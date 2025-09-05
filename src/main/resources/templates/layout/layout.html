@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html   th:fragment="layout (title, content, script)"
+        xmlns:th="http://thymeleaf.org"
+        xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <th:block th:replace="${title}"></th:block>
+</head>       
+<body>
+    <th:block th:replace="~{layout/header :: header}"></th:block>
+    <th:block th:replace="${content}"></th:block>
+    <th:block th:replace="~{layout/footer :: footer}"></th:block>
+    <th:block th:replace="${script}"></th:block>
+</body>
+</html>
