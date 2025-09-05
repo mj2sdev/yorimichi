@@ -60,7 +60,7 @@ VS Code는 JDK를 포함하고 있지 않으므로, 필요한 버전의 JDK를 �
 ### 프로젝트 클론 (첫 동기화 작업)
 - 터미널에서 아래 명령어를 실행하여 프로젝트를 복제합니다.
 ```bash
-git clone [https://github.com/mj2sdev/yorimichi](https://github.com/mj2sdev/yorimichi)
+git clone https://github.com/mj2sdev/yorimichi
 
 ```
 
@@ -72,6 +72,7 @@ git clone [https://github.com/mj2sdev/yorimichi](https://github.com/mj2sdev/yori
 - [**Markdown Diagram**](vscode:extension/skyer.vscode-markdown-diagram): markdown 다이어그램 문법을 vscode에서도 볼 수 있도록 해줍니다. (GitHub는 바로 보임)
 - [**Markdown Obsidian Callout**](vscode:extension/TendouAlice.markdown-obsidian-callout): markdown 에서의 문법 중 하나인 callout 관련 기능을 표시해 줍니다. 
 - [**GitLens**](vscode:extension/eamodio.gitlens): vscode 에서 git관련 정보를 좀더 자세히 표시해줍니다.
+- [**Database Client JDBC**](vscode:extension/cweijan.dbclient-jdbc): mysql, mariadb 관련 데이터베이스 UI 접근 툴 입니다. 진짜 편해요 ^
 
 ### Gradle 의존성 버전 확인
 - 터미널에서 아래 명령어를 사용해 설치된 의존성의 버전을 확인할 수 있습니다.

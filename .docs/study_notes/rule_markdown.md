@@ -1,28 +1,29 @@
 # Markdown(".md") 사용법
-- 이 문서는 **Markdown 문법과 GitHub 확장(GFM)** 을 한번에 정리했습니다.
-- 예시는 전부 실행 가능한 형태로 넣었습니다.
+
+> 이 문서는 **Markdown 문법과 GitHub 확장(GFM)** 을 한번에 정리했습니다.  
+예시는 전부 실행 가능한 형태로 넣었습니다.
  
 ---
 
 ## 목차
-1. 기본 개념
-2. 제목ㆍ단락ㆍ줄바꿈
-3. 강조ㆍ인라인 코드ㆍ인용
-4. 목록(순서/글머리/체크리스트)
-5. 코드 블록(언어 하이라이트ㆍdiff)
-6. 링크ㆍ이미지ㆍ앵커
-7. 표(Table)
-8. 수식(MathJax)
-9. 주석ㆍ각주(footnotes)
-10. 콜아웃(Callouts)ㆍ인용문
-11. 접기/펼치기(details/summary)
-12. Mermaid 다이어그램
-13. 이모지ㆍ자동 링크(GitHub 전용)
-14. HTML 병용과 이스케이프
-15. 자주 쓰는 패턴 스니펫
-16. 체크리스트(출고 전 점검)
-17. 부록 A. 앵커 규칙(헤딩 링크)
-18. 부록 B. 배치(Badges) 예시
+- [1. 기본 개념](#1-기본-개념)
+- [2. 제목ㆍ단락ㆍ줄바꿈](#2-제목ㆍ단락ㆍ줄바꿈)
+- [3. 강조ㆍ인라인 코드ㆍ인용](#3-강조ㆍ인라인-코드ㆍ인용)
+- [4. 목록(순서/글머리/체크리스트)](#4-목록순서글머리체크리스트)
+- [5. 코드 블록(언어 하이라이트ㆍdiff)](#5-코드-블록-언어-하이라이트ㆍdiff)
+- [6. 링크ㆍ이미지ㆍ앵커](#6-링크ㆍ이미지ㆍ앵커)
+- [7. 표(Table)](#7-표table)
+- [8. 수식(MathJax)](#8-수식mathjax)
+- [9. 주석ㆍ각주(footnotes)](#9-주석ㆍ각주footnotes)
+- [10. 콜아웃(Callouts)ㆍ인용문](#10-콜아웃calloutsㆍ인용문)
+- [11. 접기/펼치기(details/summary)](#11-접기펼치기detailssummary)
+- [12. Mermaid 다이어그램](#12-mermaid-다이어그램)
+- [13. 이모지ㆍ자동 링크(GitHub 전용)](#13-이모지ㆍ자동-링크github-전용)
+- [14. HTML 병용과 이스케이프](#14-html-병용과-이스케이프)
+- [15. 자주 쓰는 패턴 스니펫](#15-자주-쓰는-패턴-스니펫)
+- [16. 체크리스트(출고 전 점검)](#16-체크리스트출고-전-점검)
+- [부록 A. 앵커 규칙(헤딩 링크)](#부록-a-앵커-규칙헤딩-링크)
+- [부록 B. 배치(Badges) 예시](#부록-b-배지badges-예시)
 
 ---
 
@@ -45,7 +46,7 @@
 줄바꿈은<br> 강제 줄바꿈은 `<br>` 을 쓰거나  
 문장 끝에 공백 2칸을 넣습니다.
 
-> H1은 문제 제목에만 사용 권장. (README 최상단 등)
+- H1은 문제 제목에만 사용 권장. (README 최상단 등)
 
 ---
 
@@ -76,7 +77,6 @@
 ---
 
 ## 5. 코드 블록 (언어 하이라이트ㆍdiff)
-
 ```bash
 # 터미널 예시
 git init
@@ -90,7 +90,7 @@ def add(a, b):
 - password: "1234"
 + password: "${SECRET}"
 ```
-> 언어 식별자 (bash, sh, zsh, python, json, yaml, sql, diff 등)를 붙이면 **문법 하이라이트**가 적용됩니다. 
+> 언어 식별자 (bash, sh, zsh, python, json, yaml, sql, diff 등)를 붙이면 **문법 하이라이트**가 적용됩니다.
 
 ---
 
@@ -109,11 +109,11 @@ def add(a, b):
 
 [docs]: https://git-scm.com/doc
 
-> **앵커(헤딩 링크)** 규칙은 부록 A -> 참고
+> **앵커(헤딩 링크)** 규칙은 [부록 A](#부록-b-배지badges-예시) 참고.
 
 ---
 
-## 표(Table)
+## 7. 표(Table)
 
 | 열A            | 열B | 열C |
 |:--------------|:---|---:|
@@ -157,6 +157,8 @@ $$
 > [!WARNING]  
 > 경고: `git reset --hard` 는 워킹 디렉터리 변경을 **파괴**합니다.```
 
+> GitHub 문서 스타일의 **Callouts**. `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]` 사용.
+
 ---
 ## 11. 접기/펼치기(details/summary)
 
@@ -187,13 +189,12 @@ flowchart LR
 ---
 
 ## 13. 이모지ㆍ자동 링크(GitHub 전용)
-```md
+
 이모지: :tada: :rocket: :memo:
 
 이슈/PR 지동 링크: #123, org/repo#456
 커밋 SHA 자동 링크: 1a2b3c4
 유저 멘션: @username
-```
 
 > 가독성과 협업 맥락을 높여줍니다.
 
@@ -211,14 +212,98 @@ flowchart LR
 \*별포\*는 강조가 아니라 문자 그대로
 \[링크 텍스트\]\(URL\)
 ```
-- 이스케이프가 필요한 주요 문자: `\``*`
+- 이스케이프가 필요한 주요 문자: `\` `*` `_` `{` `}` `[` `]` `(` `)` `#` `+` `-` `.` `!` `|` `<` `>` `&`
 
+---
 
+## 15. 자주 쓰는 패턴 스니펫
 
+### 15.1 README 헤더 템플릿
 
+# 프로젝트명
 
+[![CI](https://img.shields.io/github/actions/workflow/status/{{owner}}/{{repo}}/ci.yml)](./.github/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-MIT-informational)](./LICENSE)
 
+> 한 줄 소개: 무엇을 해결하는가?
 
+## 특징
+- 포인트 1
+- 포인트 2
 
+## 빠른 시작
+```bash
+git clone https://github.com/{{owner}}/{{repo}}.git
+cd {{repo}}
+make run
+```
 
+### 문서
+- [설치](./docs/INSTALL.md)
+- [기여 가이드](./CONTRIBUTING.md)
 
+### 15.2 Git 커밋 메시지 규칙(예: Conventional Commits)
+```md
+<type>(scope): <subject>
+
+body(옵션)
+BREAKING CHANGE(옵션)
+
+type 예: feat, fix, docs, style, refactor, test, chore, build, ci
+예) feat(auth): add OAuth login
+```
+
+### 15.3 PR 템플릿(.github/pull_request_template.md)
+```md
+## 변경 내용
+-
+
+## 테스트
+-
+
+## 체크리스트
+- [ ] 문서/주석 업데이트
+- [ ] breaking change 여부 확인
+```
+
+### 15.4 라이선스 블록
+```md
+## License
+MIT © {{Your Name}}
+```
+---
+
+## 16. 체크리스트(출고 전 점검)
+
+- [ ] H1은 문서 제목에만 사용했는가?
+- [ ] 목차(TOC) 링크가 정상 동작하는가?
+- [ ] 코드 블록에 언어 식별자를 지정했는가?
+- [ ] 외부/상대 링크가 끊기지 않는가?
+- [ ] 표 파이프(|) 이스케이프 누락은 없는가?
+- [ ] 이미지 대체텍스트(alt)가 있는가?
+- [ ] 긴 로그/부록은 details로 접었는가?
+- [ ] 수식/다이어그램은 올바르게 렌더링되는가?
+- [ ] GitHub 전용 기능(이슈/PR 링크, 체크박스)을 적절히 사용했는가?
+
+---
+
+## 부록 A. 앵커 규칙(헤딩 링크)
+- GitHub는 헤딩을 **소문자 변환 + 공백 -> 하이폰(-) + 일부 기호 제거**로 앵커를 만듭니다.
+    예) `## 링크-이미지.앵커` -> `#링크이미지앵커`가 아니라 `#6-링크이미지앵커`처럼 섹션 번호가 있으면 번호 포함
+- 한글/특수문자도 지원. 충돌 시 `-1`, `-2`등을 붙습니다.
+- 확실히 하려면 헤딩 앞에 **절 번호**를 붙여 고정 앵커를 확보하세요.
+
+---
+
+## 부록 B. 배지(Badges) 예시
+```md
+[![Build](https://img.shields.io/github/actions/workflow/status/{{owner}}/{{repo}}/ci.yml?label=CI)](./.github/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-92%25-success)](./docs/tests.md)
+[![License](https://img.shields.io/badge/license-MIT-informational)](./LICENSE)
+[![Made with Java](https://img.shields.io/badge/made_with-Java-blue)](#)
+```
+
+## 끝으로
+- 문서는 **코드와 동일한 품질 기준**으로 다룹니다: 변경 시 PR -> 리뷰 -> 머지.
+- 동일 문서에 반복되는 패턴은 **스니펫화**하여 재사용하세요.
+- 이 파일 자체를 `DOCS_GUIDE.md`로 저장해두고, 새 repo마다 복사해 시작하면 세팅 시간이 크게 줄어듭니다.
