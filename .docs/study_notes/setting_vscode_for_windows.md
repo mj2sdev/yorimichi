@@ -74,6 +74,7 @@ git clone https://github.com/mj2sdev/yorimichi
 - [**GitLens**](vscode:extension/eamodio.gitlens): vscode 에서 git관련 정보를 좀더 자세히 표시해줍니다.
 - [**Database Client JDBC**](vscode:extension/cweijan.dbclient-jdbc): mysql, mariadb 관련 데이터베이스 UI 접근 툴 입니다. 진짜 편해요 ^
 
+
 ### Gradle 의존성 버전 확인
 - 터미널에서 아래 명령어를 사용해 설치된 의존성의 버전을 확인할 수 있습니다.
 ```bash
