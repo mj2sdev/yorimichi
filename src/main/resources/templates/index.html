@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html   th:replace="~{layout/layout :: layout(~{::title},~{::section},~{::script})}" 
+        xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Yorimichi Project</title>
+    <title> Yorimichi Project </title>
 </head>
 <body>
-    <h1 th:text="${message}">Welcome!</h1>
+    <section>
+        <h1 th:text="${message}">Welcome!</h1>
+        <P><i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i></P>
+    </section>
+    <script>
+    </script>
 </body>
 </html>
