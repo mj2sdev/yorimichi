@@ -152,11 +152,11 @@ git stash clear
 본인이 사용할 적절한 접두사가 없는 경우 여기에 추가해 주세요.  
 
 ### ✍️ 형식
-**\[접두어\]: 내용**   
+**\[접두어\]\(영향 범위\): 내용**   
 내용은 자유롭게 쓰셔도 됩니다.  
 오히려 내용 포맷을 스스로 정하여 팀원을 놀래켜보세요
 
-### 📒 목록
+### 📒 접두어 목록
 ```
 - add: 일반 항목 추가
 - remove: 항목 삭제
@@ -165,6 +165,15 @@ git stash clear
 - docs: 문서 관련내용 추가, 업데이트 등
 - refactor: 중복 코드 제거
 ```
+
+### 📒 영향 범위 목록
+```
+- 도메인/모듈/패키지: auth, user, store, food
+- 기술/레이어: api, service, repo, db, schema, securoty, ui, thymeleaf, test, build
+- 형식: 소문자, 공백 없이 kebab-case 권장(db-migration, order-item)
+- 원칙: 가능하면 하나의 범위만. 너무 넓으면 생략하고 본문에 자세히 씀(혹은 커밋을 쪼갬).
+```
+> 요약하면, **괄호 안은 "어디를 고쳤나"를 짧게 밝히는 자리**입니다.
 
 ### 예를들다 1
 ```bash
@@ -175,7 +184,7 @@ git stash clear
 
 ### 예를들다 2
 ```bash
-	git commit -m "remove: trash.md 파일 삭제 (더러워서 삭제함)"
+	git commit -m "remove(trash): trash.md 파일 삭제 (더러워서 삭제함)"
 ```
 
 # 👨‍🎨 사용할 깃 전략
