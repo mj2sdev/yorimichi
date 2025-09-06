@@ -19,6 +19,6 @@
     <th:block th:replace="~{layout/footer :: footer}"></th:block>
 
     <script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js}"></script>
-    <th:block th:replace="${script}"></th:block>
+    <th:block th:replace="${script} ?: ~{}"></th:block>
 </body>
 </html>
