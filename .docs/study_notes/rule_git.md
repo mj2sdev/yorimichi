@@ -161,6 +161,7 @@ git stash clear
 - add: 파일 추가
 - del: 파일 삭제
 - mod: 파일 수정 
+- fin: 파일 완성
 ```
 ### 대상 
 
