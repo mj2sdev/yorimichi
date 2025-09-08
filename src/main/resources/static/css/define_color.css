@@ -1,0 +1,38 @@
+.text-ymprimary{
+    color:#F28500;
+}
+.text-ymsecondary{
+    color:#0D0500;
+}
+.text-ymwhite{
+    color:#FEFCFF;
+}
+.text-ymwhitesmoke{
+    color:whitesmoke;
+}
+.text-ymprimary-bright{
+    color:#FFB347;
+}
+.text-ymsecondary-bright{
+    color:#2C1810;
+}
+
+.bg-ymprimary{
+    background-color:#F28500;
+}
+.bg-ymsecondary{
+    background-color:#0D0500;
+}
+.bg-ymwhite{
+    background-color:#FEFCFF;
+}
+.bg-ymwhitesmoke{
+    background-color:whitesmoke;
+}
+.bg-ymprimary-bright{
+    background-color:#FFB347;
+}
+.bg-ymsecondary-bright{
+    background-color:#2C1810;
+}
+
