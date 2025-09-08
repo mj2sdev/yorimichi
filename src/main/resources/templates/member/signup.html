@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html   th:replace="~{layout/layout :: layout(~{::title},~{::section},~{::script})}" 
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title> Yorimichi Project </title>
+</head>
+<body>
+    <section class="bg-ymwhite py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-6 border border-3 rounded-2">
+                    <div class="row">
+                        <div class="col">
+                            <h1 class="fw-bold my-4 text-ymsecondary text-center">회원가입</h1>
+                            <div class="fs-4 text-center" style="color: gray;"> 
+                                Yorimichi와 함께 즐거운 시간을 보내세요
+                            </div>
+                        </div>
+                    </div>
+                    <span> <!--이름/성 -->
+                        <div class="row">
+                            <div class="col-6">성</div>
+                            <div class="col-6">이름</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="text" placeholder="성" style="width:100%;">
+                            </div>
+                            <div class="col-6">
+                                <input type="text" placeholder="이름" style="width:100%;">
+                            </div>
+                        </div>
+                    </span>
+                    <span> <!-- 이메일 -->
+                        <div class="row">
+                            <div class="col">이메일</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-10">
+                                <input type="email" placeholder="이메일을 입력하세요" style="width:100%;">
+                            </div>
+                            <div class="col-2">
+                                <button class="btn text-ymwhite" style="background-color: green; font-size:14px;">중복확인</button>
+                            </div>
+                        </div>
+                    </span>
+                     <span> <!--비밀번호 -->
+                        <div class="row">
+                            <div class="col">비밀번호</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <input type="password" placehorder="비밀번호 (8자이상)" style="width:100%">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <meter min="0" max="1" low="0.5" value="0.8"></meter>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">비밀번호 강도</div>
+                        </div>
+                    </span>
+                     <span> <!--비밀번호 확인 -->
+                        <div class="row">
+                            <div class="col">비밀번호 확인</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <input type="password" placehorder="비밀번호를 다시 입력하세요" style="width:100%">
+                            </div>
+                        </div>
+                    </span>
+                     <span> <!--휴대폰 번호-->
+                        <div class="row">
+                            <div class="col">휴대폰 번호</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-9">
+                                <input type="text" placeholder="012-3456-7890" style="width:100%;">
+                            </div>
+                            <div class="col-3">
+                                <button type="button">인증번호 전송</button>
+                            </div>
+                        </div>
+                    </span>
+                     <span> <!--생년월일 -->
+                        <div class="row">
+                            <div class="col">생년월일</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <input type="date" style="width:100%;">
+                            </div>
+                        </div>
+                    </span>
+                     <span> <!--성별 -->
+                        <div class="row">
+                            <div class="col">성별</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <input type="radio" name="sex" value="man"> 남성
+                                <input type="radio" name="sex" value="woman"> 여성
+                                <input type="radio" name="sex" value="they"> 기타
+                            </div>
+                        </div>
+                    </span>
+                     <span> <!--약관-->
+                        <div class="row justify-content-center">
+                            <div class="col-11  border border-3">
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="checkbox" value="">전체 약관에 동의합니다
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="checkbox" value="">[필수] 서비스 이용약관에 동의합니다
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="checkbox" value="">[필수] 개인정보 처리방침에 동의합니다.
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <input type="checkbox" value="">[선택] 위치정보 이용에 동의합니다.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                     <span> <!--회원가입-->
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn btn-secondary" style="width:100%;">회원가입</button>
+                            </div>
+                        </div>
+                    </span>
+                    
+                </div>
+            </div>
+    </section>
+</body>
+</html>
