@@ -4,20 +4,20 @@
 <header th:fragment="header" class="border-bottom border-4 sticky-top bg-ymwhite" style="width:100%;">
     <div class="container py-4" >
         <div class="row  justify-content-between align-items-center">
-            <div class="col-4">
+            <div class="col-2">
                 <a th:href="@{/}" th:text="Yorimichi" class="me-4 text-decoration-none fs-2 fw-bold text-ymprimary">yotimichi</a>
             </div>
-            <div class="col-4">
-                <nav class="nav">
-                    <a th:href="@{/}" th:text="맛집탐방" class="me-4 text-decoration-none fs-4 text-ymsecondary"></a>
-                    <a th:href="@{/}" th:text="소개" class="me-4 text-decoration-none fs-4 text-ymsecondary" ></a>
-                    <a th:href="@{/}" th:text="문의" class="me-4 text-decoration-none fs-4 text-ymsecondary"></a>
-                </nav>
+            <div class="col-6">
+                <div class="input-group">
+                    <input type="text" name="keyword" placeholder="검색어 입력" aria-describedby="button-search" class="form-control rounded-start-pill ps-4 border-1" >
+                    <button type="button" value="검색" id="button-search" class="btn btn-outline-secondary bg-ymprimary text-ymwhite rounded-end-pill border-1">검색</button>
+                </div>
             </div>
             <div class="col-4">
-                <div class="row justify-content-end ">
-                    <a th:href="@{/}" class="col-3 me-4 text-decoration-none fs-4 border-end border-2 text-ymsecondary">로그인</a>
-                    <a th:href="@{/}" class="col-4 me-4 text-decoration-none fs-4 text-ymsecondary">회원가입</a>
+                <div class="row justify-content-end text-center">
+                    <a th:href="@{/station/list}" th:text="정류장" class="col-4 text-decoration-none fs-4 text-ymsecondary border-end border-2">정류장</a>
+                    <a th:href="@{/}" th:text="로그인" class="col-4 text-decoration-none fs-4 border-end border-2 text-ymsecondary">로그인</a>
+                    <a th:href="@{/}" th:text="회원가입" class="col-4 text-decoration-none fs-4 text-ymsecondary">회원가입</a>
                 </div>
             </div>
         </div>
