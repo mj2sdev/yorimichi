@@ -17,17 +17,13 @@
                             </div>
                         </div>
                     </div>
-                    <span> <!--이름/성 -->
+                    <span> <!--닉네임-->
                         <div class="row">
-                            <div class="col-6">성</div>
-                            <div class="col-6">이름</div>
+                            <div class="col-6">닉네임</div>
                         </div>
                         <div class="row">
-                            <div class="col-6">
-                                <input type="text" placeholder="성" style="width:100%;">
-                            </div>
-                            <div class="col-6">
-                                <input type="text" placeholder="이름" style="width:100%;">
+                            <div class="col">
+                                <input type="text" placeholder="홍길동" style="width:100%;">
                             </div>
                         </div>
                     </span>
@@ -37,14 +33,22 @@
                         </div>
                         <div class="row">
                             <div class="col-10">
-                                <input type="email" placeholder="이메일을 입력하세요" style="width:100%;">
+                                <input type="email" placeholder="abc123@gmail.com" style="width:100%;">
                             </div>
                             <div class="col-2">
                                 <button class="btn text-ymwhite" style="background-color: green; font-size:14px;">중복확인</button>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col">
+                                <!--이메일 인증번호 입력칸 만들기-->
+                            </div>
+                            <div class="col">
+                                <!--버튼 만들기-->
+                            </div>
+                        </div>
                     </span>
-                     <span> <!--비밀번호 -->
+                    <span> <!--비밀번호 -->
                         <div class="row">
                             <div class="col">비밀번호</div>
                         </div>
@@ -54,15 +58,13 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col">
-                                <meter min="0" max="1" low="0.5" value="0.8"></meter>
+                            <div class="col-6">
+                                <meter min="0" max="1" low="0.5" value="0.8" style="width:100%;"></meter>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">비밀번호 강도</div>
+                            <div class="col-6">비밀번호 강도</div>
                         </div>
                     </span>
-                     <span> <!--비밀번호 확인 -->
+                    <span> <!--비밀번호 확인 -->
                         <div class="row">
                             <div class="col">비밀번호 확인</div>
                         </div>
@@ -72,42 +74,32 @@
                             </div>
                         </div>
                     </span>
-                     <span> <!--휴대폰 번호-->
+                    <span> <!--생년월일 -->
                         <div class="row">
-                            <div class="col">휴대폰 번호</div>
+                            <div class="col-6">출생연도</div>
+                            <div class="col-6">성별</div>
                         </div>
                         <div class="row">
-                            <div class="col-9">
-                                <input type="text" placeholder="012-3456-7890" style="width:100%;">
+                            <div class="col-6">
+                                <select name="birthyear">
+                                    <th:each>
+                                        <option value="올해">2025</option>
+                                    </th:each>
+                                </select>
                             </div>
-                            <div class="col-3">
-                                <button type="button">인증번호 전송</button>
-                            </div>
-                        </div>
-                    </span>
-                     <span> <!--생년월일 -->
-                        <div class="row">
-                            <div class="col">생년월일</div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <input type="date" style="width:100%;">
-                            </div>
-                        </div>
-                    </span>
-                     <span> <!--성별 -->
-                        <div class="row">
-                            <div class="col">성별</div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <input type="radio" name="sex" value="man"> 남성
-                                <input type="radio" name="sex" value="woman"> 여성
-                                <input type="radio" name="sex" value="they"> 기타
+                            <div class="col-6">
+                                <!--생년월일 select 아래는 예시입니다.만들기-->
+
+                                <!--
+                                <select name="gender">
+                                    <option value="MAN">남성</option>
+                                    <option value="WOMAN">여성</option>
+                                    <option value="THEY">기타</option>
+                                </select> -->
                             </div>
                         </div>
                     </span>
-                     <span> <!--약관-->
+                    <span> <!--약관-->
                         <div class="row justify-content-center">
                             <div class="col-11  border border-3">
                                 <div class="row">
@@ -119,6 +111,7 @@
                                     <div class="col">
                                         <input type="checkbox" value="">[필수] 서비스 이용약관에 동의합니다
                                     </div>
+                                    <!-- 보기 버튼을 만들어 주시길 바랍니다. -->
                                 </div>
                                 <div class="row">
                                     <div class="col">
@@ -133,7 +126,7 @@
                             </div>
                         </div>
                     </span>
-                     <span> <!--회원가입-->
+                    <span> <!--회원가입-->
                         <div class="row">
                             <div class="col">
                                 <button type="button" class="btn btn-secondary" style="width:100%;">회원가입</button>

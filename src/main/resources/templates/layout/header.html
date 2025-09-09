@@ -5,19 +5,25 @@
     <div class="container py-4" >
         <div class="row  justify-content-between align-items-center">
             <div class="col-2">
-                <a th:href="@{/}" th:text="Yorimichi" class="me-4 text-decoration-none fs-2 fw-bold text-ymprimary">yotimichi</a>
+                <a th:href="@{/}" th:text="Yorimichi" class="me-4 text-decoration-none fs-2 fw-bold text-ymprimary">yorimichi</a>
             </div>
-            <div class="col-6">
-                <div class="input-group">
-                    <input type="text" name="keyword" placeholder="검색어 입력" aria-describedby="button-search" class="form-control rounded-start-pill ps-4 border-1" >
-                    <button type="button" value="검색" id="button-search" class="btn btn-outline-secondary bg-ymprimary text-ymwhite rounded-end-pill border-1">검색</button>
-                </div>
+            <div class="col-5">
+                <form name="searching" action="" onclick="">
+                    <div class="input-group">
+                        <input type="text" name="keyword" placeholder="검색어 입력" aria-describedby="button-search" class="form-control rounded-start-pill ps-4 border-1" >
+                        <button type="button" value="검색" id="button-search" class="btn btn-outline-secondary bg-ymprimary text-ymwhite rounded-end-pill border-1"><i class="bi bi-search" style="font-size: 1em;"></i></button>
+                    </div>
+                </form>
             </div>
-            <div class="col-4">
+            <div class="col-2">
                 <div class="row justify-content-end text-center">
-                    <a th:href="@{/station/list}" th:text="정류장" class="col-4 text-decoration-none fs-4 text-ymsecondary border-end border-2">정류장</a>
-                    <a th:href="@{/}" th:text="로그인" class="col-4 text-decoration-none fs-4 border-end border-2 text-ymsecondary">로그인</a>
-                    <a th:href="@{/}" th:text="회원가입" class="col-4 text-decoration-none fs-4 text-ymsecondary">회원가입</a>
+                    <button class="col-4 position-relative text-decoration-none fs-4 text-ymsecondary border-0 border-end border-2 bg-ymwhite"><i class="bi bi-lightbulb" style="font-size: 1em;"></i>
+                        <span th:text="${99}+'+'" class="position-absolute top-0 start-85 translate-middle badge rounded-pill bg-danger" style="font-size:13px;">
+                        </span>
+                    </button>
+                    <a th:href="@{/station/list}" class="col-4 text-decoration-none fs-4 text-ymsecondary border-end border-2"><i class="bi bi-bus-front" style="font-size: 1em;"></i></a>
+                    <a th:href="@{/member/login}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-door-open" style="font-size: 1em;">  </i></a>
+                    <!--<a th:href="@{/member/signup}" class="col-4 text-decoration-none fs-4 text-ymsecondary">회원가입</a> -->
                 </div>
             </div>
         </div>
