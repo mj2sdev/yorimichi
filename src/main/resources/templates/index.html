@@ -20,55 +20,14 @@
         <div class="bg-ymwhite py-5">
             <div class="container">
                 <div class="row row-cols-6">
-                    <div class="col my-4">
-                        <a class="btn btn-outline-secondary rounded-5 border-3 text-center">
-                            <i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-                            <div class="fs-4 fw-bold">치킨</div>
-                        </a>
-                    </div>
-                    <div class="col my-4">
-                        <a class="btn btn-outline-secondary rounded-5 border-3 text-center">
-                            <i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-                            <div class="fs-4 fw-bold">짜장</div>
-                        </a>
-                    </div>
-                    <div class="col my-4">
-                        <a class="btn btn-outline-secondary rounded-5 border-3 text-center">
-                            <i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-                            <div class="fs-4 fw-bold">나는 태그 리스트에서 가져와요</div>
-                        </a>
-                    </div>
-                    <div class="col my-4">
-                        <a class="btn btn-outline-secondary rounded-5 border-3 text-center">
-                            <i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-                            <div class="fs-4 fw-bold">족발</div>
-                        </a>
-                    </div>
-                    <div class="col my-4">
-                        <a class="btn btn-outline-secondary rounded-5 border-3 text-center">
-                            <i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-                            <div class="fs-4 fw-bold">햄부기</div>
-                        </a>
-                    </div>
-                    <div class="col my-4">
-                        <a class="btn btn-outline-secondary rounded-5 border-3 text-center">
-                            <i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-                            <div class="fs-4 fw-bold">햄버거</div>
-                        </a>
-                    </div>
-                    <div class="col my-4">
-                        <a class="btn btn-outline-secondary rounded-5 border-3 text-center">
-                            <i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-                            <div class="fs-4 fw-bold">햄북스딱스</div>
-                        </a>
-                    </div>
-                    <div class="col my-4">
-                        <a class="btn btn-outline-secondary rounded-5 border-3 text-center">
-                            <i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-                            <div class="fs-4 fw-bold">햄부기온앤온</div>
-                        </a>
-                    </div>
-                   
+                    <th:block th:each="item : ${#numbers.sequence(1,7)}">
+                        <div class="col my-4">
+                            <a th:href="@{/store/list}" class="btn btn-outline-secondary rounded-5 border-3 text-center">
+                                <i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
+                                <div class="fs-4 fw-bold" th:text="${item}"></div>
+                            </a>
+                        </div>
+                    </th:block>
                 </div>
             </div>
         </div>
