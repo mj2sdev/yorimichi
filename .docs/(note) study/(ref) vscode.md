@@ -17,14 +17,15 @@ vscode 에서 markdown 파일을 열면 코드편집기로 보입니다.
 
 ### 설정방법
 1. VSCode 에서 설정(Settings)에 들어갑니다.
-2. 설정 검색창에 workbench associations 를 검색합니다.
-3. 항목추가 버튼을 클릭 합니다.
-4. 아래 표와 같이 입력합니다.
+2. 검색창 아래 [사용자 | 작업영역] 탭에서 작업영역을 클릭합니다.  
+3. 설정 검색창에 workbench associations 를 검색합니다.
+4. 항목추가 버튼을 클릭 합니다.
+5. 아래 표와 같이 입력합니다.
 
 
-| key    | value                     |
-| :----- | :------------------------ |
-| `*.md` | `markdown.preview.editor` |
+| key    | value                            |
+| :----- | :------------------------------- |
+| `*.md` | `vscode.markdown.preview.editor` |
 
 ## 추천확장
 vscode는 사용자의 확장 프로그램에 따라서 사용환경이 크게 달라집니다.  
