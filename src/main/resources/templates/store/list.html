@@ -1,37 +1,130 @@
 <!DOCTYPE html>
-<html   th:replace="~{layout/layout :: layout(~{::title},~{::section},~{::script})}" 
-        xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{layout/layout :: layout(~{::title},~{::section},~{::script})}" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title> Yorimichi Project </title>
 </head>
+
 <body>
     <section>
         <div class="container my-3">
-            <div class="row py-2">
-                <div class="col">리스트</div>
-            </div>
-            <div class="row border border-3 py-3" >
-                <!-- <th:block th:each=""></th:block> -->
-                <div class="col">
-                    <a href="" class="text-decoration-none text-ymsecondary">
-                        <div class="row border-bottom border-2" style="height:100px;">
-                            <div class="col">가게이미지</div>
-                            <div class="col">가게이름</div>
-                            <div class="col">가게</div>
-                            <div class="col">기</div>
-                            <div class="col">타</div>
-                            <div class="col">정보</div>
-                        </div>
-                    </a>
+            <div class="row gap-5">
+                <div class="col-3">
                     <div class="row">
-                        <th:block th:each="item : ${#numbers.sequence(1,6)}">
-                            <div class="col"><a href="" th:text="'#'+${item}"></a></div>
-                        </th:block>
+                        <div class="col text-center fs-1 fw-bold text-ymsecondary-bright">
+                            조건 검색
+                        </div>
                     </div>
+                    <span class="bg-ymwhitesmoke">
+                        <div class="row border border-3 my-4">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col text-center fw-bold">
+                                        음식 카테고리
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <th:block th:each="item : ${#numbers.sequence(1,11)}">
+                                        <div class="col-4 text-center text-secondary my-4">
+                                            <input type="checkbox" class="btn-check" th:id="'btn-check-outlined-'+${item}" autocomplete="off">
+                                            <label class="btn btn-outline-primary" th:for="'btn-check-outlined-'+${item}">
+                                                <div class="row">
+                                                    <div class="col"><i class="bi bi-p-circle" style="font-size: 1em;"></i></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">주차</div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row border border-3">
+                            <div class="col">
+                                <div class="row">
+                                    <div class="col text-center fw-bold">
+                                        가게 조건
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <th:block th:each="item : ${#numbers.sequence(1,11)}">
+                                        <div class="col-4 text-center text-secondary my-4">
+                                            <input type="checkbox" class="btn-check" th:id="'btn-check-outlined-'+${item}" autocomplete="off">
+                                            <label class="btn btn-outline-primary" th:for="'btn-check-outlined-'+${item}">
+                                                <div class="row">
+                                                    <div class="col"><i class="bi bi-p-circle" style="font-size: 1em;"></i></div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">주차</div>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+                <div class="col-8">
+                    <div class="row py-2">
+                        <div class="col-2">
+                            <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked>
+                            <label class="btn" for="option1">전체</label>
+                        </div>
+                        <div class="col-2">
+                            <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
+                            <label class="btn" for="option2">좋아요</label>
+                        </div>
+                        <div class="col-2">
+                            <input type="radio" class="btn-check" name="options" id="option3" autocomplete="off">
+                            <label class="btn" for="option3">즐겨찾기</label>
+                        </div>
+                    </div>
+                    <th:block th:each="item : ${#numbers.sequence(1,6)}">
+                        <div class="row border border-3 py-3 my-3">
+                            <div class="col">
+                                <a href="" class="text-decoration-none text-ymsecondary">
+                                    <div class="row border-bottom border-2" style="height:100px;">
+                                        <div class="col-3">이미지자리</div>
+                                        <div class="col-3">
+                                            <div class="row">
+                                                <div class="col">이름자리</div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">분류자리</div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="row mb-3">
+                                                <div class="col">대전광역시 어쩌구 어쩌동</div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col">
+                                                    <th:block th:each="item : ${#numbers.sequence(1,5)}">
+                                                        <i class="bi bi-star-fill"
+                                                            style="font-size: 1em; color: gold;"></i>
+                                                    </th:block>
+                                                </div>
+                                                <div class="col">1234</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="row">
+                                    <th:block th:each="item : ${#numbers.sequence(1,12)}">
+                                        <div class="col"><a href="" th:text="'#'+${item}"></a></div>
+                                    </th:block>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
                 </div>
             </div>
-            
+
+
         </div>
     </section>
 </body>
+
 </html>
