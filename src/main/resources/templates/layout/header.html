@@ -11,19 +11,24 @@
                 <form name="searching" action="" onclick="">
                     <div class="input-group">
                         <input type="text" name="keyword" placeholder="검색어 입력" aria-describedby="button-search" class="form-control rounded-start-pill ps-4 border-1" >
-                        <button type="button" value="검색" id="button-search" class="btn btn-outline-secondary bg-ymprimary text-ymwhite rounded-end-pill border-1"><i class="bi bi-search" style="font-size: 1em;"></i></button>
+                        <button type="submit" value="검색" id="button-search" class="btn btn-outline-secondary bg-ymprimary text-ymwhite rounded-end-pill border-1"><i class="bi bi-search" style="font-size: 1em;"></i></button>
                     </div>
                 </form>
             </div>
             <div class="col-2">
                 <div class="row justify-content-end text-center">
-                    <button class="col-4 position-relative text-decoration-none fs-4 text-ymsecondary border-0 border-end border-2 bg-ymwhite"><i class="bi bi-lightbulb" style="font-size: 1em;"></i>
+                    <button class="col-3 position-relative text-decoration-none fs-4 text-ymsecondary border-0 border-end border-2 bg-ymwhite"><i class="bi bi-lightbulb" style="font-size: 1em;"></i>
                         <span th:text="${99}+'+'" class="position-absolute top-0 start-85 translate-middle badge rounded-pill bg-danger" style="font-size:13px;">
                         </span>
                     </button>
-                    <a th:href="@{/station/list}" class="col-4 text-decoration-none fs-4 text-ymsecondary border-end border-2"><i class="bi bi-bus-front" style="font-size: 1em;"></i></a>
-                    <a th:href="@{/member/login}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-door-open" style="font-size: 1em;">  </i></a>
-                    <!--<a th:href="@{/member/signup}" class="col-4 text-decoration-none fs-4 text-ymsecondary">회원가입</a> -->
+                    <a th:href="@{/station/list}" class="col-3 text-decoration-none fs-4 text-ymsecondary border-end border-2"><i class="bi bi-bus-front" style="font-size: 1em;"></i></a>
+                    <a th:href="@{/member/login}" class="col-3 text-decoration-none fs-4 text-ymsecondary border-end border-2"><i class="bi bi-door-open" style="font-size: 1em;">  </i></a>
+                    <a th:href="@{/member/signup}" class="col-3 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-person" style="font-size: 1em;"></i></a>
+                    <!-- 좋아요를 위한 버튼 <button type="button" class="col-4 text-ymsecondary bg-ymwhite border-0"><i class="bi bi-heart" style="font-size: 1em;"></i></span> -->
+                    <!-- <th:block th:if=""> th:if문을 통해 교체용      현재 구조상 회원정보에 좋아요/마이페이지/로그아웃이 존재하기 때문에 회원가입 버튼을 없애면 좋을 거 같음.
+                        <a th:href="@{/member/logout}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-door-open" style="font-size: 1em;"></i></a>
+                        <a th:href="@{/member/info}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-person" style="font-size: 1em;"></i></a>
+                    </th:block> -->
                 </div>
             </div>
         </div>
