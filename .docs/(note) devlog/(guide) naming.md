@@ -9,7 +9,7 @@
 1. [📁 파일 이름 규칙](#📁-파일-이름-규칙)
 2. [🥷🏿 커밋 메시지 규칙](#🥷🏿-커밋-메시지-규칙)
 3. [ 테이블(스키마) 규칙](#테이블-스키마-규칙)
-
+4. [코딩 이름 규칙](#코딩-이름-규칙)
 ---
 
 ## 📁 파일 이름 규칙
@@ -101,3 +101,20 @@
 | unique key | uk_[table name]_[column name] |
 | check key | ck_[table name]_[column name] |
 | not null | nn_[table name]_[column name] |
+
+## 코딩 이름 규칙
+해당 파트는 계속 업데이트되며 회의 및 논의 후 얼마든지 변경 가능합니다.
+변경 시 변경 희망인원은 최소 2명 이상입니다.
+한명 이상에게 설득, 논의하여 정해주시기 바랍니다.
+| 구분        | 규칙 예시                         | 설명 |
+|------------|----------------------------------|------|
+| 클래스      | `MyClass`, `UserManager`          | **PascalCase** 사용, 명사 중심 |
+| 인터페이스  | `Runnable`, `ActionListener`      | 클래스랑 동일하게 PascalCase, 대개 형용사형 + able도 많음 |
+| 메소드      | `calculateTotal()`, `getName()`   | **camelCase** 사용, 동사/동사+명사 조합 |
+| 변수        | `userName`, `totalAmount`         | **camelCase**, 명사형 위주 |
+| 상수        | `MAX_COUNT`, `DEFAULT_VALUE`      | **대문자 + 언더스코어** (SNAKE_CASE) |
+| 패키지      | `com.example.myapp`               | **소문자** + 도메인 역순, 점(.)으로 구분 |
+| 열거형(Enum)| `UserStatus { ACTIVE, INACTIVE }` | 상수와 동일하게 **대문자 + 언더스코어** |
+| 예외        | `FileNotFoundException`           | 클래스 이름 규칙과 동일, **Exception** 접미사 붙임 |
+| 제네릭 타입 | `T`, `E`, `K`, `V`                | 한 글자 대문자 관례, T=Type, E=Element, K=Key, V=Value |
+| 메소드 매개변수 | `int count`, `String fileName` | camelCase, 명확한 의미 부여 |
