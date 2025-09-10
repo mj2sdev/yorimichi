@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/layout :: layout(~{::title},~{::section},~{::script})}" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title> Yorimichi Project </title>
+</head>
+
+<body>
+    <section>
+        <div class="container my-4">
+            <div class="row justify-content-between">
+                <div class="col-3 border border-2 m-3 p-2" aria-label="sub">
+                    <div class="row" aria-label="map">
+                        <div class="col">
+                            <i class="bi bi-heart" style="font-size: 2em; color: #007bff;"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8 border border-2 m-3 p-2" aria-label="main">
+                    <div class="row" aria-label="shop-image">
+                        <div class="col-4">
+                            <img src="">
+                        </div>
+                        <div class="col-4">
+                            <img src="">
+                        </div>
+                        <div class="col-4">
+                            <img src="">
+                        </div>
+                    </div>
+                    <div class="row justify-content-between" aria-label="storename">
+                        <div class="col">
+                            <div>가게이름 본점</div>
+                        </div>
+                        <div class="col text-end">
+                            <i class="bi bi-heart border border-3 rounded-pill p-2" style="font-size: 1em;">저장</i>
+                            <i class="bi bi-share border border-3 rounded-pill p-2" style="font-size: 1em;">공유</i>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <th:block th:each="itme : ${#numbers.sequence(1,5)}">
+                                <i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
+                            </th:block>
+                        </div>
+                        <div class="col">
+                            5 (142명의 평가)
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <i class="bi bi-pin text-ymesecondary" style="font-size: 1em;">대전광역시 중구 용두동 어쩌구6길 14</i>
+                        </div>
+                        <div class="col text-end">
+                            <button class="btn border border-2">지도보기</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <i class="bi bi-watch text-ymsecondary" style="font-size: 1em;">영업중 오늘(수) 영업시간: 11:00~22:00</i>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <i class="bi bi-telephone" style="font-size: 1em;">010-1234-5678</i>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <i class="bi bi-tag" style="font-size: 1em;"></i>
+                        </div>
+                        <th:block th:each="item : ${#numbers.sequence(1,6)}">
+                            <div class="col ">
+                                <a href="" th:text="'#'+${item}" class="text-decoration-none text-ymsecondary"></a>
+                            </div>
+                        </th:block>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
