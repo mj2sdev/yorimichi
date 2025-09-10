@@ -23,9 +23,9 @@ controller를 통해서 바로 view로 오는 것이 아니라 service를 통해
 - [ ] 타임라인 (링크, 타임라인 게시판 이동)	
 > /station/list로 이동
 - [ ] 로그인 (링크, 로그인 페이지 이동)
-> /member/login로 이동
+> /user/login로 이동
 - [ ] 회원가입 (링크, 회원가입 페이지 이동)
-> /member/signup으로 이동
+> /user/signup으로 이동
 - [ ] 검색 (입력 폼, 검색 페이지 이동)
 > <span style="color:red;">현재페이지 -->> Server -->> list.hmtl(완성 안됨)</span>  
 > 데이터 입력: 검색어를 입력해서 해야함.  
@@ -37,7 +37,7 @@ controller를 통해서 바로 view로 오는 것이 아니라 service를 통해
   - [ ] 로그아웃 (버튼, 홈으로)
 > 좋아요:  
 이동 없음  
-데이터 입력(memberid)  
+데이터 입력(userId)  
 데이터 출력()
 
 
