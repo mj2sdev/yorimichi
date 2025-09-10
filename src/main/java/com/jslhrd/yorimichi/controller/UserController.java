@@ -5,17 +5,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-@RequestMapping("/member")
-public class MemberController {
+@RequestMapping("/user")
+public class UserController {
     
     @GetMapping("/signup")
     public String toSignup() {
-        return "member/signup";
+        return "user/signup";
     }
 
     @GetMapping("/login")
     public String toLogin(){
-        return "member/login";
+        return "user/login";
     }
     
 }
