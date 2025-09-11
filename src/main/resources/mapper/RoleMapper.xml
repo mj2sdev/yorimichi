@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.RoleMapper">
+
+  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.RoleDTO">
+    SELECT id AS role_id, name
+    FROM role
+    WHERE id = #{roleId}
+  </select>
+
+  <select id="selectByName" parameterType="string" resultType="com.jslhrd.yorimichi.domain.RoleDTO">
+    SELECT id AS role_id, name
+    FROM role
+    WHERE name = #{name}
+  </select>
+
+  <select id="listAll" resultType="com.jslhrd.yorimichi.domain.RoleDTO">
+    SELECT id AS role_id, name
+    FROM role
+    ORDER BY id ASC
+  </select>
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.RoleDTO">
+    INSERT INTO role (name)
+    VALUES (#{name})
+  </insert>
+
+  <update id="update" parameterType="com.jslhrd.yorimichi.domain.RoleDTO">
+    UPDATE role
+    SET name = #{name}
+    WHERE id = #{roleId}
+  </update>
+
+  <delete id="deleteById" parameterType="long">
+    DELETE FROM role WHERE id = #{roleId}
+  </delete>
+
+</mapper>
