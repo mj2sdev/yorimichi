@@ -54,40 +54,40 @@
 
 ### 공통
 
-- [ ] role
+- [x] role
   - id
   - name
 
-- [ ] root
+- [x] root
   - id
   - created_at
   - updated_at
   - deleted_at
   - blinded_at
 
-- [ ] keyword
+- [x] keyword
   - id
   - name
   - created_at
 
-- [ ] root_keyword
+- [x] root_keyword
   - root_id
   - keyword_id
   - created_at
 
-- [ ] image
+- [x] image
   - id
   - url
   - created_at
 
-- [ ] root_image
+- [x] root_image
   - root_id
   - image_id
   - created_at
 
 
 ### 유저 관련
-- [ ] user
+- [x] user
   - id
   - role_id
   - email
@@ -96,20 +96,31 @@
   - description
   - last_login_at
 
-- [ ] feed
+- [x] feed
   - id
   - user_id
+  - type
   - title
   - content
-  - status
   - view_count
 
-- [ ] feed_user
+- [x] feed_coeat
+  - id
+  - feed_id
+  - store_id
+  - capacity
+  - meeting_at
+  - auto_accept
+  - status
+
+- [x] feed_coeat_request
   - feed_id
   - user_id
+  - status
+  - message
   - created_at
 
-- [ ] comment
+- [x] comment
   - id
   - user_id
   - feed_id
@@ -123,12 +134,12 @@
   - created_at
   - updated_at
 
-- [ ] user_block
+- [ ] block
   - blocker_id
   - blockee_id
   - created_at
 
-- [ ] follower
+- [ ] follow
   - follower_id
   - followee_id
   - notified
