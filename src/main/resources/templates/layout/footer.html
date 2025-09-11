@@ -2,53 +2,43 @@
 <html xmlns:th="http://thymeleaf.org">
 <body>   
 <footer th:fragment="footer" class="bg-ymsecondary-bright text-ymwhite">
-    <div class="container py-5">
+    <div class="container pt-5">
         <div class="row">
             <div class="col-3">
                 <div class="row">
-                    <div class="fs-5 fw-bold mb-4">Yorimichi</div>
-                    <div class="fs-5">맛있는 식사의 시작</div>
+                    <a class="btn text-decoration-none text-ymwhite text-start" href="/"><h4 class="fw-bold mb-4">Yorimichi</h4></a>
+                    <h6>맛있는 식사의 시작</h6>
                 </div>
             </div>
             <div class="col-3">
-                <div class="row">
-                    <div class="col">
-                        <p>만든이</p>
-                        <a th:href="@{https://github.com/eden8631}">김도윤</a><br>
-                        <a th:href="@{https://github.com/GeonHoKoo}">구건호</a><br>
-                        <a th:href="@{https://github.com/Renseo}">김슬찬</a><br>
-                        <a th:href="@{https://github.com/3ll3702}">윤찬</a><br>
-                        <a th:href="@{https://github.com/mj2sdev}">정민재</a><br>
-                        <a th:href="@{https://github.com/Isha-dev}">양유찬</a>
-                    </div>
-                </div>
+                <h6>만든이</h6>
+                <ul class="list-unstyled">
+                    <li><a class="text-decoration-none text-ymwhite" th:href="@{https://github.com/GeonHoKoo}">구건호</a></li>
+                    <li><a class="text-decoration-none text-ymwhite" th:href="@{https://github.com/eden8631}">김도윤</a></li>
+                    <li><a class="text-decoration-none text-ymwhite" th:href="@{https://github.com/Renseo}">김슬찬</a></li>
+                    <li><a class="text-decoration-none text-ymwhite" th:href="@{https://github.com/Isha-dev}">양유찬</a></li>
+                    <li><a class="text-decoration-none text-ymwhite" th:href="@{https://github.com/3ll3702}">윤찬</a></li>
+                    <li><a class="text-decoration-none text-ymwhite" th:href="@{https://github.com/mj2sdev}">정민재</a></li>
+                </ul>
             </div>
             <div class="col-3">
-                <div class="row">
-                    <div class="col">
-                        <p>유튜브 링크</p>
-                        <a th:href="@{https://www.youtube.com/}">바로가기</a>
-                    </div>
-                </div>
+                <h6>유튜브 링크</h6>
+                <a class="text-decoration-none text-ymwhite" th:href="@{https://www.youtube.com/}">바로가기</a>
             </div>
             <div class="col-3">
-                <div class="row">
-                    <div class="col">
-                        <p>기술 스택</p>
-                        <a th:href="@{https://spring.io/projects/spring-boot}">스프링부트</a><br>
-                        <a th:href="@{https://www.thymeleaf.org/}">타임리프</a><br>
-                        <a th:href="@{https://getbootstrap.kr/}">부트스트랩</a><br>
-                        <a th:href="@{https://mariadb.org/}">마리아디비</a><br>
-                        <a th:href="@{https://mybatis.org/mybatis-3/}">마이바티스</a><br>
-                    </div>
-                </div>
+                <h6>기술 스택</h6>
+                <ul class="list-unstyled">
+                    <li><a class="text-decoration-none text-ymwhite" th:href="@{https://spring.io/projects/spring-boot}">스프링부트</a><br></li>
+                    <li><a class="text-decoration-none text-ymwhite" th:href="@{https://www.thymeleaf.org/}">타임리프</a></li>
+                    <li><a class="text-decoration-none text-ymwhite" th:href="@{https://getbootstrap.kr/}">부트스트랩</a></li>
+                    <li><a class="text-decoration-none text-ymwhite" th:href="@{https://mariadb.org/}">마리아디비</a></li>
+                    <li><a class="text-decoration-none text-ymwhite" th:href="@{https://mybatis.org/mybatis-3/}">마이바티스</a></li>
+                </ul>       
             </div>
         </div>
-    </div>
-    <div class="container">
         <div class="row">
             <div class="col">
-                <p style="text-align:right">Copyright 2025 Team3 All rights reserved.</p>
+                <p class="text-end">Copyright 2025 Team3 All rights reserved.</p>
             </div>
         </div>
     </div>
