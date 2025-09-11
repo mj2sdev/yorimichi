@@ -16,25 +16,25 @@
 ## 유찬씨가 공부해야 하는 것 정리하기
 
 ### html 알아보기
-  - [ ] !DOCTYPE, html, head, body의 이해
-  - [ ] header와 footer의 이해
-  - [ ] main, nav, section, article, aside
-  - [ ] a href태그 사용
-  - [ ] select 태그 사용
-  - [ ] img src, alt 태그 사용
-  - [ ] div와 span의 차이 이해하기
-  - [ ] h1~h6 태그 사용해보기
-  - [ ] li ul, ol 태그 사용해보기
-  - [ ] form, input, button, label 태그 사용해보기
-  - [ ] input의 type 속성 알아보기
-  - [ ] table, thead, tbody, tr, th, td 태그 알아보기
+  - [x] !DOCTYPE, html, head, body의 이해
+  - [x] header와 footer의 이해
+  - [x] main, nav, section, article, aside
+  - [x] a href태그 사용
+  - [x] select 태그 사용
+  - [x] img src, alt 태그 사용
+  - [x] div와 span의 차이 이해하기
+  - [x] h1~h6 태그 사용해보기
+  - [x] li ul, ol 태그 사용해보기
+  - [x] form, input, button, label 태그 사용해보기
+  - [x] input의 type 속성 알아보기
+  - [x] table, thead, tbody, tr, th, td 태그 알아보기
 ### css 알아보기
-  - [ ] container 만들어보기
-  - [ ] row와 col로 구획 나눠보기
-  - [ ] class를 이용한 디자인 변경 해보기
-  - [ ] bootstrap 문서를 어떻게 사용하는지 알아보기
-  - [ ] padding과 margin의 차이에 대해 알아보기
-  - [ ] 선택자 알아보기
+  - [x] container 만들어보기
+  - [x] row와 col로 구획 나눠보기
+  - [x] class를 이용한 디자인 변경 해보기
+  - [x] bootstrap 문서를 어떻게 사용하는지 알아보기
+  - [x] padding과 margin의 차이에 대해 알아보기
+  - [x] 선택자 알아보기
   - [ ] display의 이해
   - [ ] position의 이해
 ### thymeleaf 알아보기
