@@ -11,12 +11,37 @@
             <div class="row justify-content-between">
                 <div class="col-3 border border-2 m-3 p-2" aria-label="sub">
                     <div class="row" aria-label="map">
-                        <div class="col">
-                            <i class="bi bi-heart" style="font-size: 2em; color: #007bff;"></i>
+                        <div class="col" style="position: relative;">
+                            <div class="ratio ratio-4x3">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2272.926378741515!2d127.40430498927147!3d36.32677405031281!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x356549343c3c3cf1%3A0x9d6af658336f953a!2z7KCc7J207JeQ7Iqk7JeY7J247J6s6rCc67Cc7JuQKOyjvCk!5e0!3m2!1sko!2skr!4v1757573926145!5m2!1sko!2skr" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
+                            <i class="bi bi-heart" style="font-size: 2em; color: #007bff; position: absolute; top: 0px; left: 22px;"></i>
                         </div>
                     </div>
                 </div>
                 <div class="col-8 border border-2 m-3 p-2" aria-label="main">
+                    <div id="shop-image-carousel" class="carousel slide" style="height: 400px;">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="..." class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="..." class="d-block w-100" alt="...">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="..." class="d-block w-100" alt="...">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#shop-image-carousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#shop-image-carousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    
                     <div class="row" aria-label="shop-image">
                         <div class="col-4">
                             <img src="">
@@ -80,6 +105,11 @@
 
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col border border-2 m-3 p-2" aria-label="menu">
+                    
                 </div>
             </div>
         </div>
