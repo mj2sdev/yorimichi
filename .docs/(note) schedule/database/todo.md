@@ -105,7 +105,6 @@
   - view_count
 
 - [x] feed_coeat
-  - id
   - feed_id
   - store_id
   - capacity
@@ -127,7 +126,7 @@
   - parent_id
   - content
 
-- [ ] report
+- [X] report
   - reporter_id
   - reported_id
   - description
@@ -135,24 +134,24 @@
   - created_at
   - updated_at
 
-- [ ] block
+- [X] block
   - blocker_id
   - blockee_id
   - created_at
 
-- [ ] follow
+- [X] follow
   - follower_id
   - followee_id
   - notified
   - created_at
 
-- [ ] user_like
+- [X] user_like
   - id
   - user_id
   - root_id
   - created_at
 
-- [ ] notification
+- [X] notification
   - id
   - actor_user_id
   - root_id
@@ -164,63 +163,64 @@
 
 
 ### 상점 관련
-- [ ] store
+- [X] store
   - id
   - address_id
   - name
   - description
   - phone
 
-- [ ] bookmark
+- [X] bookmark
   - user_id
   - store_id
   - created_at
 
-- [ ] food
+- [X] food
   - id
   - store_id
   - name
   - price
   - description
 
-- [ ] review
+- [X] review
   - id
   - user_id
   - food_id
   - rating
   - content
 
-- [ ] category
+- [X] category
   - id
-  - parent_category_id
+  - parent_id
   - name
   - created_at
 
-- [ ] store_category
+- [X] store_category
   - store_id
   - category_id
   - created_at
 
-- [ ] food_category
+- [X] food_category
   - food_id
   - category_id
   - created_at
 
-- [ ] facility_category
+- [X] facility_category
   - id
   - name
   - created_at
 
-- [ ] store_facility_category
+- [X] store_facility_category
   - store_id
   - facility_category_id
   - created_at
 
 
 ### 주소 관련
-- [ ] address
+- [X] address
   - id
   - road_id
+  - postal_id
   - detail
   - road_address_text
   - jibun_address_text
@@ -229,34 +229,34 @@
   - created_at
   - updated_at
 
-- [ ] region_sido
+- [X] region_sido
   - id
   - code
   - name
 
-- [ ] region_sigungu
+- [X] region_sigungu
   - id
   - sido_id
   - code
   - name
 
-- [ ] region_emd
+- [X] region_emd
   - id
   - sigungu_id
   - code
   - name
 
-- [ ] road
+- [X] road
   - id
   - emd_id
   - code
   - name
 
-- [ ] postal
+- [X] postal
   - id
-  - road_id
   - code
 
-- [ ] road_postal
+- [X] road_postal
   - road_id
   - postal_id
+  - created_at
