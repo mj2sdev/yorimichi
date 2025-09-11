@@ -131,6 +131,7 @@
   - reporter_id
   - reported_id
   - description
+  - status
   - created_at
   - updated_at
 
