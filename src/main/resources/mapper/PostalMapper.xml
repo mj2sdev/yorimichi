@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.PostalMapper">
+
+  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.PostalDTO">
+    SELECT id AS postal_id, road_id, code
+    FROM postal
+    WHERE id = #{postalId}
+  </select>
+
+  <select id="selectByCode" parameterType="string" resultType="com.jslhrd.yorimichi.domain.PostalDTO">
+    SELECT id AS postal_id, road_id, code
+    FROM postal
+    WHERE code = #{code}
+  </select>
+
+  <select id="listByRoadId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.PostalDTO">
+    SELECT id AS postal_id, road_id, code
+    FROM postal
+    WHERE road_id = #{roadId}
+    ORDER BY id ASC
+  </select>
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.PostalDTO">
+    INSERT INTO postal (road_id, code)
+    VALUES (#{roadId}, #{code})
+  </insert>
+
+  <update id="update" parameterType="com.jslhrd.yorimichi.domain.PostalDTO">
+    UPDATE postal
+    SET road_id = #{roadId},
+        code = #{code}
+    WHERE id = #{postalId}
+  </update>
+
+  <delete id="deleteById" parameterType="long">
+    DELETE FROM postal WHERE id = #{postalId}
+  </delete>
+
+</mapper>
