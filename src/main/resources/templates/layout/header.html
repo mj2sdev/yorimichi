@@ -28,8 +28,9 @@
                                 <li><button type="btn" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#notificationList">
                                     <div class="row ">
                                         <div class="col"><i class="bi bi-heart-fill" style="font-size: 1em; color: red;"></i></div>
+                                        <div class="col">가게이름</div>
                                         <div class="col">작성자</div>
-                                        <div class="col">리뷰/같이먹기ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ</div>
+                                        <div class="col">리뷰/같이먹기</div>
                                         <div class="col">일자</div>
                                     </div>
                                 </button></li>
@@ -50,23 +51,7 @@
     </div>
 
 </header>
-    <div class="modal fade" id="notificationList" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <th:block th:replace="~{fragments/review/modal :: modalbody}"></th:block>
-            </div>  
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <th:block th:replace="~{fragments/coeat/modal :: modal}"></th:block>
 </th:block>
 </body>
 </html>
