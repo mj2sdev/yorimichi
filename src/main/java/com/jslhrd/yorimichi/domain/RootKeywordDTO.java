@@ -1,5 +1,6 @@
 package com.jslhrd.yorimichi.domain;
 
+import java.time.LocalDateTime;
 import lombok.*;
 
 
@@ -8,4 +9,5 @@ import lombok.*;
 public class RootKeywordDTO {
     private Long rootId;  
     private Long keywordId;
+    private LocalDateTime createdAt; 
 }

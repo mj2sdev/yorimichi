@@ -11,6 +11,6 @@ public class FeedDTO {
     private Long userId;
     private String title;
     private String content;
-    private String status;
+    private String type;
     private Integer viewCount;
 }

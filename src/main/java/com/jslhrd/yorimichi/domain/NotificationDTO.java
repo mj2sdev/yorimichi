@@ -7,10 +7,11 @@ import java.time.LocalDateTime;
 @Setter
 public class NotificationDTO {
     private Long notificationId;  // PK
+    private Long actorUserId;
     private Long rootId;          // FK → root.root_id
-    private Long userId;          // FK → user.user_id
-    private String type;          // DB ENUM (필요 시 자바 enum으로 교체)
+    private Long targetUserId;
     private String message;       // NULL 가능
-    private Boolean isRead;       // 기본 FALSE
+    private LocalDateTime readAt;     // NEW (isRead 대체)
+    private LocalDateTime updatedAt;  // NEW
     private LocalDateTime createdAt; // CURRENT_TIMESTAMP
 }
