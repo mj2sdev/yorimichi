@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html   th:replace="~{layout/layout :: layout(~{::title},~{::section},~{::script})}" 
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title> Yorimichi Project </title>
+</head>
+<body>
+    <section class="bg-ymwhite py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-6 border border-3 rounded-2">
+                    <div class="row">
+                        <div class="col">
+                            <h1 class="fw-bold my-4 text-ymsecondary text-center">로그인</h1>
+                            <div class="fs-4 text-center" style="color: gray;"> 
+                                Yorimichi에 오신 것을 환영합니다.
+                            </div>
+                        </div>
+                    </div>
+                    <span> <!-- 이메일 -->
+                        <div class="row">
+                            <div class="col">이메일</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <input type="email" placeholder="이메일을 입력하세요" style="width:100%;">
+                            </div>
+                        </div>
+                    </span>
+                     <span> <!--비밀번호 -->
+                        <div class="row">
+                            <div class="col">비밀번호</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <input type="password" placehorder="비밀번호를 입력하세요" style="width:100%">
+                            </div>
+                        </div>
+                    </span>
+                     <span> <!--로그인-->
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn bg-ymprimary text-ymwhite" style="width:100%;">로그인</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                또는
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn border border-3" style="width:100%; background-color:yellow">카카오</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn border border-3" style="width:100%; background-color:green">네이버</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn border border-3" style="width:100%;">구글</button>
+                            </div>
+                        </div>
+                    </span>
+                    <span>
+                        <div class="row">
+                            <div class="col-6">
+                                <a th:href="@{/}" th:text="'비밀번호를 잊으셨나요?'"></a>
+                            </div>
+                            <div class="col-6">
+                                <a th:href="@{/member/signup}" th:text="'회원가입'"></a>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+            </div>
+    </section>
+</body>
+</html>
