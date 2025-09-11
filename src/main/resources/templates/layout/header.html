@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org">
 <body>
-<header th:fragment="header" class="border-bottom border-4 sticky-top bg-ymwhite" style="width:100%;">
+<th:block th:fragment="header">
+<header class="border-bottom border-4 sticky-top bg-ymwhite" style="width:100%;">
     <div class="container py-4" >
         <div class="row  justify-content-between align-items-center">
             <div class="col-2">
@@ -17,14 +18,28 @@
             </div>
             <div class="col-2">
                 <div class="row justify-content-end text-center">
-                    <button class="col-3 position-relative text-decoration-none fs-4 text-ymsecondary border-0 border-end border-2 bg-ymwhite"><i class="bi bi-lightbulb" style="font-size: 1em;"></i>
-                        <span th:text="${99}+'+'" class="position-absolute top-0 start-85 translate-middle badge rounded-pill bg-danger" style="font-size:13px;">
-                        </span>
-                    </button>
-                    <a th:href="@{/station/list}" class="col-3 text-decoration-none fs-4 text-ymsecondary border-end border-2"><i class="bi bi-bus-front" style="font-size: 1em;"></i></a>
-                    <a th:href="@{/member/login}" class="col-3 text-decoration-none fs-4 text-ymsecondary border-end border-2"><i class="bi bi-door-open" style="font-size: 1em;">  </i></a>
-                    <a th:href="@{/member/signup}" class="col-3 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-person" style="font-size: 1em;"></i></a>
-                    <!-- 좋아요를 위한 버튼 <button type="button" class="col-4 text-ymsecondary bg-ymwhite border-0"><i class="bi bi-heart" style="font-size: 1em;"></i></span> -->
+                    <div class="dropdown col-4">
+                        <button type="button dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false"
+                        class="position-relative text-decoration-none fs-4 text-ymsecondary border-0 border-end border-2 bg-ymwhite"><i class="bi bi-lightbulb" style="font-size: 1em;"></i>
+                            <span th:text="${99}+'+'" class="btn position-absolute top-0 start-85 translate-middle badge rounded-pill bg-danger" style="font-size:13px;"></span>
+                        </button>
+                        <ul class="dropdown-menu "style="min-width: 350px;">
+                            <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                                <li><button type="btn" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#notificationList">
+                                    <div class="row">
+                                        <div class="col"><i class="bi bi-heart-fill" style="font-size: 1em; color: red;"></i></div>
+                                        <div class="col">작성자</div>
+                                        <div class="col">리뷰/같이먹기</div>
+                                        <div class="col">일자</div>
+                                    </div>
+                                </button></li>
+                            </th:block>
+                        </ul>
+                    </div>
+                    <a th:href="@{/station/list}" class="col-4 text-decoration-none fs-4 text-ymsecondary border-end border-2"><i class="bi bi-bus-front" style="font-size: 1em;"></i></a>
+                    <a th:href="@{/user/login}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-door-open" style="font-size: 1em;">  </i></a>
+                    <!--<a th:href="@{/user/signup}" class="col-4 text-decoration-none fs-4 text-ymsecondary">회원가입</a> -->
+                     <!-- 좋아요를 위한 버튼 <button type="button" class="col-4 text-ymsecondary bg-ymwhite border-0"><i class="bi bi-heart" style="font-size: 1em;"></i></span> -->
                     <!-- <th:block th:if=""> th:if문을 통해 교체용      현재 구조상 회원정보에 좋아요/마이페이지/로그아웃이 존재하기 때문에 회원가입 버튼을 없애면 좋을 거 같음.
                         <a th:href="@{/member/logout}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-door-open" style="font-size: 1em;"></i></a>
                         <a th:href="@{/member/info}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-person" style="font-size: 1em;"></i></a>
@@ -33,6 +48,25 @@
             </div>
         </div>
     </div>
+
 </header>
+    <div class="modal fade" id="notificationList" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <th:block th:replace="~{fragments/review/modal :: modalbody}"></th:block>
+            </div>  
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
 </body>
 </html>
