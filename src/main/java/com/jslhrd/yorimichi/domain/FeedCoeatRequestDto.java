@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class FeedCoeatRequestDto {
+public class FeedCoeatRequestDTO {
     private Long feedId;          // FK
     private Long userId;          // FK
     private String status;
