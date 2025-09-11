@@ -35,8 +35,8 @@
   - [x] bootstrap 문서를 어떻게 사용하는지 알아보기
   - [x] padding과 margin의 차이에 대해 알아보기
   - [x] 선택자 알아보기
-  - [ ] display의 이해
-  - [ ] position의 이해
+  - [x] display의 이해
+  - [x] position의 이해
 ### thymeleaf 알아보기
   - [ ] th:에 대해 알아보기
   - [ ] th:block에 대해 알아보기 
