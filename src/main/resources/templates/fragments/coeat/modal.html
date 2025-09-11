@@ -6,66 +6,113 @@
 </head>
 
 <body>
-    <th:block th:fragment="modalbody">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-
-                    <div id="carouselExample" class="carousel slide">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="..." class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="..." class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="..." class="d-block w-100" alt="...">
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
+    <th:block th:fragment="modal">
+        <div class="modal fade" id="notificationList" tabindex="-1" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">가게이름 같이 먹기 일정: 25.09.11</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="row">
-                        <div class="col">
-                            사람닉네임
-                        </div>
-                        <div class="col">
-                            25.09.11
-                        </div>
-                        <div class="col text-end">
-                            <button class="btn"><i class="bi bi-flag-fill" style="font-size: 1em; color: red;"></i></button>
-                        </div>
-                    </div>
-                    <th:block th:each="item : ${#numbers.sequence(1,5)}">
-                        <div class="row">
-                            
-                                <div class="col" th:text="${'짜장면'}">
-                                    짜장면
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col border border-2">
+                                    <div class="row border-bottom border-2" style="height:300px;">
+                                        <div class="col">
+                                            <img src="">
+                                            지도나 이미지 자리.
+                                        </div>
+                                    </div>
+                                    <div class="row py-3">
+                                        <div class="col">
+                                            <ul>
+                                                <th:block th:each="item : ${#numbers.sequence(1,5)}">
+                                                    <div class="row">
+                                                        <div class="col">음식이름</div>
+                                                        <div class="col">가격</div>
+                                                        <div class="col">
+                                                            <th:block th:each="item : ${#numbers.sequence(1,5)}">
+                                                                <i class="bi bi-star-fill"
+                                                                    style="font-size: 1em; color: gold;"></i>
+                                                            </th:block>
+                                                        </div>
+                                                    </div>
+                                                </th:block>
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
-                            <div class="col">
-                                평점
+                                <div class="col border border-2">
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="col text-ymprimary" th:text="${'개최자'}">
+                                                같이먹기 개최자
+                                            </div>
+                                            <div class="col" th:text="${'간단 자기소개'}">
+                                                사람에 대한 설명
+                                            </div>
+                                            <div class="col">
+                                                <button type="button" class="btn"><i class="bi bi-search"
+                                                        style="font-size: 1em;"></i></button>
+                                            </div>
+                                        </div>
+                                        <th:block th:each="item : ${#numbers.sequence(1,5)}">
+                                            <div class="row">
+                                                <div class="col" th:text="${'닉네임'}">
+                                                    같이먹기 참여자
+                                                </div>
+                                                <div class="col" th:text="${'간단 자기소개'}">
+                                                    사람에 대한 설명
+                                                </div>
+                                                <div class="col">
+                                                    <button type="button" class="btn"><i class="bi bi-search"
+                                                            style="font-size: 1em;"></i></button>
+                                                </div>
+                                            </div>
+                                        </th:block>
+                                    </div>
+                                    <div class="row border-top border-3 mt-3">
+                                        <div class="col mt-3">
+                                            만든 사람이 할 말.<br>
+                                            전 어쩌구 저쩌구 하고 싶구요<br>
+                                            뭐 먹으려고 합니다.<br>
+                                            참가조건은 어쩌구
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col">
-                                <th:block th:each="item : ${#numbers.sequence(1,5)}">
-                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
-                                </th:block>
+                            <div class="row mt-3">
+                                <div class="col">
+                                    <p class="text-center">참가자 대화</p>
+                                    <ul class="list-unstyled">
+                                        <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                                            <li class="my-4 text-start">
+                                                <div class="row justify-content-between">
+                                                    <div class="col-4">닉네임</div>
+                                                    <div class="col">2025-09-11</div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        댓글내용
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </th:block>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
-                    </th:block>
-                </div>
-            </div>
-            <div class="row border-top border-3 mt-3">
-                <div class="col mt-3">
-                    이 집 물을 잘합니다.
+                    </div>
+                    <div class="modal-footer">
+                        <div class="text-start">
+                            <button class="btn border border-2"><i class="bi bi-flag-fill"
+                                    style="font-size: 1em; color: red;">신고하기</i></button>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">참가신청</button>
+                    </div>
                 </div>
             </div>
         </div>
