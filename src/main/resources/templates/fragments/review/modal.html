@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title> Yorimichi Project </title>
+</head>
+
+<body>
+    <th:block th:fragments="modalbody">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <th:block th:each="item : ${#numbers.sequence(1,5)}">
+                        <img src="" th:alt="'이미지'+${item}">
+                    </th:block>
+                </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">닉네임</div>
+                        <div class="col">날짜</div>
+                        <div class="col">
+                            평점
+                        </div>
+                        <div class="col">
+                            <th:block th:each="item : ${#numbers.sequence(1,5)}">
+                                <i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
+                            </th:block>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <th:block th:each="item : ${#numbers.sequence(1,5)}">
+                            <div class="col" th:text="#{짜장면}">짜장면</div>
+                        </th:block>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            이 집 물을 잘합니다.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+
+            </div>
+        </div>
+    </th:block>
+</body>
+
+</html>
