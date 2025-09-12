@@ -37,6 +37,37 @@
   - [x] 선택자 알아보기
   - [ ] display의 이해
   - [ ] position의 이해
+
+### bootStrap 알아보기
+틀
+ - [ ] button
+ - [ ] carousel
+ - [ ] modal 
+ - [ ] dropdown
+ - [ ] toast
+ - [ ] spiiner
+ - [ ] card
+ - [ ] pagination
+ - [ ] scrollspy
+ - [ ] badge
+ - [ ] collapse
+
+ 디자인
+ - [ ] background
+ - [ ] borders
+ - [ ] colors
+ - [ ] display
+ - [ ] flex
+ - [ ] object fit
+ - [ ] overflow
+ - [ ] shadow
+ - [ ] sizing
+ - [ ] spacing
+ - [ ] text
+ - [ ] align
+ - [ ] visibility
+ - [ ] z-index
+
 ### thymeleaf 알아보기
   - [ ] th:에 대해 알아보기
   - [ ] th:block에 대해 알아보기 
