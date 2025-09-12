@@ -12,36 +12,13 @@
                 <div class="col">팔로워</div>
             </div>
             <div class="row">
+                <th:block th:each="i : ${#numbers.sequence(1,5)}">
                 <div class="col-1"><!--얘를 반복시켜서 팔로우중인 대상을 보이게 할 것. -->
                     <a href=""><img src=""></a><!-- 이미지로 프사 / href= 유저페이지 링크-->
                     <i class="bi bi-person" style="font-size: 2em; color: #007bff;"></i>
-                    <div>임시</div>
+                    <div>닉네임</div>
                 </div>
-                <div class="col-1"><!--얘를 반복시켜서 팔로우중인 대상을 보이게 할 것. -->
-                    <a href=""><img src=""></a><!-- 이미지로 프사 / href= 유저페이지 링크-->
-                    <i class="bi bi-person" style="font-size: 2em; color: #007bff;"></i>
-                    <div>임시</div>
-                </div>
-                <div class="col-1"><!--얘를 반복시켜서 팔로우중인 대상을 보이게 할 것. -->
-                    <a href=""><img src=""></a><!-- 이미지로 프사 / href= 유저페이지 링크-->
-                    <i class="bi bi-person" style="font-size: 2em; color: #007bff;"></i>
-                    <div>임시</div>
-                </div>
-                <div class="col-1"><!--얘를 반복시켜서 팔로우중인 대상을 보이게 할 것. -->
-                    <a href=""><img src=""></a><!-- 이미지로 프사 / href= 유저페이지 링크-->
-                    <i class="bi bi-person" style="font-size: 2em; color: #007bff;"></i>
-                    <div>임시</div>
-                </div>
-                <div class="col-1"><!--얘를 반복시켜서 팔로우중인 대상을 보이게 할 것. -->
-                    <a href=""><img src=""></a><!-- 이미지로 프사 / href= 유저페이지 링크-->
-                    <i class="bi bi-person" style="font-size: 2em; color: #007bff;"></i>
-                    <div>임시</div>
-                </div>
-                <div class="col-1"><!--얘를 반복시켜서 팔로우중인 대상을 보이게 할 것. -->
-                    <a href=""><img src=""></a><!-- 이미지로 프사 / href= 유저페이지 링크-->
-                    <i class="bi bi-person" style="font-size: 2em; color: #007bff;"></i>
-                    <div>임시</div>
-                </div>
+                </th:block>
             </div>
         </div>
         <div class="container">
