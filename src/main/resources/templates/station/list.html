@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html   th:replace="~{layout/layout :: layout(~{::title},~{::section},~{::script})}" 
-        xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{layout/layout :: layout(~{::title},~{::section},~{::script})}" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title> Yorimichi Project </title>
 </head>
+
 <body>
     <section>
         <div class="container my-4 border border-bottom-3">
@@ -58,24 +59,32 @@
             </div>
         </div>
         <div class="container">
-            <div class="row">
-                <div class="col border border-3">
-                    <img src="">
-                    <p>이미지 넣어줘잉</p>
-                </div>
-                <div class="col">
+            <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                <div class="row">
+                <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
                     <div class="row">
                         <div class="col">
+                            분류
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col">
-
+                            <img src="">
+                            가게 대표 이미지
+                        </div>
+                        <div class="col">
+                            가게명
+                        </div>
+                        <div class="col">
+                            작성자
+                        </div>
+                        <div class="col">
+                            날짜
                         </div>
                     </div>
+                </button>
                 </div>
-            </div>
+            </th:block>
         </div>
     </section>
 </body>
+
 </html>
