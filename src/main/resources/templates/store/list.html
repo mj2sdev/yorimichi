@@ -26,13 +26,13 @@
                                 <div class="row">
                                     <th:block th:each="item : ${#numbers.sequence(1,11)}">
                                         <div class="col-4 text-center text-secondary my-4">
-                                            <input type="checkbox" class="btn-check" th:id="'btn-check-outlined-'+${item}" autocomplete="off">
-                                            <label class="btn btn-outline-primary" th:for="'btn-check-outlined-'+${item}">
+                                            <input type="checkbox" class="btn-check" th:id="'btn-food-outlined-'+${item}" autocomplete="off">
+                                            <label class="btn btn-outline-primary" th:for="'btn-food-outlined-'+${item}">
                                                 <div class="row">
                                                     <div class="col"><i class="bi bi-p-circle" style="font-size: 1em;"></i></div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col">주차</div>
+                                                    <div class="col">파스타</div>
                                                 </div>
                                             </label>
                                         </div>
