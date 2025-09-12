@@ -59,6 +59,7 @@
                         </div>
                         <div class="col text-end">
                             <i class="bi bi-heart border border-3 rounded-pill p-2" style="font-size: 1em;">저장</i>
+                            <i class="bi bi-star border border-3 rounded-pill p-2" style="font-size: 1em;">즐겨찾기</i>
                             <i class="bi bi-share border border-3 rounded-pill p-2" style="font-size: 1em;">공유</i>
                         </div>
                     </div>
@@ -109,7 +110,38 @@
             </div>
             <div class="row">
                 <div class="col border border-2 m-3 p-2" aria-label="menu">
-                    
+                    <ul class="nav nav-tabs" id="menuTap" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="first-tab" data-bs-toggle="tab" data-bs-target="#first-tab-pane" type="button"
+                                role="tab" aria-controls="first-tab-pane" aria-selected="true">메뉴</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="second-tab" data-bs-toggle="tab" data-bs-target="#second-tab-pane" type="button"
+                                role="tab" aria-controls="second-tab-pane" aria-selected="false">리뷰</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="third-tab" data-bs-toggle="tab" data-bs-target="#third-tab-pane" type="button" 
+                                role="tab" aria-controls="third-tab-pane" aria-selected="false">리뷰 사진?</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="menuTabContent">
+                        <div class="tab-pane fade show active" id="first-tab-pane" role="tabpanel" aria-labelledby="first-tab" tabindex="0">
+                            <ul>
+                                <li style="list-style: none;">
+                                    정말 맛있는 메뉴 ··· 70,000₩
+                                </li>
+                                <li style="list-style: none;">
+                                    그저 그런 메뉴 ··· 300₩
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="tab-pane fade" id="second-tab-pane" role="tabpanel" aria-labelledby="second-tab" tabindex="0">
+                            ...
+                        </div>
+                        <div class="tab-pane fade" id="third-tab-pane" role="tabpanel" aria-labelledby="third-tab" tabindex="0">
+                            ...
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
