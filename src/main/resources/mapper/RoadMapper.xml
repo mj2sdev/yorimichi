@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.RoadMapper">
+
+  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.RoadDTO">
+    SELECT id, emd_id, code, name
+    FROM road
+    WHERE id = #{id}
+  </select>
+
+  <select id="selectByCode" parameterType="string" resultType="com.jslhrd.yorimichi.domain.RoadDTO">
+    SELECT id, emd_id, code, name
+    FROM road
+    WHERE code = #{code}
+  </select>
+
+  <select id="listByEmdId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.RoadDTO">
+    SELECT id, emd_id, code, name
+    FROM road
+    WHERE emd_id = #{emdId}
+    ORDER BY name ASC
+  </select>
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.RoadDTO">
+    INSERT INTO road (emd_id, code, name)
+    VALUES (#{emdId}, #{code}, #{name})
+  </insert>
+
+  <update id="update" parameterType="com.jslhrd.yorimichi.domain.RoadDTO">
+    UPDATE road
+    SET emd_id = #{emdId},
+        code = #{code},
+        name = #{name}
+    WHERE id = #{id}
+  </update>
+
+  <delete id="deleteById" parameterType="long">
+    DELETE FROM road WHERE id = #{id}
+  </delete>
+
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.RootKeywordMapper">
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.RootKeywordDTO">
+    INSERT INTO root_keyword (root_id, keyword_id, created_at)
+    VALUES (#{rootId}, #{keywordId}, #{createdAt})
+  </insert>
+
+  <delete id="delete" parameterType="com.jslhrd.yorimichi.domain.RootKeywordDTO">
+    DELETE FROM root_keyword
+    WHERE root_id = #{rootId}
+      AND keyword_id = #{keywordId}
+  </delete>
+
+  <select id="count" parameterType="com.jslhrd.yorimichi.domain.RootKeywordDTO" resultType="int">
+    SELECT COUNT(1)
+    FROM root_keyword
+    WHERE root_id = #{rootId}
+      AND keyword_id = #{keywordId}
+  </select>
+
+  <select id="listByRootId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.RootKeywordDTO">
+    SELECT root_id, keyword_id, created_at
+    FROM root_keyword
+    WHERE root_id = #{rootId}
+    ORDER BY created_at DESC
+  </select>
+
+  <select id="listByKeywordId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.RootKeywordDTO">
+    SELECT root_id, keyword_id, created_at
+    FROM root_keyword
+    WHERE keyword_id = #{keywordId}
+    ORDER BY created_at DESC
+  </select>
+
+</mapper>

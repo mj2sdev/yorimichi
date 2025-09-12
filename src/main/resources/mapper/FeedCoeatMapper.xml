@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.FeedCoeatMapper">
+
+  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.FeedCoeatDTO">
+    SELECT id AS feed_coeat_id, feed_id, store_id, capacity, meeting_at, auto_accept, status
+    FROM feed_coeat
+    WHERE id = #{feedCoeatId}
+  </select>
+
+  <select id="listByFeedId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.FeedCoeatDTO">
+    SELECT id AS feed_coeat_id, feed_id, store_id, capacity, meeting_at, auto_accept, status
+    FROM feed_coeat
+    WHERE feed_id = #{feedId}
+    ORDER BY meeting_at DESC
+  </select>
+
+  <select id="listByStoreId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.FeedCoeatDTO">
+    SELECT id AS feed_coeat_id, feed_id, store_id, capacity, meeting_at, auto_accept, status
+    FROM feed_coeat
+    WHERE store_id = #{storeId}
+    ORDER BY meeting_at DESC
+  </select>
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.FeedCoeatDTO">
+    INSERT INTO feed_coeat (feed_id, store_id, capacity, meeting_at, auto_accept, status)
+    VALUES (#{feedId}, #{storeId}, #{capacity}, #{meetingAt}, #{autoAccept}, #{status})
+  </insert>
+
+  <update id="update" parameterType="com.jslhrd.yorimichi.domain.FeedCoeatDTO">
+    UPDATE feed_coeat
+    SET feed_id     = #{feedId},
+        store_id    = #{storeId},
+        capacity    = #{capacity},
+        meeting_at  = #{meetingAt},
+        auto_accept = #{autoAccept},
+        status      = #{status}
+    WHERE id = #{feedCoeatId}
+  </update>
+
+  <delete id="deleteById" parameterType="long">
+    DELETE FROM feed_coeat WHERE id = #{feedCoeatId}
+  </delete>
+
+</mapper>

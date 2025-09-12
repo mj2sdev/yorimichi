@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.StoreCategoryMapper">
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.StoreCategoryDTO">
+    INSERT INTO store_category (store_id, category_id, created_at)
+    VALUES (#{storeId}, #{categoryId}, NOW())
+  </insert>
+
+  <delete id="delete" parameterType="com.jslhrd.yorimichi.domain.StoreCategoryDTO">
+    DELETE FROM store_category
+    WHERE store_id = #{storeId}
+      AND category_id = #{categoryId}
+  </delete>
+
+  <select id="count" parameterType="com.jslhrd.yorimichi.domain.StoreCategoryDTO" resultType="int">
+    SELECT COUNT(1)
+    FROM store_category
+    WHERE store_id = #{storeId}
+      AND category_id = #{categoryId}
+  </select>
+
+  <select id="listByStoreId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.StoreCategoryDTO">
+    SELECT store_id, category_id, created_at
+    FROM store_category
+    WHERE store_id = #{storeId}
+    ORDER BY created_at DESC
+  </select>
+
+  <select id="listByCategoryId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.StoreCategoryDTO">
+    SELECT store_id, category_id, created_at
+    FROM store_category
+    WHERE category_id = #{categoryId}
+    ORDER BY created_at DESC
+  </select>
+
+</mapper>
