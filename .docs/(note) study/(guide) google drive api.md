@@ -1,5 +1,15 @@
 본 파일은 gemini의 도움을 받아 작성된 파일입니다.
 
+## 전체 내용 빠른 요약
+1. google cloud project를 만들고
+2. 프로젝트 내에 로봇을 만들어서 얘가 처리하게 하는데
+3. google drive api를 사용하게 해주면
+4. 사용할 폴더에 링크 공유 권한은 미리 링크 갖고있으면 누구나 볼 수 있게 viewer로 바꿔둬야함.
+5. 폴더 링크를 가져오면 거기 id로 로봇이 파일을 올리고 올린 파일의 fileId를 가져와서 db에 저장시킬 수 있음.
+6. 그리고 파일의 링크를 가져오는데 링크에 파일 id가 있음.
+7. id를 다음과 같은 형태로 가공https://lh3.googleusercontent.com/d/" + fileId;
+8. img태그의 src 속성으로 넣어버림.
+
 ## 선행조건
 1. Java 11버전 이상
 > java -version
