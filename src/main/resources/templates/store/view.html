@@ -117,11 +117,11 @@
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="second-tab" data-bs-toggle="tab" data-bs-target="#second-tab-pane" type="button"
-                                role="tab" aria-controls="second-tab-pane" aria-selected="false">리뷰</button>
+                                role="tab" aria-controls="second-tab-pane" aria-selected="false">리뷰 리스트</button>
                         </li>
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="third-tab" data-bs-toggle="tab" data-bs-target="#third-tab-pane" type="button" 
-                                role="tab" aria-controls="third-tab-pane" aria-selected="false">리뷰 사진?</button>
+                                role="tab" aria-controls="third-tab-pane" aria-selected="false">일단 보류</button>
                         </li>
                     </ul>
                     <div class="tab-content" id="menuTabContent">
@@ -136,7 +136,30 @@
                             </ul>
                         </div>
                         <div class="tab-pane fade" id="second-tab-pane" role="tabpanel" aria-labelledby="second-tab" tabindex="0">
-                            ...
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#writeReview">
+                                리뷰 작성
+                            </button>
+                            
+                            <!-- Modal -->
+                            <div class="modal fade" id="writeReview" tabindex="-1" aria-labelledby="writeReviewLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="writeReviewLabel">리뷰 작성</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            ...
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                                            <button type="submit" class="btn btn-primary">전송</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            블라블라
                         </div>
                         <div class="tab-pane fade" id="third-tab-pane" role="tabpanel" aria-labelledby="third-tab" tabindex="0">
                             ...
