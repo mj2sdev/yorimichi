@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.RegionSigunguMapper">
+
+  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.RegionSigunguDTO">
+    SELECT id, sido_id, code, name
+    FROM region_sigungu
+    WHERE id = #{id}
+  </select>
+
+  <select id="selectByCode" parameterType="string" resultType="com.jslhrd.yorimichi.domain.RegionSigunguDTO">
+    SELECT id, sido_id, code, name
+    FROM region_sigungu
+    WHERE code = #{code}
+  </select>
+
+  <select id="listBySidoId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.RegionSigunguDTO">
+    SELECT id, sido_id, code, name
+    FROM region_sigungu
+    WHERE sido_id = #{sidoId}
+    ORDER BY name ASC
+  </select>
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.RegionSigunguDTO">
+    INSERT INTO region_sigungu (sido_id, code, name)
+    VALUES (#{sidoId}, #{code}, #{name})
+  </insert>
+
+  <update id="update" parameterType="com.jslhrd.yorimichi.domain.RegionSigunguDTO">
+    UPDATE region_sigungu
+    SET sido_id = #{sidoId},
+        code = #{code},
+        name = #{name}
+    WHERE id = #{id}
+  </update>
+
+  <delete id="deleteById" parameterType="long">
+    DELETE FROM region_sigungu WHERE id = #{id}
+  </delete>
+
+</mapper>

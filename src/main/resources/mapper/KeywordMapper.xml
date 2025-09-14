@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.KeywordMapper">
+
+  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.KeywordDTO">
+    SELECT id AS keyword_id, name, created_at
+    FROM keyword
+    WHERE id = #{keywordId}
+  </select>
+
+  <select id="selectByName" parameterType="string" resultType="com.jslhrd.yorimichi.domain.KeywordDTO">
+    SELECT id AS keyword_id, name, created_at
+    FROM keyword
+    WHERE name = #{name}
+  </select>
+
+  <select id="listByNameLike" parameterType="string" resultType="com.jslhrd.yorimichi.domain.KeywordDTO">
+    SELECT id AS keyword_id, name, created_at
+    FROM keyword
+    WHERE name LIKE CONCAT('%', #{keyword}, '%')
+    ORDER BY name ASC
+  </select>
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.KeywordDTO">
+    INSERT INTO keyword (name, created_at)
+    VALUES (#{name}, #{createdAt})
+  </insert>
+
+  <update id="update" parameterType="com.jslhrd.yorimichi.domain.KeywordDTO">
+    UPDATE keyword
+    SET name = #{name},
+        created_at = #{createdAt}
+    WHERE id = #{keywordId}
+  </update>
+
+  <delete id="deleteById" parameterType="long">
+    DELETE FROM keyword WHERE id = #{keywordId}
+  </delete>
+
+</mapper>

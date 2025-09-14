@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.BlockMapper">
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.BlockDTO">
+    INSERT INTO block (blocker_id, blockee_id, created_at)
+    VALUES (#{blockerId}, #{blockeeId}, NOW())
+  </insert>
+
+  <delete id="delete" parameterType="com.jslhrd.yorimichi.domain.BlockDTO">
+    DELETE FROM block
+    WHERE blocker_id = #{blockerId}
+      AND blockee_id = #{blockeeId}
+  </delete>
+
+  <select id="count" parameterType="com.jslhrd.yorimichi.domain.BlockDTO" resultType="int">
+    SELECT COUNT(1)
+    FROM block
+    WHERE blocker_id = #{blockerId}
+      AND blockee_id = #{blockeeId}
+  </select>
+
+  <!-- userId가 차단한 사용자들 -->
+  <select id="listBlockeesOf" parameterType="long"
+          resultType="com.jslhrd.yorimichi.domain.BlockDTO">
+    SELECT blocker_id, blockee_id, created_at
+    FROM block
+    WHERE blocker_id = #{userId}
+    ORDER BY created_at DESC
+  </select>
+
+  <!-- userId를 차단한 사용자들 -->
+  <select id="listBlockersOf" parameterType="long"
+          resultType="com.jslhrd.yorimichi.domain.BlockDTO">
+    SELECT blocker_id, blockee_id, created_at
+    FROM block
+    WHERE blockee_id = #{userId}
+    ORDER BY created_at DESC
+  </select>
+
+</mapper>
