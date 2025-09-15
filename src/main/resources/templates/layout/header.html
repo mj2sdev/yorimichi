@@ -39,15 +39,17 @@
 										</button>
 										<ul class="dropdown-menu">
 											<th:block th:each="i : ${#numbers.sequence(1,5)}">
-												<li><button type="btn" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#notificationList">
-													<div class="row ">
-														<div class="col"><i class="bi bi-heart-fill" style="font-size: 1em; color: red;"></i></div>
-														<div class="col">가게이름</div>
-														<div class="col">작성자</div>
-														<div class="col">리뷰/같이먹기</div>
-														<div class="col">일자</div>
-													</div>
-												</button></li>
+												<li>
+													<button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#reviewmodal">
+														<div class="row ">
+															<div class="col"><i class="bi bi-heart-fill" style="font-size: 1em; color: red;"></i></div>
+															<div class="col">가게이름</div>
+															<div class="col">작성자</div>
+															<div class="col">리뷰/같이먹기</div>
+															<div class="col">일자</div>
+														</div>
+													</button>
+												</li>
 											</th:block>
 										</ul>
 									</li>
@@ -93,6 +95,7 @@
 
 </header>
 	<th:block th:replace="~{fragments/coeat/modal :: modal}"></th:block>
+	<th:block th:replace="~{fragments/review/modal :: modal}"></th:block>
 </th:block>
 </body>
 </html>

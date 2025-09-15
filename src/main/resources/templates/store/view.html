@@ -2,350 +2,227 @@
 <html th:replace="~{layout/layout :: layout(~{::title},~{::section},~{::script})}" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title> Yorimichi Project </title>
+	<title> Yorimichi Project </title>
 </head>
 
 <body>
-    <section>
-        <div class="container my-4">
-            <div class="row justify-content-between">
-                <div class="col-3 border border-2 m-3 p-2" aria-label="sub">
-                    <div class="row" aria-label="map">
-                        <div class="col" style="position: relative;">
-                            <div class="ratio ratio-4x3">
-                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2272.926378741515!2d127.40430498927147!3d36.32677405031281!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x356549343c3c3cf1%3A0x9d6af658336f953a!2z7KCc7J207JeQ7Iqk7JeY7J247J6s6rCc67Cc7JuQKOyjvCk!5e0!3m2!1sko!2skr!4v1757573926145!5m2!1sko!2skr" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                            </div>
-                            <i class="bi bi-heart" style="font-size: 2em; color: #007bff; position: absolute; top: 0px; left: 22px;"></i>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <ul class="list-unstyled">
-                                <li class="text-center">
-                                    AI 리뷰 요약
-                                </li>
-                                <li class="text-start">
-                                    난 별론데? 그럼 먹어!
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-8 border border-2 m-3 p-2" aria-label="main">
-                    <div id="shop-image-carousel" class="carousel slide" style="height: 400px;">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="..." class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="..." class="d-block w-100" alt="...">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="..." class="d-block w-100" alt="...">
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#shop-image-carousel" data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Previous</span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#shop-image-carousel" data-bs-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="visually-hidden">Next</span>
-                        </button>
-                    </div>
-                    
-                    <div class="row" aria-label="shop-image">
-                        <div class="col-4">
-                            <img src="">
-                        </div>
-                        <div class="col-4">
-                            <img src="">
-                        </div>
-                        <div class="col-4">
-                            <img src="">
-                        </div>
-                    </div>
-                    <div class="row justify-content-between" aria-label="storename">
-                        <div class="col">
-                            <div>가게이름 본점</div>
-                        </div>
-                        <div class="col text-end">
-                            <i class="bi bi-heart border border-3 rounded-pill p-2" style="font-size: 1em;">저장</i>
-                            <i class="bi bi-star border border-3 rounded-pill p-2" style="font-size: 1em;">즐겨찾기</i>
-                            <i class="bi bi-share border border-3 rounded-pill p-2" style="font-size: 1em;">공유</i>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <th:block th:each="itme : ${#numbers.sequence(1,5)}">
-                                <i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
-                            </th:block>
-                        </div>
-                        <div class="col">
-                            5 (142명의 평가)
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <i class="bi bi-pin text-ymesecondary" style="font-size: 1em;">대전광역시 중구 용두동 어쩌구6길 14</i>
-                        </div>
-                        <div class="col text-end">
-                            <button class="btn border border-2">지도보기</button>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <i class="bi bi-watch text-ymsecondary" style="font-size: 1em;">영업중 오늘(수) 영업시간: 11:00~22:00</i>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <i class="bi bi-telephone" style="font-size: 1em;">010-1234-5678</i>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <i class="bi bi-tag" style="font-size: 1em;"></i>
-                        </div>
-                        <th:block th:each="item : ${#numbers.sequence(1,6)}">
-                            <div class="col ">
-                                <a href="" th:text="'#'+${item}" class="text-decoration-none text-ymsecondary"></a>
-                            </div>
-                        </th:block>
-                    </div>
-                    <div class="row">
-                        <div class="col">
+	<section>
+		<div class="container my-4">
+			<div class="row justify-content-between">
+				<div class="col-3 border border-2 p-2" aria-label="sub">
+					<div class="row" aria-label="map">
+						<div class="col" style="position: relative;">
+							<div class="ratio ratio-4x3">
+								<iframe
+									src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2272.926378741515!2d127.40430498927147!3d36.32677405031281!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x356549343c3c3cf1%3A0x9d6af658336f953a!2z7KCc7J207JeQ7Iqk7JeY7J247J6s6rCc67Cc7JuQKOyjvCk!5e0!3m2!1sko!2skr!4v1757573926145!5m2!1sko!2skr"
+									style="border:0;" allowfullscreen="" loading="lazy"
+									referrerpolicy="no-referrer-when-downgrade">
+								</iframe>
+							</div>
+						</div>
+					</div>
+					<div class="row py-4">
+						<div class="col">
+							<ul class="list-group list-unstyled">
+								<li class="text-center">
+									메뉴
+								</li>
+								<th:block th:each="item : ${#numbers.sequence(1,5)}">
+									<li class="text-start">
+										짜장면
+										3000￦
+										<th:block th:each="item : ${#numbers.sequence(1,5)}">
+											<i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
+										</th:block>
+									</li>
+								</th:block>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-8 border border-2 p-2" aria-label="main">
+					<div class="row">
+						<div class="col pb-4">
+							<div id="shop-image-carousel" class="carousel slide">
+								<div class="carousel-inner" style="height: 280px;">
+									<div class="carousel-item active">
+										<!--objectfitcover-->
+										<img src="https://picsum.photos/280">
+										<img src="https://picsum.photos/280">
+										<img src="https://picsum.photos/280">
+									</div>
+									<div class="carousel-item">
+										<img src="https://picsum.photos/280">
+										<img src="https://picsum.photos/280">
+										<img src="https://picsum.photos/280">
+									</div>
+									<div class="carousel-item">
+										<img src="https://picsum.photos/280">
+										<img src="https://picsum.photos/280">
+										<img src="https://picsum.photos/280">
+									</div>
+								</div>
+								<button class="carousel-control-prev" type="button"
+									data-bs-target="#shop-image-carousel" data-bs-slide="prev">
+									<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+									<span class="visually-hidden">Previous</span>
+								</button>
+								<button class="carousel-control-next" type="button"
+									data-bs-target="#shop-image-carousel" data-bs-slide="next">
+									<span class="carousel-control-next-icon" aria-hidden="true"></span>
+									<span class="visually-hidden">Next</span>
+								</button>
+							</div>
+						</div>
+					</div>
+					<div class="row justify-content-between" aria-label="storename">
+						<div class="col">
+							<div>가게이름 본점</div>
+						</div>
+						<div class="col text-end">
+							<i class="bi bi-heart border border-3 rounded-pill p-2" style="font-size: 1em;">저장</i>
+							<i class="bi bi-star border border-3 rounded-pill p-2" style="font-size: 1em;">즐겨찾기</i>
+							<i class="bi bi-share border border-3 rounded-pill p-2" style="font-size: 1em;">공유</i>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-3">
+							<th:block th:each="item : ${#numbers.sequence(1,5)}">
+								<i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
+							</th:block>
+						</div>
+						<div class="col">
+							5점 (142명의 평가)
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<i class="bi bi-pin text-ymesecondary" style="font-size: 1em;">대전광역시 중구 용두동 어쩌구6길 14</i>
+						</div>
+						<div class="col text-end">
+							<button class="btn border border-2 btn-ymprimary">
+								같이먹기
+							</button>
+							<button class="btn border border-2 btn-ymprimary">
+								리뷰작성
+							</button>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-3">
+							<i class="bi bi-telephone" style="font-size: 1em;">010-1234-5678</i>
+						</div>
+						<div class="col">
+							<button type="button" class="btn" data-bs-toggle="collapse"
+								data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+								<i class="bi bi-watch text-ymsecondary" style="font-size: 1em;">
+									영업중 오늘(수) 영업시간: 11:00~22:00
+								</i>
+							</button>
+							<!-- 영업일, 영업시간 드롭다운 넣기-->
+							<div class="collapse" id="collapseExample">
+								<div class="card card-body" style="width:100%">
+									<p>월요일 영업시간: 11:00~22:00'</p>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<i class="bi bi-tag" style="font-size: 1em;"></i>
+						</div>
+						<th:block th:each="item : ${#numbers.sequence(1,6)}">
+							<div class="col ">
+								<a href="" th:text="'#'+${item}" class="text-decoration-none text-ymsecondary"></a>
+							</div>
+						</th:block>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row justify-content-between">
+				<div class="col-3 border border-2 p-2" aria-label="coeatList">
+					<div class="row py-3">
+						<div class="col text-center">
+							같이먹기
+						</div>
+						<div class="col">
+							<input type="checkbox"> 팔로우만
+						</div>
+					</div>
+					<th:block th:each="i : ${#numbers.sequence(1,5)}">
+						<ul class="list-unstyled">
+							<li class="border border-2 p-2">
+								<button type="button" class="btn dropdown-item" data-bs-toggle="modal"
+									data-bs-target="#coeatmodal">
+									<div class="row ">
+										<!--전체 구인인지, 내 팔로우 구인인지.-->
+										<div class="col-1"><i class="bi bi-globe" style="font-size: 1em;"></i></div>
+										<div class="col">작성자</div>
+										<div class="col">일자</div>
+									</div>
+								</button>
+							</li>
+						</ul>
+					</th:block>
+				</div>
+				<div class="col-8 border border-2" aria-label="reviews">
+					<div class="row my-3">
+						<div class="col">
+							<i class="bi bi-compass text-ymprimary" style="font-size: 1em;">ai요약: </i>
+							이 집은 물을 잘해요!
+						</div>
+					</div>
+					<th:block th:each="reviewItem : ${#numbers.sequence(1,5)}">
+						<div class="row mb-3">
+							<div class="col-3 border">
+								<span>이미지</span>
+							</div>
+							<div class="col-9 border">
+								<div class="p-2" data-bs-toggle="collapse"
+									th:attr="data-bs-target='#menu' + ${reviewItem}">
+									<div class="row justify-content-between align-items-center">
+										<div class="col-auto">
+											<button class="btn fw-bold stoppable-event">작성자</button>
+										</div>
+										<div class="col">
+											<span th:each="star : ${#numbers.sequence(1,5)}">
+												<i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
+											</span>
+										</div>
+										<div class="col-auto">
+											2025.09.15
+										</div>
+										<div class="col-auto">
+											<button type="button" class="btn btn-sm p-0 stoppable-event"
+												data-bs-toggle="modal" data-bs-target="#reportModal">
+												<i class="bi bi-flag-fill" style="font-size: 1em; color: red;"></i>
+											</button>
+										</div>
+									</div>
+									<div class="row mt-2">
+										<div class="col">
+											리뷰 본문 내용...
+										</div>
+									</div>
+								</div>
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col border border-2 m-3 p-2" aria-label="menu">
-                    <ul class="nav nav-tabs" id="menuTap" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="first-tab" data-bs-toggle="tab" data-bs-target="#first-tab-pane" type="button"
-                                role="tab" aria-controls="first-tab-pane" aria-selected="true">메뉴</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="second-tab" data-bs-toggle="tab" data-bs-target="#second-tab-pane" type="button"
-                                role="tab" aria-controls="second-tab-pane" aria-selected="false">리뷰 리스트</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="third-tab" data-bs-toggle="tab" data-bs-target="#third-tab-pane" type="button" 
-                                role="tab" aria-controls="third-tab-pane" aria-selected="false">일단 보류</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="menuTabContent">
-                        <div class="tab-pane fade show active" id="first-tab-pane" role="tabpanel" aria-labelledby="first-tab" tabindex="0">
-                            <ul>
-                                <li style="list-style: none;">
-                                    정말 맛있는 메뉴 ··· 70,000₩
-                                </li>
-                                <li style="list-style: none;">
-                                    그저 그런 메뉴 ··· 300₩
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="tab-pane fade" id="second-tab-pane" role="tabpanel" aria-labelledby="second-tab" tabindex="0">
-                            <div class="row" style="display: flex;">
-                                <div class="col-1 text-center">
-                                <!-- Button trigger modal -->
-                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#writeReview">
-                                    리뷰 작성
-                                </button>
-                            
-                                <!-- Modal -->
-                                <div class="modal fade" id="writeReview" tabindex="-1" aria-labelledby="writeReviewLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-xl">
-                                        <div class="modal-content">
-                                            <form>
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="writeReviewLabel">리뷰 작성</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="row">
-                                                        <div class="col-6">
-                                                            <input type="file">
-                                                        </div>
-                                                        <div class="col-6">
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    닉네임칸
-                                                                </div>
-                                                                <div class="col">
-                                                                    날짜칸
-                                                                </div>
-                                                                <div class="col">
-                                                                    여긴빈칸
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    무슨무슨음식
-                                                                </div>
-                                                                <div class="col">
-                                                                    400,000₩
-                                                                </div>
-                                                                <div class="col">
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    무슨무슨음식
-                                                                </div>
-                                                                <div class="col">
-                                                                    400,000₩
-                                                                </div>
-                                                                <div class="col">
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star" style="font-size: 1em; color: gold"></i>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    무슨무슨음식
-                                                                </div>
-                                                                <div class="col">
-                                                                    400,000₩
-                                                                </div>
-                                                                <div class="col">
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star" style="font-size: 1em; color: gold"></i>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    무슨무슨음식
-                                                                </div>
-                                                                <div class="col">
-                                                                    400,000₩
-                                                                </div>
-                                                                <div class="col">
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star" style="font-size: 1em; color: gold"></i>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col">
-                                                                    무슨무슨음식
-                                                                </div>
-                                                                <div class="col">
-                                                                    400,000₩
-                                                                </div>
-                                                                <div class="col">
-                                                                    <i class="bi bi-star-fill" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star" style="font-size: 1em; color: gold"></i>
-                                                                    <i class="bi bi-star" style="font-size: 1em; color: gold"></i>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row border-top border-3 mt-3">
-                                                        <textarea placeholder="리뷰를 입력해주세요." style="height: 200px; resize: none;"></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                                                    <button type="submit" class="btn btn-primary">전송</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-1 text-center">
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        여따뭐넣지
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                        <li><a class="dropdown-item" href="#">Action</a></li>
-                                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    일단은 이게 리뷰임
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    일단은 이게 리뷰임
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    일단은 이게 리뷰임
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    일단은 이게 리뷰임
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    일단은 이게 리뷰임
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    일단은 이게 리뷰임
-                                </div>
-                            </div>
-                            <nav aria-label="Page navigation example">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span>
-                                        </a>
-                                    </li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">6</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">7</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">8</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">9</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
-                            </div>
-                        <div class="tab-pane fade" id="third-tab-pane" role="tabpanel" aria-labelledby="third-tab" tabindex="0">
-                            ...
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+								<div class="collapse" th:id="'menu' + ${reviewItem}">
+									<div class="card card-body">
+										메뉴 내용...
+									</div>
+								</div>
+							</div>
+						</div>
+					</th:block>
+				</div>
+			</div>
+		</div>
+	</section>
+	<th:block th:replace="~{fragments/coeat/modal :: modal}"></th:block>
+	<th:block th:replace="~{fragments/review/modal :: modal}"></th:block>
+
 </body>
 
 </html>
