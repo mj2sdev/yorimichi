@@ -12,11 +12,12 @@
 ## 색상
 | 색상명 | 코드 | 클래스 명 |
 | :---- | :--- | :------- |
-| 주 색상 | #F28500 | primary |
-| 보조 색상 | #0D0550 | secondary |
-| 배경색 | #FEFCFF | white |
-| 주 색상(밝은) | #FFB347 | primary-bright |
-| 보조 색상(밝은) | #2C1810 | secondary-bright |
+| YM Primary          | #F28500  | .text-ymprimary / .bg-ymprimary |
+| YM Secondary        | #0D0500  | .text-ymsecondary / .bg-ymsecondary |
+| YM White            | #FEFCFF  | .text-ymwhite / .bg-ymwhite |
+| YM WhiteSmoke       | whitesmoke | .text-ymwhitesmoke / .bg-ymwhitesmoke |
+| YM Primary Bright   | #FFB347  | .text-ymprimary-bright / .bg-ymprimary-bright |
+| YM Secondary Bright | #2C1810  | .text-ymsecondary-bright / .bg-ymsecondary-bright |
 
 ## 용어
 powered by 양유찬

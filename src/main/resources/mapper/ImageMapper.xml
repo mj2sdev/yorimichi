@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.ImageMapper">
+
+  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.ImageDTO">
+    SELECT id AS image_id, url, created_at
+    FROM image
+    WHERE id = #{imageId}
+  </select>
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.ImageDTO">
+    INSERT INTO image (url, created_at)
+    VALUES (#{url}, #{createdAt})
+  </insert>
+
+  <update id="update" parameterType="com.jslhrd.yorimichi.domain.ImageDTO">
+    UPDATE image
+    SET url = #{url},
+        created_at = #{createdAt}
+    WHERE id = #{imageId}
+  </update>
+
+  <delete id="deleteById" parameterType="long">
+    DELETE FROM image WHERE id = #{imageId}
+  </delete>
+
+</mapper>

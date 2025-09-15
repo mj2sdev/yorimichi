@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.BookmarkMapper">
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.BookmarkDTO">
+    INSERT INTO bookmark (user_id, store_id, created_at)
+    VALUES (#{userId}, #{storeId}, NOW())
+  </insert>
+
+  <delete id="delete" parameterType="com.jslhrd.yorimichi.domain.BookmarkDTO">
+    DELETE FROM bookmark
+    WHERE user_id = #{userId}
+      AND store_id = #{storeId}
+  </delete>
+
+  <select id="count" parameterType="com.jslhrd.yorimichi.domain.BookmarkDTO" resultType="int">
+    SELECT COUNT(1)
+    FROM bookmark
+    WHERE user_id = #{userId}
+      AND store_id = #{storeId}
+  </select>
+
+  <select id="listByUserId" parameterType="long"
+          resultType="com.jslhrd.yorimichi.domain.BookmarkDTO">
+    SELECT user_id, store_id, created_at
+    FROM bookmark
+    WHERE user_id = #{userId}
+    ORDER BY created_at DESC
+  </select>
+
+</mapper>

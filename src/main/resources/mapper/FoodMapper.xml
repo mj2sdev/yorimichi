@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.FoodMapper">
+
+  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.FoodDTO">
+    SELECT id, store_id, name, price, description
+    FROM food
+    WHERE id = #{foodId}
+  </select>
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.FoodDTO">
+    INSERT INTO food (store_id, name, price, description)
+    VALUES (#{storeId}, #{name}, #{price}, #{description})
+  </insert>
+
+  <update id="update" parameterType="com.jslhrd.yorimichi.domain.FoodDTO">
+    UPDATE food
+    SET store_id = #{storeId},
+        name = #{name},
+        price = #{price},
+        description = #{description}
+    WHERE id = #{foodId}
+  </update>
+
+  <delete id="deleteById" parameterType="long">
+    DELETE FROM food WHERE id = #{foodId}
+  </delete>
+
+  <select id="listByStoreId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.FoodDTO">
+    SELECT id, store_id, name, price, description
+    FROM food
+    WHERE store_id = #{storeId}
+    ORDER BY id DESC
+  </select>
+
+</mapper>
