@@ -3,7 +3,7 @@
 <body>
 <th:block th:fragment="header">
 <header class="border-bottom border-4 sticky-top bg-ymwhite" style="width:100%;">
-    <div class="container py-4" >
+    <div class="container py-3" >
         <div class="row  justify-content-between align-items-center">
             <div class="col-2">
                 <a th:href="@{/}" th:text="Yorimichi" class="me-4 text-decoration-none fs-2 fw-bold text-ymprimary">yorimichi</a>
@@ -16,35 +16,67 @@
                     </div>
                 </form>
             </div>
-            <div class="col-2">
+            <div class="col-3">
                 <div class="row justify-content-end text-center">
-                    <div class="dropdown-center col-4">
-                        <button type="button dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false"
-                        class="position-relative text-decoration-none fs-4 text-ymsecondary border-0 border-end border-2 bg-ymwhite"><i class="bi bi-lightbulb" style="font-size: 1em;"></i>
-                            <span th:text="${99}+'+'" class="btn position-absolute top-0 start-85 translate-middle badge rounded-pill bg-danger" style="font-size:13px;"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <th:block th:each="i : ${#numbers.sequence(1,5)}">
-                                <li><button type="btn" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#notificationList">
-                                    <div class="row ">
-                                        <div class="col"><i class="bi bi-heart-fill" style="font-size: 1em; color: red;"></i></div>
-                                        <div class="col">가게이름</div>
-                                        <div class="col">작성자</div>
-                                        <div class="col">리뷰/같이먹기</div>
-                                        <div class="col">일자</div>
-                                    </div>
-                                </button></li>
-                            </th:block>
-                        </ul>
+                    <div class="col">
+                        <div class="row align-items-center">
+                            <div class="dropdown-center col-4">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <button type="button dropdown-toggle" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false"
+                                        class="position-relative text-decoration-none fs-4 text-ymsecondary border-0 bg-ymwhite">
+                                            <span th:text="${99}+'+'" class="btn position-absolute top-0 start-85 translate-middle badge rounded-pill bg-danger" style="font-size:13px;"></span>
+                                            <i class="bi bi-lightbulb" style="font-size: 1em;"></i>
+                                            <span class="text-center" style="font-size: 15px;">알림</span>    
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                                                <li><button type="btn" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#notificationList">
+                                                    <div class="row ">
+                                                        <div class="col"><i class="bi bi-heart-fill" style="font-size: 1em; color: red;"></i></div>
+                                                        <div class="col">가게이름</div>
+                                                        <div class="col">작성자</div>
+                                                        <div class="col">리뷰/같이먹기</div>
+                                                        <div class="col">일자</div>
+                                                    </div>
+                                                </button></li>
+                                            </th:block>
+                                        </ul>
+                                    </li>
+                                <ul>
+                            </div>
+                            <div class="col-4">
+                                <a th:href="@{/station/list}" class="text-decoration-none fs-4 text-ymsecondary">
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <i class="bi bi-bus-front" style="font-size: 1em;"></i>
+                                        </li>
+                                        <li>
+                                            <span class="text-center" style="font-size: 15px;">정류장</span>
+                                        </li>
+                                    </ul>
+                                </a>
+                            </div>
+                            <div class="col-4">
+                                <a th:href="@{/user/login}" class="text-decoration-none fs-4 text-ymsecondary">
+                                    <ul class="list-unstyled">
+                                        <li>
+                                            <i class="bi bi-door-open" style="font-size: 1em;"></i>
+                                        </li>
+                                        <li>
+                                            <span class="text-center" style="font-size: 15px;">로그인</span>
+                                        </li>
+                                    </ul>
+                                </a>
+                            </div>
+                            <!--<a th:href="@{/user/signup}" class="col-4 text-decoration-none fs-4 text-ymsecondary">회원가입</a> -->
+                            <!-- 좋아요를 위한 버튼 <button type="button" class="col-4 text-ymsecondary bg-ymwhite border-0"><i class="bi bi-heart" style="font-size: 1em;"></i></span> -->
+                            <!-- <th:block th:if=""> th:if문을 통해 교체용      현재 구조상 회원정보에 좋아요/마이페이지/로그아웃이 존재하기 때문에 회원가입 버튼을 없애면 좋을 거 같음.
+                                <a th:href="@{/member/logout}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-door-open" style="font-size: 1em;"></i></a>
+                                <a th:href="@{/member/info}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-person" style="font-size: 1em;"></i></a>
+                            </th:block> -->
+                        </div>
                     </div>
-                    <a th:href="@{/station/list}" class="col-4 text-decoration-none fs-4 text-ymsecondary border-end border-2"><i class="bi bi-bus-front" style="font-size: 1em;"></i></a>
-                    <a th:href="@{/user/login}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-door-open" style="font-size: 1em;">  </i></a>
-                    <!--<a th:href="@{/user/signup}" class="col-4 text-decoration-none fs-4 text-ymsecondary">회원가입</a> -->
-                     <!-- 좋아요를 위한 버튼 <button type="button" class="col-4 text-ymsecondary bg-ymwhite border-0"><i class="bi bi-heart" style="font-size: 1em;"></i></span> -->
-                    <!-- <th:block th:if=""> th:if문을 통해 교체용      현재 구조상 회원정보에 좋아요/마이페이지/로그아웃이 존재하기 때문에 회원가입 버튼을 없애면 좋을 거 같음.
-                        <a th:href="@{/member/logout}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-door-open" style="font-size: 1em;"></i></a>
-                        <a th:href="@{/member/info}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-person" style="font-size: 1em;"></i></a>
-                    </th:block> -->
                 </div>
             </div>
         </div>
