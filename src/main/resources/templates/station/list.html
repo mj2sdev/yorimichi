@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/layout :: layout(~{::title},~{::section},~{::script})}" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title> Yorimichi Project </title>
+</head>
+
+<body>
+    <section>
+        <div class="container my-4 border border-bottom-3">
+            <div class="row mt-4">
+                <div class="col">팔로워</div>
+            </div>
+            <div class="row">
+                <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                <div class="col-1"><!--얘를 반복시켜서 팔로우중인 대상을 보이게 할 것. -->
+                    <a href=""><img src=""></a><!-- 이미지로 프사 / href= 유저페이지 링크-->
+                    <i class="bi bi-person" style="font-size: 2em; color: #007bff;"></i>
+                    <div>닉네임</div>
+                </div>
+                </th:block>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row justify-content-end">
+                <div class="col-1">
+                    <input type="checkbox">팔로워만
+                </div>
+                <div class="col-1">
+                    <select name="filter">
+                        <option value="" selected>전부</option>
+                        <option value="review">리뷰</option>
+                        <option value="together">같이먹기</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <th:block th:each="i : ${#numbers.sequence(1,5)}">
+                <div class="row border border-3">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn">사용자명</button>
+                        </div>
+                        <div class="col">
+                            <span>같이먹기</span>
+                        </div>
+                        <div class="col">
+                            <span>9월 15일</span>
+                        </div>
+                        
+                    </div>
+                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
+                        <span>가게명</span>
+                        <span>메뉴: 가격 별점</span>
+                        <span>임시내용 ...</span>
+                    </button>
+                </div>
+            </th:block>
+        </div>
+    </section>
+</body>
+
+</html>

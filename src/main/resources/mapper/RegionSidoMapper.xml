@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.RegionSidoMapper">
+
+  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.RegionSidoDTO">
+    SELECT id, code, name
+    FROM region_sido
+    WHERE id = #{id}
+  </select>
+
+  <select id="selectByCode" parameterType="string" resultType="com.jslhrd.yorimichi.domain.RegionSidoDTO">
+    SELECT id, code, name
+    FROM region_sido
+    WHERE code = #{code}
+  </select>
+
+  <select id="listAll" resultType="com.jslhrd.yorimichi.domain.RegionSidoDTO">
+    SELECT id, code, name
+    FROM region_sido
+    ORDER BY id ASC
+  </select>
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.RegionSidoDTO">
+    INSERT INTO region_sido (code, name)
+    VALUES (#{code}, #{name})
+  </insert>
+
+  <update id="update" parameterType="com.jslhrd.yorimichi.domain.RegionSidoDTO">
+    UPDATE region_sido
+    SET code = #{code},
+        name = #{name}
+    WHERE id = #{id}
+  </update>
+
+  <delete id="deleteById" parameterType="long">
+    DELETE FROM region_sido WHERE id = #{id}
+  </delete>
+
+</mapper>

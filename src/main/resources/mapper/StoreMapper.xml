@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.StoreMapper">
+
+  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.StoreDTO">
+    SELECT id, address_id, name, description, phone
+    FROM store
+    WHERE id = #{storeId}
+  </select>
+
+  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.StoreDTO">
+    INSERT INTO store (address_id, name, description, phone)
+    VALUES (#{addressId}, #{name}, #{description}, #{phone})
+  </insert>
+
+  <update id="update" parameterType="com.jslhrd.yorimichi.domain.StoreDTO">
+    UPDATE store
+    SET address_id = #{addressId},
+        name = #{name},
+        description = #{description},
+        phone = #{phone}
+    WHERE id = #{storeId}
+  </update>
+
+  <delete id="deleteById" parameterType="long">
+    DELETE FROM store WHERE id = #{storeId}
+  </delete>
+
+  <select id="listByAddressId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.StoreDTO">
+    SELECT id, address_id, name, description, phone
+    FROM store
+    WHERE address_id = #{addressId}
+    ORDER BY id DESC
+  </select>
+
+  <select id="listByNameLike" parameterType="string" resultType="com.jslhrd.yorimichi.domain.StoreDTO">
+    SELECT id, address_id, name, description, phone
+    FROM store
+    WHERE name LIKE CONCAT('%', #{keyword}, '%')
+    ORDER BY name ASC
+  </select>
+
+</mapper>

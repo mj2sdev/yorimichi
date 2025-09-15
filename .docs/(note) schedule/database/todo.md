@@ -144,7 +144,7 @@
   - followee_id
   - notified
   - created_at
-
+  - 
 - [X] user_like
   - id
   - user_id
@@ -189,6 +189,7 @@
   - rating
   - content
 
+=======
 - [X] category
   - id
   - parent_id
