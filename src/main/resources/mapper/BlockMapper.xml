@@ -1,42 +1,33 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.jslhrd.yorimichi.mapper.BlockMapper">
 
-  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.BlockDTO">
-    INSERT INTO block (blocker_id, blockee_id, created_at)
-    VALUES (#{blockerId}, #{blockeeId}, NOW())
-  </insert>
+    <insert id="insert" parameterType="BlockDTO">
+        INSERT INTO block (blocker_id, blocked_id)
+        VALUES (#{blockerId}, #{blockedId})
+    </insert>
 
-  <delete id="delete" parameterType="com.jslhrd.yorimichi.domain.BlockDTO">
-    DELETE FROM block
-    WHERE blocker_id = #{blockerId}
-      AND blockee_id = #{blockeeId}
-  </delete>
+    <select id="selectBlockedUsersByBlockerId" parameterType="long" resultType="BlockDTO">
+        SELECT * FROM block WHERE blocker_id = #{blockerId}
+    </select>
 
-  <select id="count" parameterType="com.jslhrd.yorimichi.domain.BlockDTO" resultType="int">
-    SELECT COUNT(1)
-    FROM block
-    WHERE blocker_id = #{blockerId}
-      AND blockee_id = #{blockeeId}
-  </select>
+    <select id="existsByPair" resultType="int">
+        SELECT COUNT(*) FROM block
+        WHERE blocker_id = #{blockerId} AND blocked_id = #{blockedId}
+    </select>
 
-  <!-- userId가 차단한 사용자들 -->
-  <select id="listBlockeesOf" parameterType="long"
-          resultType="com.jslhrd.yorimichi.domain.BlockDTO">
-    SELECT blocker_id, blockee_id, created_at
-    FROM block
-    WHERE blocker_id = #{userId}
-    ORDER BY created_at DESC
-  </select>
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM block WHERE id = #{id}
+    </delete>
 
-  <!-- userId를 차단한 사용자들 -->
-  <select id="listBlockersOf" parameterType="long"
-          resultType="com.jslhrd.yorimichi.domain.BlockDTO">
-    SELECT blocker_id, blockee_id, created_at
-    FROM block
-    WHERE blockee_id = #{userId}
-    ORDER BY created_at DESC
-  </select>
+    <delete id="deleteByPair">
+        DELETE FROM block WHERE blocker_id = #{blockerId} AND blocked_id = #{blockedId}
+    </delete>
+
+    <delete id="deleteByUserId" parameterType="long">
+        DELETE FROM block WHERE blocker_id = #{userId} OR blocked_id = #{userId}
+    </delete>
 
 </mapper>

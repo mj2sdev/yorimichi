@@ -1,52 +1,38 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.jslhrd.yorimichi.mapper.AddressMapper">
 
-  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.AddressDTO">
-    SELECT
-      id AS address_id, road_id, detail,
-      road_address_text, jibun_address_text,
-      latitude, longitude, created_at, updated_at
-    FROM address
-    WHERE id = #{addressId}
-  </select>
+    <insert id="insert" parameterType="AddressDTO">
+        INSERT INTO address (user_id, road, detail, zipcode, is_default)
+        VALUES (#{userId}, #{road}, #{detail}, #{zipcode}, #{isDefault})
+    </insert>
 
-  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.AddressDTO">
-    INSERT INTO address (
-      road_id, detail, road_address_text, jibun_address_text,
-      latitude, longitude, created_at, updated_at
-    ) VALUES (
-      #{roadId}, #{detail}, #{roadAddressText}, #{jibunAddressText},
-      #{latitude}, #{longitude}, #{createdAt}, #{updatedAt}
-    )
-  </insert>
+    <select id="selectById" parameterType="long" resultType="AddressDTO">
+        SELECT * FROM address WHERE id = #{id}
+    </select>
 
-  <update id="update" parameterType="com.jslhrd.yorimichi.domain.AddressDTO">
-    UPDATE address
-    SET road_id = #{roadId},
-        detail = #{detail},
-        road_address_text = #{roadAddressText},
-        jibun_address_text = #{jibunAddressText},
-        latitude = #{latitude},
-        longitude = #{longitude},
-        created_at = #{createdAt},
-        updated_at = #{updatedAt}
-    WHERE id = #{addressId}
-  </update>
+    <select id="selectByUserId" parameterType="long" resultType="AddressDTO">
+        SELECT * FROM address WHERE user_id = #{userId}
+    </select>
 
-  <delete id="deleteById" parameterType="long">
-    DELETE FROM address WHERE id = #{addressId}
-  </delete>
+    <select id="selectDefaultByUserId" parameterType="long" resultType="AddressDTO">
+        SELECT * FROM address WHERE user_id = #{userId} AND is_default = 1
+    </select>
 
-  <select id="listByRoadId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.AddressDTO">
-    SELECT
-      id AS address_id, road_id, detail,
-      road_address_text, jibun_address_text,
-      latitude, longitude, created_at, updated_at
-    FROM address
-    WHERE road_id = #{roadId}
-    ORDER BY id DESC
-  </select>
+    <update id="update" parameterType="AddressDTO">
+        UPDATE address
+        SET road = #{road}, detail = #{detail}, zipcode = #{zipcode}, is_default = #{isDefault}, updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM address WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByUserId" parameterType="long">
+        DELETE FROM address WHERE user_id = #{userId}
+    </delete>
 
 </mapper>
