@@ -37,27 +37,24 @@
         </div>
         <div class="container">
             <th:block th:each="i : ${#numbers.sequence(1,5)}">
-                <div class="row">
-                <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
+                <div class="row border border-3">
                     <div class="row">
                         <div class="col">
-                            분류
+                            <button type="button" class="btn">사용자명</button>
                         </div>
                         <div class="col">
-                            <img src="">
-                            가게 대표 이미지
+                            <span>같이먹기</span>
                         </div>
                         <div class="col">
-                            가게명
+                            <span>9월 15일</span>
                         </div>
-                        <div class="col">
-                            작성자
-                        </div>
-                        <div class="col">
-                            날짜
-                        </div>
+                        
                     </div>
-                </button>
+                    <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
+                        <span>가게명</span>
+                        <span>메뉴: 가격 별점</span>
+                        <span>임시내용 ...</span>
+                    </button>
                 </div>
             </th:block>
         </div>
