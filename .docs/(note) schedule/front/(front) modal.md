@@ -8,10 +8,10 @@ data-bs-dismiss="modal" 얘로 뭘 끌 건지 설정
 
 ## 어떻게 설계할 것인가.
 
-tamplates/fragments/reviewmodal.html을 정의함.
+templates/fragments/review/modal.html을 정의함.
 이 페이지에 실제로 어떠한 값이 들어가는 게 아니라
 다른 곳에서 리뷰모달을 불러올 때 사용할 수 있도록 하는 틀을 설정.
 
-tamplates/script/reviewmodal.js를 정의함
+templates/script/review/modal.js를 정의함
 이것은 리뷰 모달 버튼을 누르면 비동기식으로 내용을 가져와서
 replace로 대체된 리뷰 모달 자리에 값을 집어넣는 작업을 함.
