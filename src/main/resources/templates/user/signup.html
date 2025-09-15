@@ -88,39 +88,98 @@
                                 </select>
                             </div>
                             <div class="col-6">
-                                <!--생년월일 select 아래는 예시입니다.만들기-->
-
-                                <!--
                                 <select name="gender">
                                     <option value="MAN">남성</option>
                                     <option value="WOMAN">여성</option>
                                     <option value="THEY">기타</option>
-                                </select> -->
+                                </select>
                             </div>
                         </div>
                     </span>
                     <span> <!--약관-->
                         <div class="row justify-content-center">
                             <div class="col-11  border border-3">
-                                <div class="row">
+                                <div class="row my-3">
                                     <div class="col">
                                         <input type="checkbox" value="">전체 약관에 동의합니다
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
+                                <div class="row my-3">
+                                    <div class="col-7">
                                         <input type="checkbox" value="">[필수] 서비스 이용약관에 동의합니다
                                     </div>
-                                    <!-- 보기 버튼을 만들어 주시길 바랍니다. -->
-                                </div>
-                                <div class="row">
                                     <div class="col">
-                                        <input type="checkbox" value="">[필수] 개인정보 처리방침에 동의합니다.
+                                        <button type="button" class="btn btn-ymprimary fs-6" data-bs-toggle="modal" data-bs-target="#secondThing">
+                                            보기
+                                        </button>
+                                        <div class="modal fade" id="secondThing" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">서비스 이용약관</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    냉무
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row my-3">
+                                    <div class="col-7">
+                                        <input type="checkbox" value="">[필수] 개인정보 처리방침에 동의합니다.
+                                    </div>
                                     <div class="col">
-                                        <input type="checkbox" value="">[선택] 위치정보 이용에 동의합니다.
+                                        <button type="button" class="btn btn-ymprimary fs-6" data-bs-toggle="modal" data-bs-target="#secondThing">
+                                            보기
+                                        </button>
+                                        <div class="modal fade" id="secondThing" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">개인정보 처리방침</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    냉무
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row my-3">
+                                    <div class="col-7">
+                                        <input type="checkbox" value="">[필수] 위치정보 이용에 동의합니다.
+                                    </div>
+                                    <div class="col">
+                                        <button type="button" class="btn btn-ymprimary fs-6" data-bs-toggle="modal" data-bs-target="#secondThing">
+                                            보기
+                                        </button>
+                                        <div class="modal fade" id="secondThing" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">위치정보 이용</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    냉무
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -129,7 +188,7 @@
                     <span> <!--회원가입-->
                         <div class="row">
                             <div class="col">
-                                <button type="button" class="btn btn-secondary" style="width:100%;">회원가입</button>
+                                <button type="button" class="btn text-ymwhite bg-ymsecondary" style="width:100%;">회원가입</button>
                             </div>
                         </div>
                     </span>
