@@ -100,7 +100,7 @@
 							<i class="bi bi-pin text-ymesecondary" style="font-size: 1em;">대전광역시 중구 용두동 어쩌구6길 14</i>
 						</div>
 						<div class="col text-end">
-							<button class="btn border border-2 btn-ymprimary">
+							<button class="btn border border-2 btn-ymprimary" data-bs-toggle="modal" data-bs-target="#reviewwriting">
 								리뷰작성
 							</button>
 						</div>
@@ -201,6 +201,10 @@
 											data-bs-toggle="modal" data-bs-target="#reportModal">
 											<i class="bi bi-flag-fill" style="font-size: 1em; color: red;"></i>
 										</button>
+										<button th:if="${#false}" type="button" class="btn btn-sm p-0"
+											data-bs-toggle="modal" data-bs-target="#reviewwriting">
+											<i class="bi bi-pencil-fill text-ymprimary" style="font-size: 1em;"></i>
+										</button>	
 									</div>
 								</div>
 								<div class="p-2" data-bs-toggle="collapse"
@@ -222,9 +226,6 @@
 				</div>
 			</div>
 		</div>
-	<th:block th:replace="~{fragments/coeat/modal :: modal}"></th:block>
-	<th:block th:replace="~{fragments/coeat/modal :: write}"></th:block>
-	<th:block th:replace="~{fragments/review/modal :: modal}"></th:block>
 	</section>
 </body>
 

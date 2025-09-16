@@ -12,6 +12,13 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<h1 class="modal-title fs-5" id="coeatmodalLabel">가게이름 같이 먹기 일정: 25.09.11</h1>
+						<button class="btn">
+							<i class="bi bi-flag-fill" style="font-size: 1em; color: red;"></i>
+						</button>
+						<button th:if="${#false}" type="button" class="btn btn-sm p-0" data-bs-toggle="modal"
+							data-bs-target="#reviewwriting">
+							<i class="bi bi-pencil-fill text-ymprimary" style="font-size: 1em;"></i>
+						</button>
 						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 					</div>
 					<div class="modal-body">
@@ -118,10 +125,6 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<div class="text-start">
-							<button class="btn border border-2"><i class="bi bi-flag-fill"
-									style="font-size: 1em; color: red;">신고하기</i></button>
-						</div>
 						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
 						<button type="button" class="btn btn-primary">참가신청</button>
 					</div>

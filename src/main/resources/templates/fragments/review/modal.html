@@ -12,6 +12,13 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">가게이름</h1>
+                        <button type="button" class="btn">
+                            <i class="bi bi-flag-fill" style="font-size: 1em; color: red;"></i>
+                        </button>
+                        <button th:if="${#false}" type="button" class="btn btn-sm p-0" data-bs-toggle="modal"
+                            data-bs-target="#reviewwriting">
+                            <i class="bi bi-pencil-fill text-ymprimary" style="font-size: 1em;"></i>
+                        </button>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -60,10 +67,6 @@
                                         <div class="col">
                                             25.09.11
                                         </div>
-                                        <div class="col text-end">
-                                            <button class="btn"><i class="bi bi-flag-fill"
-                                                    style="font-size: 1em; color: red;"></i></button>
-                                        </div>
                                     </div>
                                     <th:block th:each="item : ${#numbers.sequence(1,5)}">
                                         <div class="row"> <!-- 리뷰 쓴 사람이 뭐 먹었는지-->
@@ -98,32 +101,51 @@
     </th:block>
 
     <th:block th:fragment="write">
-        <div class="modal fade" id="reviewwriting" tabindex="-1" aria-labelledby="reviewwritingLabel" aria-hidden="true">
-			<div class="modal-dialog modal-dialog-centered">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="reviewwritingLabel">리뷰 작성</h1>
-						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<div class="input-group">
-							<span class="input-group-text">내용</span>
-							<input type="text" class="form-control" placeholder="참가자에게 하고 싶은 말을 입력해주세요"
-								aria-label="content" aria-describedby="addon-wrapping">
-						</div>
+        <div class="modal fade" id="reviewwriting" tabindex="-1" aria-labelledby="reviewwritingLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="reviewwritingLabel">리뷰 작성</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group">
+                            <th:block th:each="menu : ${#numbers.sequence(1,1)}">
+                                <select name="reviewmenu" class="form-select">
+                                    <option value="짜장면">짜장면</option>
+                                    <option value="짬뽕">짬뽕</option>
+                                </select>
+                            </th:block>
+                            <span class="border border-2">
+                                <span><i class="bi bi-star" style="font-size: 1em; color: gold"></i></span>
+                                <span><i class="bi bi-star" style="font-size: 1em; color: gold"></i></span>
+                                <span><i class="bi bi-star" style="font-size: 1em; color: gold"></i></span>
+                                <span><i class="bi bi-star" style="font-size: 1em; color: gold"></i></span>
+                                <span><i class="bi bi-star" style="font-size: 1em; color: gold"></i></span>
+                            </span>
+                            <span>
+                                <button type="button" class="btn border border-2 rounded-end-2">+</button>
+                            </span>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text">내용</span>
+                            <input type="text" class="form-control" placeholder="참가자에게 하고 싶은 말을 입력해주세요"
+                                aria-label="content" aria-describedby="addon-wrapping">
+                        </div>
                         <div class="input-group mb-3">
                             <input type="file" class="form-control" id="inputGroupFile02">
                             <label class="input-group-text" for="inputGroupFile02">Upload</label>
                         </div>
-					</div>
+                    </div>
 
-					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-						<button type="button" class="btn btn-primary">작성완료</button>
-					</div>
-				</div>
-			</div>
-		</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+                        <button type="button" class="btn btn-primary">작성완료</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </th:block>
 </body>
 
