@@ -1,59 +1,59 @@
 .text-ymprimary{
-	color:#F28500;
+    color:#F28500;
 }
 .text-ymsecondary{
-	color:#0D0500;
+    color:#0D0500;
 }
 .text-ymwhite{
-	color:#FEFCFF;
+    color:#FEFCFF;
 }
 .text-ymwhitesmoke{
-	color:whitesmoke;
+    color:whitesmoke;
 }
 .text-ymprimary-bright{
-	color:#FFB347;
+    color:#FFB347;
 }
 .text-ymsecondary-bright{
-	color:#2C1810;
+    color:#2C1810;
 }
 
 .bg-ymprimary{
-	background-color:#F28500;
+    background-color:#F28500;
 }
 .bg-ymsecondary{
-	background-color:#0D0500;
+    background-color:#0D0500;
 }
 .bg-ymwhite{
-	background-color:#FEFCFF;
+    background-color:#FEFCFF;
 }
 .bg-ymwhitesmoke{
-	background-color:whitesmoke;
+    background-color:whitesmoke;
 }
 .bg-ymprimary-bright{
-	background-color:#FFB347;
+    background-color:#FFB347;
 }
 .bg-ymsecondary-bright{
-	background-color:#2C1810;
+    background-color:#2C1810;
 }
 
 /* 1. 일반 상태 */
 .btn-ymprimary {
-	color: #FEFCFF; /* 글자색: ymwhite */
-	background-color: #F28500; /* 배경색: ymprimary */
-	border-color: #F28500; /* 테두리색: ymprimary */
+    color: #FEFCFF; /* 글자색: ymwhite */
+    background-color: #F28500; /* 배경색: ymprimary */
+    border-color: #F28500; /* 테두리색: ymprimary */
 }
 
 /* 2. 호버(마우스 올렸을 때) 상태: 살짝 어둡게 */
 .btn-ymprimary:hover {
-	color: #FEFCFF;
-	background-color: #d97400; /* 기존 색보다 살짝 어둡게 */
-	border-color: #cc6d00;
+    color: #FEFCFF;
+    background-color: #d97400; /* 기존 색보다 살짝 어둡게 */
+    border-color: #cc6d00;
 }
 
 /* 3. 활성(클릭했을 때) 및 포커스 상태: 더 어둡게 + 그림자 효과 */
 .btn-ymprimary:active, .btn-ymprimary:focus {
-	color: #FEFCFF;
-	background-color: #c76b00; /* 호버 상태보다 더 어둡게 */
-	border-color: #be6500;
-	box-shadow: 0 0 0 0.25rem rgba(242, 133, 0, 0.5); /* 접근성을 위한 포커스 효과 */
+    color: #FEFCFF;
+    background-color: #c76b00; /* 호버 상태보다 더 어둡게 */
+    border-color: #be6500;
+    box-shadow: 0 0 0 0.25rem rgba(242, 133, 0, 0.5); /* 접근성을 위한 포커스 효과 */
 }

@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
+
+
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -16,6 +18,15 @@ public class UserController {
     @GetMapping("/login")
     public String toLogin(){
         return "user/login";
+    }
+    
+    @GetMapping("/info")
+    public String toUserpage(){
+        return "user/info";
+    }
+    @GetMapping("/myinfo")
+    public String toMypage() {
+        return "user/myinfo";
     }
     
 }
