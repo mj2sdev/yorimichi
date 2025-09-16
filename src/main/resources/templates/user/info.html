@@ -2,208 +2,208 @@
 <html th:replace="~{layout/layout :: layout(~{::title},~{::section},~{::script})}" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <title> Yorimichi Project </title>
+	<title> Yorimichi Project </title>
 </head>
 
 <body>
-    <section>
-        <div class="container">
-            <div class="row">
-                <div class="col-9">
-                    <div class="row justify-content-center">
-                        <div class="col-1 text-center">
-                            <button type="button" class="btn">
-                                <i class="bi bi-heart" style="font-size: 2em; color: red;"></i>
-                            </button>
-                            <p>팔로우</p>
-                        </div>
-                        <div class="col-4 text-center fs-1">
-                            <ul class="list-unstyled">
-                                <li>
-                                    윤찬
-                                </li>
-                                <li class="fs-5">
-                                    3ll37023@gmail.com
-                                </li>
-                            </ul>
+	<section>
+		<div class="container">
+			<div class="row">
+				<div class="col-9">
+					<div class="row justify-content-center">
+						<div class="col-1 text-center">
+							<button type="button" class="btn">
+								<i class="bi bi-heart" style="font-size: 2em; color: red;"></i>
+							</button>
+							<p>팔로우</p>
+						</div>
+						<div class="col-4 text-center fs-1">
+							<ul class="list-unstyled">
+								<li>
+									윤찬
+								</li>
+								<li class="fs-5">
+									3ll37023@gmail.com
+								</li>
+							</ul>
 
-                        </div>
-                        <div class="col-1 text-center">
-                            <button type="button" class="btn">
-                                <i class="bi bi-x-circle" style="font-size: 2em;"></i>
-                            </button>
-                            <p>차단</p>
-                        </div>
-                    </div>
-                    <div class="row justify-content-center">
-                        <div class="col-8 text-center">
-                            <img src="https://picsum.photos/300" class="mx-auto border rounded-circle">
-                        </div>
-                    </div>
-                    <div class="row justify-content-center">
-                        <div class="col-8 my-4 border border-3">
-                            <nav>
-                                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                    <button class="nav-link active" id="nav-review-tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav-review" type="button" role="tab" aria-controls="nav-review"
-                                        aria-selected="true">
-                                        리뷰
-                                    </button>
-                                    <button class="nav-link" id="nav-like-tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav-like" type="button" role="tab"
-                                        aria-controls="nav-like" aria-selected="false">
-                                        좋아요
-                                    </button>
-                                    <button class="nav-link" id="nav-bookmark-tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav-bookmark" type="button" role="tab"
-                                        aria-controls="nav-bookmark" aria-selected="false">
-                                        즐겨찾기
-                                    </button>
-                                </div>
-                            </nav>
+						</div>
+						<div class="col-1 text-center">
+							<button type="button" class="btn">
+								<i class="bi bi-x-circle" style="font-size: 2em;"></i>
+							</button>
+							<p>차단</p>
+						</div>
+					</div>
+					<div class="row justify-content-center">
+						<div class="col-8 text-center">
+							<img src="https://picsum.photos/300" class="mx-auto border rounded-circle">
+						</div>
+					</div>
+					<div class="row justify-content-center">
+						<div class="col-8 my-4 border border-3">
+							<nav>
+								<div class="nav nav-tabs" id="nav-tab" role="tablist">
+									<button class="nav-link active" id="nav-review-tab" data-bs-toggle="tab"
+										data-bs-target="#nav-review" type="button" role="tab" aria-controls="nav-review"
+										aria-selected="true">
+										리뷰
+									</button>
+									<button class="nav-link" id="nav-like-tab" data-bs-toggle="tab"
+										data-bs-target="#nav-like" type="button" role="tab"
+										aria-controls="nav-like" aria-selected="false">
+										좋아요
+									</button>
+									<button class="nav-link" id="nav-bookmark-tab" data-bs-toggle="tab"
+										data-bs-target="#nav-bookmark" type="button" role="tab"
+										aria-controls="nav-bookmark" aria-selected="false">
+										즐겨찾기
+									</button>
+								</div>
+							</nav>
 
-                            <div class="tab-content" id="nav-tabContent">
-                                <div class="tab-pane fade show active" id="nav-review" role="tabpanel"
-                                    aria-labelledby="nav-review-tab" tabindex="0">
-                                    <th:block th:each="reviewItem : ${#numbers.sequence(1,5)}">
-                                        <div class="row bg-ymwhite mb-3">
-                                            <div class="col-3 border">
-                                                <img src="https://picsum.photos/50" style="height:100%; width:100%;">
-                                            </div>
-                                            <div class="col-9 border">
-                                                <div class="row justify-content-between align-items-center">
-                                                    <div class="col-auto dropdown">
-                                                        <button class="btn fw-bold dropdown-toggle"
-                                                            data-bs-toggle="dropdown" aria-expanded="false">작성자</button>
-                                                        <ul class="dropdown-menu">
-                                                            <li><a class="dropdown-item" href="#"><i class="bi bi-heart"
-                                                                        style="font-size: 1em;"></i>팔로우</a></li>
-                                                            <li th:if="${#false}"><a class="dropdown-item" href="#"><i
-                                                                        class="bi bi-heart-fill"
-                                                                        style="font-size: 1em; color: red;"></i>팔로우취소</a>
-                                                            </li>
-                                                            <li><a class="dropdown-item" href="#"><i
-                                                                        class="bi bi-search"
-                                                                        style="font-size: 1em;"></i> 상세보기</a></li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="col">
-                                                        <span th:each="star : ${#numbers.sequence(1,5)}">
-                                                            <i class="bi bi-star-fill"
-                                                                style="font-size: 1em; color: gold;"></i>
-                                                        </span>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <a href="/store/view" class="text-ymprimary text-decoration-none">
-                                                            가게보기
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        2025.09.15
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <button type="button" class="btn btn-sm p-0"
-                                                            data-bs-toggle="modal" data-bs-target="#reportModal">
-                                                            <i class="bi bi-flag-fill"
-                                                                style="font-size: 1em; color: red;"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div class="p-2" data-bs-toggle="collapse"
-                                                    th:attr="data-bs-target='#menu' + ${reviewItem}">
-                                                    <div class="row mt-2">
-                                                        <div class="col">
-                                                            리뷰 본문 내용...
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="collapse" th:id="'menu' + ${reviewItem}">
-                                                    <div class="card card-body">
-                                                        메뉴 내용...
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </th:block>
-                                </div>
-                                <div class="tab-pane fade" id="nav-like" role="tabpanel"
-                                    aria-labelledby="nav-like-tab" tabindex="1">
-                                    <th:block th:each="like : ${#numbers.sequence(1,10)}">
-                                    <div class="row">
-                                        <div class="col">
-                                            <a href="/store/view" class="btn">
-                                                <img src="https://picsum.photos/50">
-                                                <span>가게명</span>
-                                                <span>위치</span>
-                                                <th:block th:each="tag : ${#numbers.sequence(1,5)}">
-                                                    <span>#태그</span>
-                                                </th:block>    
-                                            </a>
-                                        </div>
-                                    </div>
-                                    </th:block>
-                                </div>
-                                <div class="tab-pane fade" id="nav-bookmark" role="tabpanel"
-                                    aria-labelledby="nav-bookmark-tab" tabindex="1">
-                                    <th:block th:each="bookmark : ${#numbers.sequence(1,10)}">
-                                    <div class="row">
-                                        <div class="col">
-                                            <a href="/store/view" class="btn">
-                                                <img src="https://picsum.photos/50">
-                                                <span>가게명</span>
-                                                <span>위치</span>
-                                                <th:block th:each="tag : ${#numbers.sequence(1,5)}">
-                                                    <span>#태그</span>
-                                                </th:block>    
-                                            </a>
-                                        </div>
-                                    </div>
-                                    </th:block>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col border border-3 overflow-auto" style="height:400px; top: 145px;">
-                    <div class="row justify-content-center text-center">
-                        <div class="col">
-                            <button type="button" class="btn" data-bs-toggle="button">
-                                <th:block th:if="${true}">
-                                    <span><i class="bi bi-person text-ymsecondary" style="font-size: 2em;"></i></span>
-                                    <p>팔로워</p>
-                                </th:block>
-                                <th:block th:unless="${true}">
-                                    <span><i class="bi bi-person-fill text-ymprimary"
-                                            style="font-size: 2em;"></i></span>
-                                    <p>팔로우</p>
-                                </th:block>
-                            </button>
-                        </div>
-                    </div>
-                    <th:block th:each="person : ${#numbers.sequence(1,100)}">
-                        <div class="row">
-                            <div class="col-2">
-                                <span th:if="${true}">
-                                    <button type="button" class="btn">
-                                        <i class="bi bi-heart" style="font-size: 1em;"></i>
-                                    </button>
-                                </span>
-                                <span th:unless="${true}">
-                                    <button type="button" class="btn">
-                                        <i class="bi bi-heart-fill" style="font-size: 1em; color:red"></i>
-                                    </button>
-                                </span>
-                            </div>
-                            <div class="col">
-                                <a href="/user/info" class="btn d-block">
-                                    닉네임
-                                </a>
-                            </div>
-                        </div>
-                    </th:block>
-                </div>
-            </div>
-        </div>
-    </section>
+							<div class="tab-content" id="nav-tabContent">
+								<div class="tab-pane fade show active" id="nav-review" role="tabpanel"
+									aria-labelledby="nav-review-tab" tabindex="0">
+									<th:block th:each="reviewItem : ${#numbers.sequence(1,5)}">
+										<div class="row bg-ymwhite mb-3">
+											<div class="col-3 border">
+												<img src="https://picsum.photos/50" style="height:100%; width:100%;">
+											</div>
+											<div class="col-9 border">
+												<div class="row justify-content-between align-items-center">
+													<div class="col-auto dropdown">
+														<button class="btn fw-bold dropdown-toggle"
+															data-bs-toggle="dropdown" aria-expanded="false">작성자</button>
+														<ul class="dropdown-menu">
+															<li><a class="dropdown-item" href="#"><i class="bi bi-heart"
+																		style="font-size: 1em;"></i>팔로우</a></li>
+															<li th:if="${#false}"><a class="dropdown-item" href="#"><i
+																		class="bi bi-heart-fill"
+																		style="font-size: 1em; color: red;"></i>팔로우취소</a>
+															</li>
+															<li><a class="dropdown-item" href="#"><i
+																		class="bi bi-search"
+																		style="font-size: 1em;"></i> 상세보기</a></li>
+														</ul>
+													</div>
+													<div class="col">
+														<span th:each="star : ${#numbers.sequence(1,5)}">
+															<i class="bi bi-star-fill"
+																style="font-size: 1em; color: gold;"></i>
+														</span>
+													</div>
+													<div class="col-auto">
+														<a href="/store/view" class="text-ymprimary text-decoration-none">
+															가게보기
+														</a>
+													</div>
+													<div class="col-auto">
+														2025.09.15
+													</div>
+													<div class="col-auto">
+														<button type="button" class="btn btn-sm p-0"
+															data-bs-toggle="modal" data-bs-target="#reportModal">
+															<i class="bi bi-flag-fill"
+																style="font-size: 1em; color: red;"></i>
+														</button>
+													</div>
+												</div>
+												<div class="p-2" data-bs-toggle="collapse"
+													th:attr="data-bs-target='#menu' + ${reviewItem}">
+													<div class="row mt-2">
+														<div class="col">
+															리뷰 본문 내용...
+														</div>
+													</div>
+												</div>
+												<div class="collapse" th:id="'menu' + ${reviewItem}">
+													<div class="card card-body">
+														메뉴 내용...
+													</div>
+												</div>
+											</div>
+										</div>
+									</th:block>
+								</div>
+								<div class="tab-pane fade" id="nav-like" role="tabpanel"
+									aria-labelledby="nav-like-tab" tabindex="1">
+									<th:block th:each="like : ${#numbers.sequence(1,10)}">
+									<div class="row">
+										<div class="col">
+											<a href="/store/view" class="btn">
+												<img src="https://picsum.photos/50">
+												<span>가게명</span>
+												<span>위치</span>
+												<th:block th:each="tag : ${#numbers.sequence(1,5)}">
+													<span>#태그</span>
+												</th:block>    
+											</a>
+										</div>
+									</div>
+									</th:block>
+								</div>
+								<div class="tab-pane fade" id="nav-bookmark" role="tabpanel"
+									aria-labelledby="nav-bookmark-tab" tabindex="1">
+									<th:block th:each="bookmark : ${#numbers.sequence(1,10)}">
+									<div class="row">
+										<div class="col">
+											<a href="/store/view" class="btn">
+												<img src="https://picsum.photos/50">
+												<span>가게명</span>
+												<span>위치</span>
+												<th:block th:each="tag : ${#numbers.sequence(1,5)}">
+													<span>#태그</span>
+												</th:block>    
+											</a>
+										</div>
+									</div>
+									</th:block>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col border border-3 overflow-auto" style="height:400px; top: 145px;">
+					<div class="row justify-content-center text-center">
+						<div class="col">
+							<button type="button" class="btn" data-bs-toggle="button">
+								<th:block th:if="${true}">
+									<span><i class="bi bi-person text-ymsecondary" style="font-size: 2em;"></i></span>
+									<p>팔로워</p>
+								</th:block>
+								<th:block th:unless="${true}">
+									<span><i class="bi bi-person-fill text-ymprimary"
+											style="font-size: 2em;"></i></span>
+									<p>팔로우</p>
+								</th:block>
+							</button>
+						</div>
+					</div>
+					<th:block th:each="person : ${#numbers.sequence(1,100)}">
+						<div class="row">
+							<div class="col-2">
+								<span th:if="${true}">
+									<button type="button" class="btn">
+										<i class="bi bi-heart" style="font-size: 1em;"></i>
+									</button>
+								</span>
+								<span th:unless="${true}">
+									<button type="button" class="btn">
+										<i class="bi bi-heart-fill" style="font-size: 1em; color:red"></i>
+									</button>
+								</span>
+							</div>
+							<div class="col">
+								<a href="/user/info" class="btn d-block">
+									닉네임
+								</a>
+							</div>
+						</div>
+					</th:block>
+				</div>
+			</div>
+		</div>
+	</section>
 </body>
 </html>
