@@ -56,21 +56,24 @@ public class SecurityConfig {
     
     // 2) 메모리 계정 2개 (USER, ADMIN)
     public UserDetailService users(PasswordEncoder encoder) {
+        
         var user = User.withUsername("user")
-                .password(encoder.encoder("1234"))
-                .roles("USER") // ROLE_USER
-                .build();
+	        .password(encoder.encoder("1234"))
+	        .roles("USER") // ROLE_USER
+	        .build();
         var admin = User.withUsername("admin")
-                .password(encoder.encoder("1234"))
-                .roles("ADMIN") // ROLE_ADMIN
-                .build();
+            .password(encoder.encoder("1234"))
+            .roles("ADMIN") // ROLE_ADMIN
+            .build();
         
         return new InMemoryUserDetailsManager(user, admin);
     }
     
     // 3) 어떤 길(URI)에 누가 들어올 수 있는지 규칙
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throw Exception {
+
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        
         http
             .authrizeHttpRequests(auth -> auth
                 .requestMatchers("/public/**").permitAll() // 모두 통과
@@ -147,15 +150,16 @@ import java.beans.BeanProperty;
 
 @Bean
 public SecurityFilterChain apiChain(HttpSecurity http) throws Exception {
+	
     http
-		    .csrf(csrf -> csrf.disable()) // JWT 기반 등 비상태 API라면 비활성화 고려
-		    .authorizeHttpRequests(auth -> auth
-			    .requestMatchers("/public/**").permitAll()
-			    .anyRequest().authenticated()
-		    )
-		    .sessionManagerment(sm -> sm.sessionCreationPolicy(
-                    org.springframeword.security.config.http.SessionCreationPolicy.STARELESS
-		    ));
+	    .csrf(csrf -> csrf.disable()) // JWT 기반 등 비상태 API라면 비활성화 고려
+	    .authorizeHttpRequests(auth -> auth
+		    .requestMatchers("/public/**").permitAll()
+		    .anyRequest().authenticated()
+	    )
+	    .sessionManagerment(sm -> sm.sessionCreationPolicy(
+                org.springframeword.security.config.http.SessionCreationPolicy.STARELESS
+	    ));
     
     // 여기에 JWT 필터/리소스 서버 설정을 추가하게 됨
 	return http.build();
