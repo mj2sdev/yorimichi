@@ -143,6 +143,26 @@ git stash drop stash@{0}
 git stash clear
 ```
 
+### 뭔가 커밋 비슷한 작업을 했는데 실수했을 경우
+```bash
+# rebase 관련 뭔가를 했는데 실수해서 복구하고 싶은경우
+# 보통 특정 브랜치를 베이스로 삼고 싶었는데 업데이트가 안된 옛날 브랜치 정보로 rebase 한 경우
+git rebase --abort
+```
+
+```bash
+# 머지 중단(되돌아가기)
+# 위의 상황과 비슷하게 실수 한 경우가 대다수
+git merge --abort
+```
+
+```bash
+# HEAD~1 << 이것의 의미는 첫번째 커밋부터 지정한 숫자까지 취소하겠다는 의미
+# hard << 이것은 좀 강하게 리셋하겠다. 라는 의미 일 겁니다.
+git reset --hard HEAD~1
+```
+
+
 # 👨‍🎨 사용할 깃 전략
 ## **(GitFlow)**
 > [!chat gpt 😎]
