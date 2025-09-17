@@ -1,13 +1,19 @@
 package com.jslhrd.yorimichi.domain;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
+/**
+ * 리뷰
+ * - ERD: id, user_id, food_id, rating, content
+ * - created_at 컬럼 없음
+ */
 @Getter
 @Setter
 public class ReviewDTO {
-    private Long reviewId;
-    private Long userId;
-    private Long foodId;
-    private Integer rating; // 1~5 등 범위는 나중에 검증에서 처리
-    private String content;    
+    private Long id;        // PK
+    private Long userId;    // FK → user.id
+    private Long foodId;    // FK → food.id
+    private Integer rating; // 평점 (예: 1~5)
+    private String content; // 내용
 }

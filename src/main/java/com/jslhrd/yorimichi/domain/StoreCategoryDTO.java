@@ -1,12 +1,18 @@
 package com.jslhrd.yorimichi.domain;
 
-import java.time.LocalDateTime;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
+
+/**
+ * 상점-카테고리 매핑
+ * - (store_id, category_id) 복합키 성격
+ */
 @Getter
 @Setter
 public class StoreCategoryDTO {
-    private Long storeId;     // FK → store.store_id
-    private Long categoryId;  // FK → category.category_id    
-    private LocalDateTime createdAt; 
+    private Long storeId;               // FK → store.id
+    private Long categoryId;            // FK → category.id
+    private LocalDateTime createdAt;    // 생성시각 (DB DEFAULT)
 }

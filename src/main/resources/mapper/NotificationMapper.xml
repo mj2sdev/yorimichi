@@ -1,55 +1,34 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.jslhrd.yorimichi.mapper.NotificationMapper">
 
-  <select id="selectById" parameterType="long"
-          resultType="com.jslhrd.yorimichi.domain.NotificationDTO">
-    SELECT id, actor_user_id, root_id, target_user_id,
-           message, created_at, read_at, updated_at
-    FROM notification
-    WHERE id = #{notificationId}
-  </select>
+    <insert id="insert" parameterType="NotificationDTO">
+        INSERT INTO notification (user_id, type, message, read_at)
+        VALUES (#{userId}, #{type}, #{message}, #{readAt})
+    </insert>
 
-  <select id="listByTargetUserId" parameterType="long"
-          resultType="com.jslhrd.yorimichi.domain.NotificationDTO">
-    SELECT id, actor_user_id, root_id, target_user_id,
-           message, created_at, read_at, updated_at
-    FROM notification
-    WHERE target_user_id = #{targetUserId}
-    ORDER BY created_at DESC
-  </select>
+    <select id="selectById" parameterType="long" resultType="NotificationDTO">
+        SELECT * FROM notification WHERE id = #{id}
+    </select>
 
-  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.NotificationDTO">
-    INSERT INTO notification (
-      actor_user_id, root_id, target_user_id, message, created_at, read_at, updated_at
-    ) VALUES (
-      #{actorUserId}, #{rootId}, #{targetUserId}, #{message}, NOW(), #{readAt}, NOW()
-    )
-  </insert>
+    <select id="selectByUserId" parameterType="long" resultType="NotificationDTO">
+        SELECT * FROM notification WHERE user_id = #{userId} ORDER BY created_at DESC
+    </select>
 
-  <!-- 읽음 처리: read_at=NOW(), updated_at=NOW() -->
-  <update id="markRead" parameterType="long">
-    UPDATE notification
-    SET read_at = NOW(),
-        updated_at = NOW()
-    WHERE id = #{notificationId}
-  </update>
+    <update id="updateReadAt" parameterType="long">
+        UPDATE notification
+        SET read_at = NOW(), updated_at = NOW()
+        WHERE id = #{id}
+    </update>
 
-  <!-- 일반 업데이트(메시지 등) -->
-  <update id="update" parameterType="com.jslhrd.yorimichi.domain.NotificationDTO">
-    UPDATE notification
-    SET actor_user_id = #{actorUserId},
-        root_id       = #{rootId},
-        target_user_id= #{targetUserId},
-        message       = #{message},
-        read_at       = #{readAt},
-        updated_at    = NOW()
-    WHERE id = #{notificationId}
-  </update>
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM notification WHERE id = #{id}
+    </delete>
 
-  <delete id="deleteById" parameterType="long">
-    DELETE FROM notification WHERE id = #{notificationId}
-  </delete>
+    <delete id="deleteByUserId" parameterType="long">
+        DELETE FROM notification WHERE user_id = #{userId}
+    </delete>
 
 </mapper>

@@ -1,32 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.jslhrd.yorimichi.mapper.BookmarkMapper">
 
-  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.BookmarkDTO">
-    INSERT INTO bookmark (user_id, store_id, created_at)
-    VALUES (#{userId}, #{storeId}, NOW())
-  </insert>
+    <insert id="insert" parameterType="BookmarkDTO">
+        INSERT INTO bookmark (user_id, feed_id)
+        VALUES (#{userId}, #{feedId})
+    </insert>
 
-  <delete id="delete" parameterType="com.jslhrd.yorimichi.domain.BookmarkDTO">
-    DELETE FROM bookmark
-    WHERE user_id = #{userId}
-      AND store_id = #{storeId}
-  </delete>
+    <select id="selectByUserId" parameterType="long" resultType="BookmarkDTO">
+        SELECT * FROM bookmark WHERE user_id = #{userId}
+    </select>
 
-  <select id="count" parameterType="com.jslhrd.yorimichi.domain.BookmarkDTO" resultType="int">
-    SELECT COUNT(1)
-    FROM bookmark
-    WHERE user_id = #{userId}
-      AND store_id = #{storeId}
-  </select>
+    <select id="selectByFeedId" parameterType="long" resultType="BookmarkDTO">
+        SELECT * FROM bookmark WHERE feed_id = #{feedId}
+    </select>
 
-  <select id="listByUserId" parameterType="long"
-          resultType="com.jslhrd.yorimichi.domain.BookmarkDTO">
-    SELECT user_id, store_id, created_at
-    FROM bookmark
-    WHERE user_id = #{userId}
-    ORDER BY created_at DESC
-  </select>
+    <select id="existsByUserIdAndFeedId" resultType="int">
+        SELECT COUNT(*) FROM bookmark
+        WHERE user_id = #{userId} AND feed_id = #{feedId}
+    </select>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM bookmark WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByUserIdAndFeedId">
+        DELETE FROM bookmark WHERE user_id = #{userId} AND feed_id = #{feedId}
+    </delete>
+
+    <delete id="deleteByUserId" parameterType="long">
+        DELETE FROM bookmark WHERE user_id = #{userId}
+    </delete>
+
+    <delete id="deleteByFeedId" parameterType="long">
+        DELETE FROM bookmark WHERE feed_id = #{feedId}
+    </delete>
 
 </mapper>

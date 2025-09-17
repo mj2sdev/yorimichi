@@ -1,36 +1,35 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.jslhrd.yorimichi.mapper.FeedMapper">
 
-  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.FeedDTO">
-    SELECT id, user_id, type, title, content, view_count
-    FROM feed
-    WHERE id = #{feedId}
-  </select>
+    <insert id="insert" parameterType="FeedDTO">
+        INSERT INTO feed (user_id, title, content, visibility)
+        VALUES (#{userId}, #{title}, #{content}, #{visibility})
+    </insert>
 
-  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.FeedDTO">
-    INSERT INTO feed (user_id, type, title, content, view_count)
-    VALUES (#{userId}, #{type}, #{title}, #{content}, #{viewCount})
-  </insert>
+    <select id="selectById" parameterType="long" resultType="FeedDTO">
+        SELECT * FROM feed WHERE id = #{id}
+    </select>
 
-  <update id="update" parameterType="com.jslhrd.yorimichi.domain.FeedDTO">
-    UPDATE feed
-    SET user_id = #{userId},
-        type = #{type},
-        title = #{title},
-        content = #{content},
-        view_count = #{viewCount}
-    WHERE id = #{feedId}
-  </update>
+    <select id="selectByUserId" parameterType="long" resultType="FeedDTO">
+        SELECT * FROM feed WHERE user_id = #{userId}
+    </select>
 
-  <update id="increaseViewCount" parameterType="long">
-    UPDATE feed
-    SET view_count = view_count + 1
-    WHERE id = #{feedId}
-  </update>
+    <select id="selectPaged" resultType="FeedDTO">
+        SELECT * FROM feed ORDER BY created_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
 
-  <delete id="deleteById" parameterType="long">
-    DELETE FROM feed WHERE id = #{feedId}
-  </delete>
+    <update id="update" parameterType="FeedDTO">
+        UPDATE feed
+        SET title = #{title}, content = #{content}, visibility = #{visibility}, updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM feed WHERE id = #{id}
+    </delete>
 
 </mapper>

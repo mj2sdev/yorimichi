@@ -1,16 +1,20 @@
 package com.jslhrd.yorimichi.domain;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
+/**
+ * 피드(게시물)
+ * - 최신 ERD 기준: id, user_id, type, title, content, view_count
+ * - created_at 컬럼 없음
+ */
 @Getter
 @Setter
-
 public class FeedDTO {
-    /** PK이자 root(root_id)를 참조하는 FK */
-    private Long feedId;
-    private Long userId;
-    private String title;
-    private String content;
-    private String type;
-    private Integer viewCount;
+    private Long id;            // PK
+    private Long userId;        // FK → user.id
+    private String type;        // 피드 타입(예: NORMAL/COEAT 등)
+    private String title;       // 제목
+    private String content;     // 본문
+    private Integer viewCount;  // 조회수
 }

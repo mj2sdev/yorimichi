@@ -2,14 +2,15 @@ package com.jslhrd.yorimichi.mapper;
 
 import com.jslhrd.yorimichi.domain.RoadDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
 public interface RoadMapper {
-    int insert(RoadDTO road); // 등록
-    RoadDTO selectById(Long id); // 조회
-    RoadDTO selectByCode(String code); // 코드로 조회
-    List<RoadDTO> listByEmdId(Long emdId); // 특정 읍면동 하위 도로 목록
-    int update(RoadDTO road); // 수정
-    int deleteById(Long id); // 삭제
+	int insert(RoadDTO row); // 도로명 등록
+	RoadDTO selectById(@Param("id") Long id); // 단건 조회
+	List<RoadDTO> selectBySigunguId(@Param("sigunguId") Long sigunguId); // 시군구 기준 목록
+	int update(RoadDTO row); // 이름 수정
+	int deleteById(@Param("id") Long id); // 삭제(PK)
+	int deleteBySigunguId(@Param("sigunguId") Long sigunguId); // 시군구 기준 일괄 삭제
 }

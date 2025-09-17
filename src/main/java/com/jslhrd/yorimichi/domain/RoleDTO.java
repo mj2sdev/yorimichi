@@ -1,11 +1,14 @@
 package com.jslhrd.yorimichi.domain;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
-
+/**
+ * 권한/역할
+ */
 @Getter
 @Setter
 public class RoleDTO {
-    private Long roleId;
-    private String name;
+    private Long id;     // PK
+    private String name; // 역할명
 }

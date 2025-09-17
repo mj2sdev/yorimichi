@@ -1,47 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.jslhrd.yorimichi.mapper.FeedCoeatRequestMapper">
 
-  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.FeedCoeatRequestDTO">
-    INSERT INTO feed_coeat_request (feed_id, user_id, status, message, created_at)
-    VALUES (#{feedId}, #{userId}, #{status}, #{message}, NOW())
-  </insert>
+    <insert id="insert" parameterType="FeedCoeatRequestDTO">
+        INSERT INTO feed_coeat_request (coeat_id, requester_id, status)
+        VALUES (#{coeatId}, #{requesterId}, #{status})
+    </insert>
 
-  <delete id="delete" parameterType="com.jslhrd.yorimichi.domain.FeedCoeatRequestDTO">
-    DELETE FROM feed_coeat_request
-    WHERE feed_id = #{feedId}
-      AND user_id = #{userId}
-  </delete>
+    <select id="selectById" parameterType="long" resultType="FeedCoeatRequestDTO">
+        SELECT * FROM feed_coeat_request WHERE id = #{id}
+    </select>
 
-  <select id="count" parameterType="com.jslhrd.yorimichi.domain.FeedCoeatRequestDTO" resultType="int">
-    SELECT COUNT(1)
-    FROM feed_coeat_request
-    WHERE feed_id = #{feedId}
-      AND user_id = #{userId}
-  </select>
+    <select id="selectByCoeatId" parameterType="long" resultType="FeedCoeatRequestDTO">
+        SELECT * FROM feed_coeat_request WHERE coeat_id = #{coeatId}
+    </select>
 
-  <select id="listByFeedId" parameterType="long"
-          resultType="com.jslhrd.yorimichi.domain.FeedCoeatRequestDTO">
-    SELECT feed_id, user_id, status, message, created_at
-    FROM feed_coeat_request
-    WHERE feed_id = #{feedId}
-    ORDER BY created_at DESC
-  </select>
+    <select id="selectByRequesterId" parameterType="long" resultType="FeedCoeatRequestDTO">
+        SELECT * FROM feed_coeat_request WHERE requester_id = #{requesterId}
+    </select>
 
-  <select id="listByUserId" parameterType="long"
-          resultType="com.jslhrd.yorimichi.domain.FeedCoeatRequestDTO">
-    SELECT feed_id, user_id, status, message, created_at
-    FROM feed_coeat_request
-    WHERE user_id = #{userId}
-    ORDER BY created_at DESC
-  </select>
+    <select id="existsByCoeatIdAndRequesterId" resultType="int">
+        SELECT COUNT(*) FROM feed_coeat_request
+        WHERE coeat_id = #{coeatId} AND requester_id = #{requesterId}
+    </select>
 
-  <update id="updateStatus" parameterType="com.jslhrd.yorimichi.domain.FeedCoeatRequestDTO">
-    UPDATE feed_coeat_request
-    SET status = #{status}
-    WHERE feed_id = #{feedId}
-      AND user_id = #{userId}
-  </update>
+    <update id="updateStatus" parameterType="FeedCoeatRequestDTO">
+        UPDATE feed_coeat_request
+        SET status = #{status}, updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM feed_coeat_request WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByCoeatId" parameterType="long">
+        DELETE FROM feed_coeat_request WHERE coeat_id = #{coeatId}
+    </delete>
 
 </mapper>

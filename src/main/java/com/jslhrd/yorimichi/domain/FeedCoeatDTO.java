@@ -1,16 +1,21 @@
 package com.jslhrd.yorimichi.domain;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+/**
+ * 같이먹기(모집) 정보
+ */
 @Getter
 @Setter
 public class FeedCoeatDTO {
-    private Long feedCoeatId;     // feed_coeat.id
-    private Long feedId;          // FK
-    private Long storeId;         // FK
-    private Integer capacity;
-    private LocalDateTime meetingAt;
-    private Boolean autoAccept;
-    private String status;
+    private Long id;                    // PK
+    private Long feedId;                // FK → feed.id
+    private Long storeId;               // FK → store.id
+    private Integer capacity;           // 정원
+    private LocalDateTime meetingAt;    // 모임 시각
+    private Boolean autoAccept;         // 자동 수락 여부
+    private String status;              // 상태(예: OPEN/CLOSED 등)
 }
