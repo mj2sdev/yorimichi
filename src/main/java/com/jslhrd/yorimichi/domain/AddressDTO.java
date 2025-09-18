@@ -16,11 +16,12 @@ import java.time.LocalDateTime;
 public class AddressDTO {
     private Long id;                    // PK
     private Long roadId;                // FK → road.id
+    private Long postalId;              // postalId 추가(2차수정)
     private String detail;              // 상세 주소(동/호수 등)
     private String roadAddressText;     // 도로명 전체 주소
     private String jibunAddressText;    // 지번 전체 주소
-    private BigDecimal latitude;        // 위도
-    private BigDecimal longitude;       // 경도
+    private Double latitude;        // 위도  Bigdecimal -> double 변경 (2차수정)
+    private Double longitude;       // 경도  Bigdecimal -> double 변경 (2차수정)
     private LocalDateTime createdAt;    // 생성시각 (DB DEFAULT)
     private LocalDateTime updatedAt;    // 수정시각
 }

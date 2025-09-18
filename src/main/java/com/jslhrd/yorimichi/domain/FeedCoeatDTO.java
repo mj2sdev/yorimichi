@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 
 /**
  * 같이먹기(모집) 정보
+ *  id 삭제 (2차 수정)
  */
 @Getter
 @Setter
 public class FeedCoeatDTO {
-    private Long id;                    // PK
     private Long feedId;                // FK → feed.id
     private Long storeId;               // FK → store.id
     private Integer capacity;           // 정원

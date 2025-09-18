@@ -7,7 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface NotificationMapper {
-	int insert(NotificationDTO row); // 알림 등록
+	int insert(NotificationDTO dto); // 알림 등록
 	NotificationDTO selectById(@Param("id") Long id); // 단건 조회
 	List<NotificationDTO> selectByUserId(@Param("userId") Long userId); // 사용자별 알림 목록
 	int updateReadAt(@Param("id") Long id); // 읽음 처리

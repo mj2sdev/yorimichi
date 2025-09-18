@@ -10,7 +10,7 @@ import java.util.List;
 public interface CommentMapper {
 
 	/* 댓글 작성 */
-	int insert(CommentDTO comment);
+	int insert(CommentDTO dto);
 
 	/* 단건 조회 */
 	CommentDTO selectById(@Param("id") Long id);
@@ -22,7 +22,7 @@ public interface CommentMapper {
 	List<CommentDTO> selectByParentId(@Param("parentId") Long parentId);
 
 	/* 댓글 내용 수정 */
-	int updateContent(CommentDTO comment);
+	int updateContent(CommentDTO dto);
 
 	/* 댓글 삭제 (PK) */
 	int deleteById(@Param("id") Long id);

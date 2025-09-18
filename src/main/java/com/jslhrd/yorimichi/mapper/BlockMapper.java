@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface BlockMapper {
 
-    int insert(BlockDTO block);  // 차단 등록
+    int insert(BlockDTO dto);  // 차단 등록
 
     // 차단 해제(복합키) — DTO 혼용 금지, 키를 명시적으로 전달
     int delete(@Param("blockerId") Long blockerId,

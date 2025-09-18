@@ -10,7 +10,7 @@ import java.util.List;
 public interface FollowMapper {
 
 	/* 팔로우 생성 */
-	int insert(FollowDTO follow);
+	int insert(FollowDTO dto);
 
 	/* 특정 유저의 팔로워 목록 */
 	List<FollowDTO> selectFollowersByUserId(@Param("userId") Long userId);

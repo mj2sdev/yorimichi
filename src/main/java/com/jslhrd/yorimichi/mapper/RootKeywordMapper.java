@@ -7,7 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface RootKeywordMapper {
-	int insert(RootKeywordDTO row); // 루트-키워드 매핑 등록
+	int insert(RootKeywordDTO dto); // 루트-키워드 매핑 등록
 	RootKeywordDTO selectById(@Param("id") Long id); // 단건 조회
 	List<RootKeywordDTO> selectByRootId(@Param("rootId") Long rootId); // 루트 기준 목록
 	List<RootKeywordDTO> selectByKeywordId(@Param("keywordId") Long keywordId); // 키워드 기준 목록

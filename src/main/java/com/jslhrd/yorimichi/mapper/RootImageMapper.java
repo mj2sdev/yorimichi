@@ -10,7 +10,7 @@ import java.util.List;
 public interface RootImageMapper {
 
 	/* 루트 이미지 등록 */
-	int insert(RootImageDTO rootImage);
+	int insert(RootImageDTO dto);
 
 	/* 루트 기준 이미지 목록 */
 	List<RootImageDTO> selectByRootId(@Param("rootId") Long rootId);

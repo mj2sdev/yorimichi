@@ -12,6 +12,5 @@ import lombok.Setter;
 @Setter
 public class PostalDTO {
     private Long id;      // PK
-    private Long roadId;  // FK → road.id
     private String code;  // 우편번호
 }

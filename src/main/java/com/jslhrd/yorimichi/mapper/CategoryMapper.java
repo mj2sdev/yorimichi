@@ -9,9 +9,9 @@ import java.util.List;
 @Mapper
 public interface CategoryMapper {
 
-    int insert(CategoryDTO category);                    // 카테고리 등록
+    int insert(CategoryDTO dto);                    // 카테고리 등록
     CategoryDTO selectById(@Param("id") Long id);        // 단건 조회
-    int update(CategoryDTO category);                    // 수정
+    int update(CategoryDTO dto);                    // 수정
     int deleteById(@Param("id") Long id);               // 삭제
 
     // 특정 부모의 하위 카테고리 목록

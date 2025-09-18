@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface BookmarkMapper {
 
-    int insert(BookmarkDTO bookmark); // 북마크 등록
+    int insert(BookmarkDTO dto); // 북마크 등록
 
     // 복합키 삭제 — 키 파라미터 명시
     int delete(@Param("userId") Long userId,

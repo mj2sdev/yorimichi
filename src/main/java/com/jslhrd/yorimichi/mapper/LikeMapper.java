@@ -10,7 +10,7 @@ import java.util.List;
 public interface LikeMapper {
 
 	/* 좋아요 생성 */
-	int insert(LikeDTO like);
+	int insert(LikeDTO dto);
 
 	/* 특정 피드의 좋아요 목록(필요 시) */
 	List<LikeDTO> selectByFeedId(@Param("feedId") Long feedId);

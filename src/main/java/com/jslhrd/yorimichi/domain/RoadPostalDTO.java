@@ -1,5 +1,7 @@
 package com.jslhrd.yorimichi.domain;
 
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,4 +14,5 @@ import lombok.Setter;
 public class RoadPostalDTO {
     private Long roadId;    // FK → road.id
     private Long postalId;  // FK → postal.id
+    private LocalDateTime createdAt; // createdAt 추가(2차 수정)
 }
