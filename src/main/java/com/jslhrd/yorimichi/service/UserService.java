@@ -1,7 +1,9 @@
 package com.jslhrd.yorimichi.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
+import java.util.List;
 
+import com.jslhrd.yorimichi.domain.SearchDTO;
+import com.jslhrd.yorimichi.domain.StoreDTO;
 import com.jslhrd.yorimichi.domain.UserDTO;
 
 /**
@@ -10,20 +12,28 @@ import com.jslhrd.yorimichi.domain.UserDTO;
  * @author MJ2
  * @since 2025.09.16
  */
-public interface UserService extends UserDetails {
+public interface UserService {
+
+	/**
+	 * 유저가 좋아요(Like) 한 가게 정보 리스트를 불러옵니다. 
+	 * @param userId
+	 * @return List<StoreDTO> 가게정보 리스트
+	 */
+	public List<StoreDTO> findLikedStoresByUserId(Long userId);
 	
 	/**
-	 * 사용자 이름(username)으로 사용자 정보를 조회합니다.
-	 * @param username 조회할 사용자 이름
+	 * 유저 리스트를 검색합니다. (보통 관리자 유저 관리 페이지 등 사용)
+	 * @param dto 검색 파라미터 모음
+	 * @return List<UserDTO> 유저 리스트
+	 */
+	public List<UserDTO> findUsers(SearchDTO dto);
+	
+	/**
+	 * 사용자 이메일(email)로 사용자 정보를 조회합니다.
+	 * @param email 조회할 사용자 이름
 	 * @return UserDTO 사용자 정보 객체
 	 */
-	public UserDTO findByUsername(String username);
-	
-	/**
-	 * 새로운 사용자 정보를 저장(회원가입)합니다.
-	 * @param dto 저장할 사용자 정보가 담긴 DTO
-	 */
-	public void saveUser(UserDTO dto);
+	public UserDTO findUserByEmail(String eamil);
 	
 	/**
 	 * 기존 사용자 정보를 수정합니다.
