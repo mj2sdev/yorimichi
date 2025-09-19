@@ -5,8 +5,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.jslhrd.yorimichi.domain.UserDTO;
 
 /**
- * 계정관련 서비스 
- * @author MJ2
+ * 계정관련 서비스
+ * 
+ * @author @mj2sdev
  * @since 1.0
  */
 public interface AccountService extends UserDetails {
@@ -16,27 +17,27 @@ public interface AccountService extends UserDetails {
      *
      * @param dto 사용자 등록 정보가 포함 된 사용자 데이터 전송 개체
      */
-    void signup(UserDTO dto);
+    public void signup(UserDTO dto);
 
     /**
      * 제공된 사용자 세부 정보에 지정된 사용자의 비밀번호를 변경합니다.
      *
      * @param dto 사용자 식별 및 새 비밀번호가 포함 된 사용자 데이터 전송 객체
      */
-    void changePassword(UserDTO dto);
+    public void changePassword(UserDTO dto);
 
     /**
      * 제공된 사용자 ID에 해당하는 사용자 계정을 삭제합니다.
      *
      * @param userId 계정을 삭제 해야하는 사용자의 고유 식별자
      */
-    void deleteAccount(Long userId);
+    public void delete(Long userId);
 
     /**
      * 제공된 토큰으로 소셜 인증을 사용하여 새 사용자 계정을 등록합니다.
      *
      * @param token 토큰 사용자 등록에 사용되는 소셜 인증 토큰
      */
-    void signupSocial(String token);
+    public void signupSocial(String token);
 
 }
