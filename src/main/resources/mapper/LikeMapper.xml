@@ -4,29 +4,13 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.LikeMapper">
 
     <insert id="insert" parameterType="LikeDTO">
-        INSERT INTO likes (user_id, feed_id)
-        VALUES (#{userId}, #{feedId})
+        INSERT INTO likes (user_id, root_id)
+        VALUES (#{userId}, #{rootId})
     </insert>
 
-    <select id="selectByFeedId" parameterType="long" resultType="LikeDTO">
-        SELECT * FROM likes WHERE feed_id = #{feedId}
-    </select>
-
-    <select id="existsByUserIdAndFeedId" resultType="int">
-        SELECT COUNT(*) FROM likes
-        WHERE user_id = #{userId} AND feed_id = #{feedId}
-    </select>
-
-    <select id="countByFeedId" resultType="int">
-        SELECT COUNT(*) FROM likes WHERE feed_id = #{feedId}
-    </select>
-
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM likes WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByUserIdAndFeedId">
-        DELETE FROM likes WHERE user_id = #{userId} AND feed_id = #{feedId}
+    <delete id="delete" parameterType="LikeDTO">
+        DELETE FROM likes
+        WHERE user_id = #{userId} AND root_id = #{rootId}
     </delete>
 
 </mapper>

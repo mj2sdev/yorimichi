@@ -2,20 +2,39 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
 
 /**
- * 사용자
+ * 유저 DTO.
+ *
+ * <br>유저 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
  */
 @Getter
 @Setter
-public class UserDTO {
-    private Long id;                 // PK
-    private Long roleId;             // FK → role.id
-    private String email;            // 이메일
-    private String password;         // 패스워드(해시 저장)
-    private String nickname;         // 닉네임
-    private String description;      // 소개 (NULL 허용)
-    private LocalDateTime lastLoginAt; // 마지막 로그인 시각 (NULL 허용)
+@Alias("UserDTO")
+public class UserDTO extends RootDTO {
+
+	/** FK: 권한/역할 ID */
+    private Long roleId;
+
+	/** 유저 이메일/아이디 */
+    private String email;
+
+	/** 유저 비밀번호 */
+    private String password;
+
+	/** 유저 닉네임 */
+    private String nickname;
+
+	/** 유저 자기소개 */
+    private String description;
+
+	/** 마지막 로그인 일시 */
+    private LocalDateTime lastLoginAt;
 }

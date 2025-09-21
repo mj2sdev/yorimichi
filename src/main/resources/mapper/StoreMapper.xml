@@ -5,35 +5,29 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.StoreMapper">
 
     <insert id="insert" parameterType="StoreDTO">
-        INSERT INTO store (owner_id, name, address, description)
-        VALUES (#{ownerId}, #{name}, #{address}, #{description})
+        INSERT INTO store (id, address_id, name, description, phone)
+        VALUES (#{id}, #{addressId}, #{name}, #{description}, #{phone})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="StoreDTO">
-        SELECT * FROM store WHERE id = #{id}
-    </select>
-
-    <select id="selectByOwnerId" parameterType="long" resultType="StoreDTO">
-        SELECT * FROM store WHERE owner_id = #{ownerId}
-    </select>
-
-    <select id="selectPaged" resultType="StoreDTO">
-        SELECT * FROM store ORDER BY created_at DESC
-        LIMIT #{limit} OFFSET #{offset}
+    <select id="selectById" parameterType="Long" resultType="StoreDTO">
+        SELECT s.id, s.address_id, s.name, s.description, s.phone,
+               r.created_at, r.updated_at, r.deleted_at, r.blinded_at
+        FROM store s
+        JOIN root r ON s.id = r.id
+        WHERE r.id = #{id}
     </select>
 
     <update id="update" parameterType="StoreDTO">
-        UPDATE store
-        SET name = #{name}, address = #{address}, description = #{description}, updated_at = NOW()
-        WHERE id = #{id}
+        UPDATE store s
+        JOIN root r ON s.id = r.id
+        SET s.address_id = #{addressId}, s.name = #{name},
+            s.description = #{description}, s.phone = #{phone},
+            r.updated_at = NOW()
+        WHERE s.id = #{id}
     </update>
 
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM store WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByOwnerId" parameterType="long">
-        DELETE FROM store WHERE owner_id = #{ownerId}
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM root WHERE id = #{id}
     </delete>
 
 </mapper>

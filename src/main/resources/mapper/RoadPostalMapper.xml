@@ -9,28 +9,9 @@
         VALUES (#{roadId}, #{postalId})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="RoadPostalDTO">
-        SELECT * FROM road_postal WHERE id = #{id}
-    </select>
-
-    <select id="selectByRoadId" parameterType="long" resultType="RoadPostalDTO">
-        SELECT * FROM road_postal WHERE road_id = #{roadId}
-    </select>
-
-    <select id="selectByPostalId" parameterType="long" resultType="RoadPostalDTO">
-        SELECT * FROM road_postal WHERE postal_id = #{postalId}
-    </select>
-
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM road_postal WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByRoadId" parameterType="long">
-        DELETE FROM road_postal WHERE road_id = #{roadId}
-    </delete>
-
-    <delete id="deleteByPostalId" parameterType="long">
-        DELETE FROM road_postal WHERE postal_id = #{postalId}
+    <delete id="delete" parameterType="RoadPostalDTO">
+        DELETE FROM road_postal
+        WHERE road_id = #{roadId} AND postal_id = #{postalId}
     </delete>
 
 </mapper>

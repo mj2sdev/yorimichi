@@ -7,9 +7,9 @@ import org.apache.ibatis.type.Alias;
 import java.time.LocalDateTime;
 
 /**
- * 시/군/구 DTO.
+ * 북마크(즐겨찾기) DTO.
  *
- * <br>시/군/구 정보를 전달합니다.
+ * <br>북마크(즐겨찾기) 정보를 전달합니다.
  *
  * @author GeonHoKoo
  * @author LancerAlert
@@ -17,20 +17,14 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Alias("RegionSigunguDTO")
-public class RegionSigunguDTO {
-
-	/** PK: 시/군/구 ID */
-    private Long id;
-
-	/** FK: 시/도 ID */
-    private Long sidoId;
-
-	/** 시/군/구 코드 */
-    private String code;
+@Alias("BookmarkDTO")
+public class BookmarkDTO {
 	
-	/** 시/군/구 이름 */
-    private String name;
+	/** FK: 유저 ID */
+    private Long userId;
+	
+	/** FK: 상점 ID */
+    private Long storeId;
 
 	/** 생성일시 (DB 자동 생성) */
 	private LocalDateTime createdAt;

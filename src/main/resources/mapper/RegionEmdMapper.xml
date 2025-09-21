@@ -5,30 +5,24 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.RegionEmdMapper">
 
     <insert id="insert" parameterType="RegionEmdDTO">
-        INSERT INTO region_emd (sigungu_id, name)
-        VALUES (#{sigunguId}, #{name})
+        INSERT INTO region_emd (sigungu_id, code, name)
+        VALUES (#{sigunguId}, #{code}, #{name})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="RegionEmdDTO">
-        SELECT * FROM region_emd WHERE id = #{id}
-    </select>
-
-    <select id="selectBySigunguId" parameterType="long" resultType="RegionEmdDTO">
-        SELECT * FROM region_emd WHERE sigungu_id = #{sigunguId} ORDER BY name ASC
+    <select id="selectById" parameterType="Long" resultType="RegionEmdDTO">
+        SELECT id, sigunguId, code, name, created_at, updated_at
+        FROM region_emd
+        WHERE id = #{id}
     </select>
 
     <update id="update" parameterType="RegionEmdDTO">
         UPDATE region_emd
-        SET name = #{name}, updated_at = NOW()
+        SET sigungu_id = #{sigunguId}, code = #{code}, name = #{name}
         WHERE id = #{id}
     </update>
 
-    <delete id="deleteById" parameterType="long">
+    <delete id="deleteById" parameterType="Long">
         DELETE FROM region_emd WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteBySigunguId" parameterType="long">
-        DELETE FROM region_emd WHERE sigungu_id = #{sigunguId}
     </delete>
 
 </mapper>

@@ -9,28 +9,9 @@
         VALUES (#{rootId}, #{keywordId})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="RootKeywordDTO">
-        SELECT * FROM root_keyword WHERE id = #{id}
-    </select>
-
-    <select id="selectByRootId" parameterType="long" resultType="RootKeywordDTO">
-        SELECT * FROM root_keyword WHERE root_id = #{rootId}
-    </select>
-
-    <select id="selectByKeywordId" parameterType="long" resultType="RootKeywordDTO">
-        SELECT * FROM root_keyword WHERE keyword_id = #{keywordId}
-    </select>
-
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM root_keyword WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByRootId" parameterType="long">
-        DELETE FROM root_keyword WHERE root_id = #{rootId}
-    </delete>
-
-    <delete id="deleteByKeywordId" parameterType="long">
-        DELETE FROM root_keyword WHERE keyword_id = #{keywordId}
+    <delete id="delete" parameterType="RootKeywordDTO">
+        DELETE FROM root_keyword
+        WHERE root_id = #{rootId} AND keyword_id = #{keywordId}
     </delete>
 
 </mapper>

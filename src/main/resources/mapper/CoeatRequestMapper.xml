@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jslhrd.yorimichi.mapper.CoeatRequestMapper">
+
+    <insert id="insert" parameterType="CoeatRequestDTO">
+        INSERT INTO feed_coeat_request (coeat_id, user_id, status, message)
+        VALUES (#{coeatId}, #{userId}, #{status}, #{message})
+    </insert>
+
+    <delete id="deleteByCoeatId" parameterType="Long">
+        DELETE FROM feed_coeat_request WHERE coeat_id = #{coeatId}
+    </delete>
+
+</mapper>

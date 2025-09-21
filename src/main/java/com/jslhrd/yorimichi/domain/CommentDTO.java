@@ -2,18 +2,31 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.ibatis.type.Alias;
 
 /**
- * 댓글
- * - parent_id: 대댓글(자기참조), 최상위 댓글은 NULL
- * - ERD 기준: created_at 없음
+ * 댓글 DTO.
+ *
+ * 댓글 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
  */
 @Getter
 @Setter
-public class CommentDTO {
-    private Long id;        // PK
-    private Long userId;    // FK → user.id
-    private Long feedId;    // FK → feed.id
-    private Long parentId;  // 상위 댓글(자기참조), NULL 허용
-    private String content; // 내용
+@Alias("CommentDTO")
+public class CommentDTO extends RootDTO {
+
+	/** FK: 같이먹기 ID */
+    private Long coeatId;
+
+	/** FK: 부모 댓글 ID */
+    private Long parentId;
+
+	/** FK: 유저 ID */
+	private Long userId;
+
+	/** 댓글 내용 */
+    private String content;
 }

@@ -5,38 +5,27 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.ReviewMapper">
 
     <insert id="insert" parameterType="ReviewDTO">
-        INSERT INTO review (store_id, user_id, rating, content)
-        VALUES (#{storeId}, #{userId}, #{rating}, #{content})
+        INSERT INTO review (id, user_id, food_id, rating, content)
+        VALUES (#{id}, #{userId}, #{foodId}, #{rating}, #{content})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="ReviewDTO">
-        SELECT * FROM review WHERE id = #{id}
-    </select>
-
-    <select id="selectByStoreId" parameterType="long" resultType="ReviewDTO">
-        SELECT * FROM review WHERE store_id = #{storeId} ORDER BY created_at DESC
-    </select>
-
-    <select id="selectByUserId" parameterType="long" resultType="ReviewDTO">
-        SELECT * FROM review WHERE user_id = #{userId} ORDER BY created_at DESC
+    <select id="selectById" parameterType="Long" resultType="ReviewDTO">
+        SELECT v.id, v.user_id, v.food_id, v.rating, v.content,
+               r.created_at, r.updated_at, r.deleted_at, r.blinded_at
+        FROM review v
+        JOIN root r ON v.id = r.id
+        WHERE v.id = #{id}
     </select>
 
     <update id="update" parameterType="ReviewDTO">
-        UPDATE review
-        SET rating = #{rating}, content = #{content}, updated_at = NOW()
-        WHERE id = #{id}
+        UPDATE review v
+        JOIN root r ON v.id = r.id
+        SET v.rating = #{rating}, v.content = #{content}, r.updated_at = NOW()
+        WHERE v.id = #{id}
     </update>
 
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM review WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByStoreId" parameterType="long">
-        DELETE FROM review WHERE store_id = #{storeId}
-    </delete>
-
-    <delete id="deleteByUserId" parameterType="long">
-        DELETE FROM review WHERE user_id = #{userId}
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM root WHERE id = #{id}
     </delete>
 
 </mapper>

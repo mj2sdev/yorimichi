@@ -5,37 +5,13 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.BookmarkMapper">
 
     <insert id="insert" parameterType="BookmarkDTO">
-        INSERT INTO bookmark (user_id, feed_id)
-        VALUES (#{userId}, #{feedId})
+        INSERT INTO bookmark (user_id, store_id)
+        VALUES (#{userId}, #{storeId})
     </insert>
 
-    <select id="selectByUserId" parameterType="long" resultType="BookmarkDTO">
-        SELECT * FROM bookmark WHERE user_id = #{userId}
-    </select>
-
-    <select id="selectByFeedId" parameterType="long" resultType="BookmarkDTO">
-        SELECT * FROM bookmark WHERE feed_id = #{feedId}
-    </select>
-
-    <select id="existsByUserIdAndFeedId" resultType="int">
-        SELECT COUNT(*) FROM bookmark
-        WHERE user_id = #{userId} AND feed_id = #{feedId}
-    </select>
-
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM bookmark WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByUserIdAndFeedId">
-        DELETE FROM bookmark WHERE user_id = #{userId} AND feed_id = #{feedId}
-    </delete>
-
-    <delete id="deleteByUserId" parameterType="long">
-        DELETE FROM bookmark WHERE user_id = #{userId}
-    </delete>
-
-    <delete id="deleteByFeedId" parameterType="long">
-        DELETE FROM bookmark WHERE feed_id = #{feedId}
+    <delete id="delete" parameterType="BookmarkDTO">
+        DELETE FROM bookmark
+        WHERE user_id = #{userId} AND store_id = #{storeId}
     </delete>
 
 </mapper>

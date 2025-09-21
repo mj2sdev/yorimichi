@@ -5,24 +5,13 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.RootImageMapper">
 
     <insert id="insert" parameterType="RootImageDTO">
-        INSERT INTO root_image (root_id, url, alt_text)
-        VALUES (#{rootId}, #{url}, #{altText})
+        INSERT INTO root_image (root_id, image_id)
+        VALUES (#{rootId}, #{imageId})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="RootImageDTO">
-        SELECT * FROM root_image WHERE id = #{id}
-    </select>
-
-    <select id="selectByRootId" parameterType="long" resultType="RootImageDTO">
-        SELECT * FROM root_image WHERE root_id = #{rootId}
-    </select>
-
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM root_image WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByRootId" parameterType="long">
-        DELETE FROM root_image WHERE root_id = #{rootId}
+    <delete id="delete" parameterType="RootImageDTO">
+        DELETE FROM root_image
+        WHERE root_id = #{rootId} AND image_id = #{imageId}
     </delete>
 
 </mapper>

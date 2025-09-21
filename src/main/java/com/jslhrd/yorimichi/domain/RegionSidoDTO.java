@@ -2,14 +2,36 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.ibatis.type.Alias;
+
+import java.time.LocalDateTime;
 
 /**
- * 시/도
+ * 시/도 DTO.
+ *
+ * <br>시/도 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
  */
 @Getter
 @Setter
+@Alias("RegionSidoDTO")
 public class RegionSidoDTO {
-    private Long id;     // PK
-    private String code; // 시/도 코드
-    private String name; // 시/도 명칭
+
+	/** FK: 시/도 ID */
+    private Long id;
+
+	/** 시/도 코드 */
+    private String code;
+
+	/** 시/도 이름 */
+    private String name;
+
+	/** 생성일시 (DB 자동 생성) */
+	private LocalDateTime createdAt;
+
+	/** 수정일시 (DB 자동 갱신) */
+	private LocalDateTime updatedAt;
 }

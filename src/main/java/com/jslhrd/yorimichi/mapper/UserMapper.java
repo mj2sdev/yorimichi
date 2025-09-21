@@ -3,15 +3,44 @@ package com.jslhrd.yorimichi.mapper;
 import com.jslhrd.yorimichi.domain.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import java.util.List;
 
+/**
+ * 유저 Mapper.
+ *
+ * <br>유저 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
+ */
 @Mapper
 public interface UserMapper {
-	int insert(UserDTO dto); // 회원 등록
-	UserDTO selectById(@Param("id") Long id); // 단건 조회
-	UserDTO selectByEmail(@Param("email") String email); // 이메일로 조회
-	List<UserDTO> selectAll(); // 전체 회원 목록
-	int update(UserDTO dto); // 회원 정보 수정
-	int updateLastLoginAt(@Param("id") Long id); // 마지막 로그인 갱신
-	int deleteById(@Param("id") Long id); // 삭제(PK)
+
+	/**
+	 * 유저 추가.
+	 * @return 영향 행 수 (추가 1, 그 외 0)
+	 */
+	int insert(UserDTO dto);
+
+	/**
+	 * 유저 단건 조회.
+	 * @param id 유저 ID
+	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
+	 */
+	UserDTO selectById(@Param("id") Long id);
+
+	// TODO: 유저 목록 조회.
+
+	/**
+	 * 유저 수정.
+	 * @return 영향 행 수 (수정 1, 대상 없음 0)
+	 */
+	int update(UserDTO dto);
+
+	/**
+	 * 유저 삭제.
+	 * @param id 유저 ID
+	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
+	 */
+	int deleteById(@Param("id") Long id);
 }

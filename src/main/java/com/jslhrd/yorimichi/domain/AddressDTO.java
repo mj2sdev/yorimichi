@@ -2,26 +2,51 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.ibatis.type.Alias;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * 주소
- * - FK: road_id
- * - created_at: DB DEFAULT, update에서만 updated_at 갱신
+ * 주소 DTO.
+ *
+ * <br>주소 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
  */
 @Getter
 @Setter
+@Alias("AddressDTO")
 public class AddressDTO {
-    private Long id;                    // PK
-    private Long roadId;                // FK → road.id
-    private Long postalId;              // postalId 추가(2차수정)
-    private String detail;              // 상세 주소(동/호수 등)
-    private String roadAddressText;     // 도로명 전체 주소
-    private String jibunAddressText;    // 지번 전체 주소
-    private Double latitude;        // 위도  Bigdecimal -> double 변경 (2차수정)
-    private Double longitude;       // 경도  Bigdecimal -> double 변경 (2차수정)
-    private LocalDateTime createdAt;    // 생성시각 (DB DEFAULT)
-    private LocalDateTime updatedAt;    // 수정시각
+
+    /** PK: 주소 ID */
+    private Long id;
+
+    /** FK: 도로 ID */
+    private Long roadId;
+
+    /** FK: 우편번호 ID */
+    private Long postalId;
+
+    /** 상세주소(동/호수 등) */
+    private String detail;
+
+    /** 도로명 전체 주소 */
+    private String roadAddressText;
+
+    /** 지번 전체 주소 */
+    private String jibunAddressText;
+
+    /** 위도 (-90.0 ~ +90.0) */
+    private Double latitude;
+
+    /** 경도 (-180.0 ~ +180.0) */
+    private Double longitude;
+
+    /** 생성일시 (DB 자동 생성) */
+    private LocalDateTime createdAt;
+
+    /** 수정일시 (DB 자동 갱신) */
+    private LocalDateTime updatedAt;
 }

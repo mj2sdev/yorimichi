@@ -2,19 +2,33 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
 
 /**
- * 좋아요
- * - ERD: id, user_id, root_id, created_at
- * - created_at: DB DEFAULT
- *  schema 기준 id 제거 (2차 수정)
+ * 좋아요 DTO.
+ *
+ * <br>좋아요 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
  */
 @Getter
 @Setter
+@Alias("LikeDTO")
 public class LikeDTO {
-    private Long userId;             // 유저 FK
-    private Long rootId;             // 루트 FK
-    private LocalDateTime createdAt; // 생성시각 (DB DEFAULT)
+
+	/** FK: 유저 ID */
+    private Long userId;
+
+	/** FK: 루트 ID */
+    private Long rootId;
+
+	/** 생성일시 (DB 자동 생성) */
+	private LocalDateTime createdAt;
+
+	/** 수정일시 (DB 자동 갱신) */
+	private LocalDateTime updatedAt;
 }

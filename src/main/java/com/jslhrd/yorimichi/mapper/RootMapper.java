@@ -3,13 +3,29 @@ package com.jslhrd.yorimichi.mapper;
 import com.jslhrd.yorimichi.domain.RootDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import java.util.List;
 
+/**
+ * 루트 Mapper.
+ *
+ * <br>루트 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
+ */
 @Mapper
 public interface RootMapper {
-	int insert(RootDTO dto); // 루트 등록
-	RootDTO selectById(@Param("id") Long id); // 단건 조회
-	List<RootDTO> selectPaged(@Param("offset") int offset, @Param("limit") int limit); // 페이지 목록
-	int update(RootDTO dto); // 내용/상태 수정
-	int deleteById(@Param("id") Long id); // 삭제(PK)
+
+	/**
+	 * 루트 추가.
+	 * @return 영향 행 수 (추가 1, 그 외 0)
+	 */
+	int insert(RootDTO dto);
+
+	/**
+	 * 루트 삭제.
+	 * @param id 루트 ID
+	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
+	 */
+	int deleteById(@Param("id") Long id);
 }
