@@ -12,8 +12,9 @@
 >   - [x] this
 >   - [x] 클로저
 >   - [x] dom
->   - [ ] 이벤트
+>   - [x] 이벤트
 > - 토요일: AJAX, REST API, 프로미스, 제너레이터와 async와await의 이해
+>   - [x] 스코프
 >   - [ ] AJAX
 >   - [ ] REST API
 >   - [ ] 프로미스
