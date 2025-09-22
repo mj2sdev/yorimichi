@@ -4,9 +4,9 @@
   "settings": {
     "width": 8000,
     "height": 8000,
-    "scrollTop": -3030.5052,
-    "scrollLeft": -2522.9544,
-    "zoomLevel": 0.79,
+    "scrollTop": -3875.4259,
+    "scrollLeft": -1883.0548,
+    "zoomLevel": 0.82,
     "show": 430,
     "database": 1,
     "databaseName": "yorimichi",
@@ -1038,6 +1038,7 @@
         "name": "report",
         "comment": "신고",
         "columnIds": [
+          "9QOKz3GZtu-vAQYXbYqfs",
           "TxvLoiMcQuVC51UPCZQFV",
           "AXAsIg1MMVJOLC3n7Cia6",
           "Z48GmN2NLGk4E1em0_Bio",
@@ -1046,6 +1047,7 @@
           "ln_Ah1y5L33DFsskyrinU"
         ],
         "seqColumnIds": [
+          "9QOKz3GZtu-vAQYXbYqfs",
           "TxvLoiMcQuVC51UPCZQFV",
           "JKUhvoG4vEl0DyFalntQv",
           "I8v7qN-GIuChwGc8Q17-Q",
@@ -1067,7 +1069,7 @@
           "color": ""
         },
         "meta": {
-          "updateAt": 1758280179398,
+          "updateAt": 1758524484624,
           "createAt": 1757403390349
         }
       },
@@ -8152,7 +8154,7 @@
         "id": "dcjlcYq26KvVOL1UCDWQp",
         "tableId": "wEnvMM6fPnP6ofZgdxVLI",
         "name": "updated_at",
-        "comment": "",
+        "comment": "수정일시",
         "dataType": "DATETIME",
         "default": "CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP",
         "options": 8,
@@ -8164,8 +8166,28 @@
           "widthDefault": 312
         },
         "meta": {
-          "updateAt": 1758465119235,
+          "updateAt": 1758524591009,
           "createAt": 1758465092293
+        }
+      },
+      "9QOKz3GZtu-vAQYXbYqfs": {
+        "id": "9QOKz3GZtu-vAQYXbYqfs",
+        "tableId": "oz8L9ibuL6vguZxe2WXtF",
+        "name": "id",
+        "comment": "신고 PK",
+        "dataType": "BIGINT",
+        "default": "AUTO_INCREMENT",
+        "options": 10,
+        "ui": {
+          "keys": 1,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 102
+        },
+        "meta": {
+          "updateAt": 1758524500338,
+          "createAt": 1758524482741
         }
       }
     },
@@ -9394,7 +9416,7 @@
             "AXAsIg1MMVJOLC3n7Cia6"
           ],
           "x": 2479.9676,
-          "y": 4116.7095,
+          "y": 4128.7095,
           "direction": 2
         },
         "meta": {
