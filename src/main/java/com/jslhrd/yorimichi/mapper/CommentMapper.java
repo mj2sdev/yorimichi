@@ -4,6 +4,8 @@ import com.jslhrd.yorimichi.domain.CommentDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Optional;
+
 /**
  * 댓글 Mapper.
  *
@@ -29,7 +31,7 @@ public interface CommentMapper {
 	 * @param id 댓글 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
-	CommentDTO selectById(@Param("id") Long id);
+	Optional<CommentDTO> selectById(@Param("id") Long id);
 
 	/**
 	 * 댓글 수정.

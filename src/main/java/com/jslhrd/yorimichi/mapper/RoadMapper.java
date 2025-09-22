@@ -4,6 +4,8 @@ import com.jslhrd.yorimichi.domain.RoadDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Optional;
+
 /**
  * 도로명 Mapper.
  *
@@ -27,7 +29,7 @@ public interface RoadMapper {
 	 * @param id 도로명 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
-	RoadDTO selectById(@Param("id") Long id);
+	Optional<RoadDTO> selectById(@Param("id") Long id);
 
 	/**
 	 * 도로명 수정.

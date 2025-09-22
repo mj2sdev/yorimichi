@@ -9,7 +9,7 @@
         VALUES (#{reporter_id}, #{root_id}, #{reason})
     </insert>
 
-    <delete id="delete" parameterType="Long">
+    <delete id="delete" parameterType="ReportDTO">
         DELETE FROM report
         WHERE reporter_id = #{reporterId} AND root_id = #{rootId}
     </delete>

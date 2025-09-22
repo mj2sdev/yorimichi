@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jslhrd.yorimichi.mapper.SocialAccountMapper">
+
+    <insert id="insert" parameterType="SocialAccountDTO">
+        INSERT INTO social_account (user_id, provider, provider_user_id, provider_email,
+                                    email_verified, display_name, avatar_url)
+        VALUES (#{userId}, #{provider}, #{providerUserId}, #{providerEmail},
+                #{emailVerified}, #{displayName}, #{avatarUrl})
+    </insert>
+
+    <select id="selectByUserIdProvider" parameterType="String" resultType="SocialAccountDTO">
+        SELECT user_id, provider, provider_user_id, provider_email, email_verified,
+               display_name, avatar_url, created_at, updated_at, last_login_at
+        FROM social_account
+        WHERE user_id = #{userId} AND provider = #{provider}
+    </select>
+
+    <update id="update" parameterType="SocialAccountDTO">
+        UPDATE social_account
+        SET provider_email = #{providerEmail}, display_name = #{displayName}, avatar_url = #{avatarUrl}
+        WHERE user_id = #{userId} AND provider = #{provider}
+    </update>
+
+    <delete id="deleteByUserIdProvider">
+        DELETE FROM social_account
+        WHERE user_id = #{userId} AND provider = #{provider}
+    </delete>
+
+</mapper>

@@ -4,6 +4,8 @@ import com.jslhrd.yorimichi.domain.ReviewDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Optional;
+
 /**
  * 리뷰 Mapper.
  *
@@ -31,7 +33,7 @@ public interface ReviewMapper {
 	 * @param id 주소 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
-	ReviewDTO selectById(@Param("id") Long id);
+	Optional<ReviewDTO> selectById(@Param("id") Long id);
 
 	/**
 	 * 주소 수정.
