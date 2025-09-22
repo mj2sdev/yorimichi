@@ -240,7 +240,7 @@ CREATE TABLE user (
     id            BIGINT       NOT NULL,
     role_id       BIGINT       NOT NULL,
     email         VARCHAR(100) NOT NULL,
-    password      VARCHAR(256) NOT NULL,
+    password      VARCHAR(256),
     nickname      VARCHAR(20)  NOT NULL,
     description   TEXT,
     last_login_at DATETIME,
@@ -265,8 +265,8 @@ CREATE TABLE social_account (
     last_login_at    DATETIME,
 
     CONSTRAINT pk_social_account               PRIMARY KEY (provider, provider_user_id),
-    CONSTRAINT uk_social_account_user_provider UNIQUE      (user_id, provider),
-    CONSTRAINT fk_social_account_user          FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+    CONSTRAINT fk_social_account_user          FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT uk_social_account_user_provider UNIQUE      (user_id, provider)
 );
 
 CREATE TABLE bookmark (
@@ -308,6 +308,7 @@ CREATE TABLE coeat (
     auto_accept BOOLEAN                             NOT NULL DEFAULT FALSE,
 
     CONSTRAINT pk_coeat          PRIMARY KEY (id),
+    CONSTRAINT fk_coeat_root     FOREIGN KEY (id)       REFERENCES root(id)  ON DELETE CASCADE,
     CONSTRAINT fk_coeat_store    FOREIGN KEY (store_id) REFERENCES store(id) ON DELETE SET NULL,
     CONSTRAINT fk_coeat_user     FOREIGN KEY (user_id)  REFERENCES user(id)  ON DELETE CASCADE,
     CONSTRAINT ck_coeat_capacity CHECK       (capacity >= 1)
@@ -324,7 +325,7 @@ CREATE TABLE coeat_request (
 
     CONSTRAINT pk_coeat_request       PRIMARY KEY (coeat_id, user_id),
     CONSTRAINT fk_coeat_request_coeat FOREIGN KEY (coeat_id) REFERENCES coeat(id) ON DELETE CASCADE,
-    CONSTRAINT fk_coeat_request_user  FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+    CONSTRAINT fk_coeat_request_user  FOREIGN KEY (user_id)  REFERENCES user(id)  ON DELETE CASCADE
 );
 
 CREATE TABLE comment (
@@ -341,22 +342,22 @@ CREATE TABLE comment (
     CONSTRAINT fk_comment_parent FOREIGN KEY (parent_id) REFERENCES comment(id) ON DELETE SET NULL,
 
     -- 자기 자신을 부모로 참조 금지
-    CONSTRAINT ck_comment_not_self_parent CHECK       (parent_id IS NULL OR parent_id <> id)
+    CONSTRAINT ck_comment_not_self_parent CHECK (parent_id IS NULL OR parent_id <> id)
 );
 
 CREATE TABLE report (
     id          BIGINT                                                            NOT NULL AUTO_INCREMENT,
     reporter_id BIGINT                                                            NOT NULL,
-    reported_id BIGINT                                                            NOT NULL,
+    root_id     BIGINT                                                            NOT NULL,
     reason      TEXT                                                              NOT NULL,
     status      ENUM('PENDING', 'IN_REVIEW', 'RESOLVED', 'REJECTED', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
     created_at  DATETIME                                                          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at  DATETIME                                                          NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT pk_report          PRIMARY KEY (id),
-    CONSTRAINT fk_report_reporter FOREIGN KEY (reporter_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT fk_report_reported FOREIGN KEY (reported_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT uk_report_reporter_reported UNIQUE (reporter_id, reported_id)
+    CONSTRAINT pk_report                   PRIMARY KEY (id),
+    CONSTRAINT fk_report_reporter          FOREIGN KEY (reporter_id) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT fk_report_root              FOREIGN KEY (root_id)     REFERENCES root(id) ON DELETE CASCADE,
+    CONSTRAINT uk_report_reporter_root UNIQUE      (reporter_id, root_id)
 );
 
 CREATE TABLE block (
@@ -375,8 +376,8 @@ CREATE TABLE follow (
     follower_id BIGINT   NOT NULL,
     followee_id BIGINT   NOT NULL,
     notified    BOOLEAN  NOT NULL DEFAULT FALSE,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     CONSTRAINT pk_follow          PRIMARY KEY (follower_id, followee_id),
     CONSTRAINT fk_follow_follower FOREIGN KEY (follower_id) REFERENCES user(id) ON DELETE CASCADE,
@@ -384,15 +385,15 @@ CREATE TABLE follow (
     CONSTRAINT ck_follow_not_self CHECK       (follower_id <> followee_id)
 );
 
-CREATE TABLE user_like (
+CREATE TABLE likes (
     user_id    BIGINT NOT NULL,
     root_id    BIGINT NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT pk_user_like      PRIMARY KEY (user_id, root_id),
-    CONSTRAINT fk_user_like_user FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT fk_user_like_root FOREIGN KEY (root_id) REFERENCES root(id) ON DELETE CASCADE
+    CONSTRAINT pk_likes      PRIMARY KEY (user_id, root_id),
+    CONSTRAINT fk_likes_user FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT fk_likes_root FOREIGN KEY (root_id) REFERENCES root(id) ON DELETE CASCADE
 );
 
 CREATE TABLE notification (
@@ -407,8 +408,8 @@ CREATE TABLE notification (
 
     CONSTRAINT pk_notification             PRIMARY KEY (id),
     CONSTRAINT fk_notification_actor_user  FOREIGN KEY (actor_user_id)  REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT fk_notification_target_user FOREIGN KEY (target_user_id) REFERENCES user(id) ON DELETE CASCADE,
     CONSTRAINT fk_notification_root        FOREIGN KEY (root_id)        REFERENCES root(id) ON DELETE CASCADE,
+    CONSTRAINT fk_notification_target_user FOREIGN KEY (target_user_id) REFERENCES user(id) ON DELETE CASCADE,
 
     -- 자기 자신에게 보낸 알림 금지
     CONSTRAINT ck_notification_not_self    CHECK       (actor_user_id <> target_user_id)
@@ -418,20 +419,23 @@ CREATE TABLE notification (
 -- 인덱스
 
 -- 주소/지역
-CREATE INDEX idx_region_sigungu_sido_id_name ON region_sigungu (sido_id, name);
-CREATE INDEX idx_region_emd_sigungu_id_name  ON region_emd     (sigungu_id, name);
-CREATE INDEX idx_road_emd_id_name            ON road           (emd_id, name);
 CREATE INDEX idx_address_road_postal         ON address        (road_id, postal_id);
 CREATE INDEX idx_address_postal_id           ON address        (postal_id);
+CREATE INDEX idx_road_postal_postal_id       ON road_postal    (postal_id, road_id);
+
 
 -- 위경도(사각 범위 검색용)
-CREATE INDEX idx_address_lat_lon ON address (latitude, longitude);
+CREATE INDEX idx_address_lat_lon             ON address (latitude, longitude);
+
+-- ② (역방향 조회 최적화) 매핑 테이블 보조 인덱스 추가
+CREATE INDEX idx_root_keyword_keyword_id     ON root_keyword (keyword_id);
+CREATE INDEX idx_root_image_image_id         ON root_image   (image_id);
 
 -- 상점/카테고리/시설
-CREATE INDEX idx_store_address_id            ON store (address_id);
-CREATE INDEX idx_category_parent_id          ON category (parent_id);
+CREATE INDEX idx_store_address_id            ON store                   (address_id);
+CREATE INDEX idx_category_parent_id          ON category                (parent_id);
 -- store_category PK(store_id,category_id)가 있지만 역방향 조회도 고려
-CREATE INDEX idx_store_category_category_id  ON store_category (category_id);
+CREATE INDEX idx_store_category_category_id  ON store_category          (category_id);
 CREATE INDEX idx_store_facility_category_id  ON store_facility_category (facility_category_id);
 
 -- 음식
@@ -440,15 +444,18 @@ CREATE INDEX idx_food_store_id               ON food (store_id);
 CREATE INDEX idx_food_store_price            ON food (store_id, price);
 
 -- 유저/소셜
-CREATE INDEX idx_user_role_id                ON user (role_id);
+CREATE INDEX idx_user_role_id                ON user           (role_id);
 CREATE INDEX idx_social_account_user_id      ON social_account (user_id);
 
 -- 북마크/팔로우/차단/좋아요
 -- PK(user_id,store_id)지만 '가게의 북마크 수' 같은 조회 대비
 CREATE INDEX idx_bookmark_store_user         ON bookmark (store_id, user_id);
-CREATE INDEX idx_follow_followee_id          ON follow (followee_id);
-CREATE INDEX idx_block_blockee_id            ON block (blockee_id);
-CREATE INDEX idx_user_like_root_id           ON user_like (root_id);
+CREATE INDEX idx_follow_followee_id          ON follow   (followee_id);
+CREATE INDEX idx_block_blockee_id            ON block    (blockee_id);
+CREATE INDEX idx_likes_root_id               ON likes    (root_id);
+
+-- ③ (선택·권장) 좋아요 사용자 기준 조회 최적화
+CREATE INDEX idx_likes_user_id               ON likes (user_id);
 
 -- 리뷰
 CREATE INDEX idx_review_food_id              ON review (food_id);
@@ -473,7 +480,7 @@ CREATE INDEX idx_comment_parent_id           ON comment (parent_id);
 
 -- 신고
 CREATE INDEX idx_report_reporter_id          ON report (reporter_id);
-CREATE INDEX idx_report_reported_id          ON report (reported_id);
+CREATE INDEX idx_report_root_id              ON report (root_id);
 CREATE INDEX idx_report_status               ON report (status);
 
 -- 알림
