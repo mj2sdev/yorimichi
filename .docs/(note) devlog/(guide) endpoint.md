@@ -8,18 +8,54 @@
 정리하면, 엔드포인트는 **특정 기능을 호출하기 위한 접근 경로(URL, URI 등)** 라고 말씀드릴 수 있습니다.
 
 형식
-index.html METHOD `URL` |요구 데이터| : 설명
+기능이 존재하는.html METHOD `URL` |요구 데이터| :: 기능명 - 설명
 
-## header.html
-header.html GET `/index` || : 로고 클릭시 index.html로 이동
-header.html GET `/station` || : 정류장 아이콘 클릭시 station.html로 이동
-header.html GET `/login` || : 로그인 아이콘 클릭시 login.html로 이동
-header.html GET `/search `|| : 검색창에 검색시 store/list.html로 이동
-header.html GET `/mypage` || : 마이페이지 버튼 클릭시 사용자의 페이지로 이동
-header.html GET `/logout` || : 버튼 클릭시 사용자 로그아웃.
-header.html GET `/like` |like 가게 리스트| : store/list.html로 이동 및, 유저의 좋아요 가게 리스트를 우선으로 보여줌.
-header.html POST `/notification` |알림리스트| : header의 알림리스트에 목록을 띄움.
-header.html GET `/notification/review/{id}` |id에 해당하는 리뷰 정보| : 리뷰 정보를 가져와서 리뷰 모달에 띄움
-header.html GET `/notification/coeat/{id}` |id에 해당하는 coeat 정보| : 같이먹기 정보를 가져와서 같이먹기 모달에 띄움
-header.html GET `/coeat/participate/{id}` || : 같이먹기 신청자 명단에 등록하고, 참가요청 버튼이 신청 버튼으로 바뀜.
+## layout/header.html
+- header.html GET `/index` || :: 로고 - 로고 클릭시 index.html로 이동
+- header.html GET `/station` || :: 정류장 - 정류장 아이콘 클릭시 station.html로 이동
+- header.html GET `/login` || :: 로그인 - 로그인 아이콘 클릭시 login.html로 이동
+- header.html GET `/search/{keyword} `|| :: 검색 - 검색창에 검색시 store/list.html로 이동
+- header.html GET `/mypage` || :: 마이페이지 - 마이페이지 버튼 클릭시 사용자의 페이지로 이동
+- header.html GET `/logout` || :: 로그아웃 - 버튼 클릭시 사용자 로그아웃.
+- header.html GET `/store/like` |like 가게 리스트| :: 좋아요 - store/list.html로 이동 및, 유저의 좋아요 가게 리스트를 우선으로 보여줌.
+- header.html GET `/review/{reviewid}` |id에 해당하는 리뷰 정보| :: 알림리뷰 - 리뷰 정보를 가져와서 리뷰 모달에 띄움
+- header.html GET `/coeat/{coeatid}` |id에 해당하는 coeat 정보| ::  알림코잇 - 같이먹기 정보를 가져와서 같이먹기 모달에 띄움
+- header.html GET `/coeat/participate/{userid}` || :: 코잇참가 - 같이먹기 요청자 명단에 등록하고, 참가요청 버튼이 요청완료 버튼으로 바뀜.
+- header.html POST `/notification/{userid}` |알림리스트| :: 알림버튼 - header의 알림리스트에 목록을 띄움.
 
+## index.html
+- index.html GET `/store/detail/{id}` ||:: 추천가게리스트 - 클릭시 특정 가게의 상세페이지로 감.
+
+## user/signup.html
+- signup.html POST `/signup/eamil` || :: 이메일확인 - 누르면 이메일 중복 검사? 혹은 이메일 확인? 용 이메일 전송.
+- signup.html POST `/signup/nickname` |중복여부boolean| :: 닉네임 - 중복여부 비동기
+- signup.html POST `/signup` |실패시 사유| :: 회원가입 - 유효성 검사 및 실패시 사유 표시.
+
+## user/login.html
+- login.html GET `/signup` || :: 이동 - signup.html로 이동. 
+- login.html POST `/login` |실패시 사유| :: 로그인 - 로그인 처리용. 유효성 검사 필요.
+- login.html POST `/login/social` || :: 소셜로그인 - 소셜로그인 처리용
+
+## store/detail.html
+- store/detail.html POST `/review` || :: 리뷰작성 - 작성
+- store/detail.html DELETE `/review/{reviewid}` || :: 리뷰삭제 - 삭제
+- store/detail.html PUT `/review/{reviewid}` || :: 리뷰수정 - 수정
+- store/detail.html POST `/coeat` || :: 같이먹기작성 - 작성
+- store/detail.html DELETE `/coeat/{coeatid}` || :: 같이먹기삭제 - 삭제
+- store/detail.html PUT `/coeat/{coeatid}` || :: 같이먹기수정 - 수정
+- store/detail.html PETCH `/coeat/participate/{id}` || :: 같이먹기참가수락 또는 해제 - 참가자 명단에서 참가자로 변경.
+- store/detail.html DELETE `/coeat/participate/{id}` || :: 같이먹기참가취소 - 참가자 명단에서 제거
+- store/detail.html POST `/report/{id}` || :: 신고 - 신고해서 신고 대상/ 카테고리/ 내용을 리스트에 전달.
+- store/detail.html GET `/user/{id}` || :: 유저정보 - 유저의 detail을 알아옴.
+- store/detail.html POST `/user/follow/{id}` || :: 유저팔로우 - 유저를 팔로우 목록에 넣음.
+- store/detail.html DELETE `/user/follow/{id}` || :: 유저팔로우 - 유저를 팔로우 목록에 넣음.
+- store/detail.html POST `/store/bookmark/{id}` || :: 즐겨찾기 - 가게를 즐겨찾기 목록에 등록함.
+- store/detail.html DELETE `/store/bookmark/{id}` || :: 즐겨찾기해제 - 가게를 즐겨찾기 목록에서 제거함.
+- store/detail.html POST `/store/like/{id}` || :: 즐겨찾기 - 가게를 좋아요 목록에 등록함.
+- store/detail.html DELETE `/store/like/{id}` || :: 즐겨찾기해제 - 가게를 좋아요 목록에서 제거함.
+
+## user/mypage.html
+- mypage.html PUT `/user/privacy` || :: 개인정보 공개처리 - 버튼 딸깍으로 개인정보를 공개할지 말지를 결정함. 저장시 저장해서 db 갱신
+- mypage.html PUT `/user` || :: 개인정보수정 - 닉네임이나 이메일 등 개인정보 수정
+- mypage.html POST `/user/block/{id}` || :: 유저차단 - 유저차단목록에넣음
+- mypage.html DELETE `/user/block/{id}` || :: 유저차단해제 - 차단목록에서 제거.

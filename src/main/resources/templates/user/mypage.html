@@ -7,7 +7,7 @@
 
 <body>
 	<section>
-		<form name="myinfo" method="post" action="/user/myinfo">
+		<form name="myinfo" method="post" action="/user/mypage">
 			<div class="container my-4">
 				<div class="row">
 					<div class="col-9">
@@ -104,7 +104,7 @@
 															</span>
 														</div>
 														<div class="col-auto">
-															<a href="/store/view"
+															<a href="/store/detail"
 																class="text-ymprimary text-decoration-none">
 																가게보기
 															</a>
@@ -142,7 +142,7 @@
 										<th:block th:each="like : ${#numbers.sequence(1,10)}">
 											<div class="row">
 												<div class="col">
-													<a href="/store/view" class="btn">
+													<a href="/store/detail" class="btn">
 														<img src="https://picsum.photos/50">
 														<span>가게명</span>
 														<span>위치</span>
@@ -159,7 +159,7 @@
 										<th:block th:each="bookmark : ${#numbers.sequence(1,10)}">
 											<div class="row">
 												<div class="col">
-													<a href="/store/view" class="btn">
+													<a href="/store/detail" class="btn">
 														<img src="https://picsum.photos/50">
 														<span>가게명</span>
 														<span>위치</span>
@@ -206,7 +206,7 @@
 											</button>
 										</div>
 										<div class="col">
-											<a href="/user/info" class="btn d-block">
+											<a href="/user/detail" class="btn d-block">
 												닉네임
 											</a>
 										</div>
@@ -223,7 +223,7 @@
 											</button>
 										</div>
 										<div class="col">
-											<a href="/user/info" class="btn d-block">
+											<a href="/user/detail" class="btn d-block">
 												닉네임
 											</a>
 										</div>
@@ -240,7 +240,7 @@
 											</button>
 										</div>
 										<div class="col">
-											<a href="/user/info" class="btn d-block">
+											<a href="/user/detail" class="btn d-block">
 												닉네임
 											</a>
 										</div>

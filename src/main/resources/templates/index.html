@@ -116,7 +116,7 @@
 				<div class="gap-4" style="display:grid; grid-template-columns: repeat(3,1fr);">
 					<th:block th:each="item : ${#numbers.sequence(1,6)}"><!-- 임시로 number로 해뒀지만 실제로는 객체 배열이 와야합니다.-->
 						<div class="bg-ymwhite p-4 my-3 border rounded-5 border-1">
-							<a th:href="@{/store/view}" class="text-start text-decoration-none text-ymsecondary">
+							<a th:href="@{/store/detail}" class="text-start text-decoration-none text-ymsecondary">
 								<div class="row">
 									<div class="col">
 										<img src="" class="card-img-top my-3" alt="...">
