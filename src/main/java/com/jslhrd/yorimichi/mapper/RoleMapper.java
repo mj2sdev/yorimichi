@@ -4,6 +4,8 @@ import com.jslhrd.yorimichi.domain.RoleDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Optional;
+
 /**
  * 권한/역할 Mapper.
  *
@@ -27,7 +29,7 @@ public interface RoleMapper {
 	 * @param id 권한/역할 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
-	RoleDTO selectById(@Param("id") Long id);
+	Optional<RoleDTO> selectById(@Param("id") Long id);
 
 	/**
 	 * 권한/역할 수정.

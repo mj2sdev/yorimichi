@@ -4,6 +4,8 @@ import com.jslhrd.yorimichi.domain.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Optional;
+
 /**
  * 유저 Mapper.
  *
@@ -27,7 +29,7 @@ public interface UserMapper {
 	 * @param id 유저 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
-	UserDTO selectById(@Param("id") Long id);
+	Optional<UserDTO> selectById(@Param("id") Long id);
 
 	// TODO: 유저 목록 조회.
 

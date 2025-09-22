@@ -4,6 +4,8 @@ import com.jslhrd.yorimichi.domain.FoodDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Optional;
+
 /**
  * 음식 Mapper.
  *
@@ -29,7 +31,7 @@ public interface FoodMapper {
 	 * @param id 음식 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
-	FoodDTO selectById(@Param("id") Long id);
+	Optional<FoodDTO> selectById(@Param("id") Long id);
 
 	/**
 	 * 음식 수정.

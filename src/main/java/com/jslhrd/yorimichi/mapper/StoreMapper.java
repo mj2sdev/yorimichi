@@ -4,6 +4,8 @@ import com.jslhrd.yorimichi.domain.StoreDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Optional;
+
 /**
  * 상점 Mapper.
  *
@@ -31,7 +33,7 @@ public interface StoreMapper {
 	 * @param id 상점 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
-	StoreDTO selectById(@Param("id") Long id);
+	Optional<StoreDTO> selectById(@Param("id") Long id);
 
 	/**
 	 * 상점 수정.
