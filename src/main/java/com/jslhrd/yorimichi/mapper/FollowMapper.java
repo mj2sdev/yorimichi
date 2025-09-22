@@ -2,14 +2,28 @@ package com.jslhrd.yorimichi.mapper;
 
 import com.jslhrd.yorimichi.domain.FollowDTO;
 import org.apache.ibatis.annotations.Mapper;
-import java.util.List;
 
+/**
+ * 팔로우 Mapper.
+ *
+ * <br>팔로우 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
+ */
 @Mapper
 public interface FollowMapper {
-    int insert(FollowDTO follow); // 팔로우 등록
-    int delete(FollowDTO follow); // 언팔로우
-    int count(FollowDTO follow); // 팔로우 관계 확인(0 or 1)
-    List<FollowDTO> listFollowersOf(Long userId); // 나를 팔로우하는 사람 목록(= 내 팔로워들)
-    List<FollowDTO> listFolloweesOf(Long userId); // 내가 팔로우하는 사람 목록(= 내 팔로이들)
-    int updateNotified(FollowDTO follow); // 알림 여부 갱신
+
+	/**
+	 * 팔로우 생성.
+	 * @return 영향 행 수 (추가 1, 그 외 0)
+	 */
+	int insert(FollowDTO dto);
+
+	/**
+	 * 팔로우 삭제.
+	 * @return 영향 생 수 (삭제 1, 대상 없음 0)
+	 */
+	int delete(FollowDTO dto);
 }

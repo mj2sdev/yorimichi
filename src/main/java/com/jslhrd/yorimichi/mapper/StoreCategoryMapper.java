@@ -2,13 +2,28 @@ package com.jslhrd.yorimichi.mapper;
 
 import com.jslhrd.yorimichi.domain.StoreCategoryDTO;
 import org.apache.ibatis.annotations.Mapper;
-import java.util.List;
 
+/**
+ * 상점 - 카테고리 매핑 Mapper.
+ *
+ * <br>상점 - 카테고리 매핑 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
+ */
 @Mapper
 public interface StoreCategoryMapper {
-    int insert(StoreCategoryDTO storeCategory); // 매핑 추가
-    int delete(StoreCategoryDTO storeCategory); // 매핑 삭제
-    int count(StoreCategoryDTO storeCategory); // 매핑 존재 여부
-    List<StoreCategoryDTO> listByStoreId(Long storeId); // 특정 상점의 카테고리 목록
-    List<StoreCategoryDTO> listByCategoryId(Long categoryId); // 특정 카테고리에 속한 상점 매핑 목록
+
+	/**
+	 * 상점 - 카테고리 매핑 추가.
+	 * @return 영향 행 수 (추가 1, 그 외 0)
+	 */
+	int insert(StoreCategoryDTO dto);
+
+	/**
+	 * 상점 - 카테고리 매핑 삭제.
+	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
+	 */
+	int delete(StoreCategoryDTO dto);
 }

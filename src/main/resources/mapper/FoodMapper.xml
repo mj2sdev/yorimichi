@@ -1,37 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.jslhrd.yorimichi.mapper.FoodMapper">
 
-  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.FoodDTO">
-    SELECT id, store_id, name, price, description
-    FROM food
-    WHERE id = #{foodId}
-  </select>
+    <insert id="insert" parameterType="FoodDTO">
+        INSERT INTO food (id, store_id, name, price, description)
+        VALUES (#{id}, #{storeId}, #{name}, #{price}, #{description})
+    </insert>
 
-  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.FoodDTO">
-    INSERT INTO food (store_id, name, price, description)
-    VALUES (#{storeId}, #{name}, #{price}, #{description})
-  </insert>
+    <select id="selectById" parameterType="Long" resultType="FoodDTO">
+        SELECT f.id, f.store_id, f.name, f.price, f.description,
+               r.created_at, r.updated_at, r.deleted_at, r.blinded_at
+        FROM food f
+        JOIN root r ON f.id = r.id
+        WHERE f.id = #{id}
+    </select>
 
-  <update id="update" parameterType="com.jslhrd.yorimichi.domain.FoodDTO">
-    UPDATE food
-    SET store_id = #{storeId},
-        name = #{name},
-        price = #{price},
-        description = #{description}
-    WHERE id = #{foodId}
-  </update>
+    <update id="update" parameterType="FoodDTO">
+        UPDATE food f
+        JOIN root r ON f.id = r.id
+        SET f.name = #{name}, f.price = #{price}, f.description = #{description},
+            r.updated_at = NOW()
+        WHERE f.id = #{id}
+    </update>
 
-  <delete id="deleteById" parameterType="long">
-    DELETE FROM food WHERE id = #{foodId}
-  </delete>
-
-  <select id="listByStoreId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.FoodDTO">
-    SELECT id, store_id, name, price, description
-    FROM food
-    WHERE store_id = #{storeId}
-    ORDER BY id DESC
-  </select>
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM root WHERE id = #{id}
+    </delete>
 
 </mapper>

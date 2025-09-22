@@ -1,13 +1,37 @@
 package com.jslhrd.yorimichi.domain;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.ibatis.type.Alias;
+
 import java.time.LocalDateTime;
 
+/**
+ * 팔로우 DTO.
+ *
+ * <br>팔로우 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
+ */
 @Getter
 @Setter
+@Alias("FollowDTO")
 public class FollowDTO {
-    private Long followerId;            // FK → user.user_id (팔로우한 유저)
-    private Long followeeId;            // FK → user.user_id (팔로우받은 유저)
-    private Boolean notified;           // BOOLEAN (기본 TRUE)
-    private LocalDateTime createdAt;    // CURRENT_TIMESTAMP
+	
+	/** FK: 유저 ID */
+    private Long followerId;
+	
+	/** FK: 팔로우 대상 ID */
+    private Long followeeId;
+
+	/** 팔로우 알림여부 */
+    private Boolean notified;
+
+	/** 생성일시 (DB 자동 생성) */
+	private LocalDateTime createdAt;
+
+	/** 수정일시 (DB 자동 갱신) */
+	private LocalDateTime updatedAt;
 }

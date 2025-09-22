@@ -1,12 +1,34 @@
 package com.jslhrd.yorimichi.domain;
 
-import java.time.LocalDateTime;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.ibatis.type.Alias;
 
+import java.time.LocalDateTime;
+
+/**
+ * 상점 - 카테고리 매핑 DTO.
+ *
+ * <br>상점 - 카테고리 매핑 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
+ */
 @Getter
 @Setter
+@Alias("StoreCategoryDTO")
 public class StoreCategoryDTO {
-    private Long storeId;     // FK → store.store_id
-    private Long categoryId;  // FK → category.category_id    
-    private LocalDateTime createdAt; 
+
+	/** FK: 상점 ID */
+    private Long storeId;
+
+	/** FK: 카테고리 ID */
+    private Long categoryId;
+
+	/** 생성일시 (DB 자동 생성) */
+	private LocalDateTime createdAt;
+
+	/** 수정일시 (DB 자동 갱신) */
+	private LocalDateTime updatedAt;
 }

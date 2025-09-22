@@ -1,44 +1,31 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.jslhrd.yorimichi.mapper.ReviewMapper">
 
-  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.ReviewDTO">
-    SELECT id, user_id, food_id, rating, content
-    FROM review
-    WHERE id = #{reviewId}
-  </select>
+    <insert id="insert" parameterType="ReviewDTO">
+        INSERT INTO review (id, user_id, food_id, rating, content)
+        VALUES (#{id}, #{userId}, #{foodId}, #{rating}, #{content})
+    </insert>
 
-  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.ReviewDTO">
-    INSERT INTO review (user_id, food_id, rating, content)
-    VALUES (#{userId}, #{foodId}, #{rating}, #{content})
-  </insert>
+    <select id="selectById" parameterType="Long" resultType="ReviewDTO">
+        SELECT v.id, v.user_id, v.food_id, v.rating, v.content,
+               r.created_at, r.updated_at, r.deleted_at, r.blinded_at
+        FROM review v
+        JOIN root r ON v.id = r.id
+        WHERE v.id = #{id}
+    </select>
 
-  <update id="update" parameterType="com.jslhrd.yorimichi.domain.ReviewDTO">
-    UPDATE review
-    SET user_id = #{userId},
-        food_id = #{foodId},
-        rating  = #{rating},
-        content = #{content}
-    WHERE id = #{reviewId}
-  </update>
+    <update id="update" parameterType="ReviewDTO">
+        UPDATE review v
+        JOIN root r ON v.id = r.id
+        SET v.rating = #{rating}, v.content = #{content}, r.updated_at = NOW()
+        WHERE v.id = #{id}
+    </update>
 
-  <delete id="deleteById" parameterType="long">
-    DELETE FROM review WHERE id = #{reviewId}
-  </delete>
-
-  <select id="listByFoodId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.ReviewDTO">
-    SELECT id, user_id, food_id, rating, content
-    FROM review
-    WHERE food_id = #{foodId}
-    ORDER BY id DESC
-  </select>
-
-  <select id="listByUserId" parameterType="long" resultType="com.jslhrd.yorimichi.domain.ReviewDTO">
-    SELECT id, user_id, food_id, rating, content
-    FROM review
-    WHERE user_id = #{userId}
-    ORDER BY id DESC
-  </select>
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM root WHERE id = #{id}
+    </delete>
 
 </mapper>

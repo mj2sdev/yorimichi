@@ -1,28 +1,28 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.jslhrd.yorimichi.mapper.ImageMapper">
 
-  <select id="selectById" parameterType="long" resultType="com.jslhrd.yorimichi.domain.ImageDTO">
-    SELECT id AS image_id, url, created_at
-    FROM image
-    WHERE id = #{imageId}
-  </select>
+    <insert id="insert" parameterType="ImageDTO">
+        INSERT INTO image (url)
+        VALUES (#{url})
+    </insert>
 
-  <insert id="insert" parameterType="com.jslhrd.yorimichi.domain.ImageDTO">
-    INSERT INTO image (url, created_at)
-    VALUES (#{url}, #{createdAt})
-  </insert>
+    <select id="selectById" parameterType="Long" resultType="ImageDTO">
+        SELECT id, url, created_at, updated_at
+        FROM image
+        WHERE id = #{id}
+    </select>
 
-  <update id="update" parameterType="com.jslhrd.yorimichi.domain.ImageDTO">
-    UPDATE image
-    SET url = #{url},
-        created_at = #{createdAt}
-    WHERE id = #{imageId}
-  </update>
+    <update id="update" parameterType="ImageDTO">
+        UPDATE image
+        SET url = #{url}
+        WHERE id = #{id}
+    </update>
 
-  <delete id="deleteById" parameterType="long">
-    DELETE FROM image WHERE id = #{imageId}
-  </delete>
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM image WHERE id = #{id}
+    </delete>
 
 </mapper>

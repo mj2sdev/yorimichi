@@ -2,12 +2,28 @@ package com.jslhrd.yorimichi.mapper;
 
 import com.jslhrd.yorimichi.domain.BookmarkDTO;
 import org.apache.ibatis.annotations.Mapper;
-import java.util.List;
 
+/**
+ * 북마크(즐겨찾기) Mapper.
+ *
+ * <br>북마크(즐겨찾기) 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
+ */
 @Mapper
 public interface BookmarkMapper {
-    int insert(BookmarkDTO bookmark); // 북마크 추가
-    int delete(BookmarkDTO bookmark); // 북마크 삭제
-    int count(BookmarkDTO bookmark); // 북마크 존재 여부(0 / 1)
-    List<BookmarkDTO> listByUserId(Long userId); // 특정 사용자의 북마크 목록
+
+	/**
+	 * 북마크(즐겨찾기) 추가.
+	 * @return 영향 행 수 (추가 1, 그 외 0)
+	 */
+    int insert(BookmarkDTO dto);
+
+	/**
+	 * 북마크(즐겨찾기) 삭제.
+	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
+	 */
+    int delete(BookmarkDTO dto);
 }

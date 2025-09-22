@@ -1,13 +1,34 @@
 package com.jslhrd.yorimichi.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.ibatis.type.Alias;
+
 import java.time.LocalDateTime;
-import lombok.*;
 
-
+/**
+ * 북마크(즐겨찾기) DTO.
+ *
+ * <br>북마크(즐겨찾기) 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
+ */
 @Getter
 @Setter
+@Alias("BookmarkDTO")
 public class BookmarkDTO {
-    private Long userId;   // FK → user.user_id
-    private Long storeId;  // FK → store.store_id
-    private LocalDateTime createdAt;
+	
+	/** FK: 유저 ID */
+    private Long userId;
+	
+	/** FK: 상점 ID */
+    private Long storeId;
+
+	/** 생성일시 (DB 자동 생성) */
+	private LocalDateTime createdAt;
+
+	/** 수정일시 (DB 자동 갱신) */
+	private LocalDateTime updatedAt;
 }
