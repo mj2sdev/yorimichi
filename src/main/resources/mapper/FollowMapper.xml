@@ -5,29 +5,13 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.FollowMapper">
 
     <insert id="insert" parameterType="FollowDTO">
-        INSERT INTO follow (follower_id, following_id)
-        VALUES (#{followerId}, #{followingId})
+        INSERT INTO follow (follower_id, followee_id)
+        VALUES (#{followerId}, #{followeeId})
     </insert>
 
-    <select id="selectFollowersByUserId" parameterType="long" resultType="FollowDTO">
-        SELECT * FROM follow WHERE following_id = #{userId}
-    </select>
-
-    <select id="selectFollowingsByUserId" parameterType="long" resultType="FollowDTO">
-        SELECT * FROM follow WHERE follower_id = #{userId}
-    </select>
-
-    <select id="existsByPair" resultType="int">
-        SELECT COUNT(*) FROM follow
-        WHERE follower_id = #{followerId} AND following_id = #{followingId}
-    </select>
-
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM follow WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByPair">
-        DELETE FROM follow WHERE follower_id = #{followerId} AND following_id = #{followingId}
+    <delete id="delete" parameterType="FollowDTO">
+        DELETE FROM follow
+        WHERE follower_id = #{followerId} AND followee_id = #{followeeId}
     </delete>
 
 </mapper>

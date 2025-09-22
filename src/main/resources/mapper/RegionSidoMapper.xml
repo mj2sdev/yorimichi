@@ -5,25 +5,23 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.RegionSidoMapper">
 
     <insert id="insert" parameterType="RegionSidoDTO">
-        INSERT INTO region_sido (name)
-        VALUES (#{name})
+        INSERT INTO region_sido (code, name)
+        VALUES (#{code}, #{name})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="RegionSidoDTO">
-        SELECT * FROM region_sido WHERE id = #{id}
-    </select>
-
-    <select id="selectAll" resultType="RegionSidoDTO">
-        SELECT * FROM region_sido ORDER BY name ASC
+    <select id="selectById" parameterType="Long" resultType="RegionSidoDTO">
+        SELECT id, code, name, created_at, updated_at
+        FROM region_sido
+        WHERE id = #{id}
     </select>
 
     <update id="update" parameterType="RegionSidoDTO">
         UPDATE region_sido
-        SET name = #{name}, updated_at = NOW()
+        SET code = #{code}, name = #{name}
         WHERE id = #{id}
     </update>
 
-    <delete id="deleteById" parameterType="long">
+    <delete id="deleteById" parameterType="Long">
         DELETE FROM region_sido WHERE id = #{id}
     </delete>
 

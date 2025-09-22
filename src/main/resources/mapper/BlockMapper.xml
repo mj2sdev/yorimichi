@@ -9,25 +9,9 @@
         VALUES (#{blockerId}, #{blockedId})
     </insert>
 
-    <select id="selectBlockedUsersByBlockerId" parameterType="long" resultType="BlockDTO">
-        SELECT * FROM block WHERE blocker_id = #{blockerId}
-    </select>
-
-    <select id="existsByPair" resultType="int">
-        SELECT COUNT(*) FROM block
+    <delete id="deleteById" parameterType="BlockDTO">
+        DELETE FROM block
         WHERE blocker_id = #{blockerId} AND blocked_id = #{blockedId}
-    </select>
-
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM block WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByPair">
-        DELETE FROM block WHERE blocker_id = #{blockerId} AND blocked_id = #{blockedId}
-    </delete>
-
-    <delete id="deleteByUserId" parameterType="long">
-        DELETE FROM block WHERE blocker_id = #{userId} OR blocked_id = #{userId}
     </delete>
 
 </mapper>

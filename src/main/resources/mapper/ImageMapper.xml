@@ -5,24 +5,24 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.ImageMapper">
 
     <insert id="insert" parameterType="ImageDTO">
-        INSERT INTO image (root_id, url, alt_text)
-        VALUES (#{rootId}, #{url}, #{altText})
+        INSERT INTO image (url)
+        VALUES (#{url})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="ImageDTO">
-        SELECT * FROM image WHERE id = #{id}
+    <select id="selectById" parameterType="Long" resultType="ImageDTO">
+        SELECT id, url, created_at, updated_at
+        FROM image
+        WHERE id = #{id}
     </select>
 
-    <select id="selectByRootId" parameterType="long" resultType="ImageDTO">
-        SELECT * FROM image WHERE root_id = #{rootId}
-    </select>
+    <update id="update" parameterType="ImageDTO">
+        UPDATE image
+        SET url = #{url}
+        WHERE id = #{id}
+    </update>
 
-    <delete id="deleteById" parameterType="long">
+    <delete id="deleteById" parameterType="Long">
         DELETE FROM image WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByRootId" parameterType="long">
-        DELETE FROM image WHERE root_id = #{rootId}
     </delete>
 
 </mapper>

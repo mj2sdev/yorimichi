@@ -2,24 +2,45 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
 
 /**
- * 알림
- * - actorUserId : 액션을 발생시킨 유저
- * - targetUserId: 알림을 받는 유저
- * - readAt      : 읽은 시각 (NULL = 미읽음)
+ * 알림 DTO.
+ *
+ * <br>알림 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
  */
 @Getter
 @Setter
+@Alias("NotificationDTO")
 public class NotificationDTO {
-    private Long id;                  // PK
-    private Long actorUserId;         // FK → user.id (행위자)
-    private Long rootId;              // FK → root.id (대상 루트)
-    private Long targetUserId;        // FK → user.id (수신자)
-    private String message;           // 내용
-    private LocalDateTime createdAt;  // 생성시각 (DB DEFAULT)
-    private LocalDateTime readAt;     // 읽은 시각 (NULL 가능)
-    private LocalDateTime updatedAt;  // 수정시각
+
+	/** PK: 알림 ID */
+    private Long id;
+
+	/** FK: 행위자 ID */
+    private Long actorUserId;
+
+	/** FK: 대상 루트 ID */
+    private Long rootId;
+
+	/** FK: 수신자 ID */
+    private Long targetUserId;
+	
+	/** 알림 내용 */
+    private String message;
+	
+	/** 생성일시 (DB 자동 생성) */
+	private LocalDateTime createdAt;
+
+	/** 수정일시 (DB 자동 갱신) */
+	private LocalDateTime updatedAt;
+
+	/** 읽음일시 */
+	private LocalDateTime readAt;
 }

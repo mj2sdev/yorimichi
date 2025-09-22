@@ -2,28 +2,28 @@ package com.jslhrd.yorimichi.mapper;
 
 import com.jslhrd.yorimichi.domain.LikeDTO;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
+/**
+ * 좋아요 Mapper.
+ *
+ * <br>좋아요 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
+ */
 @Mapper
 public interface LikeMapper {
+	
+	/**
+	 * 좋아요 추가.
+	 * @return 영향 행 수 (추가 1, 그 외 0)
+	 */
+	int insert(LikeDTO dto);
 
-	/* 좋아요 생성 */
-	int insert(LikeDTO like);
-
-	/* 특정 피드의 좋아요 목록(필요 시) */
-	List<LikeDTO> selectByFeedId(@Param("feedId") Long feedId);
-
-	/* 사용자+피드 조합 존재 여부 - XML에서 COUNT(*) */
-	int existsByUserIdAndFeedId(@Param("userId") Long userId, @Param("feedId") Long feedId);
-
-	/* 피드별 좋아요 수 - XML에서 COUNT(*) */
-	int countByFeedId(@Param("feedId") Long feedId);
-
-	/* 단건 삭제(PK) */
-	int deleteById(@Param("id") Long id);
-
-	/* 사용자+피드 조합으로 삭제(좋아요 취소) */
-	int deleteByUserIdAndFeedId(@Param("userId") Long userId, @Param("feedId") Long feedId);
+	/**
+	 * 좋아요 삭제.
+	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
+	 */
+	int delete(LikeDTO dto);
 }

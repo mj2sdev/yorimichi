@@ -5,32 +5,24 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.CategoryMapper">
 
     <insert id="insert" parameterType="CategoryDTO">
-        INSERT INTO category (parent_id, name, sort_order)
-        VALUES (#{parentId}, #{name}, #{sortOrder})
+        INSERT INTO category (parent_id, name)
+        VALUES (#{parentId}, #{name})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="CategoryDTO">
-        SELECT * FROM category WHERE id = #{id}
-    </select>
-
-    <select id="selectByParentId" parameterType="long" resultType="CategoryDTO">
-        SELECT * FROM category 
-        WHERE (parent_id = #{parentId} OR (#{parentId} IS NULL AND parent_id IS NULL))
-        ORDER BY sort_order ASC
+    <select id="selectById" parameterType="Long" resultType="CategoryDTO">
+        SELECT id, parent_id, name, created_at, updated_at
+        FROM category
+        WHERE id = #{id}
     </select>
 
     <update id="update" parameterType="CategoryDTO">
         UPDATE category
-        SET parent_id = #{parentId}, name = #{name}, sort_order = #{sortOrder}, updated_at = NOW()
+        SET parent_id = #{parentId}, name = #{name}
         WHERE id = #{id}
     </update>
 
-    <delete id="deleteById" parameterType="long">
+    <delete id="deleteById" parameterType="Long">
         DELETE FROM category WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByParentId" parameterType="long">
-        DELETE FROM category WHERE parent_id = #{parentId}
     </delete>
 
 </mapper>

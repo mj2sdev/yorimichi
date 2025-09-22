@@ -3,16 +3,46 @@ package com.jslhrd.yorimichi.mapper;
 import com.jslhrd.yorimichi.domain.ReviewDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import java.util.List;
 
+/**
+ * 리뷰 Mapper.
+ *
+ * <br>주소 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
+ */
 @Mapper
 public interface ReviewMapper {
-	int insert(ReviewDTO row); // 리뷰 등록
-	ReviewDTO selectById(@Param("id") Long id); // 단건 조회
-	List<ReviewDTO> selectByStoreId(@Param("storeId") Long storeId); // 매장 기준 목록
-	List<ReviewDTO> selectByUserId(@Param("userId") Long userId); // 사용자 기준 목록
-	int update(ReviewDTO row); // 내용/평점 수정
-	int deleteById(@Param("id") Long id); // 삭제(PK)
-	int deleteByStoreId(@Param("storeId") Long storeId); // 매장 삭제 시 일괄 삭제
-	int deleteByUserId(@Param("userId") Long userId); // 사용자 탈퇴 시 일괄 삭제
+
+	/**
+	 * 주소 추가.
+	 * @return 영향 행 수 (추가 1, 그 외 0)
+	 */
+	int insert(ReviewDTO dto);
+
+	// TODO: 음식 기준 리뷰 목록 조회.
+
+	// TODO: 유저 기준 리뷰 목록 조회.
+
+	/**
+	 * 주소 단건 조회.
+	 * @param id 주소 ID
+	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
+	 */
+	ReviewDTO selectById(@Param("id") Long id);
+
+	/**
+	 * 주소 수정.
+	 * @return 영향 행 수 (수정 1, 대상 없음 0)
+	 */
+	int update(ReviewDTO dto);
+
+	/**
+	 * 주소 삭제.
+	 * @param id 주소 ID
+	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
+	 */
+	int deleteById(@Param("id") Long id);
 }

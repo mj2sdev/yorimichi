@@ -2,18 +2,33 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
 
 /**
- * 이미지
- * - url: 저장 경로/주소
- * - created_at: DB DEFAULT
+ * 이미지 DTO.
+ *
+ * <br>이미지 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
  */
 @Getter
 @Setter
+@Alias("ImageDTO")
 public class ImageDTO {
-    private Long id;                 // PK
-    private String url;              // 이미지 URL/경로
-    private LocalDateTime createdAt; // 생성시각 (DB DEFAULT)
+
+	/** PK: 이미지 ID */
+    private Long id;
+
+	/** 이미지 URL */
+    private String url;
+
+	/** 생성일시 (DB 자동 생성) */
+	private LocalDateTime createdAt;
+
+	/** 수정일시 (DB 자동 갱신) */
+	private LocalDateTime updatedAt;
 }

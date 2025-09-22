@@ -5,34 +5,42 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.AddressMapper">
 
     <insert id="insert" parameterType="AddressDTO">
-        INSERT INTO address (user_id, road, detail, zipcode, is_default)
-        VALUES (#{userId}, #{road}, #{detail}, #{zipcode}, #{isDefault})
+        INSERT INTO address (
+            road_id, postal_id, detail,
+            road_address_text, jibun_address_text,
+            latitude, longitude)
+        VALUES (
+            #{roadId}, #{postalId}, #{detail},
+            #{roadAddressText},#{jibunAddressText},
+            #{latitude}, #{longitude}
+        )
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="AddressDTO">
-        SELECT * FROM address WHERE id = #{id}
-    </select>
-
-    <select id="selectByUserId" parameterType="long" resultType="AddressDTO">
-        SELECT * FROM address WHERE user_id = #{userId}
-    </select>
-
-    <select id="selectDefaultByUserId" parameterType="long" resultType="AddressDTO">
-        SELECT * FROM address WHERE user_id = #{userId} AND is_default = 1
+    <select id="selectById" parameterType="Long" resultType="AddressDTO">
+        SELECT
+            id, road_id, postal_id, detail,
+            road_address_text, jibun_address_text,
+            latitude, longitude,
+            created_at, updated_at
+        FROM address
+        WHERE id = #{id}
     </select>
 
     <update id="update" parameterType="AddressDTO">
         UPDATE address
-        SET road = #{road}, detail = #{detail}, zipcode = #{zipcode}, is_default = #{isDefault}, updated_at = NOW()
+        SET
+            road_id = #{roadId},
+            postal_id = #{postalId},
+            detail = #{detail},
+            road_address_text = #{roadAddressText},
+            jibun_address_text = #{jibunAddressText},
+            latitude = #{latitude},
+            longitude = #{longitude}
         WHERE id = #{id}
     </update>
 
-    <delete id="deleteById" parameterType="long">
+    <delete id="deleteById" parameterType="Long">
         DELETE FROM address WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByUserId" parameterType="long">
-        DELETE FROM address WHERE user_id = #{userId}
     </delete>
 
 </mapper>

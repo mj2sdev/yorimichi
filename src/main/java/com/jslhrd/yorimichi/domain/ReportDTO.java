@@ -2,23 +2,39 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
 
 /**
- * 신고
- * - reporter_id: 신고한 유저
- * - reported_id: 신고 대상 유저
- * - created_at: DB DEFAULT
- * - updated_at: 수정 시각
+ * 신고 DTO.
+ *
+ * <br>신고 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
  */
 @Getter
 @Setter
+@Alias("ReportDTO")
 public class ReportDTO {
-    private Long reporterId;           // FK → user.id
-    private Long reportedId;           // FK → user.id
-    private String description;        // 신고 사유
-    private String status;             // 상태(예: OPEN/RESOLVED 등)
-    private LocalDateTime createdAt;   // 생성시각 (DB DEFAULT)
-    private LocalDateTime updatedAt;   // 수정시각
+
+	/** FK: 신고자 ID */
+    private Long reporterId;
+
+	/** FK: 루트 ID */
+    private Long rootId;
+
+	/** 신고 사유 */
+    private String reason;
+
+	/** 신고 상태 */
+    private String status;
+
+	/** 생성일시 (DB 자동 생성) */
+	private LocalDateTime createdAt;
+
+	/** 수정일시 (DB 자동 갱신) */
+	private LocalDateTime updatedAt;
 }

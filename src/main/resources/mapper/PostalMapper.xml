@@ -5,34 +5,24 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.PostalMapper">
 
     <insert id="insert" parameterType="PostalDTO">
-        INSERT INTO postal (emd_id, code, address)
-        VALUES (#{emdId}, #{code}, #{address})
+        INSERT INTO postal (code)
+        VALUES (#{code})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="PostalDTO">
-        SELECT * FROM postal WHERE id = #{id}
-    </select>
-
-    <select id="selectByCode" parameterType="string" resultType="PostalDTO">
-        SELECT * FROM postal WHERE code = #{code}
-    </select>
-
-    <select id="selectByRegionEmdId" parameterType="long" resultType="PostalDTO">
-        SELECT * FROM postal WHERE emd_id = #{emdId}
+    <select id="selectById" parameterType="Long" resultType="PostalDTO">
+        SELECT id, code, created_at, updated_at
+        FROM postal
+        WHERE id = #{id}
     </select>
 
     <update id="update" parameterType="PostalDTO">
         UPDATE postal
-        SET code = #{code}, address = #{address}, updated_at = NOW()
+        SET code = #{code}
         WHERE id = #{id}
     </update>
 
-    <delete id="deleteById" parameterType="long">
+    <delete id="deleteById" parameterType="Long">
         DELETE FROM postal WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByRegionEmdId" parameterType="long">
-        DELETE FROM postal WHERE emd_id = #{emdId}
     </delete>
 
 </mapper>

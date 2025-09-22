@@ -5,30 +5,21 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.NotificationMapper">
 
     <insert id="insert" parameterType="NotificationDTO">
-        INSERT INTO notification (user_id, type, message, read_at)
-        VALUES (#{userId}, #{type}, #{message}, #{readAt})
+        INSERT INTO notification (actor_user_id, root_id, target_user_id, message)
+        VALUES (#{actor_userId}, #{root_id}, #{target_userId}, #{message})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="NotificationDTO">
-        SELECT * FROM notification WHERE id = #{id}
+    <select id="selectById" parameterType="Long" resultType="NotificationDTO">
+        SELECT id, actor_user_id, root_id, target_user_id,
+               message, created_at, updated_at, read_at
+        FROM notification
+        WHERE id = #{id}
     </select>
 
-    <select id="selectByUserId" parameterType="long" resultType="NotificationDTO">
-        SELECT * FROM notification WHERE user_id = #{userId} ORDER BY created_at DESC
-    </select>
-
-    <update id="updateReadAt" parameterType="long">
+    <update id="deleteById" parameterType="Long">
         UPDATE notification
-        SET read_at = NOW(), updated_at = NOW()
+        SET read_at = NOW()
         WHERE id = #{id}
     </update>
-
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM notification WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByUserId" parameterType="long">
-        DELETE FROM notification WHERE user_id = #{userId}
-    </delete>
 
 </mapper>

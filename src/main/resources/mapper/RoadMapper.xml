@@ -5,30 +5,24 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.RoadMapper">
 
     <insert id="insert" parameterType="RoadDTO">
-        INSERT INTO road (sigungu_id, name)
-        VALUES (#{sigunguId}, #{name})
+        INSERT INTO road (emd_id, code, name)
+        VALUES (#{emdId}, #{code}, #{name})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="RoadDTO">
-        SELECT * FROM road WHERE id = #{id}
-    </select>
-
-    <select id="selectBySigunguId" parameterType="long" resultType="RoadDTO">
-        SELECT * FROM road WHERE sigungu_id = #{sigunguId} ORDER BY name ASC
+    <select id="selectById" parameterType="Long" resultType="RoadDTO">
+        SELECT id, emd_id, code, name, created_at, updated_at
+        FROM road
+        WHERE id = #{id}
     </select>
 
     <update id="update" parameterType="RoadDTO">
         UPDATE road
-        SET name = #{name}, updated_at = NOW()
+        SET emd_id = #{emdId}, code = #{code}, name = #{name}
         WHERE id = #{id}
     </update>
 
-    <delete id="deleteById" parameterType="long">
+    <delete id="deleteById" parameterType="Long">
         DELETE FROM road WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteBySigunguId" parameterType="long">
-        DELETE FROM road WHERE sigungu_id = #{sigunguId}
     </delete>
 
 </mapper>

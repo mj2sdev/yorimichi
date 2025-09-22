@@ -9,28 +9,9 @@
         VALUES (#{storeId}, #{categoryId})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="StoreCategoryDTO">
-        SELECT * FROM store_category WHERE id = #{id}
-    </select>
-
-    <select id="selectByStoreId" parameterType="long" resultType="StoreCategoryDTO">
-        SELECT * FROM store_category WHERE store_id = #{storeId}
-    </select>
-
-    <select id="selectByCategoryId" parameterType="long" resultType="StoreCategoryDTO">
-        SELECT * FROM store_category WHERE category_id = #{categoryId}
-    </select>
-
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM store_category WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByStoreId" parameterType="long">
-        DELETE FROM store_category WHERE store_id = #{storeId}
-    </delete>
-
-    <delete id="deleteByCategoryId" parameterType="long">
-        DELETE FROM store_category WHERE category_id = #{categoryId}
+    <delete id="delete" parameterType="StoreCategoryDTO">
+        DELETE FROM store_category
+        WHERE store_id = #{storeId} AND categort_id = #{categoryId}
     </delete>
 
 </mapper>

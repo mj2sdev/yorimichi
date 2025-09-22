@@ -5,26 +5,11 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.RootMapper">
 
     <insert id="insert" parameterType="RootDTO">
-        INSERT INTO root (title, description, type, user_id)
-        VALUES (#{title}, #{description}, #{type}, #{userId})
+        INSERT INTO root (id)
+        VALUES (#{id})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="RootDTO">
-        SELECT * FROM root WHERE id = #{id}
-    </select>
-
-    <select id="selectPaged" resultType="RootDTO">
-        SELECT * FROM root ORDER BY created_at DESC
-        LIMIT #{limit} OFFSET #{offset}
-    </select>
-
-    <update id="update" parameterType="RootDTO">
-        UPDATE root
-        SET title = #{title}, description = #{description}, type = #{type}, updated_at = NOW()
-        WHERE id = #{id}
-    </update>
-
-    <delete id="deleteById" parameterType="long">
+    <delete id="deleteById" parameterType="Long">
         DELETE FROM root WHERE id = #{id}
     </delete>
 

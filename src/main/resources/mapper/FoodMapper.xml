@@ -5,35 +5,28 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.FoodMapper">
 
     <insert id="insert" parameterType="FoodDTO">
-        INSERT INTO food (store_id, name, price, description)
-        VALUES (#{storeId}, #{name}, #{price}, #{description})
+        INSERT INTO food (id, store_id, name, price, description)
+        VALUES (#{id}, #{storeId}, #{name}, #{price}, #{description})
     </insert>
 
-    <select id="selectById" parameterType="long" resultType="FoodDTO">
-        SELECT * FROM food WHERE id = #{id}
-    </select>
-
-    <select id="selectByStoreId" parameterType="long" resultType="FoodDTO">
-        SELECT * FROM food WHERE store_id = #{storeId}
-    </select>
-
-    <select id="selectPaged" resultType="FoodDTO">
-        SELECT * FROM food ORDER BY created_at DESC
-        LIMIT #{limit} OFFSET #{offset}
+    <select id="selectById" parameterType="Long" resultType="FoodDTO">
+        SELECT f.id, f.store_id, f.name, f.price, f.description,
+               r.created_at, r.updated_at, r.deleted_at, r.blinded_at
+        FROM food f
+        JOIN root r ON f.id = r.id
+        WHERE f.id = #{id}
     </select>
 
     <update id="update" parameterType="FoodDTO">
-        UPDATE food
-        SET name = #{name}, price = #{price}, description = #{description}, updated_at = NOW()
-        WHERE id = #{id}
+        UPDATE food f
+        JOIN root r ON f.id = r.id
+        SET f.name = #{name}, f.price = #{price}, f.description = #{description},
+            r.updated_at = NOW()
+        WHERE f.id = #{id}
     </update>
 
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM food WHERE id = #{id}
-    </delete>
-
-    <delete id="deleteByStoreId" parameterType="long">
-        DELETE FROM food WHERE store_id = #{storeId}
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM root WHERE id = #{id}
     </delete>
 
 </mapper>

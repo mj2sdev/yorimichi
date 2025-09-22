@@ -3,13 +3,42 @@ package com.jslhrd.yorimichi.mapper;
 import com.jslhrd.yorimichi.domain.RoleDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import java.util.List;
 
+/**
+ * 권한/역할 Mapper.
+ *
+ * <br>권한/역할 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
+ */
 @Mapper
 public interface RoleMapper {
-	int insert(RoleDTO row); // 역할 등록
-	RoleDTO selectById(@Param("id") Long id); // 단건 조회
-	List<RoleDTO> selectAll(); // 전체 목록
-	int update(RoleDTO row); // 이름/권한 수정
-	int deleteById(@Param("id") Long id); // 삭제(PK)
+
+	/**
+	 * 권한/역할 추가.
+	 * @return 영향 행 수 (추가 1, 그 외 0)
+	 */
+	int insert(RoleDTO dto);
+
+	/**
+	 * 권한/역할 단건 조회.
+	 * @param id 권한/역할 ID
+	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
+	 */
+	RoleDTO selectById(@Param("id") Long id);
+
+	/**
+	 * 권한/역할 수정.
+	 * @return 영향 행 수 (수정 1, 대상 없음 0)
+	 */
+	int update(RoleDTO dto);
+
+	/**
+	 * 권한/역할 삭제.
+	 * @param id 권한/역할 ID
+	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
+	 */
+	int deleteById(@Param("id") Long id);
 }

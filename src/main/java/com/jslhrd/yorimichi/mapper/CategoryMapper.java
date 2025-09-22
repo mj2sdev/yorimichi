@@ -4,19 +4,43 @@ import com.jslhrd.yorimichi.domain.CategoryDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import java.util.Optional;
 
+/**
+ * 카테고리 Mapper.
+ *
+ * <br>카테고리 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
+ */
 @Mapper
 public interface CategoryMapper {
 
-    int insert(CategoryDTO category);                    // 카테고리 등록
-    CategoryDTO selectById(@Param("id") Long id);        // 단건 조회
-    int update(CategoryDTO category);                    // 수정
-    int deleteById(@Param("id") Long id);               // 삭제
+	/**
+	 * 카테고리 추가.
+	 * @return 영향 행 수 (추가 1, 그 외 0)
+	 */
+    int insert(CategoryDTO dto);
 
-    // 특정 부모의 하위 카테고리 목록
-    List<CategoryDTO> listByParentId(@Param("parentId") Long parentId);
+	/**
+	 * 카테고리 단건 조회.
+	 * @param id 카테고리 ID
+	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
+	 */
+    Optional<CategoryDTO> selectById(@Param("id") Long id);
 
-    // 최상위 카테고리 목록(리뷰 질문 반영: parent_id IS NULL 전용)
-    List<CategoryDTO> listRoots();
+	/**
+	 * 카테고리 수정.
+	 * @return 영향 행 수 (수정 1, 대상 없음 0)
+	 */
+    int update(CategoryDTO dto);
+
+	/**
+	 * 카테고리 삭제.
+	 * @param id 카테고리 ID
+	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
+	 */
+    int deleteById(@Param("id") Long id);
 }
