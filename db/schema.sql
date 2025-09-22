@@ -264,9 +264,9 @@ CREATE TABLE social_account (
     updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_login_at    DATETIME,
 
-    CONSTRAINT pk_social_account               PRIMARY KEY (provider, provider_user_id),
-    CONSTRAINT fk_social_account_user          FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT uk_social_account_user_provider UNIQUE      (user_id, provider)
+    CONSTRAINT pk_social_account                           PRIMARY KEY (user_id, provider),
+    CONSTRAINT fk_social_account_user                      FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT uk_social_account_provider_provider_user_id UNIQUE      (provider, provider_user_id)
 );
 
 CREATE TABLE bookmark (
@@ -445,7 +445,6 @@ CREATE INDEX idx_food_store_price            ON food (store_id, price);
 
 -- 유저/소셜
 CREATE INDEX idx_user_role_id                ON user           (role_id);
-CREATE INDEX idx_social_account_user_id      ON social_account (user_id);
 
 -- 북마크/팔로우/차단/좋아요
 -- PK(user_id,store_id)지만 '가게의 북마크 수' 같은 조회 대비
