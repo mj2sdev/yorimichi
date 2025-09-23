@@ -183,7 +183,7 @@ CREATE TABLE category (
     created_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-w    CONSTRAINT pk_category        PRIMARY KEY (id),
+    CONSTRAINT pk_category        PRIMARY KEY (id),
     CONSTRAINT fk_category_parent FOREIGN KEY (parent_id) REFERENCES category(id) ON DELETE SET NULL,
     CONSTRAINT uk_category_name   UNIQUE      (name)
 );
@@ -281,17 +281,27 @@ CREATE TABLE bookmark (
 
 CREATE TABLE review (
     id      BIGINT NOT NULL,
+    store_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
-    food_id BIGINT NOT NULL,
     rating  INT    NOT NULL,
     content TEXT,
 
     CONSTRAINT pk_review        PRIMARY KEY (id),
-    CONSTRAINT fk_review_root   FOREIGN KEY (id)      REFERENCES root(id) ON DELETE CASCADE,
-    CONSTRAINT fk_review_user   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT fk_review_food   FOREIGN KEY (food_id) REFERENCES food(id) ON DELETE CASCADE,
-    -- CONSTRAINT uk_review_user_food UNIQUE (user_id, food_id) -- 사용자당 음식 1건만 리뷰 제약
+    CONSTRAINT fk_review_root   FOREIGN KEY (id)       REFERENCES root(id)  ON DELETE CASCADE,
+    CONSTRAINT fk_review_user   FOREIGN KEY (user_id)  REFERENCES user(id)  ON DELETE CASCADE,
+    CONSTRAINT fk_review_store  FOREIGN KEY (store_id) REFERENCES store(id) ON DELETE CASCADE,
     CONSTRAINT ck_review_rating CHECK       (rating BETWEEN 1 AND 5)
+);
+
+CREATE TABLE review_food (
+    review_id BIGINT NOT NULL,
+    food_id BIGINT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT pk_review_food PRIMARY KEY (review_id, food_id),
+    CONSTRAINT fk_review_food_review FOREIGN KEY (review_id) REFERENCES review(id) ON DELETE CASCADE,
+    CONSTRAINT fk_review_food_food FOREIGN KEY (food_id) REFERENCES food(id) ON DELETE CASCADE
 );
 
 CREATE TABLE coeat (
@@ -448,9 +458,10 @@ CREATE INDEX idx_likes_root_id               ON likes    (root_id);
 CREATE INDEX idx_likes_user_id               ON likes (user_id);
 
 -- 리뷰
-CREATE INDEX idx_review_food_id              ON review (food_id);
+CREATE INDEX idx_review_store_id             ON review (store_id);
 CREATE INDEX idx_review_user_id              ON review (user_id);
--- 1인1리뷰를 강제할 때 UNIQUE (user_id, food_id) 활성화 권장
+CREATE INDEX idx_review_food_food            ON review_food(food_id);
+CREATE INDEX idx_review_store_created        ON review(store_id, id DESC);
 
 -- 코잇(모임)
 CREATE INDEX idx_coeat_user_id               ON coeat (user_id);
