@@ -8,7 +8,7 @@ import com.jslhrd.yorimichi.domain.SearchDTO;
  * 카테고리 관련 비즈니스 로직을 처리하는 서비스 인터페이스입니다.
  * 가게, 음식, 편의시설 등 다양한 분류에 사용되는 카테고리를 관리합니다.
  * 
- * @author @mj2sdev
+ * @author mj2sdev
  * @since 1.0
  */
 public interface CategoryService {

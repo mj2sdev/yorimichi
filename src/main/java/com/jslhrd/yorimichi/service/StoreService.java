@@ -7,7 +7,7 @@ import com.jslhrd.yorimichi.domain.StoreDTO;
 
 /**
  * 가게 정보관련 서비스 입니다.
- * @author @mj2sdev
+ * @author mj2sdev
  * @since 1.0
  */
 public interface StoreService {

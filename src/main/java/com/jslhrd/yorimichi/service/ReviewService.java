@@ -8,7 +8,7 @@ import com.jslhrd.yorimichi.domain.ReviewDTO;
 /**
  * 리뷰 관련 서비스 인터페이스 입니다.
  * 
- * @author @mj2sdev
+ * @author mj2sdev
  * @since 1.0
  */
 public interface ReviewService {
