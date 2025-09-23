@@ -29,6 +29,7 @@ public class ReviewController {
     public void submitReview(@RequestBody ReviewDTO review ) {
         //TODO: process POST request
         //서비스로 review 보내기
+        //return List<ReviewDTO> reviews
     }
     
     //리뷰수정
@@ -41,6 +42,7 @@ public class ReviewController {
     @DeleteMapping("/review")
     public void deleteReview(@RequestBody Long review){
         //서비스로 보내서 삭제
+        //return List<ReviewDTO> reviews
     }
     
 }

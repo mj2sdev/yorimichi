@@ -20,18 +20,19 @@
 ## NotificationController
 -   GET `/notification` |NotificationDTO| :: 알림버튼 - header의 알림리스트에 목록을 띄움. // header.html
 ## ReviewController
--   POST `/review` || :: 리뷰작성 - 작성 // store/detail.html
--   PUT `/review/{reviewid}` || :: 리뷰수정 - 수정 // store/detail.html
--   DELETE `/review/{reviewid}` || :: 리뷰삭제 - 삭제 // store/detail.html
--   GET `/review/{reviewid}` |id에 해당하는 리뷰 정보| :: 알림리뷰 - 리뷰 정보를 가져와서 리뷰 모달에 띄움 // header.html
+-   GET `/review/{id}` |ReviewDTO| :: 알림리뷰 - 리뷰 정보를 가져와서 리뷰 모달에 띄움 // header.html
+-   POST `/review` |List<ReviewDTO>| :: 리뷰작성 - 작성 // store/detail.html
+-   PUT `/review` || :: 리뷰수정 - 수정 // store/detail.html
+-   DELETE `/review` |List<ReviewDTO>| :: 리뷰삭제 - 삭제 // store/detail.html
 ## StoreController
--   GET `/search?keyword={keyword}`|| :: 검색 - 검색창에 검색시 store/list.html로 이동 // header.html
--   GET `/store/detail/{id}` ||:: 추천가게리스트 - 클릭시 특정 가게의 상세페이지로 감. // index.html
--   POST `/store/bookmark/{id}` || :: 즐겨찾기 - 가게를 즐겨찾기 목록에 등록함. // store/detail.html
--   DELETE `/store/bookmark/{id}` || :: 즐겨찾기해제 - 가게를 즐겨찾기 목록에서 제거함. // store/detail.html
--   GET `/store/like` |like 가게 리스트| :: 좋아요 - store/list.html로 이동 및, 유저의 좋아요 가게 리스트를 우선으로 보여줌. // header.html
--   POST `/store/like/{id}` || :: 즐겨찾기 - 가게를 좋아요 목록에 등록함. // store/detail.html
--   DELETE `/store/like/{id}` || :: 즐겨찾기해제 - 가게를 좋아요 목록에서 제거함. // store/detail.html
+-   GET `/search?keyword={keyword}&tags={tags}` |List<StoreDTO>|List<StoreCategoryDTO>|List<StoreFacilityCategoryDTO>:: 검색 - 동기식 리스트 페이지로 이동.
+-   GET `/search?keyword={keyword}&tags={tags}`|List<StoreDTO>| :: 필터 - 비동기식 리스트만 갱신 // header.html
+-   GET `/store/detail` |StoreDTO|:: 가게 상세 - 클릭시 특정 가게의 상세페이지로 감. // index.html
+-   POST `/store/bookmark` |List<BookmarkDTO>| :: 즐겨찾기 - 가게를 즐겨찾기 목록에 등록함. // store/detail.html
+-   DELETE `/store/bookmark` |List<BookmarkDTO>| :: 즐겨찾기해제 - 가게를 즐겨찾기 목록에서 제거함. // store/detail.html
+-   GET `/store/like` |List<LikeDTO>| :: 좋아요 - store/list.html로 이동 및, 유저의 좋아요 가게 리스트를 우선으로 보여줌. // header.html
+-   POST `/store/like` |List<LikeDTO>| :: 즐겨찾기 - 가게를 좋아요 목록에 등록함. // store/detail.html
+-   DELETE `/store/like` |List<LikeDTO>| :: 즐겨찾기해제 - 가게를 좋아요 목록에서 제거함. // store/detail.html
 ## CoeatController
 -   GET `/coeat/{coeatid}` |id에 해당하는 coeat 정보| ::  알림코잇 - 같이먹기 정보를 가져와서 같이먹기 모달에 띄움 // header.html
 -   POST `/coeat/{coeatid}/participants/` || :: 코잇참가 - 같이먹기 요청자 명단에 등록하고, 참가요청 버튼이 요청완료 버튼으로 바뀜. // header.html
