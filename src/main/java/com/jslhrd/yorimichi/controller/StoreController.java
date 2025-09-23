@@ -10,11 +10,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/store")
 public class StoreController {
 
-    
+    //가게 상세정보로 이동
+    @GetMapping("/detail/{id}")
+    public String showDetail(){
+        return "/store/detail";
+    }
+
     @GetMapping("/list")
     public String toListForTest() {
         return "/store/list";
     }
+
     @GetMapping("/detail")
     public String toViewforTest() {
         return "/store/detail";
