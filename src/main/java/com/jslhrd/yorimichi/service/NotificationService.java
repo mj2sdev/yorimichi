@@ -7,7 +7,7 @@ import com.jslhrd.yorimichi.domain.NotificationDTO;
 /**
  * 알림 관련 서비스 입니다.
  * 
- * @author @mj2sdev
+ * @author mj2sdev
  * @since 1.0
  */
 public interface NotificationService {

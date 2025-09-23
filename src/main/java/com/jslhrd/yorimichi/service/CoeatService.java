@@ -3,7 +3,7 @@ package com.jslhrd.yorimichi.service;
 /**
  * 같이먹기 서비스 인터페이스입니다.
  * 
- * @author @mj2sdev
+ * @author mj2sdev
  * @since 1.0
  * TODO: FeedCoeatDTO가 바뀔 예정이므로 Object로 임시 변경
  */
