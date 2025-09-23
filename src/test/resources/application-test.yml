@@ -1,19 +1,31 @@
 spring:
+  config:
+    activate:
+      on-profile: test     # ✅ test 프로파일에서만 적용
+
+
+  web:
+    resources:
+      add-mappings: false
+
   datasource:
-    url: jdbc:h2:mem:yorimichi;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_UPPER=false
+    url: jdbc:h2:mem:yorimichi;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password:
+
   sql:
     init:
-      # schema.sql, data.sql을 항상 실행 (테스트 시작시 테이블 생성)
-      mode: always
+      mode: always         # ✅ schema.sql / data.sql 실행 보장
+
+  thymeleaf:
+    cache: false
 
 mybatis:
   # main/resources/mappers/*.xml (네가 만든 경로) 를 읽게 함
   mapper-locations: classpath*:mapper/*.xml
-  configuration:
-    # DB 컬럼 스네이크 → DTO 카멜케이스 자동 매핑 (user_id -> userId)
-    map-underscore-to-camel-case: true
-    # (선택) SQL 로그 보고 싶으면 주석 해제
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  type-aliases-package: com.jslhrd.yorimichi.domain
+
+logging:
+  level:
+    com.jslhrd.yorimichi: DEBUG

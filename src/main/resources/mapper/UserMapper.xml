@@ -4,31 +4,53 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.UserMapper">
 
-  <insert id="insert" parameterType="UserDTO">
-    INSERT INTO user (id, role_id, email, password, nickname, description)
-    VALUES (#{id}, #{roleId}, #{email}, #{password}, #{nickname}, #{description})
+  <!-- AUTO_INCREMENT 대응: id 컬럼 제거 + 키 반환 -->
+  <insert id="insert" parameterType="UserDTO"
+          useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    INSERT INTO user (role_id, email, password, nickname, description)
+    VALUES (#{roleId}, #{email}, #{password}, #{nickname}, #{description})
   </insert>
 
   <select id="selectById" parameterType="Long" resultType="UserDTO">
-    SELECT u.id, u.role_id, u.email, u.password, u.nickname,
-           u.description, u.last_login_at,
-           r.created_at, r.updated_at, r.deleted_at, r.blineded_at
+    SELECT
+      u.id, u.role_id, u.email, u.password, u.nickname,
+      u.description, u.last_login_at,
+      u.created_at, u.updated_at
     FROM user u
-    JOIN root r ON u.id = r.id
-    WHERE u.id = #{userId}
+    WHERE u.id = #{id}
+  </select>
+
+  <!-- 이메일 기준 조회: 로그인/중복체크 -->
+  <select id="selectByEmail" parameterType="String" resultType="UserDTO">
+    SELECT
+      u.id, u.role_id, u.email, u.password, u.nickname,
+      u.description, u.last_login_at,
+      u.created_at, u.updated_at
+    FROM user u
+    WHERE u.email = #{email}
+    LIMIT 1
   </select>
 
   <update id="update" parameterType="UserDTO">
-    UPDATE user u
-    JOIN root r ON u.id = r.id
-    SET u.role_id = #{roleId}, u.email = #{email}, pu.ssword = #{password},
-        u.nickname = #{nickname}, u.description = #{description},
-        r.updated_at = NOW()
-    WHERE u.id = #{id}
+    UPDATE user
+    SET role_id = #{roleId},
+        email = #{email},
+        password = #{password},
+        nickname = #{nickname},
+        description = #{description}
+    WHERE id = #{id}
   </update>
 
+  <!-- 비밀번호만 단독 변경 -->
+  <update id="updatePassword">
+    UPDATE user
+    SET password = #{password}
+    WHERE id = #{id}
+  </update>
+
+  <!-- 현재 삭제는 user만. 정책에 따라 CASCADE/소프트삭제로 변경 가능 -->
   <delete id="deleteById" parameterType="Long">
-    DELETE FROM root WHERE id = #{id}
+    DELETE FROM user WHERE id = #{id}
   </delete>
 
 </mapper>

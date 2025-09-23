@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Google Drive 다중 업로드 테스트</title>
+  <style>
+    :root { --fg:#111; --muted:#6b7280; --brand:#111827; --border:#e5e7eb; --bg:#fafafa;}
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Apple SD Gothic Neo, "Noto Sans KR", sans-serif; color:var(--fg); background:var(--bg);}
+    .wrap { max-width: 920px; margin: 48px auto; padding: 0 20px; }
+    .card { background:#fff; border:1px solid var(--border); border-radius:16px; padding:20px 24px; box-shadow: 0 2px 12px rgba(0,0,0,.04); }
+    h1 { font-size:28px; margin:0 0 20px; letter-spacing:-.3px; }
+    .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    input[type="file"] { padding:8px; border:1px dashed var(--border); border-radius:10px; background:#fff; }
+    .btn { padding:10px 16px; border-radius:10px; border:1px solid #111827; background:#111827; color:#fff; cursor:pointer; font-weight:600; }
+    .btn[disabled] { opacity:.5; cursor:not-allowed; }
+    .muted { color:var(--muted); font-size:13px; }
+    .hint { margin-top:6px; }
+    .list { margin-top:18px; }
+    .item { display:flex; align-items:center; justify-content:space-between; padding:10px 4px; border-bottom:1px solid var(--border); gap:12px; }
+    .name { font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width: 40vw; }
+    .size { color:var(--muted); font-size:12px; }
+    .status { font-size:12px; color:var(--muted); }
+    .bar { height:6px; background:#f3f4f6; border-radius:99px; overflow:hidden; flex:1; margin: 0 10px; }
+    .bar > i { display:block; height:100%; width:0%; background:#111827; transition:width .25s ease; }
+    .result { display:flex; gap:8px; align-items:center; }
+    .link { font-size:13px; color:#2563eb; text-decoration:none; word-break:break-all; }
+    .pill { font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid var(--border); color:var(--muted); }
+    .topline { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+    label.switch { display:inline-flex; gap:8px; align-items:center; cursor:pointer; }
+    .hr { height:1px; background:var(--border); margin:12px 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Google Drive 다중 업로드 테스트</h1>
+
+      <div class="row">
+        <input id="file" type="file" name="files" accept="image/*" multiple />
+        <button id="uploadBtn" class="btn">업로드</button>
+
+        <label class="switch">
+          <input id="useBatch" type="checkbox" checked />
+          <span>배치 엔드포인트 사용 <span class="pill">/api/drive/upload-many</span></span>
+        </label>
+      </div>
+      <div class="hint muted">
+        * 배치 실패 시 자동으로 <code>/api/drive/upload</code> (단건) 방식으로 전환됩니다.
+      </div>
+
+      <div class="hr"></div>
+
+      <div id="queue" class="list"></div>
+
+      <div class="hr" style="display:none" id="resultHr"></div>
+      <div id="results" class="list"></div>
+    </div>
+  </div>
+
+  <script>
+    const $ = (sel) => document.querySelector(sel);
+    const fileInput = $('#file');
+    const useBatch = $('#useBatch');
+    const uploadBtn = $('#uploadBtn');
+    const queue = $('#queue');
+    const results = $('#results');
+    const resultHr = $('#resultHr');
+
+    // 모드 토글 (다건 / 단건)
+    function applyMode() {
+      fileInput.value = ''; // 전환 시 선택 초기화(중요)
+      if (useBatch.checked) {
+        fileInput.setAttribute('multiple', '');
+        fileInput.setAttribute('name', 'files');
+      } else {
+        fileInput.removeAttribute('multiple');
+        fileInput.setAttribute('name', 'file');
+      }
+      queue.innerHTML = '';
+      results.innerHTML = '';
+      resultHr.style.display = 'none';
+    }
+    useBatch.addEventListener('change', applyMode);
+    applyMode();
+
+    // 파일 선택 시 큐 표시
+    fileInput.addEventListener('change', () => {
+      queue.innerHTML = '';
+      const files = [...fileInput.files];
+      for (const f of files) {
+        queue.appendChild(renderItem(f));
+      }
+    });
+
+    // 업로드 버튼
+    uploadBtn.addEventListener('click', async () => {
+      const files = [...fileInput.files];
+      if (files.length === 0) {
+        alert('업로드할 파일을 선택하세요.');
+        return;
+      }
+
+      uploadBtn.disabled = true;
+      results.innerHTML = '';
+      resultHr.style.display = 'none';
+
+      try {
+        if (useBatch.checked) {
+          // === 배치 업로드 시도 ===
+          const fd = new FormData();
+          files.forEach(f => fd.append('files', f));
+          let links = await postMany(fd);  // JSON 배열 기대
+
+          // 만약 실패/비정상 응답이면 단건으로 폴백
+          if (!Array.isArray(links)) {
+            links = await uploadOneByOne(files);
+          }
+
+          // 결과 표시
+          renderResults(files, links);
+        } else {
+          // === 단건 업로드 ===
+          const fd = new FormData();
+          fd.append('file', files[0]);
+          const link = await postSingle(fd); // text 기대
+          renderResults([files[0]], [link]);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('업로드 중 오류가 발생했습니다. 콘솔을 확인하세요.');
+      } finally {
+        uploadBtn.disabled = false;
+      }
+    });
+
+    // ----- UI Helpers -----
+    function renderItem(file) {
+      const el = document.createElement('div');
+      el.className = 'item';
+      el.innerHTML = `
+        <div class="topline">
+          <span class="name" title="${file.name}">${file.name}</span>
+          <span class="size">(${fmtSize(file.size)})</span>
+        </div>
+        <div class="bar"><i></i></div>
+        <div class="status">대기</div>
+      `;
+      // 간단한 가짜 진행 애니메이션(실제 전송 진행률은 fetch로 직접 얻기 어려움)
+      setTimeout(() => {
+        const bar = el.querySelector('.bar > i');
+        const st = el.querySelector('.status');
+        bar.style.width = '60%';
+        st.textContent = '전송 중…';
+      }, 100);
+      setTimeout(() => {
+        const bar = el.querySelector('.bar > i');
+        const st = el.querySelector('.status');
+        bar.style.width = '100%';
+        st.textContent = '전송 완료 (대기 중)';
+      }, 500);
+      return el;
+    }
+
+    function renderResults(files, links) {
+      results.innerHTML = '';
+      resultHr.style.display = 'block';
+      files.forEach((f, i) => {
+        const link = links?.[i] ?? '';
+        const row = document.createElement('div');
+        row.className = 'item';
+        row.innerHTML = `
+          <div class="topline">
+            <span class="name" title="${f.name}">${f.name}</span>
+            <span class="size">(${fmtSize(f.size)})</span>
+          </div>
+          <div class="result">
+            ${link ? `<a class="link" href="${link}" target="_blank">${link}</a>` : '<span class="muted">실패</span>'}
+          </div>
+        `;
+        results.appendChild(row);
+      });
+    }
+
+    function fmtSize(n) {
+      if (n < 1024) return `${n} B`;
+      if (n < 1024 * 1024) return `${(n/1024).toFixed(1)} KB`;
+      return `${(n/1024/1024).toFixed(1)} MB`;
+    }
+
+    // ----- API Calls -----
+    async function postSingle(formData) {
+      const res = await fetch('/api/drive/upload', { method: 'POST', body: formData });
+      if (!res.ok) throw new Error('단건 업로드 실패');
+      // 컨트롤러가 String(plain text) 반환
+      return await res.text();
+    }
+
+    async function postMany(formData) {
+      const res = await fetch('/api/drive/upload-many', { method: 'POST', body: formData });
+      if (!res.ok) throw new Error('다건 업로드 실패');
+      // 컨트롤러가 List<String> 반환(JSON 배열)
+      return await res.json();
+    }
+
+    // 배치 실패 시 단건으로 폴백 업로드
+    async function uploadOneByOne(files) {
+      const out = [];
+      for (const f of files) {
+        const fd = new FormData();
+        fd.append('file', f);
+        try {
+          const link = await postSingle(fd);
+          out.push(link);
+        } catch (e) {
+          console.error('단건 업로드 실패:', f.name, e);
+          out.push('');
+        }
+      }
+      return out;
+    }
+  </script>
+</body>
+</html>
