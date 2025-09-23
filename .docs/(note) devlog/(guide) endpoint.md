@@ -55,10 +55,11 @@
 -   POST `/login` |실패시 사유| :: 로그인 - 로그인 처리용. 유효성 검사 필요. // login.html
 -   POST `/login/social` || :: 소셜로그인 - 소셜로그인 처리용 // login.html
 ## RelationshipController
--   POST `/user/{id}/follower` || :: 유저팔로우 - 유저를 팔로우 목록에 넣음. // store/detail.html
--   DELETE `/user/{id}/follower` || :: 유저언팔로우 - 유저를 팔로우 목록에서 뺌. // store/detail.html
--   POST `/user/block/{id}` || :: 유저차단 - 유저차단목록에넣음 // mypage.html
--   DELETE `/user/block/{id}` || :: 유저차단해제 - 차단목록에서 제거. // mypage.html
+-   POST `/follow` || :: 유저팔로우 - 유저를 팔로우 목록에 넣음. // store/detail.html
+-   DELETE `/follow` || :: 유저언팔로우 - 유저를 팔로우 목록에서 뺌. // store/detail.html
+-   POST `/block` || :: 유저차단 - 유저차단목록에넣음 // mypage.html
+-   DELETE `/block` || :: 유저차단해제 - 차단목록에서 제거. // mypage.html
+-   DELETE `/follower` || :: 내팔로워 해제- 내 팔로워 목록에서 지워버림. // mypage.html
 
 
 
