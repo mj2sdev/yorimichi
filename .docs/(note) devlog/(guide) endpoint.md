@@ -13,7 +13,6 @@
 ## PageController
 -   GET `/index` |맛집리스트|음식 카테고리 리스트| :: 로고 - 로고 클릭시 index.html로 이동 // header.html
 -   GET `/station` |팔로우리스트(사용자)|팔로워리스트(사용자)|같이먹기리스트(전체)|리뷰리스트(전체)| :: 정류장 - 정류장 아이콘 클릭시 station.html로 이동 // header.html
--   GET `/signup` |null| :: 이동 - signup.html로 이동. // login.html
 -   GET `/login` |null| :: 로그인 - 로그인 아이콘 클릭시 login.html로 이동 // header.html
 ## ReportController
 -   POST `/report` |null| :: 신고 - 신고해서 신고 대상/ 카테고리/ 내용을 리스트에 전달. // store/detail.html
@@ -51,6 +50,7 @@
 -   POST `/logout` || :: 로그아웃 - 버튼 클릭시 사용자 로그아웃. // header.html
 -   GET `/signup/nickname` |중복여부boolean| :: 닉네임 - 중복여부 비동기 // signup.html
 -   POST `/signup/eamil` || :: 이메일확인 - 누르면 이메일 중복 검사? 혹은 이메일 확인? 용 이메일 전송. // signup.html
+-   GET `/signup` |null| :: 이동 - signup.html로 이동. // login.html
 -   POST `/signup` |실패시 사유| :: 회원가입 - 유효성 검사 및 실패시 사유 표시. // signup.html
 -   POST `/login` |실패시 사유| :: 로그인 - 로그인 처리용. 유효성 검사 필요. // login.html
 -   POST `/login/social` || :: 소셜로그인 - 소셜로그인 처리용 // login.html
