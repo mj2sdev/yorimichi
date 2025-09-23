@@ -183,9 +183,9 @@ CREATE TABLE category (
     created_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT pk_category          PRIMARY KEY (id),
-    CONSTRAINT fk_category_parent   FOREIGN KEY (parent_id) REFERENCES category(id) ON DELETE SET NULL,
-    CONSTRAINT uk_category_name     UNIQUE      (name)
+w    CONSTRAINT pk_category        PRIMARY KEY (id),
+    CONSTRAINT fk_category_parent FOREIGN KEY (parent_id) REFERENCES category(id) ON DELETE SET NULL,
+    CONSTRAINT uk_category_name   UNIQUE      (name)
 );
 
 CREATE TABLE store_category (
@@ -252,15 +252,15 @@ CREATE TABLE user (
 );
 
 CREATE TABLE social_account (
-    user_id          BIGINT       NOT NULL,
-    provider         VARCHAR(20)  NOT NULL,
-    provider_user_id VARCHAR(191) NOT NULL,
+    user_id          BIGINT         NOT NULL,
+    provider         ENUM('GOOGLE') NOT NULL,
+    provider_user_id VARCHAR(191)   NOT NULL,
     provider_email   VARCHAR(191),
-    email_verified   BOOLEAN      NOT NULL,
+    email_verified   BOOLEAN        NOT NULL,
     display_name     VARCHAR(100),
     avatar_url       VARCHAR(256),
-    created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_login_at    DATETIME,
 
     CONSTRAINT pk_social_account                           PRIMARY KEY (user_id, provider),
@@ -350,9 +350,9 @@ CREATE TABLE report (
     created_at  DATETIME                                                          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at  DATETIME                                                          NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT pk_report                   PRIMARY KEY (id),
-    CONSTRAINT fk_report_reporter          FOREIGN KEY (reporter_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT fk_report_root              FOREIGN KEY (root_id)     REFERENCES root(id) ON DELETE CASCADE,
+    CONSTRAINT pk_report               PRIMARY KEY (id),
+    CONSTRAINT fk_report_reporter      FOREIGN KEY (reporter_id) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT fk_report_root          FOREIGN KEY (root_id)     REFERENCES root(id) ON DELETE CASCADE,
     CONSTRAINT uk_report_reporter_root UNIQUE      (reporter_id, root_id)
 );
 
@@ -362,9 +362,9 @@ CREATE TABLE block (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT pk_block          PRIMARY KEY (blocker_id, blockee_id),
-    CONSTRAINT fk_block_blocker  FOREIGN KEY (blocker_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT fk_block_blockee  FOREIGN KEY (blockee_id) REFERENCES user(id) ON DELETE CASCADE
+    CONSTRAINT pk_block         PRIMARY KEY (blocker_id, blockee_id),
+    CONSTRAINT fk_block_blocker FOREIGN KEY (blocker_id) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT fk_block_blockee FOREIGN KEY (blockee_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE follow (
@@ -380,8 +380,8 @@ CREATE TABLE follow (
 );
 
 CREATE TABLE likes (
-    user_id    BIGINT NOT NULL,
-    root_id    BIGINT NOT NULL,
+    user_id    BIGINT   NOT NULL,
+    root_id    BIGINT   NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
