@@ -16,9 +16,9 @@
 -   GET `/signup` || :: 이동 - signup.html로 이동. // login.html
 -   GET `/login` || :: 로그인 - 로그인 아이콘 클릭시 login.html로 이동 // header.html
 ## ReportController
--   POST `/report/{id}` || :: 신고 - 신고해서 신고 대상/ 카테고리/ 내용을 리스트에 전달. // store/detail.html
+-   POST `/report` |null| :: 신고 - 신고해서 신고 대상/ 카테고리/ 내용을 리스트에 전달. // store/detail.html
 ## NotificationController
--   GET `/notification` |알림리스트| :: 알림버튼 - header의 알림리스트에 목록을 띄움. // header.html
+-   GET `/notification` |NotificationDTO| :: 알림버튼 - header의 알림리스트에 목록을 띄움. // header.html
 ## StoreController
 -   GET `/search?keyword={keyword}`|| :: 검색 - 검색창에 검색시 store/list.html로 이동 // header.html
 -   GET `/store/detail/{id}` ||:: 추천가게리스트 - 클릭시 특정 가게의 상세페이지로 감. // index.html
