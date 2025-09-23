@@ -185,8 +185,7 @@ CREATE TABLE category (
 
     CONSTRAINT pk_category          PRIMARY KEY (id),
     CONSTRAINT fk_category_parent   FOREIGN KEY (parent_id) REFERENCES category(id) ON DELETE SET NULL,
-    CONSTRAINT uk_category_name     UNIQUE      (name),
-    CONSTRAINT ck_category_not_self CHECK       (parent_id IS NULL OR parent_id <> id)
+    CONSTRAINT uk_category_name     UNIQUE      (name)
 );
 
 CREATE TABLE store_category (
@@ -339,10 +338,7 @@ CREATE TABLE comment (
     CONSTRAINT fk_comment_root   FOREIGN KEY (id)        REFERENCES root(id)    ON DELETE CASCADE,
     CONSTRAINT fk_comment_user   FOREIGN KEY (user_id)   REFERENCES user(id)    ON DELETE CASCADE,
     CONSTRAINT fk_comment_coeat  FOREIGN KEY (coeat_id)  REFERENCES coeat(id)   ON DELETE CASCADE,
-    CONSTRAINT fk_comment_parent FOREIGN KEY (parent_id) REFERENCES comment(id) ON DELETE SET NULL,
-
-    -- 자기 자신을 부모로 참조 금지
-    CONSTRAINT ck_comment_not_self_parent CHECK (parent_id IS NULL OR parent_id <> id)
+    CONSTRAINT fk_comment_parent FOREIGN KEY (parent_id) REFERENCES comment(id) ON DELETE SET NULL
 );
 
 CREATE TABLE report (
@@ -368,8 +364,7 @@ CREATE TABLE block (
 
     CONSTRAINT pk_block          PRIMARY KEY (blocker_id, blockee_id),
     CONSTRAINT fk_block_blocker  FOREIGN KEY (blocker_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT fk_block_blockee  FOREIGN KEY (blockee_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT ck_block_not_self CHECK       (blocker_id <> blockee_id)
+    CONSTRAINT fk_block_blockee  FOREIGN KEY (blockee_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE follow (
@@ -381,8 +376,7 @@ CREATE TABLE follow (
 
     CONSTRAINT pk_follow          PRIMARY KEY (follower_id, followee_id),
     CONSTRAINT fk_follow_follower FOREIGN KEY (follower_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT fk_follow_followee FOREIGN KEY (followee_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT ck_follow_not_self CHECK       (follower_id <> followee_id)
+    CONSTRAINT fk_follow_followee FOREIGN KEY (followee_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE likes (
@@ -409,10 +403,7 @@ CREATE TABLE notification (
     CONSTRAINT pk_notification             PRIMARY KEY (id),
     CONSTRAINT fk_notification_actor_user  FOREIGN KEY (actor_user_id)  REFERENCES user(id) ON DELETE CASCADE,
     CONSTRAINT fk_notification_root        FOREIGN KEY (root_id)        REFERENCES root(id) ON DELETE CASCADE,
-    CONSTRAINT fk_notification_target_user FOREIGN KEY (target_user_id) REFERENCES user(id) ON DELETE CASCADE,
-
-    -- 자기 자신에게 보낸 알림 금지
-    CONSTRAINT ck_notification_not_self    CHECK       (actor_user_id <> target_user_id)
+    CONSTRAINT fk_notification_target_user FOREIGN KEY (target_user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 
