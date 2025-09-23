@@ -20,13 +20,13 @@ public class UserController {
         return "user/login";
     }
     
-    @GetMapping("/info")
+    @GetMapping("/detail")
     public String toUserpage(){
-        return "user/info";
+        return "user/detail";
     }
-    @GetMapping("/myinfo")
+    @GetMapping("/mypage")
     public String toMypage() {
-        return "user/myinfo";
+        return "user/mypage";
     }
     
 }

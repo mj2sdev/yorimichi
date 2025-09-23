@@ -15,9 +15,9 @@ public class StoreController {
     public String toListForTest() {
         return "/store/list";
     }
-    @GetMapping("/view")
+    @GetMapping("/detail")
     public String toViewforTest() {
-        return "/store/view";
+        return "/store/detail";
     }
     
     
