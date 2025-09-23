@@ -34,13 +34,13 @@
 -   POST `/store/like` |List<LikeDTO>| :: 즐겨찾기 - 가게를 좋아요 목록에 등록함. // store/detail.html
 -   DELETE `/store/like` |List<LikeDTO>| :: 즐겨찾기해제 - 가게를 좋아요 목록에서 제거함. // store/detail.html
 ## CoeatController
--   GET `/coeat/{coeatid}` |id에 해당하는 coeat 정보| ::  알림코잇 - 같이먹기 정보를 가져와서 같이먹기 모달에 띄움 // header.html
--   POST `/coeat/{coeatid}/participants/` || :: 코잇참가 - 같이먹기 요청자 명단에 등록하고, 참가요청 버튼이 요청완료 버튼으로 바뀜. // header.html
--   POST `/coeat` || :: 같이먹기작성 - 작성 // store/detail.html
--   DELETE `/coeat/{coeatid}` || :: 같이먹기삭제 - 삭제 // store/detail.html
--   PUT `/coeat/{coeatid}` || :: 같이먹기수정 - 수정 // store/detail.html
--   PATCH `/coeat/participate/{id}` || :: 같이먹기참가수락 또는 해제 - 참가자 명단에서 참가자로 변경. // store/detail.html
--   DELETE `/coeat/participate/{id}` || :: 같이먹기참가취소 - 참가자 명단에서 제거 // store/detail.html
+-   GET `/coeat/{coeatid}` |CoeatDTO| ::  알림코잇 - 같이먹기 정보를 가져와서 같이먹기 모달에 띄움 // header.html
+-   POST `/coeat` |List<CoeatDTO>| :: 같이먹기작성 - 작성 // store/detail.html
+-   PUT `/coeat` || :: 같이먹기수정 - 수정 // store/detail.html
+-   DELETE `/coeat` |List<CoeatDTO>| :: 같이먹기삭제 - 삭제 // store/detail.html
+-   POST `/coeat/{coeatid}/participants/` |List<CoeatRequestDTO>| :: 코잇참가 - 같이먹기 요청자 명단에 등록하고, 참가요청 버튼이 요청완료 버튼으로 바뀜. // header.html
+-   PATCH `/coeat/participate/{id}` |List<CoeatRequestDTO>| :: 같이먹기참가 수락 또는 거절 - 참가자 명단에서 참가자로 변경. // store/detail.html
+-   DELETE `/coeat/participate/{id}` |List<CoeatRequestDTO>| :: 같이먹기참가취소 - 참가자 명단에서 제거 // store/detail.html
 ## UserController
 -   GET `/user/{id}` || :: 유저정보 - 유저의 detail을 알아옴. // store/detail.html
 -   GET `/mypage` || :: 마이페이지 - 마이페이지 버튼 클릭시 사용자의 페이지로 이동 // header.html
