@@ -20,7 +20,7 @@
 ## NotificationController
 -   GET `/notification` |알림리스트| :: 알림버튼 - header의 알림리스트에 목록을 띄움. // header.html
 ## StoreController
--   GET `/search/keyword={keyword}`|| :: 검색 - 검색창에 검색시 store/list.html로 이동 // header.html
+-   GET `/search?keyword={keyword}`|| :: 검색 - 검색창에 검색시 store/list.html로 이동 // header.html
 -   GET `/store/detail/{id}` ||:: 추천가게리스트 - 클릭시 특정 가게의 상세페이지로 감. // index.html
 -   POST `/store/bookmark/{id}` || :: 즐겨찾기 - 가게를 즐겨찾기 목록에 등록함. // store/detail.html
 -   DELETE `/store/bookmark/{id}` || :: 즐겨찾기해제 - 가게를 즐겨찾기 목록에서 제거함. // store/detail.html
