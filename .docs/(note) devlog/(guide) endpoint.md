@@ -42,10 +42,10 @@
 -   PATCH `/coeat/participate/{id}` |List<CoeatRequestDTO>| :: 같이먹기참가 수락 또는 거절 - 참가자 명단에서 참가자로 변경. // store/detail.html
 -   DELETE `/coeat/participate/{id}` |List<CoeatRequestDTO>| :: 같이먹기참가취소 - 참가자 명단에서 제거 // store/detail.html
 ## UserController
--   GET `/user/{id}` || :: 유저정보 - 유저의 detail을 알아옴. // store/detail.html
--   GET `/mypage` || :: 마이페이지 - 마이페이지 버튼 클릭시 사용자의 페이지로 이동 // header.html
--   PUT `/mypage` || :: 개인정보수정 - 닉네임이나 이메일 등 개인정보 수정 // mypage.html
--   PUT `/mypage/privacy` || :: 개인정보 공개처리 - 버튼 딸깍으로 개인정보를 공개할지 말지를 결정함. 저장시 저장해서 db 갱신 // mypage.html
+-   GET `/user/detail/{id}` || :: 유저정보 - 유저의 detail을 알아옴. // store/detail.html
+-   GET `/user/mypage` || :: 마이페이지 - 마이페이지 버튼 클릭시 사용자의 페이지로 이동 // header.html
+-   PUT `/user/mypage` || :: 개인정보수정 - 닉네임이나 이메일 등 개인정보 수정 // mypage.html
+-   PUT `/user/mypage/privacy` || :: 개인정보 공개처리 - 버튼 딸깍으로 개인정보를 공개할지 말지를 결정함. 저장시 저장해서 db 갱신 // mypage.html
 
 ## AuthController
 -   POST `/logout` || :: 로그아웃 - 버튼 클릭시 사용자 로그아웃. // header.html
