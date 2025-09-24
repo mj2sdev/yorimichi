@@ -17,7 +17,7 @@ public class AuthController {
 	//로그아웃
 	@PostMapping("/logout")
 	public String logout() {
-		return "redirect:/index.html";
+		return "redirect:/index";
 	}
 
 	//회원가입 페이지로 이동  PageController에서 이동시켰습니다. 잘못 실행되는 걸 방지하기 위함.
@@ -29,7 +29,7 @@ public class AuthController {
 	@PostMapping("/signup")
 	public String signup(@RequestBody UserDTO user) {
 		
-		return "redirect:/index.html";
+		return "redirect:/index";
 	}
 	
 
@@ -52,13 +52,13 @@ public class AuthController {
 	@PostMapping("/login")
 	public String login(@RequestBody UserDTO user) {
 
-		return "redirect:/index.html";
+		return "redirect:/index";
 	}
 
 	@PostMapping("/login/social")
 	public String socialLogin(){
 		
-		return "redirect:/index.html";
+		return "redirect:/index";
 	}
 	
 	
