@@ -9,8 +9,10 @@
     </insert>
 
     <delete id="delete" parameterType="LikeDTO">
-        DELETE FROM likes
-        WHERE user_id = #{userId} AND root_id = #{rootId}
+        DELETE
+        FROM likes
+        WHERE user_id = #{userId}
+          AND root_id = #{rootId}
     </delete>
 
 </mapper>

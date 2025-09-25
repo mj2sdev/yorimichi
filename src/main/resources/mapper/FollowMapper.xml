@@ -10,8 +10,10 @@
     </insert>
 
     <delete id="delete" parameterType="FollowDTO">
-        DELETE FROM follow
-        WHERE follower_id = #{followerId} AND followee_id = #{followeeId}
+        DELETE
+        FROM follow
+        WHERE follower_id = #{followerId}
+          AND followee_id = #{followeeId}
     </delete>
 
 </mapper>

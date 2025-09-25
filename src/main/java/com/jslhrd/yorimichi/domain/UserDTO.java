@@ -20,21 +20,33 @@ import java.time.LocalDateTime;
 @Alias("UserDTO")
 public class UserDTO extends RootDTO {
 
-	/** FK: 권한/역할 ID */
-    private Long roleId;
+	/**
+	 * FK: 권한/역할 ID
+	 */
+	private Long roleId;
 
-	/** 유저 이메일/아이디 */
-    private String email;
+	/**
+	 * 유저 이메일/아이디
+	 */
+	private String email;
 
-	/** 유저 비밀번호 */
-    private String password;
+	/**
+	 * 유저 비밀번호
+	 */
+	private String password;
 
-	/** 유저 닉네임 */
-    private String nickname;
+	/**
+	 * 유저 닉네임
+	 */
+	private String nickname;
 
-	/** 유저 자기소개 */
-    private String description;
+	/**
+	 * 유저 자기소개
+	 */
+	private String description;
 
-	/** 마지막 로그인 일시 */
-    private LocalDateTime lastLoginAt;
+	/**
+	 * 마지막 로그인 일시
+	 */
+	private LocalDateTime lastLoginAt;
 }

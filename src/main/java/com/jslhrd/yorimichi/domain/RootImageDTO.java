@@ -20,15 +20,23 @@ import java.time.LocalDateTime;
 @Alias("RootImageDTO")
 public class RootImageDTO {
 
-	/** FK: 루트 ID */
-    private Long rootId;
+	/**
+	 * FK: 루트 ID
+	 */
+	private Long rootId;
 
-	/** FK: 이미지 ID */
-    private Long imageId;
-	
-	/** 생성일시 (DB 자동 생성) */
+	/**
+	 * FK: 이미지 ID
+	 */
+	private Long imageId;
+
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
 	private LocalDateTime createdAt;
 
-	/** 수정일시 (DB 자동 갱신) */
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
 	private LocalDateTime updatedAt;
 }

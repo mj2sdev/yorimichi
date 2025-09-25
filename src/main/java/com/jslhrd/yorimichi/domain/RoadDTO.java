@@ -20,21 +20,33 @@ import java.time.LocalDateTime;
 @Alias("RoadDTO")
 public class RoadDTO {
 
-	/** PK: 도로명 ID */
-    private Long id;
+	/**
+	 * PK: 도로명 ID
+	 */
+	private Long id;
 
-	/** FK: 읍/면/동 ID */
-    private Long emdId;
-	
-	/** 도로명 코드 */
-    private String code;
-	
-	/** 도로명 이름 */
-    private String name;
+	/**
+	 * FK: 읍/면/동 ID
+	 */
+	private Long emdId;
 
-	/** 생성일시 (DB 자동 생성) */
+	/**
+	 * 도로명 코드
+	 */
+	private String code;
+
+	/**
+	 * 도로명 이름
+	 */
+	private String name;
+
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
 	private LocalDateTime createdAt;
 
-	/** 수정일시 (DB 자동 갱신) */
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
 	private LocalDateTime updatedAt;
 }

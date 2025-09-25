@@ -6,16 +6,17 @@
  * 페이지 로딩 후 실행되어야 합니다.
  */
 function bsNeedValidation() {
-	const forms = document.querySelectorAll(".needs-validation");
+    const forms = document.querySelectorAll(".needs-validation");
 
-	Array.from(forms).forEach(form => {
-		form.addEventListener("submit", event => {
-			if (!form.checkValidity()) {
-				event.preventDefault()
-				event.stopPropagation();
-			}
-			form.classList.add("was-validated");
-		}, false)
-	})
+    Array.from(forms).forEach(form => {
+        form.addEventListener("submit", event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation();
+            }
+            form.classList.add("was-validated");
+        }, false)
+    })
 }
+
 bsNeedValidation();

@@ -20,15 +20,23 @@ import java.time.LocalDateTime;
 @Alias("ImageDTO")
 public class ImageDTO {
 
-	/** PK: 이미지 ID */
-    private Long id;
+	/**
+	 * PK: 이미지 ID
+	 */
+	private Long id;
 
-	/** 이미지 URL */
-    private String url;
+	/**
+	 * 이미지 URL
+	 */
+	private String url;
 
-	/** 생성일시 (DB 자동 생성) */
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
 	private LocalDateTime createdAt;
 
-	/** 수정일시 (DB 자동 갱신) */
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
 	private LocalDateTime updatedAt;
 }

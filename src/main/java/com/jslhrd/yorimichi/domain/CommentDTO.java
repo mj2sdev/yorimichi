@@ -6,7 +6,7 @@ import org.apache.ibatis.type.Alias;
 
 /**
  * 댓글 DTO.
- *
+ * <p>
  * 댓글 정보를 전달합니다.
  *
  * @author GeonHoKoo
@@ -18,15 +18,23 @@ import org.apache.ibatis.type.Alias;
 @Alias("CommentDTO")
 public class CommentDTO extends RootDTO {
 
-	/** FK: 같이먹기 ID */
-    private Long coeatId;
+	/**
+	 * FK: 같이먹기 ID
+	 */
+	private Long coeatId;
 
-	/** FK: 부모 댓글 ID */
-    private Long parentId;
+	/**
+	 * FK: 부모 댓글 ID
+	 */
+	private Long parentId;
 
-	/** FK: 유저 ID */
+	/**
+	 * FK: 유저 ID
+	 */
 	private Long userId;
 
-	/** 댓글 내용 */
-    private String content;
+	/**
+	 * 댓글 내용
+	 */
+	private String content;
 }

@@ -20,33 +20,53 @@ import java.time.LocalDateTime;
 @Alias("AddressDTO")
 public class AddressDTO {
 
-    /** PK: 주소 ID */
-    private Long id;
+	/**
+	 * PK: 주소 ID
+	 */
+	private Long id;
 
-    /** FK: 도로 ID */
-    private Long roadId;
+	/**
+	 * FK: 도로 ID
+	 */
+	private Long roadId;
 
-    /** FK: 우편번호 ID */
-    private Long postalId;
+	/**
+	 * FK: 우편번호 ID
+	 */
+	private Long postalId;
 
-    /** 상세주소(동/호수 등) */
-    private String detail;
+	/**
+	 * 상세주소(동/호수 등)
+	 */
+	private String detail;
 
-    /** 도로명 전체 주소 */
-    private String roadAddressText;
+	/**
+	 * 도로명 전체 주소
+	 */
+	private String roadAddressText;
 
-    /** 지번 전체 주소 */
-    private String jibunAddressText;
+	/**
+	 * 지번 전체 주소
+	 */
+	private String jibunAddressText;
 
-    /** 위도 (-90.0 ~ +90.0) */
-    private Double latitude;
+	/**
+	 * 위도 (-90.0 ~ +90.0)
+	 */
+	private Double latitude;
 
-    /** 경도 (-180.0 ~ +180.0) */
-    private Double longitude;
+	/**
+	 * 경도 (-180.0 ~ +180.0)
+	 */
+	private Double longitude;
 
-    /** 생성일시 (DB 자동 생성) */
-    private LocalDateTime createdAt;
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
+	private LocalDateTime createdAt;
 
-    /** 수정일시 (DB 자동 갱신) */
-    private LocalDateTime updatedAt;
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
+	private LocalDateTime updatedAt;
 }

@@ -17,12 +17,16 @@
 
     <update id="update" parameterType="RoadDTO">
         UPDATE road
-        SET emd_id = #{emdId}, code = #{code}, name = #{name}
+        SET emd_id = #{emdId},
+            code   = #{code},
+            name   = #{name}
         WHERE id = #{id}
     </update>
 
     <delete id="deleteById" parameterType="Long">
-        DELETE FROM road WHERE id = #{id}
+        DELETE
+        FROM road
+        WHERE id = #{id}
     </delete>
 
 </mapper>

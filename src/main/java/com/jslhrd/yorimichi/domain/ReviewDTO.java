@@ -16,15 +16,23 @@ import lombok.Setter;
 @Setter
 public class ReviewDTO extends RootDTO {
 
-	/** FK: 유저 ID */
-    private Long userId;
+	/**
+	 * FK: 유저 ID
+	 */
+	private Long userId;
 
-	/** FK: 음식 ID */
-    private Long foodId;
+	/**
+	 * FK: 음식 ID
+	 */
+	private Long foodId;
 
-	/** 리뷰 평점 */
-    private Integer rating;
+	/**
+	 * 리뷰 평점
+	 */
+	private Integer rating;
 
-	/** 리뷰 내용 */
-    private String content;
+	/**
+	 * 리뷰 내용
+	 */
+	private String content;
 }

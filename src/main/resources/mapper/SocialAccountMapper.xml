@@ -12,21 +12,35 @@
     </insert>
 
     <select id="selectByUserIdProvider" parameterType="String" resultType="SocialAccountDTO">
-        SELECT user_id, provider, provider_user_id, provider_email, email_verified,
-               display_name, avatar_url, created_at, updated_at, last_login_at
+        SELECT user_id,
+               provider,
+               provider_user_id,
+               provider_email,
+               email_verified,
+               display_name,
+               avatar_url,
+               created_at,
+               updated_at,
+               last_login_at
         FROM social_account
-        WHERE user_id = #{userId} AND provider = #{provider}
+        WHERE user_id = #{userId}
+          AND provider = #{provider}
     </select>
 
     <update id="update" parameterType="SocialAccountDTO">
         UPDATE social_account
-        SET provider_email = #{providerEmail}, display_name = #{displayName}, avatar_url = #{avatarUrl}
-        WHERE user_id = #{userId} AND provider = #{provider}
+        SET provider_email = #{providerEmail},
+            display_name   = #{displayName},
+            avatar_url     = #{avatarUrl}
+        WHERE user_id = #{userId}
+          AND provider = #{provider}
     </update>
 
     <delete id="deleteByUserIdProvider">
-        DELETE FROM social_account
-        WHERE user_id = #{userId} AND provider = #{provider}
+        DELETE
+        FROM social_account
+        WHERE user_id = #{userId}
+          AND provider = #{provider}
     </delete>
 
 </mapper>

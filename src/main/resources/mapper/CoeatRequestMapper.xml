@@ -10,7 +10,9 @@
     </insert>
 
     <delete id="deleteByCoeatId" parameterType="Long">
-        DELETE FROM feed_coeat_request WHERE coeat_id = #{coeatId}
+        DELETE
+        FROM feed_coeat_request
+        WHERE coeat_id = #{coeatId}
     </delete>
 
 </mapper>

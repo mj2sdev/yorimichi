@@ -2,10 +2,11 @@
 
 - 이 문서는 **Markdown 문법과 GitHub 확장(GFM)** 을 한번에 정리했습니다.
 - 예시는 전부 실행 가능한 형태로 넣었습니다.
- 
+
 ---
 
 ## 목차
+
 1. 기본 개념
 2. 제목ㆍ단락ㆍ줄바꿈
 3. 강조ㆍ인라인 코드ㆍ인용
@@ -28,6 +29,7 @@
 ---
 
 ## 1. 기본 개념
+
 - **Markdown**: 가벼운 문서 모팻. `.md` 확장자.
 - **GFM(GitHub Flavored Markdown)**: GitHub가 확장한 마크다운 (테이블, 체크박스, 자동링크, Mermaid, 수식 등 지원).
 - **목표**: "문서 가독성⬆️, 유지보수⬆️, 복붙 난이도⬇️".
@@ -37,8 +39,11 @@
 ## 2. 제목ㆍ단락ㆍ줄바꿈
 
 # H1 제목 (문서당 1개 권장)
+
 ## H2 부제
+
 ### H3 섹션
+
 #### H4 소섹션
 
 문단은 빈 줄로 구분합니다.
@@ -46,9 +51,7 @@
 줄바꿈은<br> 강제 줄바꿈은 `<br>` 을 쓰거나  
 문장 끝에 공백 2칸을 넣습니다.
 
-
 - H1은 문제 제목에만 사용 권장. (README 최상단 등)
-
 
 ---
 
@@ -68,8 +71,8 @@
 2. 숫자는 자동 증가
 
 - 글머리 기호
-    - 하위 단계
-        - 더 하위
+	- 하위 단계
+		- 더 하위
 
 - [ ] 작업 미완료 (Task List)
 - [x] 작업 완료
@@ -79,20 +82,24 @@
 ---
 
 ## 5. 코드 블록 (언어 하이라이트ㆍdiff)
+
 ```bash
 # 터미널 예시
 git init
 git status
 ```
+
 ```python
 def add(a, b):
     return a + b
 ```
+
 ```diff
 - password: "1234"
 + password: "${SECRET}"
 ```
-> 언어 식별자 (bash, sh, zsh, python, json, yaml, sql, diff 등)를 붙이면 **문법 하이라이트**가 적용됩니다. 
+
+> 언어 식별자 (bash, sh, zsh, python, json, yaml, sql, diff 등)를 붙이면 **문법 하이라이트**가 적용됩니다.
 
 ---
 
@@ -118,11 +125,10 @@ def add(a, b):
 
 ## 7. 표(Table)
 
-
-| 열A            | 열B | 열C |
-|:--------------|:---|---:|
-| 좌             | 가운데| 우 |
-| 긴 문장은<br>줄바꿈으로|
+| 열A             | 열B  | 열C |
+|:---------------|:----|---:|
+| 좌              | 가운데 |  우 |
+| 긴 문장은<br>줄바꿈으로 |
 
 - 정렬: 왼쪽`:--`, 가운데`:---:`, 오른쪽`---:`
 - 줄바꿈은 `<br>`권장. 파이프(`|`)는 필요 시 `\|`로 이스케이프.
@@ -144,7 +150,7 @@ $$
 
 ## 9. 주석ㆍ각주(footnotes)
 
-각주 예시 문장[^1] 입니다.  
+각주 예시 문장[^1] 입니다.
 
 [^1]: 여기 각주 내용을 작성합니다. 여러 줄도 가능.
 
@@ -164,6 +170,7 @@ $$
 > GitHub 문서 스타일의 **Callouts**. `[!NOTE]`, `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]` 사용.
 
 ---
+
 ## 11. 접기/펼치기(details/summary)
 
 <details>
@@ -176,11 +183,12 @@ $$
 
 </details>
 
->  긴 로그/보조 정보를 접어 둘 때 유용.
+> 긴 로그/보조 정보를 접어 둘 때 유용.
 
 ---
 
 ## 12. Mermaid 다이어그램
+
 ```mermaid
 flowchart LR
     A[개발자] --> |push| B[GitHub]
@@ -188,11 +196,13 @@ flowchart LR
     C -->|pass| D[Deploy]
     C -->|fail| E[Fix]
 ```
+
 > GitHub는 ` ```mermaid ` 블록을 **바로 렌더링**합니다 (네트워크 다이어그램, 시퀀스, 간트 등).
 
 ---
 
 ## 13. 이모지ㆍ자동 링크(GitHub 전용)
+
 ```md
 이모지: :tada: :rocket: :memo:
 
@@ -206,17 +216,22 @@ flowchart LR
 ---
 
 ## 14. HTML 병용과 이스케이프
+
 - 표 정렬/레이아웃, 이미지 크기 제어 등은 **HTML 태그**로 보완 가능
+
 ```md
 <p align="center">
     <img src="./assets/hero.png" width="600" alt="Hero">
 </p>
 ```
+
 - **이스케이프**: 마크다운 문법 문자 그대로 쓰기
+
 ```md
 \*별포\*는 강조가 아니라 문자 그대로
 \[링크 텍스트\]\(URL\)
 ```
+
 - 이스케이프가 필요한 주요 문자: `\` `*` `_` `{` `}` `[` `]` `(` `)` `#` `+` `-` `.` `!` `|` `<` `>` `&`
 
 ---
@@ -233,10 +248,12 @@ flowchart LR
 > 한 줄 소개: 무엇을 해결하는가?
 
 ## 특징
+
 - 포인트 1
 - 포인트 2
 
 ## 빠른 시작
+
 ```bash
 git clone https://github.com/{{owner}}/{{repo}}.git
 cd {{repo}}
@@ -244,10 +261,12 @@ make run
 ```
 
 ### 문서
+
 - [설치](./docs/INSTALL.md)
 - [기여 가이드](./CONTRIBUTING.md)
 
 ### 15.2 Git 커밋 메시지 규칙(예: Conventional Commits)
+
 ```md
 <type>(scope): <subject>
 
@@ -259,6 +278,7 @@ type 예: feat, fix, docs, style, refactor, test, chore, build, ci
 ```
 
 ### 15.3 PR 템플릿(.github/pull_request_template.md)
+
 ```md
 ## 변경 내용
 -
@@ -272,10 +292,12 @@ type 예: feat, fix, docs, style, refactor, test, chore, build, ci
 ```
 
 ### 15.4 라이선스 블록
+
 ```md
 ## License
 MIT © {{Your Name}}
 ```
+
 ---
 
 ## 16. 체크리스트(출고 전 점검)
@@ -293,14 +315,16 @@ MIT © {{Your Name}}
 ---
 
 ## 부록 A. 앵커 규칙(헤딩 링크)
+
 - GitHub는 헤딩을 **소문자 변환 + 공백 -> 하이폰(-) + 일부 기호 제거**로 앵커를 만듭니다.
-    예) `## 링크-이미지.앵커` -> `#링크이미지앵커`가 아니라 `#6-링크이미지앵커`처럼 섹션 번호가 있으면 번호 포함
+  예) `## 링크-이미지.앵커` -> `#링크이미지앵커`가 아니라 `#6-링크이미지앵커`처럼 섹션 번호가 있으면 번호 포함
 - 한글/특수문자도 지원. 충돌 시 `-1`, `-2`등을 붙습니다.
 - 확실히 하려면 헤딩 앞에 **절 번호**를 붙여 고정 앵커를 확보하세요.
 
 ---
 
 ## 부록 B. 배지(Badges) 예시
+
 ```md
 [![Build](https://img.shields.io/github/actions/workflow/status/{{owner}}/{{repo}}/ci.yml?label=CI)](./.github/workflows/ci.yml)
 [![Coverage](https://img.shields.io/badge/coverage-92%25-success)](./docs/tests.md)
@@ -309,6 +333,7 @@ MIT © {{Your Name}}
 ```
 
 ## 끝으로
+
 - 문서는 **코드와 동일한 품질 기준**으로 다룹니다: 변경 시 PR -> 리뷰 -> 머지.
 - 동일 문서에 반복되는 패턴은 **스니펫화**하여 재사용하세요.
 - 이 파일 자체를 `DOCS_GUIDE.md`로 저장해두고, 새 repo마다 복사해 시작하면 세팅 시간이 크게 줄어듭니다.

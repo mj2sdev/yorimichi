@@ -18,15 +18,23 @@ import java.time.LocalDateTime;
 @Setter
 public class RoleDTO {
 
-	/** PK: 권한/역할 ID */
-    private Long id;     // PK
+	/**
+	 * PK: 권한/역할 ID
+	 */
+	private Long id;     // PK
 
-	/** 권한/역할 이름 */
-    private String name; // 역할명
+	/**
+	 * 권한/역할 이름
+	 */
+	private String name; // 역할명
 
-	/** 생성일시 (DB 자동 생성) */
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
 	private LocalDateTime createdAt;
 
-	/** 수정일시 (DB 자동 갱신) */
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
 	private LocalDateTime updatedAt;
 }

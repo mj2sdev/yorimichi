@@ -1,11 +1,12 @@
 # 🧪 YorimichiApplicationTests 사용 가이드
 
 이 문서는 `YorimichiApplicationTests.java`를 처음 접하는 사람도 쉽게 따라와서  
-**MyBatis XML Mapper 테스트**를 진행할 수 있도록 작성된 가이드입니다.  
+**MyBatis XML Mapper 테스트**를 진행할 수 있도록 작성된 가이드입니다.
 
 ---
 
 ## 📌 개요
+
 - **목적**: Mapper 인터페이스 ↔ XML 매핑이 올바르게 동작하는지 검증
 - **환경**: H2 인메모리 DB + `schema.sql` + Spring Boot `@MybatisTest`
 - **결과**: 모든 매퍼가 insert/select/update/delete 기본 동작을 하는지 스모크 테스트
@@ -13,6 +14,7 @@
 ---
 
 ## ⚙️ 환경 구성
+
 - Spring Boot 3.x
 - JUnit 5 (Jupiter)
 - MyBatis Spring Boot Starter
@@ -26,22 +28,24 @@
 ---
 
 ## 🗂️ 준비
-1. **`schema.sql` 확인**  
-   - H2 호환 테이블 정의 필요  
-   - `created_at`/`updated_at`은 DB에서 자동 관리  
 
-2. **Mapper 네임스페이스 규칙**  
-   - 네임스페이스 = 인터페이스 FQCN  
-     예) `com.jslhrd.yorimichi.mapper.UserMapper`  
+1. **`schema.sql` 확인**
+	- H2 호환 테이블 정의 필요
+	- `created_at`/`updated_at`은 DB에서 자동 관리
 
-3. **XML 규칙**  
-   - `COUNT(*)` 통일  
-   - `update`에서는 `created_at` 제외  
-   - `ORDER BY` ASC/DESC 명시  
+2. **Mapper 네임스페이스 규칙**
+	- 네임스페이스 = 인터페이스 FQCN  
+	  예) `com.jslhrd.yorimichi.mapper.UserMapper`
+
+3. **XML 규칙**
+	- `COUNT(*)` 통일
+	- `update`에서는 `created_at` 제외
+	- `ORDER BY` ASC/DESC 명시
 
 ---
 
 ## 🧩 테스트 코드 기본 구조
+
 `YorimichiApplicationTests.java`는 다음과 같은 형태로 작성됩니다:
 
 ```java

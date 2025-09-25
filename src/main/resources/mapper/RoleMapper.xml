@@ -22,7 +22,9 @@
     </update>
 
     <delete id="deleteById" parameterType="Long">
-        DELETE FROM role WHERE id = #{id}
+        DELETE
+        FROM role
+        WHERE id = #{id}
     </delete>
 
 </mapper>

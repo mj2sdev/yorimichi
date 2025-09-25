@@ -20,15 +20,23 @@ import java.time.LocalDateTime;
 @Alias("BlockDTO")
 public class BlockDTO {
 
-    /** FK: 차단한 유저 ID */
-    private Long blockerId;
+	/**
+	 * FK: 차단한 유저 ID
+	 */
+	private Long blockerId;
 
-    /** FK: 차단당한 유저 ID */
-    private Long blockedId;
+	/**
+	 * FK: 차단당한 유저 ID
+	 */
+	private Long blockedId;
 
-    /** 생성일시 (DB 자동 생성) */
-    private LocalDateTime createdAt;
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
+	private LocalDateTime createdAt;
 
-    /** 수정일시 (DB 자동 갱신) */
-    private LocalDateTime updatedAt;
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
+	private LocalDateTime updatedAt;
 }

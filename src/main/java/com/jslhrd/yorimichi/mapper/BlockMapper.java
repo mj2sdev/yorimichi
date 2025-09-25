@@ -17,14 +17,16 @@ public interface BlockMapper {
 
 	/**
 	 * 차단 추가.
+	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
-    int insert(BlockDTO dto);
+	int insert(BlockDTO dto);
 
 
 	/**
 	 * 차단 삭제.
+	 *
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */
-    int delete(BlockDTO dto);
+	int delete(BlockDTO dto);
 }

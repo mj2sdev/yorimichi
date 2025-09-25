@@ -22,7 +22,9 @@
     </update>
 
     <delete id="deleteById" parameterType="Long">
-        DELETE FROM image WHERE id = #{id}
+        DELETE
+        FROM image
+        WHERE id = #{id}
     </delete>
 
 </mapper>

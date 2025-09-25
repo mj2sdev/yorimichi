@@ -19,33 +19,53 @@ import java.time.LocalDateTime;
 @Alias("SocialAccountDTO")
 public class SocialAccountDTO extends RootDTO {
 
-	/** PK1, FK: 권한/역할 ID */
-    private Long userId;
+	/**
+	 * PK1, FK: 권한/역할 ID
+	 */
+	private Long userId;
 
-	/** PK2: 제공자 */
-    private String provider;
+	/**
+	 * PK2: 제공자
+	 */
+	private String provider;
 
-	/** 제공자 유저 ID */
-    private String providerUserId;
+	/**
+	 * 제공자 유저 ID
+	 */
+	private String providerUserId;
 
-	/** 제공자 유저 이메일 */
-    private String providerEmail;
+	/**
+	 * 제공자 유저 이메일
+	 */
+	private String providerEmail;
 
-	/** 이메일 인증여부 */
-    private String emailVerified;
+	/**
+	 * 이메일 인증여부
+	 */
+	private String emailVerified;
 
-	/** 제공자 유저 닉네임 */
+	/**
+	 * 제공자 유저 닉네임
+	 */
 	private String displayName;
 
-	/** 제공자 유저 프로필 URL */
+	/**
+	 * 제공자 유저 프로필 URL
+	 */
 	private String avatarUrl;
 
-	/** 생성일시 (DB 자동 생성) */
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
 	private LocalDateTime createdAt;
 
-	/** 수정일시 (DB 자동 갱신) */
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
 	private LocalDateTime updatedAt;
 
-	/** 마지막 로그인 일시 */
-    private LocalDateTime lastLoginAt;
+	/**
+	 * 마지막 로그인 일시
+	 */
+	private LocalDateTime lastLoginAt;
 }

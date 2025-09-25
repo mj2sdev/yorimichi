@@ -10,24 +10,35 @@
     </insert>
 
     <select id="selectById" parameterType="Long" resultType="StoreDTO">
-        SELECT s.id, s.address_id, s.name, s.description, s.phone,
-               r.created_at, r.updated_at, r.deleted_at, r.blinded_at
+        SELECT s.id,
+               s.address_id,
+               s.name,
+               s.description,
+               s.phone,
+               r.created_at,
+               r.updated_at,
+               r.deleted_at,
+               r.blinded_at
         FROM store s
-        JOIN root r ON s.id = r.id
+                 JOIN root r ON s.id = r.id
         WHERE r.id = #{id}
     </select>
 
     <update id="update" parameterType="StoreDTO">
         UPDATE store s
-        JOIN root r ON s.id = r.id
-        SET s.address_id = #{addressId}, s.name = #{name},
-            s.description = #{description}, s.phone = #{phone},
-            r.updated_at = NOW()
+            JOIN root r ON s.id = r.id
+        SET s.address_id  = #{addressId},
+            s.name        = #{name},
+            s.description = #{description},
+            s.phone       = #{phone},
+            r.updated_at  = NOW()
         WHERE s.id = #{id}
     </update>
 
     <delete id="deleteById" parameterType="Long">
-        DELETE FROM root WHERE id = #{id}
+        DELETE
+        FROM root
+        WHERE id = #{id}
     </delete>
 
 </mapper>

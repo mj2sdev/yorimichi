@@ -20,15 +20,23 @@ import java.time.LocalDateTime;
 @Alias("LikeDTO")
 public class LikeDTO {
 
-	/** FK: 유저 ID */
-    private Long userId;
+	/**
+	 * FK: 유저 ID
+	 */
+	private Long userId;
 
-	/** FK: 루트 ID */
-    private Long rootId;
+	/**
+	 * FK: 루트 ID
+	 */
+	private Long rootId;
 
-	/** 생성일시 (DB 자동 생성) */
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
 	private LocalDateTime createdAt;
 
-	/** 수정일시 (DB 자동 갱신) */
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
 	private LocalDateTime updatedAt;
 }

@@ -18,15 +18,23 @@ import org.apache.ibatis.type.Alias;
 @Alias("StoreDTO")
 public class StoreDTO extends RootDTO {
 
-	/** FK: 주소 ID */
-    private Long addressId;
+	/**
+	 * FK: 주소 ID
+	 */
+	private Long addressId;
 
-	/** 상점 이름 */
-    private String name;
+	/**
+	 * 상점 이름
+	 */
+	private String name;
 
-	/** 상점 설명 */
-    private String description;
+	/**
+	 * 상점 설명
+	 */
+	private String description;
 
-	/** 상점 번호 */
-    private String phone;
+	/**
+	 * 상점 번호
+	 */
+	private String phone;
 }

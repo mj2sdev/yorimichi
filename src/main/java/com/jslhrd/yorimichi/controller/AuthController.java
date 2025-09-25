@@ -1,19 +1,13 @@
 package com.jslhrd.yorimichi.controller;
 
 import com.jslhrd.yorimichi.domain.UserDTO;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.*;
 
 
 @Controller
 public class AuthController {
-	
+
 	//로그아웃
 	@PostMapping("/logout")
 	public String logout() {
@@ -22,16 +16,16 @@ public class AuthController {
 
 	//회원가입 페이지로 이동  PageController에서 이동시켰습니다. 잘못 실행되는 걸 방지하기 위함.
 	@GetMapping("/signup")
-	public String showSignup(){
+	public String showSignup() {
 		return "/user/signup";
 	}
 
 	@PostMapping("/signup")
 	public String signup(@RequestBody UserDTO user) {
-		
+
 		return "redirect:/index";
 	}
-	
+
 
 	@ResponseBody
 	@GetMapping("/signup/nickname")
@@ -48,7 +42,7 @@ public class AuthController {
 
 		return result;
 	}
-	
+
 	@PostMapping("/login")
 	public String login(@RequestBody UserDTO user) {
 
@@ -56,14 +50,10 @@ public class AuthController {
 	}
 
 	@PostMapping("/login/social")
-	public String socialLogin(){
-		
+	public String socialLogin() {
+
 		return "redirect:/index";
 	}
-	
-	
 
 
-	
-	
 }

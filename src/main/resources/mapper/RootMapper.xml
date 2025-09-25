@@ -10,7 +10,9 @@
     </insert>
 
     <delete id="deleteById" parameterType="Long">
-        DELETE FROM root WHERE id = #{id}
+        DELETE
+        FROM root
+        WHERE id = #{id}
     </delete>
 
 </mapper>

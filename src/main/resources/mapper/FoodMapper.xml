@@ -10,23 +10,34 @@
     </insert>
 
     <select id="selectById" parameterType="Long" resultType="FoodDTO">
-        SELECT f.id, f.store_id, f.name, f.price, f.description,
-               r.created_at, r.updated_at, r.deleted_at, r.blinded_at
+        SELECT f.id,
+               f.store_id,
+               f.name,
+               f.price,
+               f.description,
+               r.created_at,
+               r.updated_at,
+               r.deleted_at,
+               r.blinded_at
         FROM food f
-        JOIN root r ON f.id = r.id
+                 JOIN root r ON f.id = r.id
         WHERE f.id = #{id}
     </select>
 
     <update id="update" parameterType="FoodDTO">
         UPDATE food f
-        JOIN root r ON f.id = r.id
-        SET f.name = #{name}, f.price = #{price}, f.description = #{description},
-            r.updated_at = NOW()
+            JOIN root r ON f.id = r.id
+        SET f.name        = #{name},
+            f.price       = #{price},
+            f.description = #{description},
+            r.updated_at  = NOW()
         WHERE f.id = #{id}
     </update>
 
     <delete id="deleteById" parameterType="Long">
-        DELETE FROM root WHERE id = #{id}
+        DELETE
+        FROM root
+        WHERE id = #{id}
     </delete>
 
 </mapper>

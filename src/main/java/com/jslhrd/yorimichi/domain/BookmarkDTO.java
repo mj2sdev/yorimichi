@@ -19,16 +19,24 @@ import java.time.LocalDateTime;
 @Setter
 @Alias("BookmarkDTO")
 public class BookmarkDTO {
-	
-	/** FK: 유저 ID */
-    private Long userId;
-	
-	/** FK: 상점 ID */
-    private Long storeId;
 
-	/** 생성일시 (DB 자동 생성) */
+	/**
+	 * FK: 유저 ID
+	 */
+	private Long userId;
+
+	/**
+	 * FK: 상점 ID
+	 */
+	private Long storeId;
+
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
 	private LocalDateTime createdAt;
 
-	/** 수정일시 (DB 자동 갱신) */
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
 	private LocalDateTime updatedAt;
 }

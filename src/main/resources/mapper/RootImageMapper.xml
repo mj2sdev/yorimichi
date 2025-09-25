@@ -10,8 +10,10 @@
     </insert>
 
     <delete id="delete" parameterType="RootImageDTO">
-        DELETE FROM root_image
-        WHERE root_id = #{rootId} AND image_id = #{imageId}
+        DELETE
+        FROM root_image
+        WHERE root_id = #{rootId}
+          AND image_id = #{imageId}
     </delete>
 
 </mapper>
