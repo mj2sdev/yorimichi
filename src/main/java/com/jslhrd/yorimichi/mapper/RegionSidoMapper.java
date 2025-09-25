@@ -20,6 +20,7 @@ public interface RegionSidoMapper {
 
 	/**
 	 * 시/도 추가.
+	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
 	int insert(RegionSidoDTO dto);
@@ -28,6 +29,7 @@ public interface RegionSidoMapper {
 
 	/**
 	 * 시/도 단건 조회.
+	 *
 	 * @param id 시/도 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
@@ -35,12 +37,14 @@ public interface RegionSidoMapper {
 
 	/**
 	 * 시/도 수정.
+	 *
 	 * @return 영향 행 수 (수정 1, 대상 없음 0)
 	 */
 	int update(RegionSidoDTO dto);
 
 	/**
 	 * 시/도 삭제.
+	 *
 	 * @param id 시/도 ID
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */

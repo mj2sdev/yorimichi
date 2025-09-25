@@ -1,113 +1,113 @@
 :root {
-	--ym-primary: oklch(0.748 0.1719 58.5);
-	--ym-primary-bright: oklch(0.8208 0.1486 72.1);
-	--ym-secondary: oklch(0.1261 0.0272 70.75);
-	--ym-secondary-bright: oklch(0.234 0.0357 42.46);
-	--ym-white: oklch(0.9934 0.0045 314.81);
-	--ym-whitesmoke: oklch(0.9702 0 0);
+    --ym-primary: oklch(0.748 0.1719 58.5);
+    --ym-primary-bright: oklch(0.8208 0.1486 72.1);
+    --ym-secondary: oklch(0.1261 0.0272 70.75);
+    --ym-secondary-bright: oklch(0.234 0.0357 42.46);
+    --ym-white: oklch(0.9934 0.0045 314.81);
+    --ym-whitesmoke: oklch(0.9702 0 0);
 }
 
 .text-ymprimary {
-	color: var(--ym-primary);
+    color: var(--ym-primary);
 }
 
 .text-ymsecondary {
-	color: var(--ym-secondary);
+    color: var(--ym-secondary);
 }
 
 .text-ymwhite {
-	color: var(--ym-white);
+    color: var(--ym-white);
 }
 
 .text-ymwhitesmoke {
-	color: var(--ym-whitesmoke);
+    color: var(--ym-whitesmoke);
 }
 
 .text-ymprimary-bright {
-	color: var(--ym-primary-bright);
+    color: var(--ym-primary-bright);
 }
 
 .text-ymsecondary-bright {
-	color: var(--ym-secondary-bright);
+    color: var(--ym-secondary-bright);
 }
 
 .bg-ymprimary {
-	background-color: var(--ym-primary);
+    background-color: var(--ym-primary);
 }
 
 .bg-ymsecondary {
-	background-color: var(--ym-secondary);
+    background-color: var(--ym-secondary);
 }
 
 .bg-ymwhite {
-	background-color: var(--ym-white);
+    background-color: var(--ym-white);
 }
 
 .bg-ymwhitesmoke {
-	background-color: var(--ym-whitesmoke);
+    background-color: var(--ym-whitesmoke);
 }
 
 .bg-ymprimary-bright {
-	background-color: var(--ym-primary-bright);
+    background-color: var(--ym-primary-bright);
 }
 
 .bg-ymsecondary-bright {
-	background-color: var(--ym-secondary-bright);
+    background-color: var(--ym-secondary-bright);
 }
 
 .bg-ymprimary-gradient {
-	background: linear-gradient(
-		45deg,
-		var(--ym-primary),
-		var(--ym-primary-bright)
-	);
+    background: linear-gradient(
+            45deg,
+            var(--ym-primary),
+            var(--ym-primary-bright)
+    );
 }
 
 .btn-ymprimary {
-	--bs-btn-color: #fff;
-	--bs-btn-bg: var(--ym-primary);
-	/* 주 색상 */
-	--bs-btn-border-color: var(--ym-primary);
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--ym-primary);
+    /* 주 색상 */
+    --bs-btn-border-color: var(--ym-primary);
 
-	--bs-btn-hover-color: #fff;
-	--bs-btn-hover-bg: #d97400;
-	/* 살짝 어둡게 */
-	--bs-btn-hover-border-color: #cc6d00;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #d97400;
+    /* 살짝 어둡게 */
+    --bs-btn-hover-border-color: #cc6d00;
 
-	--bs-btn-focus-shadow-rgb: 242, 133, 0;
-	/* 주 색상 RGB */
-	--bs-btn-active-color: #fff;
-	--bs-btn-active-bg: #c76b00;
-	/* hover보다 더 어둡게 */
-	--bs-btn-active-border-color: #be6500;
-	--bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-focus-shadow-rgb: 242, 133, 0;
+    /* 주 색상 RGB */
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #c76b00;
+    /* hover보다 더 어둡게 */
+    --bs-btn-active-border-color: #be6500;
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 
-	--bs-btn-disabled-color: #fff;
-	--bs-btn-disabled-bg: var(--ym-primary);
-	--bs-btn-disabled-border-color: var(--ym-primary);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: var(--ym-primary);
+    --bs-btn-disabled-border-color: var(--ym-primary);
 }
 
 .btn-ymsecondary {
-	--bs-btn-color: #fff;
-	--bs-btn-bg: var(--ym-secondary);
-	--bs-btn-border-color: var(--ym-secondary);
+    --bs-btn-color: #fff;
+    --bs-btn-bg: var(--ym-secondary);
+    --bs-btn-border-color: var(--ym-secondary);
 
-	--bs-btn-hover-color: #fff;
-	--bs-btn-hover-bg: oklch(0.11 0.025 70); /* 살짝 어둡게 */
-	--bs-btn-hover-border-color: oklch(0.105 0.024 69);
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: oklch(0.11 0.025 70); /* 살짝 어둡게 */
+    --bs-btn-hover-border-color: oklch(0.105 0.024 69);
 
-	--bs-btn-focus-shadow-rgb: 32, 7, 180; /* secondary RGB 참고 */
-	--bs-btn-active-color: #fff;
-	--bs-btn-active-bg: oklch(0.095 0.022 68); /* hover보다 더 어둡게 */
-	--bs-btn-active-border-color: oklch(0.09 0.02 67);
-	--bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-focus-shadow-rgb: 32, 7, 180; /* secondary RGB 참고 */
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: oklch(0.095 0.022 68); /* hover보다 더 어둡게 */
+    --bs-btn-active-border-color: oklch(0.09 0.02 67);
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 
-	--bs-btn-disabled-color: #fff;
-	--bs-btn-disabled-bg: var(--ym-secondary);
-	--bs-btn-disabled-border-color: var(--ym-secondary);
+    --bs-btn-disabled-color: #fff;
+    --bs-btn-disabled-bg: var(--ym-secondary);
+    --bs-btn-disabled-border-color: var(--ym-secondary);
 }
 
 .form-control:focus {
-  border-color: var(--ym-primary) !important;
-  box-shadow: 0 0 0 0.25rem rgba(242, 133, 0, 0.25) !important; /* primary 색상 반투명 그림자 */
+    border-color: var(--ym-primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(242, 133, 0, 0.25) !important; /* primary 색상 반투명 그림자 */
 }

@@ -5,35 +5,53 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.CoeatMapper">
 
     <insert id="insert" parameterType="CoeatDTO">
-        INSERT INTO feed_coeat (
-            id, user_id, store_id, title, content,
-            capacity, meeting_at, status, auto_accept)
+        INSERT INTO feed_coeat (id, user_id, store_id, title, content,
+                                capacity, meeting_at, status, auto_accept)
         VALUES (#{id}, #{userId}, #{storeId}, #{title}, #{content},
                 #{capacity}, #{meetingAt}, #{status}, #{autAccept})
     </insert>
 
     <select id="selectById" parameterType="Long" resultType="CoeatDTO">
-        SELECT
-            c.id, c.user_id, c.store_id, c.title, c.content,
-            c.capacity, c.view_count, c.meeting_at, c.status, c.auto_accept,
-            r.created_at, r.updated_at, r.deleted_at, r.blinded_at
+        SELECT c.id,
+               c.user_id,
+               c.store_id,
+               c.title,
+               c.content,
+               c.capacity,
+               c.view_count,
+               c.meeting_at,
+               c.status,
+               c.auto_accept,
+               r.created_at,
+               r.updated_at,
+               r.deleted_at,
+               r.blinded_at
         FROM feed_coeat c
-        JOIN root r ON c.id = r.id
+                 JOIN root r ON c.id = r.id
         WHERE c.id = #{id}
     </select>
 
     <update id="update" parameterType="CoeatDTO">
         UPDATE coeat c
-        JOIN root r ON c.id = r.id
-        SET c.id = #{id}, c.user_id = #{userId}, c.store_id = #{storeId}, c.title = #{title},
-            c.content = #{content}, c.capacity = #{capacity}, c.view_count = #{viewCount},
-            c.meeting_at = #{meetingAt}, c.status = #{status}, c.auto_accept = #{autoAccept},
-            r.updated_at = NOW()
+            JOIN root r ON c.id = r.id
+        SET c.id          = #{id},
+            c.user_id     = #{userId},
+            c.store_id    = #{storeId},
+            c.title       = #{title},
+            c.content     = #{content},
+            c.capacity    = #{capacity},
+            c.view_count  = #{viewCount},
+            c.meeting_at  = #{meetingAt},
+            c.status      = #{status},
+            c.auto_accept = #{autoAccept},
+            r.updated_at  = NOW()
         WHERE c.id = #{id}
     </update>
 
     <delete id="deleteById" parameterType="Long">
-        DELETE FROM coeat WHERE feed_id = #{id}
+        DELETE
+        FROM coeat
+        WHERE feed_id = #{id}
     </delete>
 
 </mapper>

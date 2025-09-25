@@ -18,6 +18,7 @@ public interface CoeatRequestMapper {
 
 	/**
 	 * 주소 추가.
+	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
 	int insert(CoeatRequestDTO dto);
@@ -28,6 +29,7 @@ public interface CoeatRequestMapper {
 
 	/**
 	 * 같이먹기 요청 삭제.
+	 *
 	 * @param id 같이먹기 요청 ID
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */

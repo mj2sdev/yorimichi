@@ -22,7 +22,9 @@
     </update>
 
     <delete id="deleteById" parameterType="Long">
-        DELETE FROM facility_category WHERE id = #{id}
+        DELETE
+        FROM facility_category
+        WHERE id = #{id}
     </delete>
 
 </mapper>

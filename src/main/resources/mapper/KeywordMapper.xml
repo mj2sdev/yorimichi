@@ -22,7 +22,9 @@
     </update>
 
     <delete id="deleteById" parameterType="Long">
-        DELETE FROM keyword WHERE id = #{id}
+        DELETE
+        FROM keyword
+        WHERE id = #{id}
     </delete>
 
 </mapper>

@@ -32,10 +32,9 @@ public class PageController {
 
 	//로그인 화면으로 이동
 	@GetMapping("/login")
-	public String showLogin(){
+	public String showLogin() {
 		return "/user/login";
 	}
-	
 
 
 }

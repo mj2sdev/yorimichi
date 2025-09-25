@@ -5,42 +5,45 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.AddressMapper">
 
     <insert id="insert" parameterType="AddressDTO">
-        INSERT INTO address (
-            road_id, postal_id, detail,
-            road_address_text, jibun_address_text,
-            latitude, longitude)
-        VALUES (
-            #{roadId}, #{postalId}, #{detail},
-            #{roadAddressText},#{jibunAddressText},
-            #{latitude}, #{longitude}
-        )
+        INSERT INTO address (road_id, postal_id, detail,
+                             road_address_text, jibun_address_text,
+                             latitude, longitude)
+        VALUES (#{roadId}, #{postalId}, #{detail},
+                #{roadAddressText}, #{jibunAddressText},
+                #{latitude}, #{longitude})
     </insert>
 
     <select id="selectById" parameterType="Long" resultType="AddressDTO">
-        SELECT
-            id, road_id, postal_id, detail,
-            road_address_text, jibun_address_text,
-            latitude, longitude,
-            created_at, updated_at
+        SELECT id,
+               road_id,
+               postal_id,
+               detail,
+               road_address_text,
+               jibun_address_text,
+               latitude,
+               longitude,
+               created_at,
+               updated_at
         FROM address
         WHERE id = #{id}
     </select>
 
     <update id="update" parameterType="AddressDTO">
         UPDATE address
-        SET
-            road_id = #{roadId},
-            postal_id = #{postalId},
-            detail = #{detail},
-            road_address_text = #{roadAddressText},
+        SET road_id            = #{roadId},
+            postal_id          = #{postalId},
+            detail             = #{detail},
+            road_address_text  = #{roadAddressText},
             jibun_address_text = #{jibunAddressText},
-            latitude = #{latitude},
-            longitude = #{longitude}
+            latitude           = #{latitude},
+            longitude          = #{longitude}
         WHERE id = #{id}
     </update>
 
     <delete id="deleteById" parameterType="Long">
-        DELETE FROM address WHERE id = #{id}
+        DELETE
+        FROM address
+        WHERE id = #{id}
     </delete>
 
 </mapper>

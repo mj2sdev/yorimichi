@@ -10,18 +10,24 @@
     </insert>
 
     <select id="selectById" parameterType="Long" resultType="CommentDTO">
-        SELECT
-            c.id, c.coeat_id, c.parent_id, c.user_id, c.content,
-            r.created_at, r.updated_at, r.deleted_at, r.blinded_at
+        SELECT c.id,
+               c.coeat_id,
+               c.parent_id,
+               c.user_id,
+               c.content,
+               r.created_at,
+               r.updated_at,
+               r.deleted_at,
+               r.blinded_at
         FROM comment c
-        JOIN root r ON c.id = r.id
+                 JOIN root r ON c.id = r.id
         WHERE c.id = #{id}
     </select>
 
     <update id="update" parameterType="CommentDTO">
         UPDATE comment c
-        JOIN root r ON c.id = r.id
-        SET c.content = #{content},
+            JOIN root r ON c.id = r.id
+        SET c.content    = #{content},
             r.updated_at = NOW()
         WHERE c.id = #{id}
     </update>

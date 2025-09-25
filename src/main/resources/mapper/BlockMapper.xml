@@ -10,8 +10,10 @@
     </insert>
 
     <delete id="deleteById" parameterType="BlockDTO">
-        DELETE FROM block
-        WHERE blocker_id = #{blockerId} AND blocked_id = #{blockedId}
+        DELETE
+        FROM block
+        WHERE blocker_id = #{blockerId}
+          AND blocked_id = #{blockedId}
     </delete>
 
 </mapper>

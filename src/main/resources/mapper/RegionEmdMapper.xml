@@ -17,12 +17,16 @@
 
     <update id="update" parameterType="RegionEmdDTO">
         UPDATE region_emd
-        SET sigungu_id = #{sigunguId}, code = #{code}, name = #{name}
+        SET sigungu_id = #{sigunguId},
+            code       = #{code},
+            name       = #{name}
         WHERE id = #{id}
     </update>
 
     <delete id="deleteById" parameterType="Long">
-        DELETE FROM region_emd WHERE id = #{id}
+        DELETE
+        FROM region_emd
+        WHERE id = #{id}
     </delete>
 
 </mapper>

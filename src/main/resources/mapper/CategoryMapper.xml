@@ -17,12 +17,15 @@
 
     <update id="update" parameterType="CategoryDTO">
         UPDATE category
-        SET parent_id = #{parentId}, name = #{name}
+        SET parent_id = #{parentId},
+            name      = #{name}
         WHERE id = #{id}
     </update>
 
     <delete id="deleteById" parameterType="Long">
-        DELETE FROM category WHERE id = #{id}
+        DELETE
+        FROM category
+        WHERE id = #{id}
     </delete>
 
 </mapper>

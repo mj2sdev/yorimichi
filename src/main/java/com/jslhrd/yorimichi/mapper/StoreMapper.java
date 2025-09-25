@@ -20,6 +20,7 @@ public interface StoreMapper {
 
 	/**
 	 * 상점 추가.
+	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
 	int insert(StoreDTO dto); // 매장 등록
@@ -30,6 +31,7 @@ public interface StoreMapper {
 
 	/**
 	 * 상점 단건 조회.
+	 *
 	 * @param id 상점 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
@@ -37,12 +39,14 @@ public interface StoreMapper {
 
 	/**
 	 * 상점 수정.
+	 *
 	 * @return 영향 행 수 (수정 1, 대상 없음 0)
 	 */
 	int update(StoreDTO dto);
 
 	/**
 	 * 상점 삭제.
+	 *
 	 * @param id 상점 ID
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */

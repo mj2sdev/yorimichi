@@ -11,6 +11,7 @@
 - Spring Security는 기본적으로 모든 문은 닫혀 있고, 로그인한 사람만 통과하게 만들어져 있어. 거기서 우리가 “이 길은 모두 통과 가능”, “여긴 ADMIN만” 같은 규칙을 덧붙이면 돼.
 
 ### 폴더 구조
+
 ```swift
 src/main/java
 └─ com/example/myapp
@@ -22,15 +23,16 @@ src/main/java
 ```
 
 #### 왜 여기?
-- Spring Boot는 `@SpingBootApplication`이 선언된 클래스의 **패키지부터 하위 패키지들을 자동 스캔**합니다.
-그래서 `SecurityConfig`를 그 **하위 패키지(예:`config`)**에 두면 자동으로 읽혀요.
 
+- Spring Boot는 `@SpingBootApplication`이 선언된 클래스의 **패키지부터 하위 패키지들을 자동 스캔**합니다.
+  그래서 `SecurityConfig`를 그 **하위 패키지(예:`config`)**에 두면 자동으로 읽혀요.
 
 ## 2) 바로 되는 최소 예제
 
 ### (1) 의존성 추가
 
 **build.gradle**
+
 ```gradle
 dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -41,7 +43,9 @@ dependencies {
 ### (2) 계정 & 보안 규칙 설정
 
 **SecurityConfig.java**
+
 - 위 설정 방식은 SecurityFilterChain 빈으로 규칙을 선언하는 현재 권장 방식.
+
 ```java
 import java.beans.BeanProperty;
 
@@ -91,6 +95,7 @@ public class SecurityConfig {
 ### (3) 컨트롤러(길 만들기)
 
 **HelloController.java**
+
 ```java
 @RestController
 public class HelloController {
@@ -127,24 +132,27 @@ curl -u user:1234 http://localhost:8080/me
 curl -u admin:1234 http://localhost:8080/admin/secret
 ```
 
-
 ## 3) 자주 묻는 것들
 
 ### Q1) 왜 비밀번호를 꼭 암호화해?
+
 - 비밀번호는 평문으로 저장하면 절돼 안 돼. 위에 쓴 `BCryptPasswordEncoder`가 표준이야.
 
 ### Q2) CSRF는?
-- **브라우저 폼**을 쓰는 앱이면 Spring Security가 **기본으로 CSRF 보호**를 켜줘. 
-JSON API만 쓰고 **완전한 REST/JWT** 구조라면 보통 **세션을 끄고(CSRF도 끄는 편) 설계해.
-(무턱대고 끄지 말고, 아키텍처에 맞춰 결정!)
+
+- **브라우저 폼**을 쓰는 앱이면 Spring Security가 **기본으로 CSRF 보호**를 켜줘.
+  JSON API만 쓰고 **완전한 REST/JWT** 구조라면 보통 **세션을 끄고(CSRF도 끄는 편) 설계해.
+  (무턱대고 끄지 말고, 아키텍처에 맞춰 결정!)
 
 ### Q4) "ROLE_" 접두사는 뭐야?
+
 - 코드에선 `hasRole("ADMIN")`처럼 쓰지만, 내부에선 자동으로 `ROLE_ADMIN` 권한으로 매칭돼.
 
-
 ## 4) (보너스) 완전 API 모드의 기본 뼈대
+
 - SPA + 백엔드 분리 환경에서 자주 쓰는 기본기 (세션 끄기, CSRF 비활성화).
 - 이 부분은 설계에 따라 달라지미, need가 생기면 JWT/Resource Server 설정을 이어서 붙이면 돼. (여기선 핵심 흐름만)
+
 ```java
 import java.beans.BeanProperty;
 
@@ -167,6 +175,7 @@ public SecurityFilterChain apiChain(HttpSecurity http) throws Exception {
 ```
 
 ## 한 줄 정리
+
 1. 계정을 만들고(사용자/권한)
 2. 길(URI)마다 규칙 정하고
 3. 문지기(SecurityFilterChain)에 알려주면 끝!

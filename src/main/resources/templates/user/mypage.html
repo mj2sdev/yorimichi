@@ -2,301 +2,302 @@
 <html th:replace="~{layout/layout :: layout(~{::title},~{::section},~{::script})}" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title> Yorimichi Project </title>
+  <title> Yorimichi Project </title>
 </head>
 
 <body>
-	<section>
-		<form name="myinfo" method="post" action="/user/mypage">
-			<div class="container my-4">
-				<div class="row">
-					<div class="col-9">
-						<div class="row mb-3 justify-content-center">
-							<div class="text-center col-8">
-								<button type="submit" class="btn btn-ymprimary">정보 수정</button>
-							</div>
-						</div>
-						<div class="row justify-content-center">
-							<div class="col-4 text-center fs-1">
-								<ul class="list-unstyled">
-									<li>
-										<input type="text" class="form-control text-center" placeholder="윤찬"
-											aria-label="Username" aria-describedby="addon-wrapping">
-									</li>
-									<li class="fs-5 bg-ymwhitesmoke form-control">
-										3ll37023@gmail.com
-									</li>
-								</ul>
-							</div>
-						</div>
-						<div class="row my-4 justify-content-center">
-							<div class="col-8 text-center">
-								<img src="https://picsum.photos/300" class="mx-auto border rounded-circle">
-							</div>
-						</div>
-						<div class="row justify-content-center">
-							<div class="col-8">
-								<div class="input-group mb-3">
-									<input type="file" class="form-control" id="inputGroupFile02">
-									<label class="input-group-text" for="inputGroupFile02">업로드</label>
-								</div>
-							</div>
-						</div>
-						<div class="row justify-content-center">
-							<div class="col-8 my-4 border border-3">
-								<nav>
-									<div class="nav nav-tabs" id="nav-tab" role="tablist">
-										<button class="nav-link active" id="nav-review-tab" data-bs-toggle="tab"
-											data-bs-target="#nav-review" type="button" role="tab"
-											aria-controls="nav-review" aria-selected="true">
-											리뷰
-										</button>
-										<button class="nav-link" id="nav-like-tab" data-bs-toggle="tab"
-											data-bs-target="#nav-like" type="button" role="tab" aria-controls="nav-like"
-											aria-selected="false">
-											좋아요
-										</button>
-										<button class="nav-link" id="nav-bookmark-tab" data-bs-toggle="tab"
-											data-bs-target="#nav-bookmark" type="button" role="tab"
-											aria-controls="nav-bookmark" aria-selected="false">
-											즐겨찾기
-										</button>
-										<button type="button" class="btn text-ymprimary" data-bs-toggle="modal"
-											data-bs-target="#privacy">
-											<i class="bi bi-key-fill" style="font-size: 1em; color: gold;">
-												공개설정
-											</i>
-										</button>
-									</div>
-								</nav>
-								<div class="tab-content" id="nav-tabContent">
-									<div class="tab-pane fade show active" id="nav-review" role="tabpanel"
-										aria-labelledby="nav-review-tab" tabindex="0">
-										<th:block th:each="reviewItem : ${#numbers.sequence(1,5)}">
-											<div class="row bg-ymwhite mb-3">
-												<div class="col-3 border">
-													<img src="https://picsum.photos/50"
-														style="height:100%; width:100%;">
-												</div>
-												<div class="col-9 border">
-													<div class="row justify-content-between align-items-center">
-														<div class="col-auto dropdown">
-															<button class="btn fw-bold dropdown-toggle"
-																data-bs-toggle="dropdown"
-																aria-expanded="false">작성자</button>
-															<ul class="dropdown-menu">
-																<li><a class="dropdown-item" href="#"><i
-																			class="bi bi-heart"
-																			style="font-size: 1em;"></i>팔로우</a></li>
-																<li th:if="${#false}"><a class="dropdown-item"
-																		href="#"><i class="bi bi-heart-fill"
-																			style="font-size: 1em; color: red;"></i>팔로우취소</a>
-																</li>
-																<li><a class="dropdown-item" href="#"><i
-																			class="bi bi-search"
-																			style="font-size: 1em;"></i> 상세보기</a></li>
-															</ul>
-														</div>
-														<div class="col">
+<section>
+  <form name="myinfo" method="post" action="/user/mypage">
+    <div class="container my-4">
+      <div class="row">
+        <div class="col-9">
+          <div class="row mb-3 justify-content-center">
+            <div class="text-center col-8">
+              <button type="submit" class="btn btn-ymprimary">정보 수정</button>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-4 text-center fs-1">
+              <ul class="list-unstyled">
+                <li>
+                  <input type="text" class="form-control text-center" placeholder="윤찬"
+                         aria-label="Username" aria-describedby="addon-wrapping">
+                </li>
+                <li class="fs-5 bg-ymwhitesmoke form-control">
+                  3ll37023@gmail.com
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row my-4 justify-content-center">
+            <div class="col-8 text-center">
+              <img src="https://picsum.photos/300" class="mx-auto border rounded-circle">
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-8">
+              <div class="input-group mb-3">
+                <input type="file" class="form-control" id="inputGroupFile02">
+                <label class="input-group-text" for="inputGroupFile02">업로드</label>
+              </div>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-8 my-4 border border-3">
+              <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                  <button class="nav-link active" id="nav-review-tab" data-bs-toggle="tab"
+                          data-bs-target="#nav-review" type="button" role="tab"
+                          aria-controls="nav-review" aria-selected="true">
+                    리뷰
+                  </button>
+                  <button class="nav-link" id="nav-like-tab" data-bs-toggle="tab"
+                          data-bs-target="#nav-like" type="button" role="tab" aria-controls="nav-like"
+                          aria-selected="false">
+                    좋아요
+                  </button>
+                  <button class="nav-link" id="nav-bookmark-tab" data-bs-toggle="tab"
+                          data-bs-target="#nav-bookmark" type="button" role="tab"
+                          aria-controls="nav-bookmark" aria-selected="false">
+                    즐겨찾기
+                  </button>
+                  <button type="button" class="btn text-ymprimary" data-bs-toggle="modal"
+                          data-bs-target="#privacy">
+                    <i class="bi bi-key-fill" style="font-size: 1em; color: gold;">
+                      공개설정
+                    </i>
+                  </button>
+                </div>
+              </nav>
+              <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-review" role="tabpanel"
+                     aria-labelledby="nav-review-tab" tabindex="0">
+                  <th:block th:each="reviewItem : ${#numbers.sequence(1,5)}">
+                    <div class="row bg-ymwhite mb-3">
+                      <div class="col-3 border">
+                        <img src="https://picsum.photos/50"
+                             style="height:100%; width:100%;">
+                      </div>
+                      <div class="col-9 border">
+                        <div class="row justify-content-between align-items-center">
+                          <div class="col-auto dropdown">
+                            <button class="btn fw-bold dropdown-toggle"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">작성자
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#"><i
+                                  class="bi bi-heart"
+                                  style="font-size: 1em;"></i>팔로우</a></li>
+                              <li th:if="${#false}"><a class="dropdown-item"
+                                                       href="#"><i class="bi bi-heart-fill"
+                                                                   style="font-size: 1em; color: red;"></i>팔로우취소</a>
+                              </li>
+                              <li><a class="dropdown-item" href="#"><i
+                                  class="bi bi-search"
+                                  style="font-size: 1em;"></i> 상세보기</a></li>
+                            </ul>
+                          </div>
+                          <div class="col">
 															<span th:each="star : ${#numbers.sequence(1,5)}">
 																<i class="bi bi-star-fill"
-																	style="font-size: 1em; color: gold;"></i>
+                                   style="font-size: 1em; color: gold;"></i>
 															</span>
-														</div>
-														<div class="col-auto">
-															<a href="/store/detail"
-																class="text-ymprimary text-decoration-none">
-																가게보기
-															</a>
-														</div>
-														<div class="col-auto">
-															2025.09.15
-														</div>
-														<div class="col-auto">
-															<button type="button" class="btn btn-sm p-0"
-																data-bs-toggle="modal" data-bs-target="#reviewwriting">
-																<i class="bi bi-pencil-fill text-ymprimary"
-																	style="font-size: 1em;"></i>
-															</button>
-														</div>
-													</div>
-													<div class="p-2" data-bs-toggle="collapse"
-														th:attr="data-bs-target='#menu' + ${reviewItem}">
-														<div class="row mt-2">
-															<div class="col">
-																리뷰 본문 내용...
-															</div>
-														</div>
-													</div>
-													<div class="collapse" th:id="'menu' + ${reviewItem}">
-														<div class="card card-body">
-															메뉴 내용...
-														</div>
-													</div>
-												</div>
-											</div>
-										</th:block>
-									</div>
-									<div class="tab-pane fade" id="nav-like" role="tabpanel"
-										aria-labelledby="nav-like-tab" tabindex="1">
-										<th:block th:each="like : ${#numbers.sequence(1,10)}">
-											<div class="row">
-												<div class="col">
-													<a href="/store/detail" class="btn">
-														<img src="https://picsum.photos/50">
-														<span>가게명</span>
-														<span>위치</span>
-														<th:block th:each="tag : ${#numbers.sequence(1,5)}">
-															<span>#태그</span>
-														</th:block>
-													</a>
-												</div>
-											</div>
-										</th:block>
-									</div>
-									<div class="tab-pane fade" id="nav-bookmark" role="tabpanel"
-										aria-labelledby="nav-bookmark-tab" tabindex="1">
-										<th:block th:each="bookmark : ${#numbers.sequence(1,10)}">
-											<div class="row">
-												<div class="col">
-													<a href="/store/detail" class="btn">
-														<img src="https://picsum.photos/50">
-														<span>가게명</span>
-														<span>위치</span>
-														<th:block th:each="tag : ${#numbers.sequence(1,5)}">
-															<span>#태그</span>
-														</th:block>
-													</a>
-												</div>
-											</div>
-										</th:block>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-3 border border-3 overflow-auto" style="height:400px; top: 145px;">
-						<nav>
-							<div class="nav nav-tabs" id="nav-tab" role="tablist">
-								<button class="nav-link active" id="nav-follow-tab" data-bs-toggle="tab"
-									data-bs-target="#nav-follow" type="button" role="tab" aria-controls="nav-follow"
-									aria-selected="true">
-									팔로우
-								</button>
-								<button class="nav-link" id="nav-follower-tab" data-bs-toggle="tab"
-									data-bs-target="#nav-follower" type="button" role="tab" aria-controls="nav-follower"
-									aria-selected="false">
-									팔로워
-								</button>
-								<button class="nav-link" id="nav-block-tab" data-bs-toggle="tab"
-									data-bs-target="#nav-block" type="button" role="tab" aria-controls="nav-block"
-									aria-selected="false">
-									차단목록
-								</button>
-							</div>
-						</nav>
-						<div class="tab-content" id="nav-tabContent">
-							<div class="tab-pane fade show active" id="nav-follow" role="tabpanel"
-								aria-labelledby="nav-follow-tab" tabindex="0">
-								<th:block th:each="person : ${#numbers.sequence(1,10)}">
-									<div class="row">
-										<div class="col-2">
-											<button type="button" class="btn">
-												<i class="bi bi-heart-fill" style="font-size: 1em; color:red"></i>
-											</button>
-										</div>
-										<div class="col">
-											<a href="/user/detail" class="btn d-block">
-												닉네임
-											</a>
-										</div>
-									</div>
-								</th:block>
-							</div>
-							<div class="tab-pane fade" id="nav-follower" role="tabpanel"
-								aria-labelledby="nav-follower-tab" tabindex="0">
-								<th:block th:each="person : ${#numbers.sequence(1,10)}">
-									<div class="row">
-										<div class="col-2">
-											<button type="button" class="btn">
-												<i class="bi bi-toggle-on" style="font-size: 1em; color:gold;"></i>
-											</button>
-										</div>
-										<div class="col">
-											<a href="/user/detail" class="btn d-block">
-												닉네임
-											</a>
-										</div>
-									</div>
-								</th:block>
-							</div>
-							<div class="tab-pane fade" id="nav-block" role="tabpanel" aria-labelledby="nav-block-tab"
-								tabindex="0">
-								<th:block th:each="person : ${#numbers.sequence(1,10)}">
-									<div class="row">
-										<div class="col-2">
-											<button type="button" class="btn">
-												<i class="bi bi-toggle-on" style="font-size: 1em; color:red;"></i>
-											</button>
-										</div>
-										<div class="col">
-											<a href="/user/detail" class="btn d-block">
-												닉네임
-											</a>
-										</div>
-									</div>
-								</th:block>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="modal fade" id="privacy" tabindex="-1" aria-labelledby="privacyLabel" aria-hidden="true">
-				<div class="modal-dialog">
-					<div class="modal-content">
-						<div class="modal-header">
-							<h1 class="modal-title fs-5" id="privacyLabel">개인 정보 보호 설정</h1>
-						</div>
-						<div class="modal-body">
-							<div class="form-check form-switch">
-								<input class="form-check-input" type="checkbox" role="switch" id="review-privacy">
-								<label class="form-check-label" for="switchCheckDefault">
-									리뷰 비공개
-								</label>
-							</div>
-							<div class="form-check form-switch">
-								<input class="form-check-input" type="checkbox" role="switch" id="like-privacy">
-								<label class="form-check-label" for="switchCheckDefault">
-									좋아요 비공개
-								</label>
-							</div>
-							<div class="form-check form-switch">
-								<input class="form-check-input" type="checkbox" role="switch" id="bookmark-privacy">
-								<label class="form-check-label" for="switchCheckDefault">
-									즐겨찾기 비공개
-								</label>
-							</div>
-							<div class="form-check form-switch">
-								<input class="form-check-input" type="checkbox" role="switch" id="follow-privacy">
-								<label class="form-check-label" for="switchCheckDefault">
-									팔로우 비공개
-								</label>
-							</div>
-							<div class="form-check form-switch">
-								<input class="form-check-input" type="checkbox" role="switch" id="follower-privacy">
-								<label class="form-check-label" for="switchCheckDefault">
-									팔로워 비공개
-								</label>
-							</div>
-						</div>
-						<div class="modal-footer">
-							<button type="button" class="btn btn-primary" data-bs-dismiss="modal">창 닫기</button>
-						</div>
-					</div>
-				</div>
-			</div>
-	</section>
-	</form>
+                          </div>
+                          <div class="col-auto">
+                            <a href="/store/detail"
+                               class="text-ymprimary text-decoration-none">
+                              가게보기
+                            </a>
+                          </div>
+                          <div class="col-auto">
+                            2025.09.15
+                          </div>
+                          <div class="col-auto">
+                            <button type="button" class="btn btn-sm p-0"
+                                    data-bs-toggle="modal" data-bs-target="#reviewwriting">
+                              <i class="bi bi-pencil-fill text-ymprimary"
+                                 style="font-size: 1em;"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="p-2" data-bs-toggle="collapse"
+                             th:attr="data-bs-target='#menu' + ${reviewItem}">
+                          <div class="row mt-2">
+                            <div class="col">
+                              리뷰 본문 내용...
+                            </div>
+                          </div>
+                        </div>
+                        <div class="collapse" th:id="'menu' + ${reviewItem}">
+                          <div class="card card-body">
+                            메뉴 내용...
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </th:block>
+                </div>
+                <div class="tab-pane fade" id="nav-like" role="tabpanel"
+                     aria-labelledby="nav-like-tab" tabindex="1">
+                  <th:block th:each="like : ${#numbers.sequence(1,10)}">
+                    <div class="row">
+                      <div class="col">
+                        <a href="/store/detail" class="btn">
+                          <img src="https://picsum.photos/50">
+                          <span>가게명</span>
+                          <span>위치</span>
+                          <th:block th:each="tag : ${#numbers.sequence(1,5)}">
+                            <span>#태그</span>
+                          </th:block>
+                        </a>
+                      </div>
+                    </div>
+                  </th:block>
+                </div>
+                <div class="tab-pane fade" id="nav-bookmark" role="tabpanel"
+                     aria-labelledby="nav-bookmark-tab" tabindex="1">
+                  <th:block th:each="bookmark : ${#numbers.sequence(1,10)}">
+                    <div class="row">
+                      <div class="col">
+                        <a href="/store/detail" class="btn">
+                          <img src="https://picsum.photos/50">
+                          <span>가게명</span>
+                          <span>위치</span>
+                          <th:block th:each="tag : ${#numbers.sequence(1,5)}">
+                            <span>#태그</span>
+                          </th:block>
+                        </a>
+                      </div>
+                    </div>
+                  </th:block>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-3 border border-3 overflow-auto" style="height:400px; top: 145px;">
+          <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <button class="nav-link active" id="nav-follow-tab" data-bs-toggle="tab"
+                      data-bs-target="#nav-follow" type="button" role="tab" aria-controls="nav-follow"
+                      aria-selected="true">
+                팔로우
+              </button>
+              <button class="nav-link" id="nav-follower-tab" data-bs-toggle="tab"
+                      data-bs-target="#nav-follower" type="button" role="tab" aria-controls="nav-follower"
+                      aria-selected="false">
+                팔로워
+              </button>
+              <button class="nav-link" id="nav-block-tab" data-bs-toggle="tab"
+                      data-bs-target="#nav-block" type="button" role="tab" aria-controls="nav-block"
+                      aria-selected="false">
+                차단목록
+              </button>
+            </div>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-follow" role="tabpanel"
+                 aria-labelledby="nav-follow-tab" tabindex="0">
+              <th:block th:each="person : ${#numbers.sequence(1,10)}">
+                <div class="row">
+                  <div class="col-2">
+                    <button type="button" class="btn">
+                      <i class="bi bi-heart-fill" style="font-size: 1em; color:red"></i>
+                    </button>
+                  </div>
+                  <div class="col">
+                    <a href="/user/detail" class="btn d-block">
+                      닉네임
+                    </a>
+                  </div>
+                </div>
+              </th:block>
+            </div>
+            <div class="tab-pane fade" id="nav-follower" role="tabpanel"
+                 aria-labelledby="nav-follower-tab" tabindex="0">
+              <th:block th:each="person : ${#numbers.sequence(1,10)}">
+                <div class="row">
+                  <div class="col-2">
+                    <button type="button" class="btn">
+                      <i class="bi bi-toggle-on" style="font-size: 1em; color:gold;"></i>
+                    </button>
+                  </div>
+                  <div class="col">
+                    <a href="/user/detail" class="btn d-block">
+                      닉네임
+                    </a>
+                  </div>
+                </div>
+              </th:block>
+            </div>
+            <div class="tab-pane fade" id="nav-block" role="tabpanel" aria-labelledby="nav-block-tab"
+                 tabindex="0">
+              <th:block th:each="person : ${#numbers.sequence(1,10)}">
+                <div class="row">
+                  <div class="col-2">
+                    <button type="button" class="btn">
+                      <i class="bi bi-toggle-on" style="font-size: 1em; color:red;"></i>
+                    </button>
+                  </div>
+                  <div class="col">
+                    <a href="/user/detail" class="btn d-block">
+                      닉네임
+                    </a>
+                  </div>
+                </div>
+              </th:block>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="privacy" tabindex="-1" aria-labelledby="privacyLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="privacyLabel">개인 정보 보호 설정</h1>
+          </div>
+          <div class="modal-body">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="review-privacy">
+              <label class="form-check-label" for="switchCheckDefault">
+                리뷰 비공개
+              </label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="like-privacy">
+              <label class="form-check-label" for="switchCheckDefault">
+                좋아요 비공개
+              </label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="bookmark-privacy">
+              <label class="form-check-label" for="switchCheckDefault">
+                즐겨찾기 비공개
+              </label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="follow-privacy">
+              <label class="form-check-label" for="switchCheckDefault">
+                팔로우 비공개
+              </label>
+            </div>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="follower-privacy">
+              <label class="form-check-label" for="switchCheckDefault">
+                팔로워 비공개
+              </label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">창 닫기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>
+</form>
 </body>
 
 </html>

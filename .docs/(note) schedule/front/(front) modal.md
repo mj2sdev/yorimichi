@@ -1,7 +1,9 @@
 # modal 이란
+
 누르면 화면 최상단레이어에 새로운 창을 띄워 무언가를 보여주는 방식.
 
 ## 어떤 속성을 주목해서 봐야하는가.
+
 data-bs-toggle="modal" 얘로 뭘 열고 닫을 건지 설정
 data-bs-target="#id" 정확히 어떤 것을 열고 닫을 건지 설정.
 data-bs-dismiss="modal" 얘로 뭘 끌 건지 설정

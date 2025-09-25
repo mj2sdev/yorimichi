@@ -20,6 +20,7 @@ public interface RegionSigunguMapper {
 
 	/**
 	 * 시/군/구 추가.
+	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
 	int insert(RegionSigunguDTO dto);
@@ -28,6 +29,7 @@ public interface RegionSigunguMapper {
 
 	/**
 	 * 시/군/구 단건 조회.
+	 *
 	 * @param id 시/군/구 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
@@ -35,12 +37,14 @@ public interface RegionSigunguMapper {
 
 	/**
 	 * 시/군/구 수정.
+	 *
 	 * @return 영향 행 수 (수정 1, 대상 없음 0)
 	 */
 	int update(RegionSigunguDTO dto);
 
 	/**
 	 * 시/군/구 삭제.
+	 *
 	 * @param id 시/군/구 ID
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */

@@ -20,6 +20,7 @@ public interface ReviewMapper {
 
 	/**
 	 * 주소 추가.
+	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
 	int insert(ReviewDTO dto);
@@ -30,6 +31,7 @@ public interface ReviewMapper {
 
 	/**
 	 * 주소 단건 조회.
+	 *
 	 * @param id 주소 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
@@ -37,12 +39,14 @@ public interface ReviewMapper {
 
 	/**
 	 * 주소 수정.
+	 *
 	 * @return 영향 행 수 (수정 1, 대상 없음 0)
 	 */
 	int update(ReviewDTO dto);
 
 	/**
 	 * 주소 삭제.
+	 *
 	 * @param id 주소 ID
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */

@@ -10,8 +10,14 @@
     </insert>
 
     <select id="selectById" parameterType="Long" resultType="NotificationDTO">
-        SELECT id, actor_user_id, root_id, target_user_id,
-               message, created_at, updated_at, read_at
+        SELECT id,
+               actor_user_id,
+               root_id,
+               target_user_id,
+               message,
+               created_at,
+               updated_at,
+               read_at
         FROM notification
         WHERE id = #{id}
     </select>

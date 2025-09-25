@@ -10,8 +10,10 @@
     </insert>
 
     <delete id="delete" parameterType="RoadPostalDTO">
-        DELETE FROM road_postal
-        WHERE road_id = #{roadId} AND postal_id = #{postalId}
+        DELETE
+        FROM road_postal
+        WHERE road_id = #{roadId}
+          AND postal_id = #{postalId}
     </delete>
 
 </mapper>

@@ -2,7 +2,6 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,28 +19,44 @@ import java.util.List;
 @Setter
 public class RegionSigunguDTO {
 
-	/** PK: 시/군/구 ID */
-    private Long id;
+	/**
+	 * PK: 시/군/구 ID
+	 */
+	private Long id;
 
-	/** FK: 시/도 ID */
-    private Long sidoId;
+	/**
+	 * FK: 시/도 ID
+	 */
+	private Long sidoId;
 
-	/** 시/군/구 코드 */
-    private String code;
-	
-	/** 시/군/구 이름 */
-    private String name;
+	/**
+	 * 시/군/구 코드
+	 */
+	private String code;
 
-	/** 생성일시 (DB 자동 생성) */
+	/**
+	 * 시/군/구 이름
+	 */
+	private String name;
+
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
 	private LocalDateTime createdAt;
 
-	/** 수정일시 (DB 자동 갱신) */
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
 	private LocalDateTime updatedAt;
 
 
-	/** 시/도 */
+	/**
+	 * 시/도
+	 */
 	private RegionSidoDTO regionSidoDTO;
 
-	/** 읍/면/동 목록 */
+	/**
+	 * 읍/면/동 목록
+	 */
 	private List<RegionEmdDTO> regionEmds;
 }

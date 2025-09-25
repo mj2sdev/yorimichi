@@ -8,4 +8,4 @@ console.log(template);
 
 var first = 'Chan';
 var last = 'Yun';
-console.log('My name is '+first+''+last+'.');
+console.log('My name is ' + first + '' + last + '.');

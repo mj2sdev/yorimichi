@@ -20,27 +20,31 @@ public interface AddressMapper {
 
 	/**
 	 * 주소 추가.
+	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
-    int insert(AddressDTO dto);
+	int insert(AddressDTO dto);
 
 	/**
 	 * 주소 단건 조회.
+	 *
 	 * @param id 주소 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
-    Optional<AddressDTO> selectById(@Param("id") Long id);
+	Optional<AddressDTO> selectById(@Param("id") Long id);
 
 	/**
 	 * 주소 수정.
+	 *
 	 * @return 영향 행 수 (수정 1, 대상 없음 0)
 	 */
-    int update(AddressDTO dto);
+	int update(AddressDTO dto);
 
 	/**
 	 * 주소 삭제.
+	 *
 	 * @param id 주소 ID
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */
-    int deleteById(@Param("id") Long id);
+	int deleteById(@Param("id") Long id);
 }

@@ -10,8 +10,10 @@
     </insert>
 
     <delete id="deleteById" parameterType="StoreFacilityCategoryDTO">
-        DELETE FROM store_facility_category
-        WHERE store_id = #{storeId} AND facility_category_id = #{facilityCategoryId}
+        DELETE
+        FROM store_facility_category
+        WHERE store_id = #{storeId}
+          AND facility_category_id = #{facilityCategoryId}
     </delete>
 
 </mapper>

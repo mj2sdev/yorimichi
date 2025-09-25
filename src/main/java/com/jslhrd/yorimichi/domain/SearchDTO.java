@@ -9,19 +9,29 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SearchDTO {
-	
+
 	private String searchType;
 	private String searchWord;
 
-	/** 원하는 페이지 */
+	/**
+	 * 원하는 페이지
+	 */
 	private int page;
-	/** 페이지당 글 갯수 */
+	/**
+	 * 페이지당 글 갯수
+	 */
 	private int recordCount;
-	/** 페이지 사이즈 */
+	/**
+	 * 페이지 사이즈
+	 */
 	private int pageSize;
-	/** 총 몇 페이지 */
+	/**
+	 * 총 몇 페이지
+	 */
 	private int totalPage;
-	/** 검색물 갯수 */
+	/**
+	 * 검색물 갯수
+	 */
 	private int totalCount;
 
 	public void computePagination() {
@@ -41,6 +51,6 @@ public class SearchDTO {
 		} else if (totalPage == 0) { // 총 페이지가 0일 경우 페이지도 0으로 설정
 			page = 0;
 		}
-		
+
 	}
 }
