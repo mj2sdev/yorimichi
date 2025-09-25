@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html th:replace="~{layout/clean :: layout(~{::head/content()},~{::body/content()})}"
+<html
+	th:replace="~{layout/clean :: params(~{::head/content()},~{::body/content()})}"
 	xmlns:th="http://www.thymeleaf.org">
-
 <head>
 	<title>
 		로그인
 	</title>
 </head>
-
 <body>
 	<div class="bg-wallpaper">
 		<div class="d-flex justify-content-center align-items-center dvh">
