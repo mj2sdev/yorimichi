@@ -3,6 +3,8 @@ package com.jslhrd.yorimichi.domain;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 /**
  * 리뷰 DTO.
  *
@@ -27,4 +29,17 @@ public class ReviewDTO extends RootDTO {
 
 	/** 리뷰 내용 */
     private String content;
+
+
+	/** 리뷰 작성한 유저 */
+	private UserDTO user;
+
+	/** 리뷰 작성된 상점 */
+	private StoreDTO store;
+
+	/** 리뷰 음식 목록 */
+	private List<FoodDTO> foods;
+
+	/** 리뷰 이미지 목록 */
+	private List<ImageDTO> images;
 }

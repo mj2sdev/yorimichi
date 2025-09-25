@@ -2,7 +2,9 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 음식 DTO.
@@ -15,7 +17,6 @@ import org.apache.ibatis.type.Alias;
  */
 @Getter
 @Setter
-@Alias("FoodDTO")
 public class FoodDTO extends RootDTO {
 
 	/** PK: 음식 ID */
@@ -32,4 +33,14 @@ public class FoodDTO extends RootDTO {
 
 	/** 음식 설명 */
     private String description;
+
+
+	/** 상점 */
+	private StoreDTO store;
+	
+	/** 리뷰 목록 */
+	private List<ReviewDTO> reviews;
+
+	/** 음식 이미지 목록 */
+	List<ImageDTO> images = new ArrayList<>();
 }

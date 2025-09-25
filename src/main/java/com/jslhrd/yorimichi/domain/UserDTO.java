@@ -2,9 +2,9 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 유저 DTO.
@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Alias("UserDTO")
 public class UserDTO extends RootDTO {
 
 	/** FK: 권한/역할 ID */
@@ -37,4 +36,29 @@ public class UserDTO extends RootDTO {
 
 	/** 마지막 로그인 일시 */
     private LocalDateTime lastLoginAt;
+
+
+	/** 권한/역할 */
+	private RoleDTO role;
+
+	/** 소셜 아이디 */
+	private SocialAccountDTO socialAccount;
+
+	/** 리뷰 목록 */
+	private List<ReviewDTO> reviews;
+
+	/** 팔로잉 목록 */
+	private List<UserDTO> following;
+
+	/** 팔로우 목록 */
+	private List<UserDTO> followers;
+
+	/** 즐겨찾기 목록 */
+	private List<StoreDTO> bookmark;
+
+	/** 좋아요 목록 */
+	private List<StoreDTO> likes;
+
+	/** 같이먹기 목록 */
+	private List<CoeatDTO> coeats;
 }

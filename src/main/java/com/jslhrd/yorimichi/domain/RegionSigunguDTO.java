@@ -5,6 +5,7 @@ import lombok.Setter;
 import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 시/군/구 DTO.
@@ -17,7 +18,6 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Alias("RegionSigunguDTO")
 public class RegionSigunguDTO {
 
 	/** PK: 시/군/구 ID */
@@ -37,4 +37,11 @@ public class RegionSigunguDTO {
 
 	/** 수정일시 (DB 자동 갱신) */
 	private LocalDateTime updatedAt;
+
+
+	/** 시/도 */
+	private RegionSidoDTO regionSidoDTO;
+
+	/** 읍/면/동 목록 */
+	private List<RegionEmdDTO> regionEmds;
 }

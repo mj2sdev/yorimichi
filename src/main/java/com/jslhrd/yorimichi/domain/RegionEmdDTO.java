@@ -2,9 +2,9 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 읍/면/동 DTO.
@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Alias("RegionEmdDTO")
 public class RegionEmdDTO {
 
 	/** PK: 읍/면/동 ID */
@@ -37,4 +36,11 @@ public class RegionEmdDTO {
 
 	/** 수정일시 (DB 자동 갱신) */
 	private LocalDateTime updatedAt;
+
+
+	/** 시/군/구 */
+	private RegionSigunguDTO regionSigungu;
+
+	/** 도로명 목록 */
+	private List<RoadDTO> roads;
 }

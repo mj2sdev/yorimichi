@@ -2,7 +2,6 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Alias("AddressDTO")
 public class AddressDTO {
 
     /** PK: 주소 ID */
@@ -49,4 +47,14 @@ public class AddressDTO {
 
     /** 수정일시 (DB 자동 갱신) */
     private LocalDateTime updatedAt;
+
+
+	/** 주소의 상점 */
+	private StoreDTO store;
+
+	/** 주소의 우편번호 */
+	private PostalDTO postal;
+
+	/** 주소의 도로명 */
+	private RoadDTO road;
 }

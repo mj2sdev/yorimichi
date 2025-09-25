@@ -2,9 +2,9 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 같이먹기 DTO.
@@ -17,7 +17,6 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Alias("CoeatDTO")
 public class CoeatDTO extends RootDTO {
 
 	/** FK: 유저 ID */
@@ -46,4 +45,17 @@ public class CoeatDTO extends RootDTO {
 
     /** 자동 수락 여부 */
     private Boolean autoAccept;
+
+
+	/** 같이먹기 상점 */
+	private StoreDTO store;
+
+	/** 같이먹기 작성자 */
+	private UserDTO user;
+
+	/** 같이먹기 신청자 목록 */
+	private List<CoeatRequestDTO> coeatRequests;
+
+	/** 같이먹기 댓글 목록 */
+	List<CommentDTO> comments;
 }

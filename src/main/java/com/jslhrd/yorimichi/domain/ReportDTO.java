@@ -1,8 +1,8 @@
 package com.jslhrd.yorimichi.domain;
 
+import com.jslhrd.yorimichi.enums.ReportStatus;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
 
@@ -17,8 +17,10 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Alias("ReportDTO")
 public class ReportDTO {
+
+	/** PK: 신고 ID */
+	private Long id;
 
 	/** FK: 신고자 ID */
     private Long reporterId;
@@ -30,7 +32,7 @@ public class ReportDTO {
     private String reason;
 
 	/** 신고 상태 */
-    private String status;
+    private ReportStatus status;
 
 	/** 생성일시 (DB 자동 생성) */
 	private LocalDateTime createdAt;

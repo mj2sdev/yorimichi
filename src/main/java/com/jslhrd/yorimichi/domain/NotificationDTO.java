@@ -2,7 +2,6 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Alias("NotificationDTO")
 public class NotificationDTO {
 
 	/** PK: 알림 ID */
@@ -43,4 +41,11 @@ public class NotificationDTO {
 
 	/** 읽음일시 */
 	private LocalDateTime readAt;
+
+
+	/** 유저 */
+	private UserDTO user;
+
+	/** 루트 */
+	private RootDTO root;
 }
