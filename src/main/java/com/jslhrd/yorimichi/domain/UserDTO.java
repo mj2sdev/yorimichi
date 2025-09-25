@@ -38,6 +38,9 @@ public class UserDTO extends RootDTO {
     private LocalDateTime lastLoginAt;
 
 
+	/** 권한/역할 */
+	private RoleDTO role;
+
 	/** 소셜 아이디 */
 	private SocialAccountDTO socialAccount;
 

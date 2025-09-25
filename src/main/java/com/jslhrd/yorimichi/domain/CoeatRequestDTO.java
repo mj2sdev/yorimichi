@@ -1,5 +1,6 @@
 package com.jslhrd.yorimichi.domain;
 
+import com.jslhrd.yorimichi.enums.CoeatRequestStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +26,7 @@ public class CoeatRequestDTO {
     private Long userId;
 
     /** 같이먹기 요청 처리 상태 */
-    private String status;
+    private CoeatRequestStatus status;
 
     /** 같이먹기 요청 자기소개 */
     private String message;

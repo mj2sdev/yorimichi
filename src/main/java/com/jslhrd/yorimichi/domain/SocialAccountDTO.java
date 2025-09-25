@@ -1,5 +1,6 @@
 package com.jslhrd.yorimichi.domain;
 
+import com.jslhrd.yorimichi.enums.Provider;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,7 +22,7 @@ public class SocialAccountDTO extends RootDTO {
     private Long userId;
 
 	/** PK2: 제공자 */
-    private String provider;
+    private Provider provider;
 
 	/** 제공자 유저 ID */
     private String providerUserId;
