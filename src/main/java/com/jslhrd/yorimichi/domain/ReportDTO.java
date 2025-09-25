@@ -2,7 +2,6 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Alias("ReportDTO")
 public class ReportDTO {
 
 	/** FK: 신고자 ID */

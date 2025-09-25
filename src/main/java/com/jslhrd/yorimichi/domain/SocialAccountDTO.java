@@ -2,7 +2,6 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +15,6 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Alias("SocialAccountDTO")
 public class SocialAccountDTO extends RootDTO {
 
 	/** PK1, FK: 권한/역할 ID */

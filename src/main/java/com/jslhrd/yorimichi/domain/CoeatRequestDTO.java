@@ -2,7 +2,6 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@Alias("CoeatRequestDTO")
 public class CoeatRequestDTO {
 
     /** PK, FK: 같이먹기 ID */
@@ -37,4 +35,11 @@ public class CoeatRequestDTO {
 
 	/** 수정일시 (DB 자동 갱신) */
 	private LocalDateTime updatedAt;
+
+
+	/** 신청한 같이먹기 */
+	private CoeatDTO coeatDTO;
+
+	/** 신청한 유저*/
+	private UserDTO userDTO;
 }

@@ -2,7 +2,8 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
+
+import java.util.List;
 
 /**
  * 상점 DTO.
@@ -15,7 +16,6 @@ import org.apache.ibatis.type.Alias;
  */
 @Getter
 @Setter
-@Alias("StoreDTO")
 public class StoreDTO extends RootDTO {
 
 	/** FK: 주소 ID */
@@ -29,4 +29,26 @@ public class StoreDTO extends RootDTO {
 
 	/** 상점 번호 */
     private String phone;
+
+
+	/** 주소 */
+	private AddressDTO address;
+	
+	/** 음식 카테고리  목록 */
+	private List<CategoryDTO> categories;
+
+	/** 시설 카테고리 목록 */
+	private List<FacilityCategoryDTO> facilities;
+
+	/** 음식 목록 */
+	private List<FoodDTO> foods;
+
+	/** 리뷰 목록 */
+	private List<ReviewDTO> reviews;
+
+	/** 같이 먹기 목록 */
+	private  List<CoeatDTO> coeats;
+
+	/** 상점 이미지 목록 */
+	private List<ImageDTO> images;
 }

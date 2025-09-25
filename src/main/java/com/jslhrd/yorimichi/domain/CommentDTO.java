@@ -2,7 +2,8 @@ package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
+
+import java.util.List;
 
 /**
  * 댓글 DTO.
@@ -15,7 +16,6 @@ import org.apache.ibatis.type.Alias;
  */
 @Getter
 @Setter
-@Alias("CommentDTO")
 public class CommentDTO extends RootDTO {
 
 	/** FK: 같이먹기 ID */
@@ -29,4 +29,14 @@ public class CommentDTO extends RootDTO {
 
 	/** 댓글 내용 */
     private String content;
+
+
+	/** 작성된 같이먹기 */
+	private CoeatDTO coeat;
+
+	/** 작성한 유저 */
+	private UserDTO user;;
+
+	/** 댓글 목록 */
+	private List<CommentDTO> comments;
 }
