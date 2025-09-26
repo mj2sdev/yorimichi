@@ -1,200 +1,160 @@
 <!DOCTYPE html>
-<html   th:replace="~{layout/layout :: layout(~{::title},~{::section},~{::script})}" 
-		xmlns:th="http://www.thymeleaf.org">
+<html th:replace="~{layout/clean :: params(~{::head/content()},~{::body/content()})}"
+	xmlns:th="http://www.thymeleaf.org">
+
 <head>
-	<title> Yorimichi Project </title>
+	<title>
+		회원가입
+	</title>
+	<script defer src="/js/signup.js"></script>
 </head>
+
 <body>
-	<section class="bg-ymwhite py-5">
-		<div class="container">
-			<div class="row justify-content-center">
-				<div class="col-6 border border-3 rounded-2">
-					<div class="row">
-						<div class="col">
-							<h1 class="fw-bold my-4 text-ymsecondary text-center">회원가입</h1>
-							<div class="fs-4 text-center" style="color: gray;"> 
-								Yorimichi와 함께 즐거운 시간을 보내세요
+	<div class="bg-wallpaper">
+
+		<div class="d-flex justify-content-center">
+			<form
+				method="post"
+				th:action="@{/user/signup}"
+				class="my-5 shadow-lg bg-ymwhite rounded needs-validation"
+				style="max-width: 20rem;"
+				novalidate>
+				<div class="p-4 bg-ymprimary-gradient rounded-top text-ymwhitesmoke">
+					<h1 class="fw-bold py-2 text-center">
+						회원가입
+					</h1>
+					<div class="fs-5 text-center">
+						Yorimichi와 함께 즐거운 시간을 보내세요
+					</div>
+				</div>
+				<div class="row gap-4 p-3">
+
+					<div class="col-12">
+						<label for="nickname" class="form-label">
+							닉네임
+						</label>
+						<input
+							onblur="nicknameDeduplication(event)"
+							class="form-control"
+							id="nickname"
+							placeholder="낙쿠네무"
+							minlength="3"
+							maxlength="20"
+							required
+							pattern="">
+						<div class="invalid-feedback">
+							최소 3자 이상 20자 이하로 입력해주세요
+						</div>
+					</div>
+
+					<div class="col-12">
+						<label for="email" class="form-label">
+							이메일
+						</label>
+						<div class="input-group">
+							<input
+								type="email"
+								class="form-control"
+								id="email" 
+								placeholder="email@example.com" 
+								required 
+								pattern="">
+							<button type="button" onclick="emailDeduplication(event)" class="btn btn-ymprimary bg-ymprimary-gradient rounded-end">
+								중복검사
+							</button>
+							<div class="invalid-feedback">
+								정확한 이메일, 중복확인을 진행하세요
 							</div>
 						</div>
 					</div>
-					<span> <!--닉네임-->
-						<div class="row">
-							<div class="col-6">닉네임</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<input type="text" placeholder="홍길동" style="width:100%;">
+
+					<div class="col-12">
+						<label for="password" class="form-label">
+							비밀번호
+						</label>
+						<input type="password" class="form-control" id="password" placeholder="●●●●●●●●" required onkeyup="changePassword(event)">
+						<div class="d-flex align-items-center justify-content-between gap-2">
+							<div style="font-size: .75rem; color: gray;">
+								<span>보안: </span>
+								<span id="password-level-description">없음</span>
+							</div>
+							<div class="d-flex w-75 rounded border overflow-auto" id="password-level" style="height: .75rem">
+								<span class="flex-grow-1 border-end"></span>
+								<span class="flex-grow-1 border-end"></span>
+								<span class="flex-grow-1 "></span>
 							</div>
 						</div>
-					</span>
-					<span> <!-- 이메일 -->
-						<div class="row">
-							<div class="col">이메일</div>
+					</div>
+
+					<div class="col-12">
+						<label for="repassword" class="form-label">
+							비밀번호 확인
+						</label>
+						<input type="password" class="form-control" id="repassword" placeholder="●●●●●●●●" required>
+						<div class="invalid-feedback">
+							비밀번호가 맞지 않습니다
 						</div>
-						<div class="row">
-							<div class="col-10">
-								<input type="email" placeholder="abc123@gmail.com" style="width:100%;">
-							</div>
-							<div class="col-2">
-								<button class="btn text-ymwhite" style="background-color: green; font-size:14px;">중복확인</button>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<!--이메일 인증번호 입력칸 만들기-->
-							</div>
-							<div class="col">
-								<!--버튼 만들기-->
-							</div>
-						</div>
-					</span>
-					<span> <!--비밀번호 -->
-						<div class="row">
-							<div class="col">비밀번호</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<input type="password" placehorder="비밀번호 (8자이상)" style="width:100%">
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-6">
-								<meter min="0" max="1" low="0.5" value="0.8" style="width:100%;"></meter>
-							</div>
-							<div class="col-6">비밀번호 강도</div>
-						</div>
-					</span>
-					<span> <!--비밀번호 확인 -->
-						<div class="row">
-							<div class="col">비밀번호 확인</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<input type="password" placehorder="비밀번호를 다시 입력하세요" style="width:100%">
-							</div>
-						</div>
-					</span>
-					<span> <!--생년월일 -->
-						<div class="row">
-							<div class="col-6">출생연도</div>
-							<div class="col-6">성별</div>
-						</div>
-						<div class="row">
-							<div class="col-6">
-								<select name="birthyear">
-									<th:each>
-										<option value="올해">2025</option>
-									</th:each>
+					</div>
+
+					<div class="col-12">
+						<div class="d-flex gap-2">
+							<div class="flex-grow-1">
+								<label for="year" class="form-label">
+									출생년도
+								</label>
+								<select class="form-select" id="year" name="year">
+									<option th:each="year : ${#numbers.sequence(2025, 1900)}" th:text="${ year }"></option>
 								</select>
 							</div>
-							<div class="col-6">
-								<select name="gender">
-									<option value="MAN">남성</option>
-									<option value="WOMAN">여성</option>
-									<option value="THEY">기타</option>
+							<div class="flex-grow-1">
+								<label for="gender" class="form-label">
+									성별
+								</label>
+								<select class="form-select" id="gender" name="gender">
+									<option th:each="option : ${ {'남자', '여자'} }" th:text="${ option }"></option>
 								</select>
 							</div>
 						</div>
-					</span>
-					<span> <!--약관-->
-						<div class="row justify-content-center">
-							<div class="col-11  border border-3">
-								<div class="row my-3">
-									<div class="col">
-										<input type="checkbox" value="">전체 약관에 동의합니다
-									</div>
+					</div>
+
+					<div class="col-12">
+						<ul class="list-group" onchange="changeAll(event)">
+							<li class="list-group-item">
+								<div class="form-check">
+									<input id="all-agree" type="checkbox" class="form-check-input" required>
+									<label for="all-agree">전체 약관에 동의합니다</label>
 								</div>
-								<div class="row my-3">
-									<div class="col-7">
-										<input type="checkbox" value="">[필수] 서비스 이용약관에 동의합니다
-									</div>
-									<div class="col">
-										<button type="button" class="btn btn-ymprimary fs-6" data-bs-toggle="modal" data-bs-target="#secondThing">
-											보기
+							</li>
+							<li class="list-group-item"
+								th:each="item, stat : ${ {'[필수] 서비스 이용 약관', '[필수] 개인정보 처리방침', '[필수] 위치정보 이용'} }">
+								<div class="form-check m-0">
+									<input th:id="'agree-service-' + ${ stat.index }" type="checkbox" class="form-check-input" required>
+									<div class="d-flex gap-2 align-items-center justify-content-between">
+										<label th:for="'agree-service-' + ${ stat.index }" style="font-size: .9rem;" th:text="${ item }">
+										</label>
+										<button
+											type="button"
+											class="btn btn-link p-0 border-0"
+											data-bs-toggle="modal"
+											data-bs-target="#agreement" style="font-size: .9rem;" onclick="agreement(0)">
+											자세히
 										</button>
-										<div class="modal fade" id="secondThing" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-											<div class="modal-dialog">
-												<div class="modal-content">
-												<div class="modal-header">
-													<h1 class="modal-title fs-5" id="exampleModalLabel">서비스 이용약관</h1>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-												</div>
-												<div class="modal-body">
-													냉무
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-												</div>
-												</div>
-											</div>
-										</div>
 									</div>
 								</div>
-								<div class="row my-3">
-									<div class="col-7">
-										<input type="checkbox" value="">[필수] 개인정보 처리방침에 동의합니다.
-									</div>
-									<div class="col">
-										<button type="button" class="btn btn-ymprimary fs-6" data-bs-toggle="modal" data-bs-target="#secondThing">
-											보기
-										</button>
-										<div class="modal fade" id="secondThing" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-											<div class="modal-dialog">
-												<div class="modal-content">
-												<div class="modal-header">
-													<h1 class="modal-title fs-5" id="exampleModalLabel">개인정보 처리방침</h1>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-												</div>
-												<div class="modal-body">
-													냉무
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-												</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="row my-3">
-									<div class="col-7">
-										<input type="checkbox" value="">[필수] 위치정보 이용에 동의합니다.
-									</div>
-									<div class="col">
-										<button type="button" class="btn btn-ymprimary fs-6" data-bs-toggle="modal" data-bs-target="#secondThing">
-											보기
-										</button>
-										<div class="modal fade" id="secondThing" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-											<div class="modal-dialog">
-												<div class="modal-content">
-												<div class="modal-header">
-													<h1 class="modal-title fs-5" id="exampleModalLabel">위치정보 이용</h1>
-													<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-												</div>
-												<div class="modal-body">
-													냉무
-												</div>
-												<div class="modal-footer">
-													<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-												</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</span>
-					<span> <!--회원가입-->
-						<div class="row">
-							<div class="col">
-								<button type="button" class="btn text-ymwhite bg-ymsecondary" style="width:100%;">회원가입</button>
-							</div>
-						</div>
-					</span>
-					
+							</li>
+						</ul>
+					</div>
+
+					<div class="col-12">
+						<button class="btn btn-ymprimary bg-ymprimary-gradient w-100">회원가입</button>
+					</div>
+
 				</div>
-			</div>
-	</section>
+			</form>
+		</div>
+	</div>
+
+	<div th:replace="~{ fragments/signup/agreement }"></div>
 </body>
+
 </html>

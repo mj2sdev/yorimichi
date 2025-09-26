@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 :root {
 	--ym-primary: oklch(0.748 0.1719 58.5);
 	--ym-primary-bright: oklch(0.8208 0.1486 72.1);
@@ -110,4 +112,45 @@
 .form-control:focus {
   border-color: var(--ym-primary) !important;
   box-shadow: 0 0 0 0.25rem rgba(242, 133, 0, 0.25) !important; /* primary 색상 반투명 그림자 */
+}
+
+.list-group {
+	--bs-list-group-active-bg: var(--ym-primary);
+	--bs-list-group-active-border-color: var(--ym-primary);
+}
+
+.form-select:focus {
+  border-color: var(--ym-primary);
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(242, 133, 0, 0.25); /* primary 색상 반투명 그림자 */
+}
+
+.form-check-input:checked {
+	background-color: var(--ym-primary);
+	border-color: var(--ym-primary);
+}
+
+.form-check-input:focus {
+	border-color: var(--ym-primary);
+	outline: 0;
+	box-shadow: 0 0 0 0.25rem rgba(242, 133, 0, 0.25);
+}
+.btn-link {
+  --bs-btn-font-weight: 400;
+  --bs-btn-color: var(--ym-primary);
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: transparent;
+
+  --bs-btn-hover-color: var(--ym-primary-bright);
+  --bs-btn-hover-border-color: transparent;
+
+  --bs-btn-active-color: var(--ym-primary-bright);
+  --bs-btn-active-border-color: transparent;
+
+  --bs-btn-disabled-color: #6c757d;
+  --bs-btn-disabled-border-color: transparent;
+
+  --bs-btn-box-shadow: 0 0 0 #000;
+  --bs-btn-focus-shadow-rgb: 242, 133, 0; /* primary RGB 기준 */
+  text-decoration: underline;
 }
