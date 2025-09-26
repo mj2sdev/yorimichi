@@ -129,7 +129,7 @@
 								th:each="item, stat : ${ {'[필수] 서비스 이용 약관', '[필수] 개인정보 처리방침', '[필수] 위치정보 이용'} }">
 								<div class="form-check m-0">
 									<input th:id="'agree-service-' + ${ stat.index }" type="checkbox" class="form-check-input" required>
-									<div class="d-flex gap-2 align-items-center">
+									<div class="d-flex gap-2 align-items-center justify-content-between">
 										<label th:for="'agree-service-' + ${ stat.index }" style="font-size: .9rem;" th:text="${ item }">
 										</label>
 										<button
