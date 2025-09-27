@@ -256,7 +256,7 @@ CREATE TABLE social_account (
     provider         ENUM('GOOGLE') NOT NULL,
     provider_user_id VARCHAR(191)   NOT NULL,
     provider_email   VARCHAR(191),
-    email_verified   BOOLEAN        NOT NULL,
+    email_verified   BOOLEAN        NOT NULL DEFAULT FALSE,
     display_name     VARCHAR(100),
     avatar_url       VARCHAR(256),
     created_at       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
