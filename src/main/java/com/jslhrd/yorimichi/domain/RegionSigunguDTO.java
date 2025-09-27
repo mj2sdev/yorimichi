@@ -1,8 +1,10 @@
 package com.jslhrd.yorimichi.domain;
 
+import com.jslhrd.yorimichi.validation.Create;
+import com.jslhrd.yorimichi.validation.Update;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.ibatis.type.Alias;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,28 +22,56 @@ import java.util.List;
 @Setter
 public class RegionSigunguDTO {
 
-	/** PK: 시/군/구 ID */
-    private Long id;
+	/**
+	 * PK: 시/군/구 ID
+	 */
+	@Null(groups = Create.class)
+	@NotNull(groups = Update.class)
+	private Long id;
 
-	/** FK: 시/도 ID */
-    private Long sidoId;
+	/**
+	 * FK: 시/도 ID
+	 */
+	@NotNull
+	@Positive
+	private Long sidoId;
 
-	/** 시/군/구 코드 */
-    private String code;
-	
-	/** 시/군/구 이름 */
-    private String name;
+	/**
+	 * 시/군/구 코드
+	 */
+	@NotBlank
+	@Size(max = 10)
+	private String code;
 
-	/** 생성일시 (DB 자동 생성) */
+	/**
+	 * 시/군/구 이름
+	 */
+	@NotBlank
+	@Size(max = 50)
+	private String name;
+
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
+	@PastOrPresent
+	@Null(groups = Create.class)
 	private LocalDateTime createdAt;
 
-	/** 수정일시 (DB 자동 갱신) */
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
+	@PastOrPresent
+	@Null(groups = Create.class)
 	private LocalDateTime updatedAt;
 
 
-	/** 시/도 */
+	/**
+	 * 시/도
+	 */
 	private RegionSidoDTO regionSidoDTO;
 
-	/** 읍/면/동 목록 */
+	/**
+	 * 읍/면/동 목록
+	 */
 	private List<RegionEmdDTO> regionEmds;
 }
