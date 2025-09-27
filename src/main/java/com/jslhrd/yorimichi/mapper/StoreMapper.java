@@ -1,9 +1,11 @@
 package com.jslhrd.yorimichi.mapper;
 
+import com.jslhrd.yorimichi.domain.SearchDTO;
 import com.jslhrd.yorimichi.domain.StoreDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -20,9 +22,24 @@ public interface StoreMapper {
 
 	/**
 	 * 상점 추가.
+	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
 	int insert(StoreDTO dto); // 매장 등록
+
+	/**
+	 * 현재 검색/필터 조건에 맞는 StoreDTO 를 담은 목록.
+	 *
+	 * @return
+	 */
+	List<StoreDTO> selectAll(SearchDTO dto);
+
+	/**
+	 * 현재 검색/필터 조건에 맞는 총 개수.
+	 *
+	 * @return
+	 */
+	int countAll(SearchDTO dto);
 
 	// TODO: 주소 기준 상점 목록 조회.
 
@@ -30,6 +47,7 @@ public interface StoreMapper {
 
 	/**
 	 * 상점 단건 조회.
+	 *
 	 * @param id 상점 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
@@ -37,12 +55,14 @@ public interface StoreMapper {
 
 	/**
 	 * 상점 수정.
+	 *
 	 * @return 영향 행 수 (수정 1, 대상 없음 0)
 	 */
 	int update(StoreDTO dto);
 
 	/**
 	 * 상점 삭제.
+	 *
 	 * @param id 상점 ID
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */
