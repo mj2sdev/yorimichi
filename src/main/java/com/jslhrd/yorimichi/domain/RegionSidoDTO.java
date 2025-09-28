@@ -19,22 +19,34 @@ import java.util.List;
 @Setter
 public class RegionSidoDTO {
 
-	/** FK: 시/도 ID */
-    private Long id;
+	/**
+	 * FK: 시/도 ID
+	 */
+	private Long id;
 
-	/** 시/도 코드 */
-    private String code;
+	/**
+	 * 시/도 코드
+	 */
+	private String code;
 
-	/** 시/도 이름 */
-    private String name;
+	/**
+	 * 시/도 이름
+	 */
+	private String name;
 
-	/** 생성일시 (DB 자동 생성) */
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
 	private LocalDateTime createdAt;
 
-	/** 수정일시 (DB 자동 갱신) */
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
 	private LocalDateTime updatedAt;
 
 
-	/** 시/군/읍 목록 */
+	/**
+	 * 시/군/읍 목록
+	 */
 	private List<RegionSigunguDTO> sigungus;
 }

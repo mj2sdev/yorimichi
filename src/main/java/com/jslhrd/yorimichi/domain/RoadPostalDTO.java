@@ -18,15 +18,23 @@ import java.time.LocalDateTime;
 @Setter
 public class RoadPostalDTO {
 
-	/** FK: 도로명 ID */
-    private Long roadId;
+	/**
+	 * FK: 도로명 ID
+	 */
+	private Long roadId;
 
-	/** FK: 우편번호 ID */
-    private Long postalId;
+	/**
+	 * FK: 우편번호 ID
+	 */
+	private Long postalId;
 
-	/** 생성일시 (DB 자동 생성) */
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
 	private LocalDateTime createdAt;
 
-	/** 수정일시 (DB 자동 갱신) */
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
 	private LocalDateTime updatedAt;
 }

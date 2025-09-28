@@ -1,6 +1,6 @@
 package com.jslhrd.yorimichi.domain;
 
-import com.jslhrd.yorimichi.enums.Role;
+import com.jslhrd.yorimichi.enums.RoleName;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,15 +19,23 @@ import java.time.LocalDateTime;
 @Setter
 public class RoleDTO {
 
-	/** PK: 권한/역할 ID */
-    private Long id;
+	/**
+	 * PK: 권한/역할 ID
+	 */
+	private Long id;
 
-	/** 권한/역할 이름 */
-    private Role role;
+	/**
+	 * 권한/역할 이름
+	 */
+	private RoleName name;
 
-	/** 생성일시 (DB 자동 생성) */
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
 	private LocalDateTime createdAt;
 
-	/** 수정일시 (DB 자동 갱신) */
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
 	private LocalDateTime updatedAt;
 }

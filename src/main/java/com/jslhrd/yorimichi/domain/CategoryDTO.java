@@ -18,18 +18,28 @@ import java.time.LocalDateTime;
 @Setter
 public class CategoryDTO {
 
-	/** PK: 카테고리 ID */
-    private Long id;
+	/**
+	 * PK: 카테고리 ID
+	 */
+	private Long id;
 
-    /** FK: 부모 카테고리 ID */
-    private Long parentId;
-    
-    /** 카테고리 이름 */
-    private String name;
+	/**
+	 * FK: 부모 카테고리 ID
+	 */
+	private Long parentId;
 
-    /** 생성일시 (DB 자동 생성) */
-    private LocalDateTime createdAt;
+	/**
+	 * 카테고리 이름
+	 */
+	private String name;
 
-	/** 수정일시 (DB 자동 갱신) */
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
+	private LocalDateTime createdAt;
+
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
 	private LocalDateTime updatedAt;
 }

@@ -9,38 +9,85 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SearchDTO {
-	
-	private String searchType;
+
+	private static final int MAX_SIZE = 100;
+
+	/**
+	 * 검색 구분: name|desc|all 등 화이트리스트
+	 */
+	private String searchType = "all";
+
+	/**
+	 * 검색어
+	 */
 	private String searchWord;
 
-	/** 원하는 페이지 */
-	private int page;
-	/** 페이지당 글 갯수 */
-	private int recordCount;
-	/** 페이지 사이즈 */
-	private int pageSize;
-	/** 총 몇 페이지 */
-	private int totalPage;
-	/** 검색물 갯수 */
+	/**
+	 * 원하는 페이지(1-based)
+	 */
+	private int page = 1;
+
+	/**
+	 * 페이지당 행 수 (쿼리 limit)
+	 */
+	private int recordCount = 20;        // 기본 20
+
+	/**
+	 * 페이지 버튼 묶음 크기(프론트 전용)
+	 */
+	private int pageSize = 10;
+
+	/**
+	 * 총 레코드 수(서버 계산용)
+	 */
 	private int totalCount;
 
-	public void computePagination() {
-		// 총 페이지 수 계산
-		if (recordCount > 0) {
-			totalPage = (totalCount + recordCount - 1) / recordCount;
-		} else {
-			totalPage = 0; // 또는 예외 처리
-		}
+	/**
+	 * 총 페이지 수(서버 계산용)
+	 */
+	private int totalPage;
 
-		// 현재 페이지가 총 페이지 수를 초과하지 않도록 조정
-		if (page > totalPage) {
-			page = totalPage;
-		}
-		if (page < 1 && totalPage > 0) { // 페이지가 1보다 작고 총 페이지가 있을 경우 1로 설정
-			page = 1;
-		} else if (totalPage == 0) { // 총 페이지가 0일 경우 페이지도 0으로 설정
-			page = 0;
-		}
-		
+	/**
+	 * 서버에서 totalCount를 알고 난 뒤 호출
+	 */
+	public void computePagination() {
+		// 안전한 size 상한
+		if (recordCount > MAX_SIZE) recordCount = MAX_SIZE;
+
+		// 총 페이지 계산 (0건이면 1페이지로 고정할지, 0으로 둘지는 정책 선택)
+		totalPage = (totalCount == 0) ? 1
+				: (int) Math.ceil((double) totalCount / recordCount);
+
+		// page 범위 클램프(1..totalPage)
+		if (page < 1) page = 1;
+		if (page > totalPage) page = totalPage;
+	}
+
+	/**
+	 * SQL OFFSET (1-based 페이지 기준)
+	 */
+	public int offset() {
+		return (page - 1) * recordCount;
+	}
+
+	/**
+	 * SQL LIMIT
+	 */
+	public int limit() {
+		return recordCount;
+	}
+
+	/**
+	 * 다음 페이지가 있는가?
+	 */
+	public boolean hasNext() {
+		return page < totalPage;
+	}
+
+	/**
+	 * 이전 페이지가 있는가?
+	 */
+	public boolean hasPrev() {
+		return page > 1;
 	}
 }
