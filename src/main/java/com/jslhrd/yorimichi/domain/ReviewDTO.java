@@ -24,9 +24,9 @@ public class ReviewDTO extends RootDTO {
 	private Long userId;
 
 	/**
-	 * FK: 음식 ID
+	 * FK: 상점 ID
 	 */
-	private Long foodId;
+	private Long storeId;
 
 	/**
 	 * 리뷰 평점
