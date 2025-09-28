@@ -1,6 +1,5 @@
 package com.jslhrd.yorimichi.domain;
 
-import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,27 +21,21 @@ public class FoodDTO extends RootDTO {
 	/**
 	 * FK: 상점 ID
 	 */
-	@NotNull
-	@Positive
 	private Long storeId;
 
 	/**
 	 * 음식 이름
 	 */
-	@NotBlank
-	@Size(max = 50)
 	private String name;
 
 	/**
 	 * 음식 가격
 	 */
-	@Min(0)
 	private Integer price;
 
 	/**
 	 * 음식 설명
 	 */
-	@Size(max = 2000)
 	private String description;
 
 	/**

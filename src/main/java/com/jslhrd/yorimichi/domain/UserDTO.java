@@ -1,6 +1,5 @@
 package com.jslhrd.yorimichi.domain;
 
-import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,41 +22,31 @@ public class UserDTO extends RootDTO {
 	/**
 	 * FK: 권한/역할 ID
 	 */
-	@NotNull
-	@Positive
 	private Long roleId;
 
 	/**
 	 * 유저 이메일/아이디
 	 */
-	@NotBlank
-	@Email
-	@Size(max = 100)
 	private String email;
 
 	/**
 	 * 유저 비밀번호
 	 */
-	@Size(max = 256)
 	private String password;
 
 	/**
 	 * 유저 닉네임
 	 */
-	@NotBlank
-	@Size(max = 20)
 	private String nickname;
 
 	/**
 	 * 유저 자기소개
 	 */
-	@Size(max = 2000)
 	private String description;
 
 	/**
 	 * 마지막 로그인 일시
 	 */
-	@PastOrPresent
 	private LocalDateTime lastLoginAt;
 
 

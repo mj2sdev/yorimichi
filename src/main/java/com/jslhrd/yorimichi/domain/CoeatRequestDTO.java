@@ -1,8 +1,6 @@
 package com.jslhrd.yorimichi.domain;
 
 import com.jslhrd.yorimichi.enums.CoeatRequestStatus;
-import com.jslhrd.yorimichi.validation.Create;
-import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,41 +22,31 @@ public class CoeatRequestDTO {
 	/**
 	 * PK, FK: 같이먹기 ID
 	 */
-	@NotNull
-	@Positive
 	private Long coeatId;
 
 	/**
 	 * FK: 요청자 ID
 	 */
-	@NotNull
-	@Positive
 	private Long userId;
 
 	/**
 	 * 같이먹기 요청 처리 상태
 	 */
-	@NotNull
 	private CoeatRequestStatus status;
 
 	/**
 	 * 같이먹기 요청 자기소개
 	 */
-	@NotBlank
 	private String message;
 
 	/**
 	 * 생성일시 (DB 자동 생성)
 	 */
-	@PastOrPresent
-	@Null(groups = Create.class)
 	private LocalDateTime createdAt;
 
 	/**
 	 * 수정일시 (DB 자동 갱신)
 	 */
-	@PastOrPresent
-	@Null(groups = Create.class)
 	private LocalDateTime updatedAt;
 
 

@@ -5,13 +5,15 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.BlockMapper">
 
     <insert id="insert" parameterType="BlockDTO">
-        INSERT INTO block (blocker_id, blocked_id)
+        INSERT INTO block (blocker_id, blockee_id)
         VALUES (#{blockerId}, #{blockedId})
     </insert>
 
-    <delete id="deleteById" parameterType="BlockDTO">
-        DELETE FROM block
-        WHERE blocker_id = #{blockerId} AND blocked_id = #{blockedId}
+    <delete id="delete" parameterType="BlockDTO">
+        DELETE
+        FROM block
+        WHERE blocker_id = #{blockerId}
+          AND blockee_id = #{blockee_id}
     </delete>
 
 </mapper>

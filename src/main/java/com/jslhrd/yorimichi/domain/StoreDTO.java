@@ -1,8 +1,5 @@
 package com.jslhrd.yorimichi.domain;
 
-import com.jslhrd.yorimichi.validation.Create;
-import com.jslhrd.yorimichi.validation.Update;
-import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,29 +21,21 @@ public class StoreDTO extends RootDTO {
 	/**
 	 * FK: 주소 ID
 	 */
-	@NotNull(groups = Create.class)
-	@Positive(groups = {Create.class, Update.class})
 	private Long addressId;
 
 	/**
 	 * 상점 이름
 	 */
-	@NotBlank
-	@Size(max = 100)
 	private String name;
 
 	/**
 	 * 상점 설명
 	 */
-	@Size(max = 1000)
 	private String description;
 
 	/**
 	 * 상점 번호
 	 */
-	@Size(max = 20)
-	@Pattern(regexp = "^[+0-9][0-9\\- ]{6,19}$",
-			message = "전화번호 형식이 올바르지 않습니다.")
 	private String phone;
 
 

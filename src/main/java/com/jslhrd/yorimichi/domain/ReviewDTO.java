@@ -1,6 +1,5 @@
 package com.jslhrd.yorimichi.domain;
 
-import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,28 +21,21 @@ public class ReviewDTO extends RootDTO {
 	/**
 	 * FK: 유저 ID
 	 */
-	@NotNull
-	@Positive
 	private Long userId;
 
 	/**
 	 * FK: 음식 ID
 	 */
-	@NotNull
-	@Positive
 	private Long foodId;
 
 	/**
 	 * 리뷰 평점
 	 */
-	@Min(1)
-	@Max(5)
 	private Integer rating;
 
 	/**
 	 * 리뷰 내용
 	 */
-	@Size(max = 5000)
 	private String content;
 
 

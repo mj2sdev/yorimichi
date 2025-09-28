@@ -1,8 +1,5 @@
 package com.jslhrd.yorimichi.domain;
 
-import com.jslhrd.yorimichi.validation.Create;
-import com.jslhrd.yorimichi.validation.Update;
-import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,43 +22,31 @@ public class RegionSigunguDTO {
 	/**
 	 * PK: 시/군/구 ID
 	 */
-	@Null(groups = Create.class)
-	@NotNull(groups = Update.class)
 	private Long id;
 
 	/**
 	 * FK: 시/도 ID
 	 */
-	@NotNull
-	@Positive
 	private Long sidoId;
 
 	/**
 	 * 시/군/구 코드
 	 */
-	@NotBlank
-	@Size(max = 10)
 	private String code;
 
 	/**
 	 * 시/군/구 이름
 	 */
-	@NotBlank
-	@Size(max = 50)
 	private String name;
 
 	/**
 	 * 생성일시 (DB 자동 생성)
 	 */
-	@PastOrPresent
-	@Null(groups = Create.class)
 	private LocalDateTime createdAt;
 
 	/**
 	 * 수정일시 (DB 자동 갱신)
 	 */
-	@PastOrPresent
-	@Null(groups = Create.class)
 	private LocalDateTime updatedAt;
 
 

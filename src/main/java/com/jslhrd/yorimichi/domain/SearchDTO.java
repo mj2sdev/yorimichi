@@ -1,8 +1,5 @@
 package com.jslhrd.yorimichi.domain;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,33 +15,28 @@ public class SearchDTO {
 	/**
 	 * 검색 구분: name|desc|all 등 화이트리스트
 	 */
-	@Pattern(regexp = "name|desc|all", message = "지원하지 않는 searchType")
 	private String searchType = "all";
 
 	/**
 	 * 검색어
 	 */
-	@Size(max = 50)
 	private String searchWord;
 
 	/**
 	 * 원하는 페이지(1-based)
 	 */
-	@Min(1)
 	private int page = 1;
 
 	/**
 	 * 페이지당 행 수 (쿼리 limit)
 	 */
-	@Min(1)
 	private int recordCount = 20;        // 기본 20
 
 	/**
 	 * 페이지 버튼 묶음 크기(프론트 전용)
 	 */
-	@Min(1)
 	private int pageSize = 10;
-	
+
 	/**
 	 * 총 레코드 수(서버 계산용)
 	 */
