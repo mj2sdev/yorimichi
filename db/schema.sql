@@ -183,9 +183,9 @@ CREATE TABLE category (
     created_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT pk_category          PRIMARY KEY (id),
-    CONSTRAINT fk_category_parent   FOREIGN KEY (parent_id) REFERENCES category(id) ON DELETE SET NULL,
-    CONSTRAINT uk_category_name     UNIQUE      (name)
+    CONSTRAINT pk_category        PRIMARY KEY (id),
+    CONSTRAINT fk_category_parent FOREIGN KEY (parent_id) REFERENCES category(id) ON DELETE SET NULL,
+    CONSTRAINT uk_category_name   UNIQUE      (name)
 );
 
 CREATE TABLE store_category (
@@ -252,15 +252,15 @@ CREATE TABLE user (
 );
 
 CREATE TABLE social_account (
-    user_id          BIGINT       NOT NULL,
-    provider         VARCHAR(20)  NOT NULL,
-    provider_user_id VARCHAR(191) NOT NULL,
+    user_id          BIGINT         NOT NULL,
+    provider         ENUM('GOOGLE') NOT NULL,
+    provider_user_id VARCHAR(191)   NOT NULL,
     provider_email   VARCHAR(191),
-    email_verified   BOOLEAN      NOT NULL,
+    email_verified   BOOLEAN        NOT NULL DEFAULT FALSE,
     display_name     VARCHAR(100),
     avatar_url       VARCHAR(256),
-    created_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at       DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     last_login_at    DATETIME,
 
     CONSTRAINT pk_social_account                           PRIMARY KEY (user_id, provider),
@@ -281,17 +281,27 @@ CREATE TABLE bookmark (
 
 CREATE TABLE review (
     id      BIGINT NOT NULL,
+    store_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
-    food_id BIGINT NOT NULL,
     rating  INT    NOT NULL,
     content TEXT,
 
     CONSTRAINT pk_review        PRIMARY KEY (id),
-    CONSTRAINT fk_review_root   FOREIGN KEY (id)      REFERENCES root(id) ON DELETE CASCADE,
-    CONSTRAINT fk_review_user   FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT fk_review_food   FOREIGN KEY (food_id) REFERENCES food(id) ON DELETE CASCADE,
-    -- CONSTRAINT uk_review_user_food UNIQUE (user_id, food_id) -- 사용자당 음식 1건만 리뷰 제약
+    CONSTRAINT fk_review_root   FOREIGN KEY (id)       REFERENCES root(id)  ON DELETE CASCADE,
+    CONSTRAINT fk_review_user   FOREIGN KEY (user_id)  REFERENCES user(id)  ON DELETE CASCADE,
+    CONSTRAINT fk_review_store  FOREIGN KEY (store_id) REFERENCES store(id) ON DELETE CASCADE,
     CONSTRAINT ck_review_rating CHECK       (rating BETWEEN 1 AND 5)
+);
+
+CREATE TABLE review_food (
+    review_id BIGINT NOT NULL,
+    food_id BIGINT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT pk_review_food PRIMARY KEY (review_id, food_id),
+    CONSTRAINT fk_review_food_review FOREIGN KEY (review_id) REFERENCES review(id) ON DELETE CASCADE,
+    CONSTRAINT fk_review_food_food FOREIGN KEY (food_id) REFERENCES food(id) ON DELETE CASCADE
 );
 
 CREATE TABLE coeat (
@@ -350,9 +360,9 @@ CREATE TABLE report (
     created_at  DATETIME                                                          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at  DATETIME                                                          NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT pk_report                   PRIMARY KEY (id),
-    CONSTRAINT fk_report_reporter          FOREIGN KEY (reporter_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT fk_report_root              FOREIGN KEY (root_id)     REFERENCES root(id) ON DELETE CASCADE,
+    CONSTRAINT pk_report               PRIMARY KEY (id),
+    CONSTRAINT fk_report_reporter      FOREIGN KEY (reporter_id) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT fk_report_root          FOREIGN KEY (root_id)     REFERENCES root(id) ON DELETE CASCADE,
     CONSTRAINT uk_report_reporter_root UNIQUE      (reporter_id, root_id)
 );
 
@@ -362,9 +372,9 @@ CREATE TABLE block (
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT pk_block          PRIMARY KEY (blocker_id, blockee_id),
-    CONSTRAINT fk_block_blocker  FOREIGN KEY (blocker_id) REFERENCES user(id) ON DELETE CASCADE,
-    CONSTRAINT fk_block_blockee  FOREIGN KEY (blockee_id) REFERENCES user(id) ON DELETE CASCADE
+    CONSTRAINT pk_block         PRIMARY KEY (blocker_id, blockee_id),
+    CONSTRAINT fk_block_blocker FOREIGN KEY (blocker_id) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT fk_block_blockee FOREIGN KEY (blockee_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE follow (
@@ -380,8 +390,8 @@ CREATE TABLE follow (
 );
 
 CREATE TABLE likes (
-    user_id    BIGINT NOT NULL,
-    root_id    BIGINT NOT NULL,
+    user_id    BIGINT   NOT NULL,
+    root_id    BIGINT   NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -448,9 +458,10 @@ CREATE INDEX idx_likes_root_id               ON likes    (root_id);
 CREATE INDEX idx_likes_user_id               ON likes (user_id);
 
 -- 리뷰
-CREATE INDEX idx_review_food_id              ON review (food_id);
+CREATE INDEX idx_review_store_id             ON review (store_id);
 CREATE INDEX idx_review_user_id              ON review (user_id);
--- 1인1리뷰를 강제할 때 UNIQUE (user_id, food_id) 활성화 권장
+CREATE INDEX idx_review_food_food            ON review_food(food_id);
+CREATE INDEX idx_review_store_created        ON review(store_id, id DESC);
 
 -- 코잇(모임)
 CREATE INDEX idx_coeat_user_id               ON coeat (user_id);
