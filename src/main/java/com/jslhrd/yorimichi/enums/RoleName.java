@@ -1,13 +1,13 @@
 package com.jslhrd.yorimichi.enums;
 
-public enum Role {
+public enum RoleName {
 
 	USER("USER"),
 	ADMIN("ADMIN");
 
-	Role(String name) {
+	private String name;
+
+	RoleName(String name) {
 		this.name = name;
 	}
-
-	private String name;
 }

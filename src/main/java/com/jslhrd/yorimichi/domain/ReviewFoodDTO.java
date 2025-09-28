@@ -1,32 +1,27 @@
 package com.jslhrd.yorimichi.domain;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDateTime;
 
 /**
- * 시설 카테고리 DTO.
+ * 리뷰 - 음식 매핑 DTO.
  *
- * <br>시설 카테고리 정보를 전달합니다.
+ * <br>리뷰 - 음식 매핑 정보를 전달합니다.
  *
- * @author GeonHoKoo
  * @author LancerAlert
  * @since 1.0
  */
-@Getter
-@Setter
-public class FacilityCategoryDTO {
+public class ReviewFoodDTO {
 
 	/**
-	 * PK: 시설 카테고리 ID
+	 * FK: 리뷰 ID
 	 */
-	private Long id;
+	private Long reviewId;
 
 	/**
-	 * 시설 카테고리 이름
+	 * FK: 음식 ID
 	 */
-	private String name;
+	private Long foodId;
+
 
 	/**
 	 * 생성일시 (DB 자동 생성)

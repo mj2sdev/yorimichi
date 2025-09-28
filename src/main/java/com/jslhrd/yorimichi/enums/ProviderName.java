@@ -1,12 +1,12 @@
 package com.jslhrd.yorimichi.enums;
 
-public enum Provider {
+public enum ProviderName {
 
 	GOOGLE("GOOGLE");
 
-	Provider(String name) {
+	private String name;
+
+	ProviderName(String name) {
 		this.name = name;
 	}
-
-	private String name;
 }
