@@ -10,7 +10,7 @@ spring:
       mode: always
 
 mybatis:
-  # main/resources/mapper/*.xml (네가 만든 경로) 를 읽게 함
+  # main/resources/mappers/*.xml (네가 만든 경로) 를 읽게 함
   mapper-locations: classpath*:mapper/*.xml
   configuration:
     # DB 컬럼 스네이크 → DTO 카멜케이스 자동 매핑 (user_id -> userId)

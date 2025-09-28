@@ -18,37 +18,66 @@ import java.util.List;
 @Setter
 public class StoreDTO extends RootDTO {
 
-	/** FK: 주소 ID */
-    private Long addressId;
+	/**
+	 * FK: 주소 ID
+	 */
+	private Long addressId;
 
-	/** 상점 이름 */
-    private String name;
+	/**
+	 * 상점 이름
+	 */
+	private String name;
 
-	/** 상점 설명 */
-    private String description;
+	/**
+	 * 상점 설명
+	 */
+	private String description;
 
-	/** 상점 번호 */
-    private String phone;
+	/**
+	 * 상점 번호
+	 */
+	private String phone;
 
 
-	/** 주소 */
-	private AddressDTO address;
+	private String addressText;
+	private String imageUrl;
+	private Double avgRating;
+	private Integer reviewCount;
+	private Integer likeCount;
 	
-	/** 음식 카테고리  목록 */
+
+	/**
+	 * 주소
+	 */
+	private AddressDTO address;
+
+	/**
+	 * 음식 카테고리  목록
+	 */
 	private List<CategoryDTO> categories;
 
-	/** 시설 카테고리 목록 */
+	/**
+	 * 시설 카테고리 목록
+	 */
 	private List<FacilityCategoryDTO> facilities;
 
-	/** 음식 목록 */
+	/**
+	 * 음식 목록
+	 */
 	private List<FoodDTO> foods;
 
-	/** 리뷰 목록 */
+	/**
+	 * 리뷰 목록
+	 */
 	private List<ReviewDTO> reviews;
 
-	/** 같이 먹기 목록 */
-	private  List<CoeatDTO> coeats;
+	/**
+	 * 같이 먹기 목록
+	 */
+	private List<CoeatDTO> coeats;
 
-	/** 상점 이미지 목록 */
+	/**
+	 * 상점 이미지 목록
+	 */
 	private List<ImageDTO> images;
 }

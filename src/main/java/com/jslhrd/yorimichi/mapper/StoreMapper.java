@@ -25,25 +25,11 @@ public interface StoreMapper {
 	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
-	int insert(StoreDTO dto); // 매장 등록
+	int insert(StoreDTO dto);
 
-	/**
-	 * 현재 검색/필터 조건에 맞는 StoreDTO 를 담은 목록.
-	 *
-	 * @return
-	 */
-	List<StoreDTO> selectAll(SearchDTO dto);
+	int countAll(@Param("q") SearchDTO q);
 
-	/**
-	 * 현재 검색/필터 조건에 맞는 총 개수.
-	 *
-	 * @return
-	 */
-	int countAll(SearchDTO dto);
-
-	// TODO: 주소 기준 상점 목록 조회.
-
-	// TODO: 카테로기 기준 상점 목록 조회.
+	List<StoreDTO> selectAll(@Param("q") SearchDTO q);
 
 	/**
 	 * 상점 단건 조회.
