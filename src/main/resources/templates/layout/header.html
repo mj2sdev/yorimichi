@@ -68,7 +68,7 @@
 								</a>
 							</div>
 							<div class="col-4">
-								<a th:href="@{/user/login}" class="text-decoration-none fs-4 text-ymsecondary">
+								<a th:href="@{/login}" class="text-decoration-none fs-4 text-ymsecondary">
 									<ul class="list-unstyled">
 										<li>
 											<i class="bi bi-door-open" style="font-size: 1em;"></i>
@@ -83,8 +83,8 @@
 							<button type="button" th:if="${false}" class="col-4 text-ymsecondary bg-ymwhite border-0"><i class="bi bi-heart" style="font-size: 1em;"></i></button>
 							<!-- th:if문을 통해 로그인시 교체용 -->
 							<th:block th:if="${false}">
-								<a th:href="@{/member/logout}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-door-open" style="font-size: 1em;"></i></a>
-								<a th:href="@{/member/info}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-person" style="font-size: 1em;"></i></a>
+								<a th:href="@{/logout}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-door-open" style="font-size: 1em;"></i></a>
+								<a th:href="@{/mypage}" class="col-4 text-decoration-none fs-4 text-ymsecondary"><i class="bi bi-person" style="font-size: 1em;"></i></a>
 							</th:block>
 						</div>
 					</div>
