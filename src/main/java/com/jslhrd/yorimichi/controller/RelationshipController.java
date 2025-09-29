@@ -4,11 +4,23 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
 public class RelationshipController {
-	
+
+	//사용자가 팔로우 한 리스트
+	@GetMapping("/follow")
+	public void showFollow() {
+	}
+
+	//사용자가 팔로우 당한 리스트
+	@GetMapping("/follower")
+	public void showFollower() {
+	}
 
 	//내가 상대 팔로우
 	@PostMapping("/follow")
