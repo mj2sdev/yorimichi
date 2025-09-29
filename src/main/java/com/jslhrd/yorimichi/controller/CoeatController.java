@@ -20,9 +20,18 @@ public class CoeatController {
 	
 	//같이먹기 상세
 	@GetMapping("/coeat/{id}")
-	public void getCoeat() {
+	public void showCoeat() {
 		//return CoeatDTO coeat;
+		//같이먹기 상세 조회 메서드도 없는 것 같습니다.
 	}
+
+	@GetMapping("/coeats")
+	public void showCoeatList(){
+		//아이디 없이 최신 같이먹기를 불러올 수 있는 메서드가 있으면 좋겠습니다
+		//List<CoeatDTO> coeats = CoeatService.???();
+		//return coeats;
+	}
+
 	
 	//같이먹기 작성
 	@PostMapping("/coeat")

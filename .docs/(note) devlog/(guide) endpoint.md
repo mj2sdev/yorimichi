@@ -19,6 +19,7 @@
 ## NotificationController
 -   GET `/notification` |NotificationDTO| :: 알림버튼 - header의 알림리스트에 목록을 띄움. // header.html
 ## ReviewController
+-   GET `/reviews` |List<ReviewDTO>| :: 가게와 상관 없이 최신 리뷰 리스트를 불러옴.
 -   GET `/review/{id}` |ReviewDTO| :: 알림리뷰 - 리뷰 정보를 가져와서 리뷰 모달에 띄움 // header.html
 -   POST `/review` |List<ReviewDTO>| :: 리뷰작성 - 작성 // store/detail.html
 -   PUT `/review` || :: 리뷰수정 - 수정 // store/detail.html
@@ -33,6 +34,7 @@
 -   POST `/store/like` |List<LikeDTO>| :: 즐겨찾기 - 가게를 좋아요 목록에 등록함. // store/detail.html
 -   DELETE `/store/like` |List<LikeDTO>| :: 즐겨찾기해제 - 가게를 좋아요 목록에서 제거함. // store/detail.html
 ## CoeatController
+-   GET `/coeats` |List<CoeatDTO>| :: 최신 코잇 리스트를 불러옴.
 -   GET `/coeat/{coeatid}` |CoeatDTO| ::  알림코잇 - 같이먹기 정보를 가져와서 같이먹기 모달에 띄움 // header.html
 -   POST `/coeat` |List<CoeatDTO>| :: 같이먹기작성 - 작성 // store/detail.html
 -   PUT `/coeat` || :: 같이먹기수정 - 수정 // store/detail.html
@@ -55,11 +57,16 @@
 -   POST `/login` |실패시 사유| :: 로그인 - 로그인 처리용. 유효성 검사 필요. // login.html
 -   POST `/login/social` || :: 소셜로그인 - 소셜로그인 처리용 // login.html
 ## RelationshipController
+-   GET `/follow` || :: 사용자가 팔로우한 사람 리스트
+-   GET `/follower` || :: 사용자를 팔로우한 사람 리스트
 -   POST `/follow` || :: 유저팔로우 - 유저를 팔로우 목록에 넣음. // store/detail.html
 -   DELETE `/follow` || :: 유저언팔로우 - 유저를 팔로우 목록에서 뺌. // store/detail.html
 -   POST `/block` || :: 유저차단 - 유저차단목록에넣음 // mypage.html
 -   DELETE `/block` || :: 유저차단해제 - 차단목록에서 제거. // mypage.html
 -   DELETE `/follower` || :: 내팔로워 해제- 내 팔로워 목록에서 지워버림. // mypage.html
+
+## StationController
+- GET `/feed` || :: 리뷰와 같이먹기의 목록을 가져오는 용도.
 
 
 

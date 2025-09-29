@@ -3,6 +3,11 @@ package com.jslhrd.yorimichi.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jslhrd.yorimichi.domain.ReviewDTO;
+import com.jslhrd.yorimichi.service.ReviewService;
+
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,15 +19,28 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 
 
+
 @RestController
+@RequiredArgsConstructor
 public class ReviewController {
 	
+	private final ReviewService reviewService;
+
+
 	//리뷰상세
 	@GetMapping("/review/{id}")
 	public void showReview(@PathVariable Long id) {
 		//서비스에서 ReviewDTO 받아와서 리턴타입 고쳐야함
 		//return ReviewDTO review;
 	}
+
+	@GetMapping("/reviews")
+	public void showReviewList() {
+		//아이디 없이 최신 리뷰를 불러올 수 있는 메서드가 있으면 좋겠습니다
+		//List<ReviewDTO> reviews = reviewService.findAllByStoreId();
+		//return reviews;
+	}
+	
 
 	//리뷰작성
 	@PostMapping("/review")

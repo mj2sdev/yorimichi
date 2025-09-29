@@ -4,7 +4,11 @@
 <head>
 	<title> Yorimichi Project </title>
 <script>
-
+/*작성해야 하는 스크립트 리스트
+1.인기 맛집 리스트를 불러와야함.(비동기, 자동(타이머)&&수동(버튼))
+2.피드를 불러와야함.(비동기, 자동(타이머)) 피드에 같이먹기 리스트랑 리뷰 리스트를 동시에 담을 수 있는 DTO가 필요한 것 같음.
+아니면, 따로따로 가져와서 객체배열로 합치고 각 객체의 작성시간을 비교해다가 정렬해서 화면에 띄워야 함.
+*/
 </script>
 </head>
 
@@ -22,161 +26,102 @@
 				</div>
 			</div>
 		</div>
+		<!-- 클릭시 /store/list로 이동시키기. -->
 		<div class= container>
 			<div class="row">
 				<div class="col-4">
 					<div class="row">
-						<div class="col-3">
+						<div class="col">
+							<button class="btn border border-1" type="button" >
+								더 다양한 즐거움을 발견해요
+							</button>
+						</div>	
+					</div>
+					<th:block th:each="category : ${#numbers.sequence(1,3)}">
+					<div class="row py-3">
+						<div class="col-4">
 							<a th:href="@{/store/list}" class="btn btn-outline-secondary rounded-5 border-3 text-center">
 								<i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
 								<div class="fs-4 fw-bold">와쇼쿠</div>
 							</a>
 						</div>
 					</div>
+					</th:block>
 				</div>
-				<div class="col-4">
-					<th:block th:each="i : ${#numbers.sequence(1,5)}">
-							<div class="row border border-3">
-								<div class="col">
-									<button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
-										<span>가게명</span>
-										<span>별점</span>
-										<span>n분전</span>
-									</button>
-								</div>
+				<!-- 누르면 버튼들을 애니메이션과 함께 치워버리고 하단에 있는 인기 맛집 리스트를 보이게 바꾸고 애니메이션으로 다시 보이게 한다.-->
+				<!-- 스크롤이 아닌 버튼식으로 해야하는 게 좋을 거 같은 이유. 최상단에서 살짝 스크롤 했다고 인기 맛집으로 넘어가버릴 거 같음. -->
+				<div class="col-4 p-3">
+						<div class="row px-3 border border-2">
+							<div class="col">
+								지금 인기 있는 가게를 찾아가요
 							</div>
-						</th:block>
-				</div>
-				<div class="col-4">
-					<th:block th:each="i : ${#numbers.sequence(1,5)}">
-							<div class="row border border-3">
-								<div class="col">
-									<button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
-										<span>위치</span>
-										<span>가게명</span>
-										<span>카테고리</span>
-										<span>같이먹기</span>
-									</button>
-								</div>
-							</div>
-						</th:block>
-				</div>
-			</div>
-		</div>		
-		<div class="bg-ymwhite py-5">
-			<div class="container">
-				<div class="row">
-					<div class="col-9">
-						<th:block th:each="i : ${#numbers.sequence(1,5)}">
-							<div class="row border border-3">
+						</div>
+						<div class="bg-ymwhite p-4 my-3 border rounded-5 border-1">
+							<a th:href="@{/store/detail}" class="text-start text-decoration-none text-ymsecondary">
 								<div class="row">
 									<div class="col">
-										<button type="button" class="btn">사용자명</button>
+										<img src="" class="card-img-top my-3" alt="...">
 									</div>
-									<div class="col">
-										<span>같이먹기</span>
-									</div>
-									<div class="col">
-										<span>9월 15일</span>
-									</div>
-									
 								</div>
-								<button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
-									<span>가게명</span>
-									<span>메뉴: 가격 별점</span>
-									<span>임시내용 ...</span>
-								</button>
-							</div>
-						</th:block>
-					</div>
-					<div class="col-2">
-						<a th:href="@{/station}" class="text-decoration-none fs-4 text-ymsecondary">
+								<div class="row">
+									<div class="col fs-3 fw-bold my-3 text-ymprimary" th:text="가게이름">가게이름요청</div>
+								</div>
+								<div class="row">
+									<div class="fs-6 my-3" th:text="분류">분류요청</div>
+								</div>
+								<div class="row">
+									<div class="fs-6 my-3" th:text="위치">위치요청</div>
+								</div>
+								<div class="row my-3 justify-content-start">
+									<div class="col-2">별점</div>
+									<div class="col-4">
+										<th:block th:each="item : ${#numbers.sequence(1,5)}">
+											<i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
+										</th:block>
+									</div>
+									<div class="col-3">평가수</div>
+									<div class="col-3">1234</div>
+								</div>
+							</a>
+						</div>
+				</div>
+				<div class="col-4">
+					<div class="row">
+						<div class="col">
+							<a th:href="@{/station}" class="text-decoration-none fs-4 text-ymsecondary">
 							<ul class="list-unstyled text-center">
 								<li>
 									<i class="bi bi-bus-front" style="font-size: 1em;"></i>
 								</li>
 								<li>
-									<span style="font-size: 15px;">정류장</span>
+									<span style="font-size: 15px;">정류장에서 더 많은 사람과 만나요</span>
 								</li>
 							</ul>
 						</a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="bg-ymwhitesmoke py-5">
-			<div class="container">
-				<div class="row">
-					<div class="col">
-						<div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
-							<div class="carousel-inner">
-								<div class="carousel-item active" data-bs-interval="2000">
-									<div class="row text-center">
-										<div class="col-4 border border-2">
-											
-										</div>
-										<div class="col-4">
-											<a th:href="@{/store/list}"
-												class="btn btn-outline-secondary rounded-5 border-3 text-center">
-												<i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-												<div class="fs-4 fw-bold">와쇼쿠</div>
-											</a>
-										</div>
-										<div class="col-4 border border-2">
-											<a th:href="@{/store/list}"
-												class="btn btn-outline-secondary rounded-5 border-3 text-center">
-												<i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-												<div class="fs-4 fw-bold">와쇼쿠</div>
-											</a>
-										</div>
-									</div>
-								</div>
-								<div class="carousel-item" data-bs-interval="2000">
-									<div class="row text-center">
-										<div class="col-4 border border-2">
-											<a th:href="@{/store/list}"
-												class="btn btn-outline-secondary rounded-5 border-3 text-center">
-												<i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-												<div class="fs-4 fw-bold">와쇼쿠</div>
-											</a>
-										</div>
-										<div class="col-4">
-											<a th:href="@{/store/list}"
-												class="btn btn-outline-secondary rounded-5 border-3 text-center">
-												<i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-												<div class="fs-4 fw-bold">와쇼쿠</div>
-											</a>
-										</div>
-										<div class="col-4 border border-2">
-											<a th:href="@{/store/list}"
-												class="btn btn-outline-secondary rounded-5 border-3 text-center">
-												<i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-												<div class="fs-4 fw-bold">와쇼쿠</div>
-											</a>
-										</div>
-									</div>
-								</div>
-							</div>
-							<button class="carousel-control-prev" type="button"
-								data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
-								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-								<span class="visually-hidden">Previous</span>
-							</button>
-							<button class="carousel-control-next" type="button"
-								data-bs-target="#carouselExampleAutoplaying" data-bs-slide="next">
-								<span class="carousel-control-next-icon" aria-hidden="true"></span>
-								<span class="visually-hidden">Next</span>
-							</button>
 						</div>
 					</div>
+					<!--일정 시간마다 피드가 최신 것으로 갱신된다. 누르면 정류장으로 이동시킴.-->
+					<th:block th:each="i : ${#numbers.sequence(1,5)}">
+						<div class="row">
+							<div class="col">
+								<button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
+									<span>위치</span>
+									<span>가게명</span>
+									<span>카테고리</span>
+									<span>같이먹기</span>
+								</button>
+							</div>
+						</div>
+					</th:block>
 				</div>
 			</div>
-		</div>
+		</div>		
 		<div class="bg-ymwhite py-5">
 			<div class="container">
+				<!-- 인기 맛집 리스트는 일정 시간마다 비동기로 새로고침 되며, 새로고침 버튼도 둬서 사용자가 갱신할 수 있도록 한다.-->
 				<div class="row">
 					<div class="col text-center">
-						<h1 th:text="맛집리스트">블럭이름</h1>
+						<h1 th:text="인기맛집">인기 맛집</h1> 
 					</div>
 				</div>
 				<!-- <div class="row flexbox row-cols-3 g-4"> -->
@@ -217,5 +162,4 @@
 	</section>
 	<th:block th:replace="~{ layout/footer }"/>
 </body>
-
 </html>
