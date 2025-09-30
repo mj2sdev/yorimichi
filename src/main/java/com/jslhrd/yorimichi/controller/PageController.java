@@ -19,7 +19,7 @@ public class PageController {
 	public String showIndex() {
 		//맛집 리스트를 가져와야함, 최신기준
 		//음식 카테고리를 가져와야함
-		return "/index";
+		return "index";
 	}
 
 	//정류장으로 이동
@@ -27,7 +27,7 @@ public class PageController {
 	public String showStation() {
 		//사용자의 id를 바탕으로 팔로우, 팔로워 등을 가져올 수 있어야 함
 		//같이먹기나와 리뷰의 리스트를 가져올 수 있어야함
-		return "/station/list";
+		return "station/list";
 	}
 
 }
