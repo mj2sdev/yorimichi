@@ -102,6 +102,7 @@ CREATE TABLE address (
 -- 공통
 CREATE TABLE root (
     id         BIGINT   NOT NULL AUTO_INCREMENT,
+    type       ENUM('USER', 'STORE', 'FOOD', 'COEAT', 'COMMENT', 'REVIEW') NOT NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted_at DATETIME,
@@ -183,9 +184,9 @@ CREATE TABLE category (
     created_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT pk_category        PRIMARY KEY (id),
-    CONSTRAINT fk_category_parent FOREIGN KEY (parent_id) REFERENCES category(id) ON DELETE SET NULL,
-    CONSTRAINT uk_category_name   UNIQUE      (name)
+    CONSTRAINT pk_category             PRIMARY KEY (id),
+    CONSTRAINT fk_category_parent      FOREIGN KEY (parent_id) REFERENCES category(id) ON DELETE SET NULL,
+    CONSTRAINT uk_category_parent_name UNIQUE      (parent_id, name)
 );
 
 CREATE TABLE store_category (
@@ -327,7 +328,7 @@ CREATE TABLE coeat_request (
     coeat_id   BIGINT                                               NOT NULL,
     user_id    BIGINT                                               NOT NULL,
     status     ENUM('PENDING', 'APPROVED', 'REJECTED', 'CANCELLED') NOT NULL DEFAULT 'PENDING',
-    message    TEXT                                                 NOT NULL,
+    message    TEXT,
     -- reject_reason VARCHAR(200) -- 거절 사유
     created_at DATETIME                                             NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME                                             NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -417,74 +418,185 @@ CREATE TABLE notification (
 );
 
 
--- 인덱스
+/* =========================
+   주소 / 지역
+   ========================= */
 
--- 주소/지역
-CREATE INDEX idx_address_road_postal         ON address        (road_id, postal_id);
-CREATE INDEX idx_address_postal_id           ON address        (postal_id);
-CREATE INDEX idx_road_postal_postal_id       ON road_postal    (postal_id, road_id);
+-- 주소를 도로+우편번호로 정확히 조회(=,= 조건 최적화)
+CREATE INDEX idx_address_road_postal ON address (road_id, postal_id);
+
+-- 우편번호 단일 필터/집계 최적화
+CREATE INDEX idx_address_postal_id ON address (postal_id);
+
+-- 우편번호에서 연결 도로 역방향 탐색 최적화
+CREATE INDEX idx_road_postal_postal_id ON road_postal (postal_id, road_id);
 
 
--- 위경도(사각 범위 검색용)
-CREATE INDEX idx_address_lat_lon             ON address (latitude, longitude);
+/* =========================
+   위경도 (사각 범위 검색)
+   ========================= */
 
--- ② (역방향 조회 최적화) 매핑 테이블 보조 인덱스 추가
-CREATE INDEX idx_root_keyword_keyword_id     ON root_keyword (keyword_id);
-CREATE INDEX idx_root_image_image_id         ON root_image   (image_id);
+-- 사각 범위(BBOX) 검색용 후보군 축소 인덱스
+CREATE INDEX idx_address_lat_lon ON address (latitude, longitude);
 
--- 상점/카테고리/시설
-CREATE INDEX idx_store_address_id            ON store                   (address_id);
-CREATE INDEX idx_category_parent_id          ON category                (parent_id);
--- store_category PK(store_id,category_id)가 있지만 역방향 조회도 고려
-CREATE INDEX idx_store_category_category_id  ON store_category          (category_id);
-CREATE INDEX idx_store_facility_category_id  ON store_facility_category (facility_category_id);
 
--- 음식
-CREATE INDEX idx_food_store_id               ON food (store_id);
--- 가격대 필터링이 잦으면
-CREATE INDEX idx_food_store_price            ON food (store_id, price);
+/* =========================
+   루트(슈퍼타입)
+   ========================= */
 
--- 유저/소셜
-CREATE INDEX idx_user_role_id                ON user           (role_id);
+-- 타입별 최신/범위 조회 최적화 (type 선행 + id 정렬/범위)
+CREATE INDEX idx_root_type_id ON root (type, id);
 
--- 북마크/팔로우/차단/좋아요
--- PK(user_id,store_id)지만 '가게의 북마크 수' 같은 조회 대비
-CREATE INDEX idx_bookmark_store_user         ON bookmark (store_id, user_id);
-CREATE INDEX idx_follow_followee_id          ON follow   (followee_id);
-CREATE INDEX idx_block_blockee_id            ON block    (blockee_id);
-CREATE INDEX idx_likes_root_id               ON likes    (root_id);
 
--- ③ (선택·권장) 좋아요 사용자 기준 조회 최적화
-CREATE INDEX idx_likes_user_id               ON likes (user_id);
+/* =========================
+   매핑 테이블 (역방향 조회 보조)
+   ========================= */
 
--- 리뷰
-CREATE INDEX idx_review_store_id             ON review (store_id);
-CREATE INDEX idx_review_user_id              ON review (user_id);
-CREATE INDEX idx_review_food_food            ON review_food(food_id);
-CREATE INDEX idx_review_store_created        ON review(store_id, id DESC);
+-- 키워드 -> 루트 역방향 탐색 최적화
+CREATE INDEX idx_root_keyword_keyword_id ON root_keyword (keyword_id);
 
--- 코잇(모임)
-CREATE INDEX idx_coeat_user_id               ON coeat (user_id);
-CREATE INDEX idx_coeat_store_id              ON coeat (store_id);
--- '모집중 & 시작 임박' 리스트용
-CREATE INDEX idx_coeat_status_meeting_at     ON coeat (status, meeting_at);
+-- 이미지 -> 루트 역방향 탐색 최적화
+CREATE INDEX idx_root_image_image_id ON root_image (image_id);
 
--- 코잇 신청
-CREATE INDEX idx_coeat_request_user_status   ON coeat_request (user_id, status);
-CREATE INDEX idx_coeat_request_coeat_status  ON coeat_request (coeat_id, status);
 
--- 댓글(코잇 전용 모델일 때)
-CREATE INDEX idx_comment_coeat_parent        ON comment (coeat_id, parent_id);
-CREATE INDEX idx_comment_coeat_id            ON comment (coeat_id, id);
-CREATE INDEX idx_comment_user_id             ON comment (user_id);
-CREATE INDEX idx_comment_parent_id           ON comment (parent_id);
+/* =========================
+   상점 / 카테고리 / 시설
+   ========================= */
 
--- 신고
-CREATE INDEX idx_report_reporter_id          ON report (reporter_id);
-CREATE INDEX idx_report_root_id              ON report (root_id);
-CREATE INDEX idx_report_status               ON report (status);
+-- 주소별 상점 목록/집계
+CREATE INDEX idx_store_address_id ON store (address_id);
 
--- 알림
-CREATE INDEX idx_notification_target_read    ON notification (target_user_id, read_at);
-CREATE INDEX idx_notification_actor          ON notification (actor_user_id);
-CREATE INDEX idx_notification_root           ON notification (root_id);
+-- 부모 카테고리 하위 목록 조회
+CREATE INDEX idx_category_parent_id ON category (parent_id);
+
+-- 카테고리 -> 상점 역방향 탐색
+CREATE INDEX idx_store_category_category_id ON store_category (category_id);
+
+-- 시설카테고리 -> 상점 역방향 탐색
+CREATE INDEX idx_store_facility_category_id ON store_facility_category (facility_category_id);
+
+
+/* =========================
+   음식
+   ========================= */
+
+-- 상점의 메뉴 전체 조회
+CREATE INDEX idx_food_store_id ON food (store_id);
+
+-- 상점 내 가격대 필터/정렬 (store_id 선행 + price 범위/정렬)
+CREATE INDEX idx_food_store_price ON food (store_id, price);
+
+
+/* =========================
+   유저 / 소셜
+   ========================= */
+
+-- 역할/권한별 사용자 조회/집계
+CREATE INDEX idx_user_role_id ON user (role_id);
+
+
+/* =========================
+   북마크 / 팔로우 / 차단 / 좋아요
+   ========================= */
+
+-- 가게의 북마크 수/목록 (역방향)
+CREATE INDEX idx_bookmark_store_user ON bookmark (store_id, user_id);
+
+-- 나를 팔로우하는 사용자 목록 (역방향)
+CREATE INDEX idx_follow_followee_id ON follow (followee_id);
+
+-- 나를 차단한 사용자 목록 (역방향)
+CREATE INDEX idx_block_blockee_id ON block (blockee_id);
+
+-- 컨텐츠의 좋아요 수/목록 (루트 기준 역방향)
+CREATE INDEX idx_likes_root_id ON likes (root_id);
+
+-- 사용자가 누른 좋아요 목록 (마이페이지 등)
+CREATE INDEX idx_likes_user_id ON likes (user_id);
+
+
+/* =========================
+   리뷰
+   ========================= */
+
+-- 가게별 리뷰 조회
+CREATE INDEX idx_review_store_id ON review (store_id);
+
+-- 사용자별 리뷰 조회
+CREATE INDEX idx_review_user_id ON review (user_id);
+
+-- 메뉴(음식)별 리뷰 역방향 조회
+CREATE INDEX idx_review_food_food ON review_food (food_id);
+
+-- 가게 리뷰 최신순 페이징 (store_id 선행 + id DESC)
+CREATE INDEX idx_review_store_created ON review (store_id, id DESC);
+
+
+/* =========================
+   코잇(모임)
+   ========================= */
+
+-- 사용자가 만든 모임 목록
+CREATE INDEX idx_coeat_user_id ON coeat (user_id);
+
+-- 상점별 모임 목록
+CREATE INDEX idx_coeat_store_id ON coeat (store_id);
+
+-- 모집중&임박 리스트 (status 선행 + 시간 범위/정렬)
+CREATE INDEX idx_coeat_status_meeting_at ON coeat (status, meeting_at);
+
+
+/* =========================
+   코잇 신청
+   ========================= */
+
+-- 사용자 신청 내역을 상태로 필터
+CREATE INDEX idx_coeat_request_user_status ON coeat_request (user_id, status);
+
+-- 모임 단위 신청자 목록(대기/승인 등)
+CREATE INDEX idx_coeat_request_coeat_status ON coeat_request (coeat_id, status);
+
+
+/* =========================
+   댓글 (코잇 전용 모델)
+   ========================= */
+
+-- 특정 모임의 대댓글 트리 조회 (coeat_id + parent_id)
+CREATE INDEX idx_comment_coeat_parent ON comment (coeat_id, parent_id);
+
+-- 특정 모임 댓글의 시간/ID 순 페이징
+CREATE INDEX idx_comment_coeat_id ON comment (coeat_id, id);
+
+-- 사용자별 댓글 활동
+CREATE INDEX idx_comment_user_id ON comment (user_id);
+
+-- 한 부모 아래 자식 댓글들 조회
+CREATE INDEX idx_comment_parent_id ON comment (parent_id);
+
+
+/* =========================
+   신고
+   ========================= */
+
+-- 사용자가 올린 신고 내역
+CREATE INDEX idx_report_reporter_id ON report (reporter_id);
+
+-- 특정 컨텐츠에 들어온 신고 목록
+CREATE INDEX idx_report_root_id ON report (root_id);
+
+-- 상태별 업무 큐(관리화면)
+CREATE INDEX idx_report_status ON report (status);
+
+
+/* =========================
+   알림
+   ========================= */
+
+-- 미읽음 알림 빠른 조회/읽음 처리 (target_user_id + read_at NULL)
+CREATE INDEX idx_notification_target_read ON notification (target_user_id, read_at);
+
+-- 특정 사용자가 발생시킨 활동 기반 알림
+CREATE INDEX idx_notification_actor ON notification (actor_user_id);
+
+-- 특정 컨텐츠 관련 알림
+CREATE INDEX idx_notification_root ON notification (root_id);
