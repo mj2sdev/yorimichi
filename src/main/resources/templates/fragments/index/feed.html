@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<body>
+	<template th:fragment="template" id="feed-template">
+		<button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
+			<span class="feed-address">위치</span>
+			<span class="feed-store-name">가게명</span>
+			<span class="feed-store-category">카테고리</span>
+			<span class="feed-category">같이먹기</span>
+			<input type="hidden" data-feedid>
+		</button>
+	</template>
+</body>
+</html>

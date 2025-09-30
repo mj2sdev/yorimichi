@@ -54,6 +54,4 @@ async function fetchStores() {
 	}
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-	fetchStores();
-})
+fetchStores();
