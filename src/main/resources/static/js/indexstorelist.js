@@ -53,3 +53,5 @@ async function fetchStores() {
 		fetchTimerId = setTimeout(fetchStores, 30000);
 	}
 }
+
+fetchStores();
