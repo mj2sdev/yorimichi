@@ -7,6 +7,7 @@ import com.jslhrd.yorimichi.service.ReviewService;
 
 import lombok.RequiredArgsConstructor;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,43 +25,44 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequiredArgsConstructor
 public class ReviewController {
 	
-	//private final ReviewService reviewService;
+	private final ReviewService reviewService;
 
 
 	//리뷰상세
 	@GetMapping("/review/{id}")
-	public void showReview(@PathVariable Long id) {
-		//서비스에서 ReviewDTO 받아와서 리턴타입 고쳐야함
-		//return ReviewDTO review;
+	public ReviewDTO showReview(@PathVariable("id") Long reviewId) {
+		return reviewService.findById(reviewId);
 	}
 
+	//특정 가게 리뷰 리스트
+	@GetMapping("/reviews/{id}")
+	public List<ReviewDTO> showReviewListById(@PathVariable("id") Long StoreId) {
+		return reviewService.findAllByStoreId(StoreId);
+	}
+
+	//리뷰 리스트
 	@GetMapping("/reviews")
-	public void showReviewList() {
-		//아이디 없이 최신 리뷰를 불러올 수 있는 메서드가 있으면 좋겠습니다
-		//List<ReviewDTO> reviews = reviewService.findAllByStoreId();
-		//return reviews;
+	public List<ReviewDTO> showReviewlatest() {
+		return reviewService.findAll();
 	}
 	
 
 	//리뷰작성
 	@PostMapping("/review")
 	public void submitReview(@RequestBody ReviewDTO review ) {
-		//TODO: process POST request
-		//서비스로 review 보내기
-		//return List<ReviewDTO> reviews
+		reviewService.save(review);
 	}
 	
 	//리뷰수정
 	@PutMapping("/review")
 	public void updateReview(@RequestBody ReviewDTO review) {
-		//서비스로 보내서 수정
+		reviewService.update(review);
 	}
 
 	//리뷰삭제
-	@DeleteMapping("/review")
-	public void deleteReview(@RequestBody Long review){
-		//서비스로 보내서 삭제
-		//return List<ReviewDTO> reviews
+	@DeleteMapping("/review/{id}")
+	public void deleteReview(@PathVariable("id") Long reviewId, Principal principal){
+		reviewService.delete(reviewId,principal);
 	}
 	
 }
