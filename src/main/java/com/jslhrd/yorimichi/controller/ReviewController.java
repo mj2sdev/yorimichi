@@ -60,9 +60,9 @@ public class ReviewController {
 	}
 
 	//리뷰삭제
-	@DeleteMapping("/review/{id}")
-	public void deleteReview(@PathVariable("id") Long reviewId, Principal principal){
-		reviewService.delete(reviewId,principal);
+	@DeleteMapping("/review")
+	public void deleteReview(@RequestBody ReviewDTO review, Principal principal){
+		reviewService.delete(review,principal);
 	}
 	
 }

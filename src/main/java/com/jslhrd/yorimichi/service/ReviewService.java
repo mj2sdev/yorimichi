@@ -60,9 +60,9 @@ public interface ReviewService {
 	/**
 	 * 리뷰아이디 (reviewId) 를 이용해 리뷰를 삭제합니다.
 	 * TODO: 컨트롤러의 임시 작성을 위해 principal을 추가했습니다. 검토 바랍니다.
-	 * @param reviewId 리뷰 아이디
+	 * @param review 리뷰 작성자id와 리뷰id를 받기 위함.
 	 * @param principal 요청자 아이디
 	 */
-	public void delete(Long reviewId,Principal principal);
+	public void delete(ReviewDTO review,Principal principal);
 	
 }
