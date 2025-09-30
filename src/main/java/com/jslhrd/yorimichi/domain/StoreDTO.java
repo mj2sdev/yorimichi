@@ -37,13 +37,8 @@ public class StoreDTO extends RootDTO {
 	 * 상점 번호
 	 */
 	private String phone;
-
-  
-	private Double avgRating;
-	private Integer reviewCount;
-	private Integer likeCount;
 	
-  
+
 	/**
 	 * 주소
 	 */

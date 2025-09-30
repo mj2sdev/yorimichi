@@ -39,6 +39,8 @@ public interface StoreMapper {
 	 */
 	Optional<StoreDTO> selectById(@Param("id") Long id);
 
+	int existsById(Long id);
+
 	/**
 	 * 상점 수정.
 	 *

@@ -158,6 +158,16 @@
         VALUES (#{id}, #{addressId}, #{name}, #{description}, #{phone})
     </insert>
 
+    <select id="existsById" parameterType="Long" resultType="int">
+        SELECT 1
+        FROM store s
+        JOIN root r ON r.id = s.id
+        WHERE s.id = #{id}
+        AND
+        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        LIMIT 1
+    </select>
+
     <!-- UPDATE: root.updated_at 명시 갱신 -->
     <update id="update" parameterType="StoreDTO">
         UPDATE store s
