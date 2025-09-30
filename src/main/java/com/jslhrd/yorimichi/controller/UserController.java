@@ -22,13 +22,13 @@ public class UserController {
 	//유저 상세페이지 이동
 	@GetMapping("/detail/{id}")
 	public String showUserDetail(@PathVariable Long userId) {
-		return "/user/detail";
+		return "user/detail";
 	}
 
 	//마이페이지 이동
 	@GetMapping("/mypage")
 	public String showMypage() {
-		return "/user/mypage";
+		return "user/mypage";
 	}
 
 	//자기 정보 수정
