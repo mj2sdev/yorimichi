@@ -1,6 +1,9 @@
 package com.jslhrd.yorimichi.controller;
 
 import com.jslhrd.yorimichi.domain.UserDTO;
+import com.jslhrd.yorimichi.service.AccountService;
+
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,8 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @Controller
+@RequiredArgsConstructor
 public class AuthController {
 	
+	//private final AccountService accountService;
+
 	//로그아웃
 	@PostMapping("/logout")
 	public String logout() {

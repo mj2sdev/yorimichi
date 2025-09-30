@@ -3,6 +3,9 @@ package com.jslhrd.yorimichi.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jslhrd.yorimichi.domain.CoeatDTO;
+import com.jslhrd.yorimichi.service.CoeatService;
+
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +19,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
+@RequiredArgsConstructor
 public class CoeatController {
 	
+	//private final CoeatService coeatService;
+
 	//같이먹기 상세
 	@GetMapping("/coeat/{id}")
 	public void showCoeat() {
