@@ -4,13 +4,19 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.RootMapper">
 
-    <insert id="insert" parameterType="RootDTO">
-        INSERT INTO root (id)
-        VALUES (#{id})
+    <insert id="insert"
+            parameterType="RootDTO"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
+        INSERT INTO root (type)
+        VALUES (#{type})
     </insert>
 
-    <delete id="deleteById" parameterType="Long">
-        DELETE FROM root WHERE id = #{id}
-    </delete>
+    <update id="deleteById" parameterType="Long">
+        UPDATE root
+        SET deleted_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
 
 </mapper>
