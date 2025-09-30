@@ -1,0 +1,4 @@
+gemini:
+  aip-key: 1234
+  model: modal
+  jsonMimeType: application/json
