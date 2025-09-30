@@ -13,10 +13,10 @@
         VALUES (#{type})
     </insert>
 
-    <delete id="deleteById" parameterType="Long">
-        DELETE
-        FROM root
+    <update id="deleteById" parameterType="Long">
+        UPDATE root
+        SET deleted_at = CURRENT_TIMESTAMP
         WHERE id = #{id}
-    </delete>
+    </update>
 
 </mapper>
