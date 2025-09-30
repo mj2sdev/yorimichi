@@ -9,14 +9,14 @@
             useGeneratedKeys="true"
             keyProperty="id"
             keyColumn="id">
-        INSERT INTO root ()
-        VALUES ()
+        INSERT INTO root (type)
+        VALUES (#{type})
     </insert>
 
-    <update id="deleteById" parameterType="Long">
-        UPDATE root
-        SET deleted_at = CURRENT_TIMESTAMP
+    <delete id="deleteById" parameterType="Long">
+        DELETE
+        FROM root
         WHERE id = #{id}
-    </update>
+    </delete>
 
 </mapper>
