@@ -1,5 +1,6 @@
 package com.jslhrd.yorimichi.domain;
 
+import com.jslhrd.yorimichi.enums.RootType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,11 @@ public class RootDTO {
 	 * PK: 루트 ID
 	 */
 	private Long id;
+
+	/**
+	 * 루트 타입 (USER, STORE, FOOD, COEAT, COMMENT, REVIEW)
+	 */
+	private RootType type;
 
 	/**
 	 * 생성일시 (DB 자동 생성)
