@@ -35,7 +35,7 @@ public class StoreController {
 	
 
 	//첫검색 혹은 검색 버튼을 눌러서 검색.
-	@GetMapping("/search?keyword={keyword}&tags={tags}")
+	@GetMapping("/search?keyword={keyword}")
 	public String showStoresBySearch() {
 		//List<StoreDTO> stores
 		//List<StoreCategoryDTO> categories

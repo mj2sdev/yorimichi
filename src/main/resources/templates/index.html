@@ -5,27 +5,11 @@
 	<title> Yorimichi Project </title>
 <script>
 /*작성해야 하는 스크립트 리스트
-1.인기 맛집 리스트를 불러와야함.(비동기, 자동(타이머)&&수동(버튼))
 2.피드를 불러와야함.(비동기, 자동(타이머)) 피드에 같이먹기 리스트랑 리뷰 리스트를 동시에 담을 수 있는 DTO가 필요한 것 같음.
 아니면, 따로따로 가져와서 객체배열로 합치고 각 객체의 작성시간을 비교해다가 정렬해서 화면에 띄워야 함.
 */
-//인기 맛집 리스트 불러오기.
-fetch("/search")
-.then(response => { 
-    if(!response.ok){
-        throw new error(response.staturText);
-    }
-    return response.json();
-})
-.then(stores => {
-    console.log(stores);
-})
-.catch(error => {
-    console.log('통신 오류:', error);
-});
-
-
 </script>
+<script defer src="/js/indexstorelist.js"></script> <!--인기 맛집 리스트 불러오기.js 비동기, 자동(타이머)&&수동(버튼)) 수동 만들어야함.-->
 </head>
 
 <body>
@@ -141,41 +125,13 @@ fetch("/search")
 					</div>
 				</div>
 				<!-- <div class="row flexbox row-cols-3 g-4"> -->
-				<div class="gap-4" style="display:grid; grid-template-columns: repeat(3,1fr);">
-					<template id="storelist-area">
-						<div class="bg-ymwhite p-4 my-3 border rounded-5 border-1">
-							<a th:href="@{/store/detail/${#}}" class="text-start text-decoration-none text-ymsecondary">
-								<div class="row">
-									<div class="col">
-										<img src="" class="card-img-top my-3" alt="...">
-									</div>
-								</div>
-								<div class="row">
-									<div class="col fs-3 fw-bold my-3 text-ymprimary" th:text="가게이름">가게이름요청</div>
-								</div>
-								<div class="row">
-									<div class="fs-6 my-3" th:text="분류">분류요청</div>
-								</div>
-								<div class="row">
-									<div class="fs-6 my-3" th:text="위치">위치요청</div>
-								</div>
-								<div class="row my-3 justify-content-start">
-									<div class="col-2">별점</div>
-									<div class="col-4">
-										<th:block th:each="item : ${#numbers.sequence(1,5)}">
-											<i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
-										</th:block>
-									</div>
-									<div class="col-3">평가수</div>
-									<div class="col-3">1234</div>
-								</div>
-							</a>
-						</div>
-					</template>
+				<div class="storeList gap-4" style="display:grid; grid-template-columns: repeat(3,1fr);">
+					
 				</div>
 			</div>
 		</div>
 	</section>
 	<th:block th:replace="~{ layout/footer }"/>
+	<th:block th:replace="~{ fragments/index/storelist/template :: template }"/>
 </body>
 </html>
