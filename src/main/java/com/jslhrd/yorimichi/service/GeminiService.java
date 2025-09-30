@@ -9,7 +9,7 @@ import com.jslhrd.yorimichi.domain.StoreDTO;
  * 해당 서비스는 Gemini API 기능을 정의하는 인터페이스 입니다.
  * 인터페이스를 구현하여 각종 기능을 구현해주시기 바랍니다.
  * 
- * @author @mj2sdev
+ * @author mj2sdev
  * @since 1.0
  */
 public interface GeminiService {
@@ -29,7 +29,7 @@ public interface GeminiService {
 	 * @param count 몇개를 뽑아낼지를 결정합니다.
 	 * @return {@code List<String>} 가게명 리스트를 반환합니다.
 	 */
-	public List<String> findStoreNamesByRegion(String region, String count);
+	public List<String> findStoreNamesByRegion(String region, Integer count);
 
 	/**
 	 * 가게명 (name) 으로 가게정보를 뽑아냅니다.

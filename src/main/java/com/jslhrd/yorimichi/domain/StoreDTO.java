@@ -38,7 +38,12 @@ public class StoreDTO extends RootDTO {
 	 */
 	private String phone;
 
-
+  
+	private Double avgRating;
+	private Integer reviewCount;
+	private Integer likeCount;
+	
+  
 	/**
 	 * 주소
 	 */
