@@ -27,7 +27,7 @@
 ## StoreController
 -   GET `/search` |List<StoreDTO>| :: 가게 리스트를 비동기로 불러오기 위함. index 페이지에서 맛집 리스트를 요구하기 때문에, 키워드나 태그 없이 가져오도록 함.
 -   GET `/search?keyword={keyword}&tags={tags}` |List<StoreDTO>|List<StoreCategoryDTO>|List<StoreFacilityCategoryDTO>:: 검색 - 동기식 리스트 페이지로 이동.
--   GET `/search?keyword={keyword}&tags={tags}`|List<StoreDTO>| :: 필터 - 비동기식 리스트만 갱신 // header.html
+-   GET `/search/async?keyword={keyword}&tags={tags}`|List<StoreDTO>| :: 필터 - 비동기식 리스트만 갱신 // header.html
 -   GET `/store/detail` |StoreDTO|:: 가게 상세 - 클릭시 특정 가게의 상세페이지로 감. // index.html
 -   POST `/store/bookmark` |List<BookmarkDTO>| :: 즐겨찾기 - 가게를 즐겨찾기 목록에 등록함. // store/detail.html
 -   DELETE `/store/bookmark` |List<BookmarkDTO>| :: 즐겨찾기해제 - 가게를 즐겨찾기 목록에서 제거함. // store/detail.html
