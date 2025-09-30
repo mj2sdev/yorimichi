@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html th:fragment="params(head, content)" xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<th:block th:replace="~{ fragments/common/metadata }"/>
+	<th:block th:replace="~{ fragments/common/resource }"/>
+	<th:block th:replace="${ head }"/>
+</head>
+<body>
+	<header th:replace="~{ fragments/header :: header }"></header>
+	<th:block th:replace="${ content }"></th:block>
+	<footer th:replace="~{ fragments/footer :: footer }"></footer>
+</body>
+</html>
