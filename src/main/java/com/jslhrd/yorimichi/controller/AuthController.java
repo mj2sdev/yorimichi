@@ -48,6 +48,12 @@ public class AuthController {
 
 		return result;
 	}
+
+	//로그인 화면으로 이동 PageController에서 옮겼습니다. 헷갈리지 않기 위해.
+	@GetMapping("/login")
+	public String showLogin(){
+		return "/user/login";
+	}
 	
 	@PostMapping("/login")
 	public String login(@RequestBody UserDTO user) {

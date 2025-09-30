@@ -3,9 +3,13 @@
 
 <head>
 	<title> Yorimichi Project </title>
+<script>
+
+</script>
 </head>
 
 <body>
+	<th:block th:replace="~{ layout/header }"/>
 	<h1 th:text="${message}">Welcome!</h1>
 	<section>
 		<div class="bg-ymprimary py-5 bg-gradient">
@@ -18,22 +22,89 @@
 				</div>
 			</div>
 		</div>
-		<div class="bg-ymwhite py-5">
-			<div class="container">
-				<div class="row row-cols-6">
-					<th:block th:each="item : ${#numbers.sequence(1,7)}">
-						<div class="col my-4">
-							<a th:href="@{/store/list}"
-								class="btn btn-outline-secondary rounded-5 border-3 text-center">
-								<i class="bi bi-alarm" style="font-size: 2em; color: #007bff;"></i>
-								<div class="fs-4 fw-bold" >와쇼쿠</div>
+		<div class= container>
+			<div class="row">
+				<div class="col-4">
+					<div class="row">
+						<div class="col-3">
+							<a th:href="@{/store/list}" class="btn btn-outline-secondary rounded-5 border-3 text-center">
+								<i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
+								<div class="fs-4 fw-bold">와쇼쿠</div>
 							</a>
 						</div>
-					</th:block>
+					</div>
+				</div>
+				<div class="col-4">
+					<th:block th:each="i : ${#numbers.sequence(1,5)}">
+							<div class="row border border-3">
+								<div class="col">
+									<button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
+										<span>가게명</span>
+										<span>별점</span>
+										<span>n분전</span>
+									</button>
+								</div>
+							</div>
+						</th:block>
+				</div>
+				<div class="col-4">
+					<th:block th:each="i : ${#numbers.sequence(1,5)}">
+							<div class="row border border-3">
+								<div class="col">
+									<button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
+										<span>위치</span>
+										<span>가게명</span>
+										<span>카테고리</span>
+										<span>같이먹기</span>
+									</button>
+								</div>
+							</div>
+						</th:block>
+				</div>
+			</div>
+		</div>		
+		<div class="bg-ymwhite py-5">
+			<div class="container">
+				<div class="row">
+					<div class="col-9">
+						<th:block th:each="i : ${#numbers.sequence(1,5)}">
+							<div class="row border border-3">
+								<div class="row">
+									<div class="col">
+										<button type="button" class="btn">사용자명</button>
+									</div>
+									<div class="col">
+										<span>같이먹기</span>
+									</div>
+									<div class="col">
+										<span>9월 15일</span>
+									</div>
+									
+								</div>
+								<button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
+									<span>가게명</span>
+									<span>메뉴: 가격 별점</span>
+									<span>임시내용 ...</span>
+								</button>
+							</div>
+						</th:block>
+					</div>
+					<div class="col-2">
+						<a th:href="@{/station}" class="text-decoration-none fs-4 text-ymsecondary">
+							<ul class="list-unstyled text-center">
+								<li>
+									<i class="bi bi-bus-front" style="font-size: 1em;"></i>
+								</li>
+								<li>
+									<span style="font-size: 15px;">정류장</span>
+								</li>
+							</ul>
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div class="bg-ymwhite py-5">
+		<div class="bg-ymwhitesmoke py-5">
 			<div class="container">
 				<div class="row">
 					<div class="col">
@@ -42,11 +113,7 @@
 								<div class="carousel-item active" data-bs-interval="2000">
 									<div class="row text-center">
 										<div class="col-4 border border-2">
-											<a th:href="@{/store/list}"
-												class="btn btn-outline-secondary rounded-5 border-3 text-center">
-												<i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-												<div class="fs-4 fw-bold">와쇼쿠</div>
-											</a>
+											
 										</div>
 										<div class="col-4">
 											<a th:href="@{/store/list}"
@@ -105,7 +172,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="bg-ymwhitesmoke py-5">
+		<div class="bg-ymwhite py-5">
 			<div class="container">
 				<div class="row">
 					<div class="col text-center">
@@ -148,6 +215,7 @@
 			</div>
 		</div>
 	</section>
+	<th:block th:replace="~{ layout/footer }"/>
 </body>
 
 </html>
