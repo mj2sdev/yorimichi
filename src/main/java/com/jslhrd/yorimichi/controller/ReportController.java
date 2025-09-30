@@ -4,12 +4,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jslhrd.yorimichi.domain.ReportDTO;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
+@RequiredArgsConstructor
 public class ReportController {
 
+	//private final ReportService reportService;
 
 	//신고하기
 	@PostMapping("/report")

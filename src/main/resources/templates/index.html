@@ -9,6 +9,22 @@
 2.피드를 불러와야함.(비동기, 자동(타이머)) 피드에 같이먹기 리스트랑 리뷰 리스트를 동시에 담을 수 있는 DTO가 필요한 것 같음.
 아니면, 따로따로 가져와서 객체배열로 합치고 각 객체의 작성시간을 비교해다가 정렬해서 화면에 띄워야 함.
 */
+//인기 맛집 리스트 불러오기.
+fetch("/search")
+.then(response => { 
+    if(!response.ok){
+        throw new error(response.staturText);
+    }
+    return response.json();
+})
+.then(stores => {
+    console.log(stores);
+})
+.catch(error => {
+    console.log('통신 오류:', error);
+});
+
+
 </script>
 </head>
 
@@ -126,9 +142,9 @@
 				</div>
 				<!-- <div class="row flexbox row-cols-3 g-4"> -->
 				<div class="gap-4" style="display:grid; grid-template-columns: repeat(3,1fr);">
-					<th:block th:each="item : ${#numbers.sequence(1,6)}"><!-- 임시로 number로 해뒀지만 실제로는 객체 배열이 와야합니다.-->
+					<template id="storelist-area">
 						<div class="bg-ymwhite p-4 my-3 border rounded-5 border-1">
-							<a th:href="@{/store/detail}" class="text-start text-decoration-none text-ymsecondary">
+							<a th:href="@{/store/detail/${#}}" class="text-start text-decoration-none text-ymsecondary">
 								<div class="row">
 									<div class="col">
 										<img src="" class="card-img-top my-3" alt="...">
@@ -155,7 +171,7 @@
 								</div>
 							</a>
 						</div>
-					</th:block>
+					</template>
 				</div>
 			</div>
 		</div>

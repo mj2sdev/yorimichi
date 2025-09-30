@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequiredArgsConstructor
 public class ReviewController {
 	
-	private final ReviewService reviewService;
+	//private final ReviewService reviewService;
 
 
 	//리뷰상세
