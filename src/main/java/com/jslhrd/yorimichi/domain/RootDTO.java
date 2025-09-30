@@ -17,35 +17,43 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-public class RootDTO {
+public abstract class RootDTO {
 
 	/**
 	 * PK: 루트 ID
 	 */
 	private Long id;
-
 	/**
 	 * 루트 타입 (USER, STORE, FOOD, COEAT, COMMENT, REVIEW)
 	 */
 	private RootType type;
-
 	/**
 	 * 생성일시 (DB 자동 생성)
 	 */
 	private LocalDateTime createdAt;
-
 	/**
 	 * 수정일시 (DB 자동 갱신)
 	 */
 	private LocalDateTime updatedAt;
-
 	/**
 	 * 삭제일시
 	 */
 	private LocalDateTime deletedAt;
-
 	/**
 	 * 숨김일시
 	 */
 	private LocalDateTime blindedAt;
+
+	/**
+	 * MyBatis용 기본 생성자
+	 */
+	protected RootDTO() {
+	}
+
+	/**
+	 * 서브타입에서만 호출
+	 */
+	protected RootDTO(RootType type) {
+		this.type = type;
+	}
 }
