@@ -45,4 +45,17 @@ public interface AccountService {
 	 */
 	public void signupSocial(String token);
 
+	/**
+	 * 사용자가 입력한 닉네임이 DB에서 중복되어 있는지 유효성검사
+	 *
+	 * @param nickname
+	 */
+	public boolean validateNickname(String nickname);
+
+	/**
+	 * 이메일 인증을 구현해야 합니다.
+	 * @param email
+	 * @return
+	 */
+	public boolean verificateEmail(String email);
 }
