@@ -30,6 +30,14 @@ public interface UserService extends UserDetailsService {
 	public List<UserDTO> findAll(SearchDTO dto);
 	
 	/**
+	 * 유저 상세 정보를 조회합니다.
+	 * 
+	 * @param userId
+	 * @return 유저 특정 정보 반환.
+	 */
+	public UserDTO findById(Long userId);
+
+	/**
 	 * 기존 사용자 정보를 수정합니다.
 	 * 
 	 * @param dto 수정할 사용자 정보가 담긴 DTO
@@ -43,19 +51,4 @@ public interface UserService extends UserDetailsService {
 	 */
 	public void delete(Long userId);
 	
-	/**
-	 * 유저(userId)가 팔로우 한 유저의 리스트
-	 * 
-	 * @param userId 유저 아이디
-	 * @return {@code List<UserDTO} 팔로우 한 유저의 목록
-	 */
-	public List<UserDTO> findAllByFollowing(Long userId);
-
-	/**
-	 * 유저(userId)를 팔로우 한 유저의 리스트
-	 * 
-	 * @param userId 유저 아이디
-	 * @return {@code List<UserDTO} 팔로우 하고있는 유저의 리스트
-	 */
-	public List<UserDTO> findAllByFollower(Long userId);
 }
