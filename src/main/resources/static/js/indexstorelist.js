@@ -4,12 +4,10 @@ const state = {
 
 function render() {
 	const storeListContainer = document.querySelector('.storeList');
-	const storeTemplate = document.getElementById('.storelist-template');
-
+	const storeTemplate = document.getElementById('storelist-template');
 	storeListContainer.innerHTML = '';
-	
 	state.stores.forEach(store => {
-		const clone = document.importNode(storeItemTemplate.content, true);
+		const clone = document.importNode(storeTemplate.content, true);
 		const link = clone.querySelector('a');
 		link.href = `/store/detail/${store.id}`;
 		clone.querySelector('.store-name').textContent = store.storeName;
@@ -17,7 +15,6 @@ function render() {
         clone.querySelector('.store-address').textContent = store.address;
         clone.querySelector('.store-rating-number').textContent = `${store.rating}점`;
         clone.querySelector('.store-reviews-count').textContent = store.reviewCount;
-
 		const starContainer = clone.querySelector('.store-rating-star');
 		starContainer.innerHTML = generateStars(store.rating);
 		storeListContainer.appendChild(clone);
@@ -37,26 +34,26 @@ function generateStars(rating) {
     return starsHTML;
 }
 
+let fetchTimerId = null; 
 async function fetchStores() {
-	
+		if(fetchTimerId) {
+        clearTimeout(fetchTimerId);
+    	}
 	try{
 		const response = await fetch('/search');
-	
 		if(!response.ok){
-			throw new error('HTTP error! status: '+ response.status);
+			throw new Error('HTTP error! status: '+ response.status);
 		}
-
 		const newStores = await response.json();
-
 		state.stores = newStores;
-
 		render();
 	} catch (error){
 		console.error("가게 목록 불러오기 실패.", error);
+	} finally{
+		fetchTimerId = setTimeout(fetchStores, 30000);
 	}
 }
 
-documnet.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
 	fetchStores();
-	setInterval(fetchStores, 30000);
 })
