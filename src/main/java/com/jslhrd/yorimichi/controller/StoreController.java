@@ -2,11 +2,10 @@ package com.jslhrd.yorimichi.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.jslhrd.yorimichi.service.StoreService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +27,7 @@ public class StoreController {
 
 	//인덱스 페이지에서 가게 맛집 리스트를 보여주기 위함. 인기있는 최신 6개를 보여주면 될 거 같음.
 	//인기의 기준이 뭔지 모르겠음.
+	@ResponseBody
 	@GetMapping("/search")
 	public void showStores() {
 		
@@ -35,19 +35,28 @@ public class StoreController {
 	
 
 	//첫검색 혹은 검색 버튼을 눌러서 검색.
-	@GetMapping("/search?keyword={keyword}&tags={tags}")
-	public String showStoresBySearch() {
+	// /search/async?keyword={keyword}&tags={tags}
+	@ResponseBody
+	@GetMapping("/search")
+	public String showStoresBySearch(
+		@RequestParam(value = "keyword", required = false) String keyword, 
+		@RequestParam(value = "tags", required = false) String tags
+	) {
 		//List<StoreDTO> stores
 		//List<StoreCategoryDTO> categories
 		//List<StoreFacilityCategoryDTO> Facilities
-		return "/list";
+		return "store/list";
 	}
 	
 	//비동기로 리스트를 가져오기 위한 메서드
 	//카테고리나 시설 등 버튼을 눌러 설정이 바뀌면 리스트가 달라지는 형태.
+	// /search/async?keyword={keyword}&tags={tags}
 	@ResponseBody
-	@GetMapping("/search/async?keyword={keyword}&tags={tags}")
-	public void showStoresByFilter() {
+	@GetMapping("/search/async")
+	public void showStoresByFilter(
+		@RequestParam(value = "keyword", required = false) String keyword, 
+		@RequestParam(value = "tags", required = false) String tags
+	) {
 		//서비스로 가서 키워드로 가져온 가게 리스를 보여줄 수 있어야 함.
 		//return List<StoreDTO> stores;
 	}
@@ -56,7 +65,7 @@ public class StoreController {
 	@GetMapping("/detail/{id}")
 	public String showDetail(){
 		//StoreDTO
-		return "/detail";
+		return "store/detail";
 	}
 
 
@@ -78,7 +87,7 @@ public class StoreController {
 
 	@GetMapping("/like")
 	public String showLikes() {
-		return "/list/";
+		return "store/list";
 	}
 
 	@ResponseBody
