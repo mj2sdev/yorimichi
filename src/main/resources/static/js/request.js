@@ -1,4 +1,4 @@
-this.clear;
+request.clear();
 const request = {
     requestUrl: '',
     fetchOption: {
