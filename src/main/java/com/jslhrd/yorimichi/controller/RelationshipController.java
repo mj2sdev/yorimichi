@@ -1,49 +1,60 @@
 package com.jslhrd.yorimichi.controller;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import com.jslhrd.yorimichi.domain.UserDTO;
+import com.jslhrd.yorimichi.service.RelationshipService;
+
+import lombok.RequiredArgsConstructor;
+
+import java.security.Principal;
+import java.util.List;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
+@RequiredArgsConstructor
 public class RelationshipController {
+
+	private final RelationshipService relationshipService;
 
 	//사용자가 팔로우 한 리스트
 	@GetMapping("/follow")
-	public void showFollow() {
+	public List<UserDTO> showFollow(Principal principal) {
+		return relationshipService.findFollowById(principal);
+
 	}
 
 	//사용자가 팔로우 당한 리스트
 	@GetMapping("/follower")
-	public void showFollower() {
+	public List<UserDTO> showFollower(Principal principal) {
+		return relationshipService.findFollowerById(principal);
 	}
 
 	//내가 상대 팔로우
-	@PostMapping("/follow")
-	public void followUser(@RequestBody Long userId) {
+	@PostMapping("/follow/{targetId}")
+	public void followUser(Principal principal, @PathVariable("targetId") Long targetId) {
+		relationshipService.saveFollow(principal, targetId);
 	}
 
-	//내가 상대 언팔로우
-	@DeleteMapping("/follow")
-	public void unfollowUser(@RequestBody Long userId) {
-	}
-	
-	//나를 팔로우한 사람을 강제 취소
-	@DeleteMapping("/follower")
-	public void unfollowFromMe(@RequestBody Long userId) {
+	//내가 상대와의 관계를 삭제
+	@DeleteMapping("/follow/{targetId}")
+	public void unfollowUser(Principal principal, @PathVariable("targetId") Long targetId) {
+		relationshipService.delete(principal, targetId);
 	}
 	
 	//내가 상대를 차단
-	@PostMapping("/block")
-	public void blockuser(@RequestBody Long userId) {
+	@PostMapping("/block/{targetId}")
+	public void blockuser(Principal principal, @PathVariable("targetId") Long targetId) {
+		relationshipService.saveBlock(principal, targetId);
 	}
 
 	//내가 상대를 차단해제
-	@DeleteMapping("/block")
-	public void unblockuser(@RequestBody Long userId) {
+	@DeleteMapping("/block/{targetId}")
+	public void unblockuser(Principal principal, @PathVariable("targetId") Long targetId) {
+		relationshipService.deleteBlock(principal, targetId);
 	}
 }
