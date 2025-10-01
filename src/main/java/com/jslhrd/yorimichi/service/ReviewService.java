@@ -3,8 +3,6 @@ package com.jslhrd.yorimichi.service;
 import java.security.Principal;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.jslhrd.yorimichi.domain.ReportDTO;
 import com.jslhrd.yorimichi.domain.ReviewDTO;
 
@@ -51,13 +49,13 @@ public interface ReviewService {
 	 * 
 	 * @param dto 리뷰 데이터
 	 */
-	public void save(MultipartFile dto);
+	public void save(ReviewDTO dto);
 	/**
 	 * Review 수정 데이터를 반영합니다.
 	 * 
 	 * @param dto 리뷰 데이터
 	 */
-	public void update(MultipartFile dto);
+	public void update(ReviewDTO dto);
 	
 	/**
 	 * 리뷰아이디 (reviewId) 를 이용해 리뷰를 삭제합니다.

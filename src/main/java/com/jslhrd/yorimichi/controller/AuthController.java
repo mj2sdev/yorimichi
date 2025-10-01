@@ -55,7 +55,7 @@ public class AuthController {
 
 	//이메일 인증
 	@ResponseBody
-	@PostMapping("/signup/email/verification")
+	@PostMapping("/signup/email-verification")
 	public boolean verificateEmail(@RequestBody String email) {
 		return accountService.verificateEmail(email);
 	}
@@ -73,7 +73,7 @@ public class AuthController {
 	}
 
 	@PostMapping("/login/social")
-	public String socialLogin(@RequestBody String token){
+	public String socialLogin(){
 		
 		return "redirect:index";
 	}
