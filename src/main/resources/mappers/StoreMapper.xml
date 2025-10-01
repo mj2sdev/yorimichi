@@ -158,6 +158,16 @@
         VALUES (#{id}, #{addressId}, #{name}, #{description}, #{phone})
     </insert>
 
+    <select id="existsById" resultType="int">
+        SELECT 1
+        FROM store s
+        JOIN root r ON s.id = r.id
+        WHERE s.id = #{id}
+        AND r.type = #{type}
+        AND
+        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+    </select>
+
     <!-- UPDATE: root.updated_at 명시 갱신 -->
     <update id="update" parameterType="StoreDTO">
         UPDATE store s
@@ -168,6 +178,7 @@
             s.phone       = #{phone},
             r.updated_at  = CURRENT_TIMESTAMP
         WHERE s.id = #{id}
+          AND r.type = #{type}
     </update>
 
     <!-- 소프트 삭제 -->

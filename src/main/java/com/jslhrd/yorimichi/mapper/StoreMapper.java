@@ -39,12 +39,14 @@ public interface StoreMapper {
 	 */
 	Optional<StoreDTO> selectById(@Param("id") Long id);
 
+	int existsById(Long id);
+
 	/**
 	 * 상점 수정.
 	 *
 	 * @return 영향 행 수 (수정 1, 대상 없음 0)
 	 */
-	int update(StoreDTO dto);
+	int update(Long id, StoreDTO dto);
 
 	/**
 	 * 상점 삭제.
