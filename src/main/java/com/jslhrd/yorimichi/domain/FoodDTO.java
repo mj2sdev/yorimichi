@@ -1,5 +1,6 @@
 package com.jslhrd.yorimichi.domain;
 
+import com.jslhrd.yorimichi.enums.RootType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -52,4 +53,8 @@ public class FoodDTO extends RootDTO {
 	 * 리뷰 목록
 	 */
 	private List<ReviewDTO> reviews;
+
+	public FoodDTO() {
+		super(RootType.FOOD);
+	}
 }
