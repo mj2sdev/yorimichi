@@ -12,7 +12,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -30,8 +30,8 @@ public class NotificationController {
 	}
 
 	//알림을 읽으면 읽음처리 하는 메서드.
-	@PatchMapping("/notification/{id}")
-	public void updateNotificationStatus(@PathVariable("id") Long notificationId){
+	@PatchMapping("/notification")
+	public void updateNotificationStatus(@RequestParam(value = "id") Long notificationId){
 		notificationService.read(notificationId);
 	}
 	
