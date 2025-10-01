@@ -1,11 +1,22 @@
 package com.jslhrd.yorimichi.controller;
 
+import java.security.Principal;
+import java.util.List;
+
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.jslhrd.yorimichi.domain.CategoryDTO;
+import com.jslhrd.yorimichi.domain.FacilityCategoryDTO;
+import com.jslhrd.yorimichi.domain.StoreDTO;
+import com.jslhrd.yorimichi.service.CategoryService;
+import com.jslhrd.yorimichi.service.StoreService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,28 +34,42 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/store")
 public class StoreController {
 
-	//private final StoreService storeService;
-
+	private final StoreService storeService;
+	private final CategoryService categoryService;
 	//인덱스 페이지에서 가게 맛집 리스트를 보여주기 위함. 인기있는 최신 6개를 보여주면 될 거 같음.
 	//인기의 기준이 뭔지 모르겠음.
-	@ResponseBody
 	@GetMapping("/search")
-	public void showStores() {
-		
+	public String showStores(
+		@RequestParam(value = "keyword", required = false) String keyword, 
+		@RequestParam(value = "tags", required = false) String tags,
+		Model model
+	) {
+		List<StoreDTO> stores = storeService.findAll(null);
+		List<CategoryDTO> categories = categoryService.findAll(null); 
+		//List<FacilityCategoryDTO> facilities = 
+
+		model.addAttribute("stores", stores);
+		model.addAttribute("categories", categories);
+		//model.addAttribute("facilities", facilities);
+		return "store/list";
 	}
 	
 
 	//첫검색 혹은 검색 버튼을 눌러서 검색.
 	// /search/async?keyword={keyword}&tags={tags}
-	@ResponseBody
 	@GetMapping("/search/sync")
 	public String showStoresBySearch(
 		@RequestParam(value = "keyword", required = false) String keyword, 
-		@RequestParam(value = "tags", required = false) String tags
+		@RequestParam(value = "tags", required = false) String tags,
+		Model model
 	) {
-		//List<StoreDTO> stores
-		//List<StoreCategoryDTO> categories
-		//List<StoreFacilityCategoryDTO> Facilities
+		List<StoreDTO> stores = storeService.findAll(null);
+		List<CategoryDTO> categories = categoryService.findAll(null); 
+		//List<FacilityCategoryDTO> facilities = 
+
+		model.addAttribute("stores", stores);
+		model.addAttribute("categories", categories);
+		//model.addAttribute("facilities", facilities);
 		return "store/list";
 	}
 	
@@ -55,15 +80,21 @@ public class StoreController {
 	@GetMapping("/search/async")
 	public void showStoresByFilter(
 		@RequestParam(value = "keyword", required = false) String keyword, 
-		@RequestParam(value = "tags", required = false) String tags
+		@RequestParam(value = "tags", required = false) String tags,
+		Model model
 	) {
-		//서비스로 가서 키워드로 가져온 가게 리스를 보여줄 수 있어야 함.
-		//return List<StoreDTO> stores;
+		List<StoreDTO> stores = storeService.findAll(null);
+		List<CategoryDTO> categories = categoryService.findAll(null); 
+		//List<FacilityCategoryDTO> facilities = 
+
+		model.addAttribute("stores", stores);
+		model.addAttribute("categories", categories);
+		//model.addAttribute("facilities", facilities);
 	}
 	
 	//가게 상세정보로 이동
-	@GetMapping("/detail/{id}")
-	public String showDetail(){
+	@GetMapping("/detail")
+	public String showDetail(@RequestParam(value = "id") Long storeId){
 		//StoreDTO
 		return "store/detail";
 	}
@@ -85,20 +116,22 @@ public class StoreController {
 		//return List<BookmarkDTO> Bookmarks;
 	}
 
+	@ResponseBody
 	@GetMapping("/like")
-	public String showLikes() {
-		return "store/list";
+	public String showLikes(Principal principal) {
+		//return storeService.findAllByUserLike(null);
+		return null;
 	}
 
 	@ResponseBody
 	@PostMapping("/like")
-	public void submitLike() {
+	public void submitLike(@RequestBody Long storeId) {
 		//return List<LikeDTO> likes;
 	}
 
 	@ResponseBody
 	@DeleteMapping("/like")
-	public void deleteLikes(){
+	public void deleteLikes(@RequestParam(value = "storeId") Long storeId){
 		//return List<LikeDTO> likes;
 	}
 	
