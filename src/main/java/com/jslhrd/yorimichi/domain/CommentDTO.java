@@ -1,5 +1,6 @@
 package com.jslhrd.yorimichi.domain;
 
+import com.jslhrd.yorimichi.enums.RootType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -54,4 +55,9 @@ public class CommentDTO extends RootDTO {
 	 * 댓글 목록
 	 */
 	private List<CommentDTO> comments;
+
+	
+	public CommentDTO() {
+		super(RootType.COMMENT);
+	}
 }

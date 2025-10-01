@@ -1,5 +1,6 @@
 package com.jslhrd.yorimichi.domain;
 
+import com.jslhrd.yorimichi.enums.RootType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -38,12 +39,12 @@ public class StoreDTO extends RootDTO {
 	 */
 	private String phone;
 
-  
+
 	private Double avgRating;
 	private Integer reviewCount;
 	private Integer likeCount;
-	
-  
+
+
 	/**
 	 * 주소
 	 */
@@ -78,4 +79,9 @@ public class StoreDTO extends RootDTO {
 	 * 상점 이미지 목록
 	 */
 	private List<ImageDTO> images;
+
+
+	public StoreDTO() {
+		super(RootType.STORE);
+	}
 }
