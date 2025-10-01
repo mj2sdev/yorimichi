@@ -1,5 +1,10 @@
 package com.jslhrd.yorimichi.service;
 
+import java.security.Principal;
+import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import com.jslhrd.yorimichi.domain.ReportDTO;
 import com.jslhrd.yorimichi.domain.ReviewDTO;
 
