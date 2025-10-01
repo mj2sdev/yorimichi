@@ -71,29 +71,30 @@ public class StoreManager implements StoreService {
 
 	@Override
 	@Transactional
-	public void update(StoreDTO dto) {
-		// TODO: 주소 변경 시 변경 처리 필요
-		int affected = storeMapper.update(dto);
-		if (affected == 0) {
+	public void update(Long storeId, StoreDTO dto) {
+		// TODO: address 변경 시 추가 검증/처리
+		int affected = storeMapper.update(storeId, dto);
 
-			boolean exists = storeMapper.existsById(dto.getId()) == 1;
+		if (affected != 1) {
+
+			boolean exists = storeMapper.existsById(storeId) == 1;
 			if (!exists) {
-				throw new StoreNotFoundException(dto.getId());
+				throw new StoreNotFoundException(storeId);
 			}
 
-			log.info("Store no-op update id={}", dto.getId());
+			log.info("Store no-op update id={}", storeId);
 			return;
 		}
 
-		log.info("Store updated id={}", dto.getId());
+		log.info("Store updated id={}", storeId);
 	}
 
 	@Override
 	@Transactional
 	public void delete(Long storeId) {
 
-		int affected = storeMapper.deleteById(storeId);
-		if (affected == 0) {
+		int affected = rootMapper.deleteById(storeId);
+		if (affected != 1) {
 			throw new StoreNotFoundException(storeId);
 		}
 
