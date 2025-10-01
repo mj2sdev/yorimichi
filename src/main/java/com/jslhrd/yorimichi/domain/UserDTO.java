@@ -1,5 +1,6 @@
 package com.jslhrd.yorimichi.domain;
 
+import com.jslhrd.yorimichi.enums.RootType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -89,4 +90,9 @@ public class UserDTO extends RootDTO {
 	 * 같이먹기 목록
 	 */
 	private List<CoeatDTO> coeats;
+
+
+	public UserDTO() {
+		super(RootType.USER);
+	}
 }

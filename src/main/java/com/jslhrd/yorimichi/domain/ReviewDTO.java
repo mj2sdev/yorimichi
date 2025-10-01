@@ -1,5 +1,6 @@
 package com.jslhrd.yorimichi.domain;
 
+import com.jslhrd.yorimichi.enums.RootType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -58,4 +59,9 @@ public class ReviewDTO extends RootDTO {
 	 * 리뷰 이미지 목록
 	 */
 	private List<ImageDTO> images;
+
+
+	public ReviewDTO() {
+		super(RootType.REVIEW);
+	}
 }
