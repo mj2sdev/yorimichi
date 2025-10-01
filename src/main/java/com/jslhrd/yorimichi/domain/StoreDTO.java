@@ -39,7 +39,6 @@ public class StoreDTO extends RootDTO {
 	 */
 	private String phone;
 
-
 	/**
 	 * 주소
 	 */
