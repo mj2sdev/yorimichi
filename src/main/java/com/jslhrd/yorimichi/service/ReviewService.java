@@ -1,5 +1,6 @@
 package com.jslhrd.yorimichi.service;
 
+import java.security.Principal;
 import java.util.List;
 
 import com.jslhrd.yorimichi.domain.ReportDTO;
@@ -12,6 +13,13 @@ import com.jslhrd.yorimichi.domain.ReviewDTO;
  * @since 1.0
  */
 public interface ReviewService {
+
+	/**
+	 * 최신 리뷰 리스트를 조회합니다.
+	 * TODO: Controller 작성을 위해 임시로 만든 메서드입니다. 검토 바랍니다.
+	 * @return review list
+	 */
+	public List<ReviewDTO> findAll();
 
 	/**
 	 * 가게 아이디를 기준으로 리뷰 리스트를 조회합니다.
@@ -51,9 +59,10 @@ public interface ReviewService {
 	
 	/**
 	 * 리뷰아이디 (reviewId) 를 이용해 리뷰를 삭제합니다.
-	 * 
-	 * @param reviewId 리뷰 아이디
+	 * TODO: 컨트롤러의 임시 작성을 위해 principal을 추가했습니다. 검토 바랍니다.
+	 * @param review 리뷰 작성자id와 리뷰id를 받기 위함.
+	 * @param principal 요청자 아이디
 	 */
-	public void delete(Long reviewId);
+	public void delete(ReviewDTO review,Principal principal);
 	
 }
