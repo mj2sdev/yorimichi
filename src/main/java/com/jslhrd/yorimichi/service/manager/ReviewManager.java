@@ -1,0 +1,115 @@
+package com.jslhrd.yorimichi.service.manager;
+
+import com.jslhrd.yorimichi.domain.ReportDTO;
+import com.jslhrd.yorimichi.domain.ReviewDTO;
+import com.jslhrd.yorimichi.exception.ReviewNotFoundException;
+import com.jslhrd.yorimichi.exception.StoreNotFoundException;
+import com.jslhrd.yorimichi.mapper.ReviewMapper;
+import com.jslhrd.yorimichi.mapper.RootMapper;
+import com.jslhrd.yorimichi.mapper.StoreMapper;
+import com.jslhrd.yorimichi.service.ReviewService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class ReviewManager implements ReviewService {
+
+	private final RootMapper rootMapper;
+	private final StoreMapper storeMapper;
+	private final ReviewMapper reviewMapper;
+
+	@Override
+	public List<ReviewDTO> findAll() {
+		// TODO: 무한 스크룰 및 review 상세 정보 추후 구현
+		return reviewMapper.selectAll();
+	}
+
+	@Override
+	public List<ReviewDTO> findAllByStoreId(Long storeId) {
+		// TODO: 무한 스크룰 및 review 상세 정보 추후 구현
+		reviewMapper.selectAllByStoreId(storeId);
+		return List.of();
+	}
+
+	@Override
+	public ReviewDTO findById(Long reviewId) {
+
+		reviewMapper.selectById(reviewId);
+		return null;
+	}
+
+	@Override
+	public void report(ReportDTO dto) {
+		// TODO: 리뷰 신고하기 있었나요?
+	}
+
+	@Override
+	@Transactional
+	public void save(Long userId, Long storeId, ReviewDTO dto) {
+
+		if (storeMapper.existsById(storeId) == 0) {
+			throw new StoreNotFoundException(storeId);
+		}
+
+		dto.setUserId(userId);
+		dto.setStoreId(storeId);
+
+		int rootAffected = rootMapper.insert(dto);
+		if (rootAffected == 0 || dto.getId() == null) {
+			log.warn("Root insert failed or id not generated: rootAffected={}, dto={}", rootAffected, dto);
+			throw new IllegalStateException("Root insert failed or no generated id");
+		}
+
+		int reviewAffected = reviewMapper.insert(dto);
+		if (reviewAffected == 0) {
+			log.warn("review insert failed: reviewAffected={}, dto={}", reviewAffected, dto);
+			throw new IllegalStateException("review insert failed");
+		}
+
+		log.info("Review created id={}", dto.getId());
+	}
+
+	@Override
+	@Transactional
+	public void update(Long reviewId, Long userId, ReviewDTO dto) {
+
+		int affected = reviewMapper.update(reviewId, userId, dto);
+		if (affected == 1) {
+			log.info("Review updated id={}", reviewId);
+			return;
+		}
+
+		int exists = reviewMapper.existsActive(reviewId);
+		if (exists == 0) {
+			throw new ReviewNotFoundException(reviewId);
+		}
+
+		throw new AccessDeniedException("리뷰 수정 권한이 없습니다.");
+	}
+
+	@Override
+	@Transactional
+	public void delete(Long reviewId, Long userId) {
+
+		int affected = reviewMapper.deleteById(reviewId, userId);
+		if (affected == 1) {
+			log.info("Review deleted id={}", reviewId);
+			return;
+		}
+
+		int exists = reviewMapper.existsActive(reviewId);
+		if (exists == 0) {
+			throw new ReviewNotFoundException(reviewId);
+		}
+
+		throw new AccessDeniedException("리뷰 삭제 권한이 없습니다.");
+	}
+}

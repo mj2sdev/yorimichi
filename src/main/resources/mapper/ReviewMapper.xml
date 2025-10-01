@@ -4,39 +4,95 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.ReviewMapper">
 
-    <insert id="insert" parameterType="ReviewDTO">
-        INSERT INTO review (id, user_id, store_id, rating, content)
-        VALUES (#{id}, #{userId}, #{foodId}, #{rating}, #{content})
-    </insert>
+    <select id="selectAll" resultType="ReviewDTO">
+        SELECT v.id,
+        v.user_id,
+        v.store_id,
+        v.rating,
+        v.content,
+        r.type,
+        r.created_at,
+        r.updated_at
+        FROM review v
+        JOIN root r ON v.id = r.id
+        WHERE
+        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        AND r.type = 'REVIEW'
+    </select>
+
+    <select id="selectAllByStoreId" resultType="ReviewDTO">
+        SELECT v.id,
+        v.user_id,
+        v.store_id,
+        v.rating,
+        v.content,
+        r.type,
+        r.created_at,
+        r.updated_at
+        FROM review v
+        JOIN root r ON v.id = r.id
+        WHERE
+        v.store_id = #{storeId}
+        AND
+        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        AND r.type = 'REVIEW'
+    </select>
 
     <select id="selectById" parameterType="Long" resultType="ReviewDTO">
         SELECT v.id,
-               v.user_id,
-               v.store_id,
-               v.rating,
-               v.content,
-               r.created_at,
-               r.updated_at,
-               r.deleted_at,
-               r.blinded_at
+        v.user_id,
+        v.store_id,
+        v.rating,
+        v.content,
+        r.type,
+        r.created_at,
+        r.updated_at
         FROM review v
-                 JOIN root r ON v.id = r.id
+        JOIN root r ON v.id = r.id
         WHERE v.id = #{id}
+        AND
+        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        AND r.type = 'REVIEW'
     </select>
 
-    <update id="update" parameterType="ReviewDTO">
-        UPDATE review v
-            JOIN root r ON v.id = r.id
-        SET v.rating     = #{rating},
-            v.content    = #{content},
-            r.updated_at = NOW()
+    <select id="existsActive" resultType="int">
+        SELECT 1
+        FROM review v
+        JOIN root r ON v.id = r.id
         WHERE v.id = #{id}
+        AND r.type = #{type}
+        AND
+        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        AND r.type = 'REVIEW'
+    </select>
+
+    <insert id="insert" parameterType="ReviewDTO">
+        INSERT INTO review (id, user_id, store_id, rating, content)
+        VALUES (#{id}, #{userId}, #{storeId}, #{rating}, #{content})
+    </insert>
+
+    <update id="update">
+        UPDATE review v
+        JOIN root r ON v.id = r.id
+        SET v.rating = #{dto.rating},
+        v.content = #{dto.content},
+        r.updated_at = CURRENT_TIMESTAMP
+        WHERE v.id = #{id}
+        AND v.user_id = #{userId}
+        AND
+        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        AND r.type = 'REVIEW'
     </update>
 
-    <delete id="deleteById" parameterType="Long">
-        DELETE
-        FROM root
-        WHERE id = #{id}
-    </delete>
+    <update id="deleteById">
+        UPDATE review v
+        JOIN root r ON v.id = r.id
+        SET r.deleted_at = CURRENT_TIMESTAMP
+        WHERE v.id = #{id}
+        AND v.user_id = #{userId}
+        AND
+        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        AND r.type = 'REVIEW'
+    </update>
 
 </mapper>
