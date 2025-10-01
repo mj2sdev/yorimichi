@@ -39,7 +39,6 @@ const request = {
     put: function (endpoint, data){
         this.requestUrl = endpoint;
         this.fetchOption.method = 'PUT';
-        this.fetchOption.headers = 'PUT';
         if(data instanceof HTMLFormElement){
             this.fetchOption.headers = {
                 'Contetn-Type': 'multipart/form-data'
@@ -57,7 +56,6 @@ const request = {
     patch: function (endpoint, data){
         this.requestUrl = endpoint;
         this.fetchOption.method = 'PATCH';
-        this.fetchOption.headers = 'PATCH';
         if(data instanceof HTMLFormElement){
             this.fetchOption.headers = {
                 'Contetn-Type': 'multipart/form-data'
