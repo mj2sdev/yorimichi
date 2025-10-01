@@ -1,4 +1,3 @@
-request.clear();
 const request = {
     requestUrl: '',
     fetchOption: {
@@ -97,3 +96,4 @@ const request = {
         this.fetchOption = {};
     }
 }
+request.clear();
