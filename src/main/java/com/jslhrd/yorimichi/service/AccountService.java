@@ -12,6 +12,13 @@ import com.jslhrd.yorimichi.domain.UserDTO;
  * <p>
  * 실제 필요했던건 {@code UserDetailsService}
  * 해당 인터페이스는 {@code UserService} 이쪽으로 옮김
+ * @author mj2sdev
+ * 
+ * @version 1.0 초안 작성
+ * @version 1.1 {@code UserDetails} 삭제
+ * <p>
+ * 실제 필요했던건 {@code UserDetailsService}
+ * 해당 인터페이스는 {@code UserService} 이쪽으로 옮김
  */
 public interface AccountService {
 
@@ -29,11 +36,11 @@ public interface AccountService {
 	 *            객체
 	 */
 	public void changePassword(UserDTO dto);
-
 	/**
-	 * 제공된 사용자 ID에 해당하는 사용자 계정을 삭제합니다.
+	 * 제공된 사용자 세부 정보에 지정된 사용자의 비밀번호를 변경합니다.
 	 *
-	 * @param userId 계정을 삭제 해야하는 사용자의 고유 식별자
+	 * @param dto 사용자 식별 및 새 비밀번호가 포함 된 사용자 데이터 전송
+	 *            객체
 	 */
 	public void delete(Long userId);
 

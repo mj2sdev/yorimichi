@@ -1,25 +1,36 @@
-# 서버 포트
 server:
   port: 8080
 
-# spring 설정 시작
 spring:
   application:
     name: yorimichi
+  servlet:
+    multipart:
+      max-file-size: 25MB      # 파일 하나 최대 크기
+      max-request-size: 25MB   # 요청 전체(여러 파트) 최대 크기
+  profiles:
+    group:
+      oauth-drive: local-drive-test,oauth-drive-only
+  config:
+    activate:
+      on-profile: oauth-drive-only
+  web:
+    resources:            # ✅ plural
+      add-mappings: false
 
-  # MySQL 데이터베이스 연결 설정
+# MySQL 데이터베이스 연결 설정
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://yorimichi.duckdns.org:3306/yorimichi?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    # mysql에서 db와 서버의 시간이 다른 경우 문제가 발생할 수 있어서 시간대를 명시하게 함.
+# mysql에서 db와 서버의 시간이 다른 경우 문제가 발생할 수 있어서 시간대를 명시하게 함.
     username: jsl3team
-    password: # [wi-fi password]
-  # Thymeleaf 설정
-  # 캐시를 저장하지 않게 해둬서 변경시 바로바로 확인 가능
+    password: [wi-fi password]
+# Thymeleaf 설정
+# 캐시를 저장하지 않게 해둬서 변경시 바로바로 확인 가능
   thymeleaf:
     cache: false
 
-  # Spring Security 임시 사용자 설정
+# Spring Security 임시 사용자 설정
   security:
     user:
       name: admin
@@ -28,7 +39,14 @@ spring:
 # MyBatis 설정 (패키지 경로는 실제 프로젝트에 맞게 수정)
 # dto 위치 기본적으로 설정해서 xml에서 DTO클래스 이름만 적어도 되게 해줌.
 mybatis:
-  configuration:
-    map-underscore-to-camel-case: true
-  mapper-locations: classpath*:mappers/**/*.xml
+  mapper-locations: mappers/**/*.xml
   type-aliases-package: com.jslhrd.yorimichi.domain
+
+
+google:
+  drive:
+    folder-id: 1zmXzxFMUcpvM4n08f3sv8UB4l9U_yd1J 
+    upload-folder-id: 1zmXzxFMUcpvM4n08f3sv8UB4l9U_yd1J
+  oauth:
+    redirect-uri: "http://localhost:8080/oauth2/callback"
+

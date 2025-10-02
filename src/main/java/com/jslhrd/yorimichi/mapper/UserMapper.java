@@ -39,6 +39,11 @@ public interface UserMapper {
 	 */
 	int update(UserDTO dto);
 
+	Optional<UserDTO> selectByEmail(@Param("email") String email);
+
+    int updatePassword(@Param("id") Long id, @Param("password") String password);
+
+
 	/**
 	 * 유저 삭제.
 	 * @param id 유저 ID
