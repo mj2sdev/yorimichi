@@ -14,9 +14,9 @@ import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 @RestController
 @RequiredArgsConstructor
@@ -31,16 +31,15 @@ public class CoeatController {
 	}
 
 	//같이먹기 상세
-	//	"/coeat?coeatId={feedid}"
-	@GetMapping("/coeat")
-	public CoeatDTO showCoeat(@RequestParam(value = "coeatId") Long feedId) {
+	//	"/coeat/{id}"
+	@GetMapping("/coeat/{id}")
+	public CoeatDTO showCoeat(@PathVariable("id") Long feedId) {
 		return coeatService.getCoeatDetail(feedId);
 	}
 
 	//같이먹기 삭제
-	//	"/coeat?coeatId={feedid}"
-	@DeleteMapping("/coeat")
-	public void deleteCoeat(@RequestParam(value = "coeatId") Long feedId){
+	@DeleteMapping("/coeat/{id}")
+	public void deleteCoeat(@PathVariable("id") Long feedId){
 		coeatService.deleteCoeat(feedId);
 	}
 
