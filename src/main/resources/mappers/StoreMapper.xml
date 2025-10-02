@@ -109,13 +109,14 @@
     </sql>
 
     <select id="selectAll" parameterType="map" resultMap="StoreLightMap">
-        SELECT s.id,
-               s.address_id,
-               s.name,
-               s.description,
-               s.phone,
-               r.created_at,
-               r.updated_at
+        SELECT
+            s.id,
+            s.address_id,
+            s.name,
+            s.description,
+            s.phone,
+            r.created_at,
+            r.updated_at
         FROM store s
         JOIN root r ON s.id = r.id
             AND r.type = 'STORE'
