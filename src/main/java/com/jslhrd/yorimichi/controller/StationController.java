@@ -4,12 +4,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 public class StationController {
     
@@ -24,6 +26,7 @@ public class StationController {
 	}
     
     //최신 리뷰를 가져오는 피드, count로 몇개 받아올 건지 정함
+    @ResponseBody
     @GetMapping("/feed")
     public void showFeed(@RequestBody int count) {
     }
