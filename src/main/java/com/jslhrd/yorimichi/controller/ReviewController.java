@@ -24,19 +24,19 @@ public class ReviewController {
 
 	//리뷰 리스트
 	@GetMapping("/reviews")
-	public List<ReviewDTO> listReview() {
+	public List<ReviewDTO> showReviewlatest() {
 		return reviewService.findAll();
 	}
 
 	//특정 가게 리뷰 리스트
 	@GetMapping("/stores/{storeId}/reviews")
-	public List<ReviewDTO> listReviewByStore(@PathVariable("storeId") Long storeId) {
+	public List<ReviewDTO> showReviewListById(@PathVariable("storeId") Long storeId) {
 		return reviewService.findAllByStoreId(storeId);
 	}
 
 	//리뷰상세
 	@GetMapping("/review/{reviewId}")
-	public ReviewDTO getReview(@PathVariable("reviewId") Long reviewId) {
+	public ReviewDTO showReview(@PathVariable("reviewId") Long reviewId) {
 		return reviewService.findById(reviewId);
 	}
 
@@ -44,34 +44,35 @@ public class ReviewController {
 	// 리뷰작성
 	// TODO: CustomUserPrincipal 구현 필요.
 	@PostMapping("/stores/{storeId}/review")
-	public void createReview(
+	public void submitReview(
+			@PathVariable Long storeId,
+			
 			@AuthenticationPrincipal(expression = "userId") Long userId,
-			@PathVariable("storeId") Long storeId,
-			@RequestBody ReviewDTO review
+			@RequestBody ReviewDTO dto
 	) {
-		reviewService.save(userId, storeId, review);
+		reviewService.save(userId, storeId, dto);
 	}
 
 	//리뷰수정
-	// TODO: CustomUserPrincipal 구현 필요.
-	@PatchMapping("/review/{reviewId}")
+	@PutMapping("/review/{reviewId}")
 	public void updateReview(
-			@PathVariable("reviewId") Long reviewId,
+			@PathVariable Long reviewId,
+			// TODO: CustomUserPrincipal 구현 필요.
 			@AuthenticationPrincipal(expression = "userId") Long userId,
-			@RequestBody ReviewDTO review
+			@RequestBody ReviewDTO dto
 	) {
-		reviewService.update(userId, reviewId, review);
+		reviewService.update(reviewId, userId, dto);
 
 	}
 
 	//리뷰삭제
-	// TODO: CustomUserPrincipal 구현 필요.
 	@DeleteMapping("/review/{reviewId}")
 	public void deleteReview(
-			@AuthenticationPrincipal(expression = "userId") Long userId,
-			@PathVariable("reviewId") Long reviewId
+			@PathVariable Long reviewId,
+			// TODO: CustomUserPrincipal 구현 필요.
+			@AuthenticationPrincipal(expression = "userId") Long userId
 	) {
-		reviewService.delete(userId, reviewId);
+		reviewService.delete(reviewId, userId);
 	}
 
 }
