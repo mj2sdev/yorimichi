@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Slf4j
-@RestController
+// @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/drive")
 public class GoogleDriveUploadController {

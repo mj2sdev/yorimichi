@@ -16,7 +16,7 @@ import com.jslhrd.yorimichi.domain.StoreDTO;
 
 import lombok.RequiredArgsConstructor;
 
-@Component
+// @Component
 @RequiredArgsConstructor
 public class GeminiHelper {
 
