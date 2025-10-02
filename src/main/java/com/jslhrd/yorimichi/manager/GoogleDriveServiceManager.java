@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.util.*;
 
 @Slf4j
-@Service
+// @Service
 @RequiredArgsConstructor
 public class GoogleDriveServiceManager implements GoogleDriveService {
 

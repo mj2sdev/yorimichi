@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
-@RestController
+// @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/files")
 public class FileTestController {

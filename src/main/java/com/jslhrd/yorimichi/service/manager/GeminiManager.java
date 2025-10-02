@@ -12,7 +12,7 @@ import com.jslhrd.yorimichi.service.GeminiService;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
+// @Service
 @RequiredArgsConstructor
 public class GeminiManager implements GeminiService {
 

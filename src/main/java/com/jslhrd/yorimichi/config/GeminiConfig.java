@@ -20,11 +20,13 @@ import com.google.gson.JsonSerializer;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @ConfigurationProperties(prefix = "gemini")
 @Getter
 @Setter
+@Slf4j
 public class GeminiConfig {
 
 	private String apiKey;
@@ -33,9 +35,14 @@ public class GeminiConfig {
 
 	@Bean
 	public Client geminiClient() {
-		return Client.builder()
-			.apiKey(apiKey)
-			.build();
+		try {
+			return Client.builder()
+				.apiKey(apiKey)
+				.build();
+		} catch (Exception e) {
+			log.error("gemini api key를 확인해야 합니다.");
+			return null;
+		}
 	}
 
 	@Bean
