@@ -37,10 +37,9 @@ out/
 ### VS Code ###
 .vscode/
 
-<<<<<<< Updated upstream
 ### MAC OS ###
 .DS_Store
-=======
+
 ### Google Drive JSON ###
 /secrets/
 **/*gdrive*.json
@@ -55,4 +54,3 @@ src/main/resources/secrets/yorimichi-gdrive.json
 # (선택) secrets 폴더 전체를 무시하고 싶다면 ↓ 두 줄도 추가
 # src/main/resources/secrets/*
 # !src/main/resources/secrets/.gitkeep
->>>>>>> Stashed changes

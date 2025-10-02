@@ -1,12 +1,5 @@
 spring:
-  config:
-    activate:
-      on-profile: test     # ✅ test 프로파일에서만 적용
 
-
-  web:
-    resources:
-      add-mappings: false
 
   config:
     activate:
@@ -19,7 +12,6 @@ spring:
 
   datasource:
     url: jdbc:h2:mem:yorimichi;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    url: jdbc:h2:mem:yorimichi;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -31,10 +23,7 @@ spring:
 
   thymeleaf:
     cache: false
-      mode: always         # ✅ schema.sql / data.sql 실행 보장
 
-  thymeleaf:
-    cache: false
 
 mybatis:
   # main/resources/mappers/*.xml (네가 만든 경로) 를 읽게 함
@@ -46,6 +35,4 @@ logging:
     com.jslhrd.yorimichi: DEBUG
   type-aliases-package: com.jslhrd.yorimichi.domain
 
-logging:
-  level:
-    com.jslhrd.yorimichi: DEBUG
+
