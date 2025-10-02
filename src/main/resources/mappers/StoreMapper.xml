@@ -4,6 +4,8 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.StoreMapper">
 
+    <!-- @formatter:off -->
+
     <!-- 라이트 목록 매핑 -->
     <resultMap id="StoreLightMap" type="StoreDTO">
         <id property="id" column="id"/>
@@ -45,8 +47,6 @@
                     select="com.jslhrd.yorimichi.mapper.FoodMapper.selectByStoreId"
                     column="{storeId=id}"/>
     </resultMap>
-
-    <!-- @formatter:off -->
 
     <!-- 검색 WHERE (공용 조각 include) -->
     <!-- 검색 WHERE: searchType = name|desc|all 만 사용 -->
@@ -108,84 +108,75 @@
         </where>
     </sql>
 
-    <!-- @formatter:on -->
-
-    <!-- 총 건수 -->
-    <select id="countAll" parameterType="map" resultType="int">
-        SELECT COUNT(*)
-        FROM store s
-        JOIN root r ON r.id = s.id
-        <include refid="StoreSearchWhere"/>
-    </select>
-
-    <!-- 페이징 목록 -->
     <select id="selectAll" parameterType="map" resultMap="StoreLightMap">
-        SELECT
-        s.id,
-        s.address_id,
-        s.name,
-        s.description,
-        s.phone,
-        r.created_at,
-        r.updated_at
+        SELECT s.id,
+               s.address_id,
+               s.name,
+               s.description,
+               s.phone,
+               r.created_at,
+               r.updated_at
         FROM store s
         JOIN root r ON s.id = r.id
-        <include refid="StoreSearchWhere"/>
-        ORDER BY s.id DESC
-        <include refid="com.jslhrd.yorimichi.mapper.common.LimitOffset"/>
+            AND r.type = 'STORE'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
     </select>
 
-    <!-- 상세 1건 -->
-    <select id="selectById" parameterType="Long" resultMap="StoreMap">
+    <select id="selectById" parameterType="long" resultMap="StoreMap">
         SELECT
-        s.id,
-        s.address_id,
-        s.name,
-        s.description,
-        s.phone,
-        r.created_at,
-        r.updated_at
+            s.id,
+            s.address_id,
+            s.name,
+            s.description,
+            s.phone,
+            r.created_at,
+            r.updated_at
         FROM store s
         JOIN root r ON r.id = s.id
+            AND r.type = 'STORE'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
         WHERE s.id = #{id}
-        AND
-        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
     </select>
 
-    <!-- INSERT: root INSERT 후 호출 -->
+    <select id="existsActive" parameterType="long" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM store s
+            JOIN root r ON s.id = r.id
+                AND r.type = 'STORE'
+                AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+            WHERE s.id = #{id}
+        )
+    </select>
+
     <insert id="insert" parameterType="StoreDTO">
         INSERT INTO store (id, address_id, name, description, phone)
         VALUES (#{id}, #{addressId}, #{name}, #{description}, #{phone})
     </insert>
 
-    <select id="existsById" resultType="int">
-        SELECT 1
-        FROM store s
-        JOIN root r ON s.id = r.id
-        WHERE s.id = #{id}
-        AND r.type = #{type}
-        AND
-        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-    </select>
-
-    <!-- UPDATE: root.updated_at 명시 갱신 -->
     <update id="update" parameterType="StoreDTO">
         UPDATE store s
-            JOIN root r ON s.id = r.id
-        SET s.address_id  = #{addressId},
-            s.name        = #{name},
+        JOIN root r ON s.id = r.id
+            AND r.type = 'STORE'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        SET
+            s.address_id = #{addressId},
+            s.name = #{name},
             s.description = #{description},
-            s.phone       = #{phone},
-            r.updated_at  = CURRENT_TIMESTAMP
+            s.phone = #{phone},
+            r.updated_at = CURRENT_TIMESTAMP
         WHERE s.id = #{id}
-          AND r.type = #{type}
     </update>
 
-    <!-- 소프트 삭제 -->
     <update id="deleteById" parameterType="long">
-        UPDATE root
-        SET deleted_at = CURRENT_TIMESTAMP
-        WHERE id = #{id}
+        UPDATE store s
+        JOIN root r ON s.id = r.id
+            AND r.type = 'STORE'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        SET r.deleted_at = CURRENT_TIMESTAMP
+        WHERE s.id = #{id}
     </update>
+
+    <!-- @formatter:on -->
 
 </mapper>
