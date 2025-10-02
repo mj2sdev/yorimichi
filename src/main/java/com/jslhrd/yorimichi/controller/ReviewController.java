@@ -37,7 +37,7 @@ public class ReviewController {
 	}
 
 	//리뷰상세
-	@GetMapping("/reviews/{reviewId}")
+	@GetMapping("/review/{reviewId}")
 	public ReviewDTO showReview(@PathVariable("reviewId") Long reviewId) {
 		return reviewService.findById(reviewId);
 
