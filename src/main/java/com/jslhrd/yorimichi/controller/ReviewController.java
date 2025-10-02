@@ -42,11 +42,12 @@ public class ReviewController {
 
 
 
-	//리뷰작성
+	// 리뷰작성
+	// TODO: CustomUserPrincipal 구현 필요.
 	@PostMapping("/stores/{storeId}/review")
 	public void submitReview(
 			@PathVariable Long storeId,
-			// TODO: CustomUserPrincipal 구현 필요.
+			
 			@AuthenticationPrincipal(expression = "userId") Long userId,
 			@RequestBody ReviewDTO dto
 	) {
