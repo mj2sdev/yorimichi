@@ -66,7 +66,7 @@ public class ReviewController {
 	}
 
 	//리뷰삭제
-	@DeleteMapping("/reviews/{reviewId}")
+	@DeleteMapping("/review/{reviewId}")
 	public void deleteReview(
 			@PathVariable Long reviewId,
 			// TODO: CustomUserPrincipal 구현 필요.
