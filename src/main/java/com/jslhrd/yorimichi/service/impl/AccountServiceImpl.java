@@ -134,4 +134,16 @@ public class AccountServiceImpl implements AccountService {
             throw new IllegalStateException("소셜 회원가입 실패");
         }
     }
+
+    @Override
+    public boolean validateNickname(String nickname) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'validateNickname'");
+    }
+
+    @Override
+    public boolean verificateEmail(String email) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'verificateEmail'");
+    }
 }
