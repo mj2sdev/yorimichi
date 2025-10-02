@@ -45,8 +45,7 @@ public class ReviewController {
 	// TODO: CustomUserPrincipal 구현 필요.
 	@PostMapping("/stores/{storeId}/review")
 	public void submitReview(
-			@PathVariable Long storeId,
-			
+			@PathVariable("storeId") Long storeId,
 			@AuthenticationPrincipal(expression = "userId") Long userId,
 			@RequestBody ReviewDTO dto
 	) {
@@ -54,10 +53,10 @@ public class ReviewController {
 	}
 
 	//리뷰수정
+	// TODO: CustomUserPrincipal 구현 필요.
 	@PutMapping("/review/{reviewId}")
 	public void updateReview(
-			@PathVariable Long reviewId,
-			// TODO: CustomUserPrincipal 구현 필요.
+			@PathVariable("reviewId") Long reviewId,
 			@AuthenticationPrincipal(expression = "userId") Long userId,
 			@RequestBody ReviewDTO dto
 	) {
@@ -66,10 +65,10 @@ public class ReviewController {
 	}
 
 	//리뷰삭제
+	// TODO: CustomUserPrincipal 구현 필요.
 	@DeleteMapping("/review/{reviewId}")
 	public void deleteReview(
-			@PathVariable Long reviewId,
-			// TODO: CustomUserPrincipal 구현 필요.
+			@PathVariable("reviewId") Long reviewId,
 			@AuthenticationPrincipal(expression = "userId") Long userId
 	) {
 		reviewService.delete(reviewId, userId);
