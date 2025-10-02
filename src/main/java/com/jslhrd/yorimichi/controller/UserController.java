@@ -5,8 +5,8 @@ import java.security.Principal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jslhrd.yorimichi.domain.UserDTO;
@@ -29,8 +29,8 @@ public class UserController {
 	private final UserService userService;
 	
 	//유저 상세페이지 이동
-	@GetMapping("/detail")
-	public String showUserDetail(@RequestParam("id") Long userId, Model model) {
+	@GetMapping("/detail/{id}")
+	public String showUserDetail(@PathVariable("id") Long userId, Model model) {
 		UserDTO user = userService.findById(userId);
 		model.addAttribute("user", user);
 		return "user/detail";
@@ -47,8 +47,8 @@ public class UserController {
 	//자기 정보 수정
 	@ResponseBody
 	@PutMapping("mypage")
-	public void updateMyDetail(Principal principal) {
-		//userService.update(user);
+	public void updateMyDetail(@RequestBody UserDTO user) {
+		userService.update(user);
 	}
 
 	//개인정보 보호 설정
