@@ -1,7 +1,5 @@
 package com.jslhrd.yorimichi.controller;
 
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import com.jslhrd.yorimichi.domain.ReviewDTO;
 import com.jslhrd.yorimichi.service.ReviewService;
 import lombok.RequiredArgsConstructor;
@@ -9,13 +7,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequiredArgsConstructor
@@ -39,15 +30,14 @@ public class ReviewController {
 	@GetMapping("/review/{reviewId}")
 	public ReviewDTO showReview(@PathVariable("reviewId") Long reviewId) {
 		return reviewService.findById(reviewId);
-
+	}
 
 
 	// 리뷰작성
 	// TODO: CustomUserPrincipal 구현 필요.
 	@PostMapping("/stores/{storeId}/review")
 	public void submitReview(
-			@PathVariable Long storeId,
-			
+			@PathVariable("storeId") Long storeId,
 			@AuthenticationPrincipal(expression = "userId") Long userId,
 			@RequestBody ReviewDTO dto
 	) {
@@ -55,10 +45,10 @@ public class ReviewController {
 	}
 
 	//리뷰수정
+	// TODO: CustomUserPrincipal 구현 필요.
 	@PutMapping("/review/{reviewId}")
 	public void updateReview(
-			@PathVariable Long reviewId,
-			// TODO: CustomUserPrincipal 구현 필요.
+			@PathVariable("reviewId") Long reviewId,
 			@AuthenticationPrincipal(expression = "userId") Long userId,
 			@RequestBody ReviewDTO dto
 	) {
@@ -67,10 +57,10 @@ public class ReviewController {
 	}
 
 	//리뷰삭제
+	// TODO: CustomUserPrincipal 구현 필요.
 	@DeleteMapping("/review/{reviewId}")
 	public void deleteReview(
-			@PathVariable Long reviewId,
-			// TODO: CustomUserPrincipal 구현 필요.
+			@PathVariable("reviewId") Long reviewId,
 			@AuthenticationPrincipal(expression = "userId") Long userId
 	) {
 		reviewService.delete(reviewId, userId);
