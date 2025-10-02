@@ -55,7 +55,7 @@ public class ReviewController {
 	}
 
 	//리뷰수정
-	@PutMapping("/reviews/{reviewId}")
+	@PutMapping("/review/{reviewId}")
 	public void updateReview(
 			@PathVariable Long reviewId,
 			// TODO: CustomUserPrincipal 구현 필요.
