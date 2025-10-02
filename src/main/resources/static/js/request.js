@@ -1,13 +1,3 @@
-/*
-처리가 가능해야 하는 요청 리스트
-/abc/{id}/def/{id}/ghi/{....
-/abc/{id}?def={ghi}&jkl={...
-
-목표
-1.엔드 포인트 사이에 특정 구간에 id를 넣을 수 있어야 한다.
-2.데이터의 타입별로 분리해서 적절한 헤더를 붙일 수 있어야 한다.
-*/
-
 const httpMethods = new Set(['GET', 'POST', 'PUT', 'PATCH', 'DELETE']);
 async function request(method, endpoint, {params, query, body}={}){
     
