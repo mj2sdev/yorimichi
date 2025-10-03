@@ -2,7 +2,11 @@ package com.jslhrd.yorimichi.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jslhrd.yorimichi.domain.FeedDTO;
+
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +33,10 @@ public class StationController {
     //최신 리뷰를 가져오는 피드, count로 몇개 받아올 건지 정함
     @ResponseBody
     @GetMapping("/feed/{count}")
-    public void showFeed(@PathVariable("count") int count) {
+    public List<FeedDTO> showFeed(@PathVariable("count") int count) {
+       // TODO: 서비스와 연결해야함.
+        List<FeedDTO> feeds = null;
+        return feeds;
     }
     
 }
