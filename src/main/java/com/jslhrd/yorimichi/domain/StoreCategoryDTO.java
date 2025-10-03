@@ -37,4 +37,9 @@ public class StoreCategoryDTO {
 	 * 수정일시 (DB 자동 갱신)
 	 */
 	private LocalDateTime updatedAt;
+
+	public StoreCategoryDTO(Long storeId, Long categoryId) {
+		this.storeId = storeId;
+		this.categoryId = categoryId;
+	}
 }
