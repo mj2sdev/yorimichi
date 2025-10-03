@@ -13,7 +13,6 @@
 </head>
 
 <body>
-	<h1 th:text="${message}">Welcome!</h1>
 	<section>
 		<div class="bg-ymprimary py-5 bg-gradient">
 			<div class="container-fluid">
@@ -123,11 +122,18 @@
 				</div>
 				<!-- <div class="row flexbox row-cols-3 g-4"> -->
 				<div class="storeList gap-4" style="display:grid; grid-template-columns: repeat(3,1fr);">
+					
 				</div>
 			</div>
 		</div>
 	</section>
+
+
 	<th:block th:replace="~{ fragments/index/storelist :: template }"/>
 	<th:block th:replace="~{ fragments/index/feed :: template }"/>
+
+
+			
+				
 </body>
 </html>

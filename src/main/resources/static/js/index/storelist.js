@@ -1,6 +1,4 @@
-const state = {
-	stores: []
-}
+request('get', '/');
 
 function render() {
 	const storeListContainer = document.querySelector('.storeList');
@@ -33,25 +31,3 @@ function generateStars(rating) {
     }
     return starsHTML;
 }
-
-let fetchTimerId = null; 
-async function fetchStores() {
-		if(fetchTimerId) {
-        clearTimeout(fetchTimerId);
-    	}
-	try{
-		const response = await fetch('/search');
-		if(!response.ok){
-			throw new Error('HTTP error! status: '+ response.status);
-		}
-		const newStores = await response.json();
-		state.stores = newStores;
-		render();
-	} catch (error){
-		console.error("가게 목록 불러오기 실패.", error);
-	} finally{
-		fetchTimerId = setTimeout(fetchStores, 30000);
-	}
-}
-
-fetchStores();

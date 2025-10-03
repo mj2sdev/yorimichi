@@ -17,48 +17,54 @@ public interface RelationshipService {
 	/**
 	 * 사용자가 팔로우 한 유저 목록을 가져옵니다.
 	 * 
-	 * @param principal
+	 * @param userId
 	 * @return
 	 */
-	public List<UserDTO> findFollowById(Principal principal);
+	public List<UserDTO> findFollowById(Long userId);
 
 	/**
 	 * 사용자를 팔로우 한 유저 목록을 가져옵니다.
 	 * 
-	 * @param principal
+	 * @param userId
 	 * @return
 	 */
-	public List<UserDTO> findFollowerById(Principal principal);
+	public List<UserDTO> findFollowerById(Long userId);
 
 	/**
 	 * 사용자가 대상을 관계 목록에 저장합니다.
 	 * 
-	 * @param principal
-	 * @param userId
+	 * @param userId 사용자
+	 * @param targetId 대상
 	 */
-	public void saveFollow(Principal principal, Long userId);
+	public void saveFollow(Long userid, Long targetId);
 	
 	/**
 	 * 사용자가 대상과의 관계를 전부 삭제합니다.
 	 * 
-	 * @param principal
+	 * @param userId 사용자
+	 * @param targetId 대상
+	 */
+	public void delete(Long userid, Long targetId);
+
+	/**
+	 * 사용자가 차단한 대상 목록을 가져옵니다.
 	 * @param userId
 	 */
-	public void delete(Principal principal, Long userId);
+	public List<UserDTO> findBlockById(Long userId);
 
 	/**
 	 * 사용자가 대상을 차단 목록에 저장합니다.
 	 * 
-	 * @param principal
-	 * @param userId
+	 * @param userId 사용자
+	 * @param targetId 대상
 	 */
-	public void saveBlock(Principal principal, Long userId);
+	public void saveBlock(Long userid, Long targetId);
 	
 	/**
 	 * 사용자가 대상을 차단목록에서 삭제합니다.
 	 * 
-	 * @param principal
-	 * @param userId
+	 * @param userId 사용자
+	 * @param targetId 대상
 	 */
-	public void deleteBlock(Principal principal, Long userId);
+	public void deleteBlock(Long userid, Long targetId);
 }
