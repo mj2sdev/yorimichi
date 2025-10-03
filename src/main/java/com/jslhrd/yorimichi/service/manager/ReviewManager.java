@@ -35,15 +35,14 @@ public class ReviewManager implements ReviewService {
 	@Override
 	public List<ReviewDTO> findAllByStoreId(Long storeId) {
 		// TODO: 무한 스크룰 및 review 상세 정보 추후 구현
-		reviewMapper.selectAllByStoreId(storeId);
-		return List.of();
+		return reviewMapper.selectAllByStoreId(storeId);
 	}
 
 	@Override
 	public ReviewDTO findById(Long reviewId) {
 
-		reviewMapper.selectById(reviewId);
-		return null;
+		return reviewMapper.selectById(reviewId)
+				.orElseThrow(() -> new ReviewNotFoundException(reviewId));
 	}
 
 	@Override
@@ -55,7 +54,8 @@ public class ReviewManager implements ReviewService {
 	@Transactional
 	public void save(Long userId, Long storeId, ReviewDTO dto) {
 
-		if (storeMapper.existsById(storeId) == 0) {
+		boolean exists = storeMapper.existsActive(storeId);
+		if (!exists) {
 			throw new StoreNotFoundException(storeId);
 		}
 
@@ -87,8 +87,8 @@ public class ReviewManager implements ReviewService {
 			return;
 		}
 
-		int exists = reviewMapper.existsActive(reviewId);
-		if (exists == 0) {
+		boolean exists = reviewMapper.existsActive(reviewId);
+		if (!exists) {
 			throw new ReviewNotFoundException(reviewId);
 		}
 
@@ -101,12 +101,12 @@ public class ReviewManager implements ReviewService {
 
 		int affected = reviewMapper.deleteById(reviewId, userId);
 		if (affected == 1) {
-			log.info("Review deleted id={}", reviewId);
+			log.info("Review Soft deleted id={}", reviewId);
 			return;
 		}
 
-		int exists = reviewMapper.existsActive(reviewId);
-		if (exists == 0) {
+		boolean exists = reviewMapper.existsActive(reviewId);
+		if (!exists) {
 			throw new ReviewNotFoundException(reviewId);
 		}
 

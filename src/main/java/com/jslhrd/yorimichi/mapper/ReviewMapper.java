@@ -31,14 +31,14 @@ public interface ReviewMapper {
 	 */
 	Optional<ReviewDTO> selectById(@Param("id") Long id);
 
+	boolean existsActive(@Param("id") Long id);
+
 	/**
 	 * 리뷰 추가.
 	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
 	int insert(ReviewDTO dto);
-
-	int existsActive(@Param("id") Long id);
 
 	/**
 	 * 리뷰 수정.

@@ -4,6 +4,8 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.ReviewMapper">
 
+    <!-- @formatter:off -->
+
     <select id="selectAll" resultType="ReviewDTO">
         SELECT v.id,
         v.user_id,
@@ -15,9 +17,8 @@
         r.updated_at
         FROM review v
         JOIN root r ON v.id = r.id
-        WHERE
-        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        AND r.type = 'REVIEW'
+            AND r.type = 'REVIEW'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
     </select>
 
     <select id="selectAllByStoreId" resultType="ReviewDTO">
@@ -31,39 +32,38 @@
         r.updated_at
         FROM review v
         JOIN root r ON v.id = r.id
+            AND r.type = 'REVIEW'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
         WHERE
         v.store_id = #{storeId}
-        AND
-        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        AND r.type = 'REVIEW'
     </select>
 
-    <select id="selectById" parameterType="Long" resultType="ReviewDTO">
-        SELECT v.id,
-        v.user_id,
-        v.store_id,
-        v.rating,
-        v.content,
-        r.type,
-        r.created_at,
-        r.updated_at
+    <select id="selectById" parameterType="long" resultType="ReviewDTO">
+        SELECT
+            v.id,
+            v.user_id,
+            v.store_id,
+            v.rating,
+            v.content,
+            r.type,
+            r.created_at,
+            r.updated_at
         FROM review v
         JOIN root r ON v.id = r.id
+            AND r.type = 'REVIEW'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
         WHERE v.id = #{id}
-        AND
-        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        AND r.type = 'REVIEW'
     </select>
 
-    <select id="existsActive" resultType="int">
-        SELECT 1
-        FROM review v
-        JOIN root r ON v.id = r.id
-        WHERE v.id = #{id}
-        AND r.type = #{type}
-        AND
-        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        AND r.type = 'REVIEW'
+    <select id="existsActive" parameterType="long" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM review v
+            JOIN root r ON v.id = r.id
+                AND r.type = 'REVIEW'
+                AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+            WHERE v.id = #{id}
+        )
     </select>
 
     <insert id="insert" parameterType="ReviewDTO">
@@ -74,25 +74,26 @@
     <update id="update">
         UPDATE review v
         JOIN root r ON v.id = r.id
-        SET v.rating = #{dto.rating},
-        v.content = #{dto.content},
-        r.updated_at = CURRENT_TIMESTAMP
+            AND r.type = 'REVIEW'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        SET
+            v.rating = #{dto.rating},
+            v.content = #{dto.content},
+            r.updated_at = CURRENT_TIMESTAMP
         WHERE v.id = #{id}
         AND v.user_id = #{userId}
-        AND
-        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        AND r.type = 'REVIEW'
     </update>
 
     <update id="deleteById">
         UPDATE review v
         JOIN root r ON v.id = r.id
+            AND r.type = 'REVIEW'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
         SET r.deleted_at = CURRENT_TIMESTAMP
         WHERE v.id = #{id}
         AND v.user_id = #{userId}
-        AND
-        <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        AND r.type = 'REVIEW'
     </update>
+
+    <!-- @formatter:on -->
 
 </mapper>
