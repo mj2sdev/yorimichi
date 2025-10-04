@@ -21,7 +21,7 @@ public interface ReviewMapper {
 
 	List<ReviewDTO> selectAll();
 
-	List<ReviewDTO> selectAllByStoreId(Long storeId);
+	List<ReviewDTO> selectAllByStoreId(@Param("storeId") Long storeId);
 
 	/**
 	 * 리뷰 단건 조회.
@@ -43,22 +43,22 @@ public interface ReviewMapper {
 	/**
 	 * 리뷰 수정.
 	 *
-	 * @param id     리뷰 ID
 	 * @param userId 유저 ID
+	 * @param id     리뷰 ID
 	 * @param dto    수정된 DTO
 	 * @return 영향 행 수 (수정 1, 대상 없음 0)
 	 */
-	int update(@Param("id") Long id,
-	           @Param("userId") Long userId,
+	int update(@Param("userId") Long userId,
+	           @Param("id") Long id,
 	           @Param("dto") ReviewDTO dto);
 
 	/**
 	 * 리뷰 삭제.
 	 *
-	 * @param id     리뷰 ID
 	 * @param userId 유저 ID
+	 * @param id     리뷰 ID
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */
-	int deleteById(@Param("id") Long id,
-	               @Param("userId") Long userId);
+	int deleteById(@Param("userId") Long userId,
+	               @Param("id") Long id);
 }

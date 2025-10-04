@@ -16,19 +16,19 @@ public class ReviewController {
 
 	//리뷰 리스트
 	@GetMapping("/reviews")
-	public List<ReviewDTO> showReviewlatest() {
+	public List<ReviewDTO> listReview() {
 		return reviewService.findAll();
 	}
 
 	//특정 가게 리뷰 리스트
 	@GetMapping("/stores/{storeId}/reviews")
-	public List<ReviewDTO> showReviewListById(@PathVariable("storeId") Long storeId) {
+	public List<ReviewDTO> listReviewByStore(@PathVariable("storeId") Long storeId) {
 		return reviewService.findAllByStoreId(storeId);
 	}
 
 	//리뷰상세
 	@GetMapping("/review/{reviewId}")
-	public ReviewDTO showReview(@PathVariable("reviewId") Long reviewId) {
+	public ReviewDTO getReview(@PathVariable("reviewId") Long reviewId) {
 		return reviewService.findById(reviewId);
 	}
 
@@ -36,9 +36,9 @@ public class ReviewController {
 	// 리뷰작성
 	// TODO: CustomUserPrincipal 구현 필요.
 	@PostMapping("/stores/{storeId}/review")
-	public void submitReview(
-			@PathVariable("storeId") Long storeId,
+	public void createReview(
 			@AuthenticationPrincipal(expression = "userId") Long userId,
+			@PathVariable("storeId") Long storeId,
 			@RequestBody ReviewDTO dto
 	) {
 		reviewService.save(userId, storeId, dto);
@@ -46,13 +46,13 @@ public class ReviewController {
 
 	//리뷰수정
 	// TODO: CustomUserPrincipal 구현 필요.
-	@PutMapping("/review/{reviewId}")
+	@PatchMapping("/review/{reviewId}")
 	public void updateReview(
 			@PathVariable("reviewId") Long reviewId,
 			@AuthenticationPrincipal(expression = "userId") Long userId,
 			@RequestBody ReviewDTO dto
 	) {
-		reviewService.update(reviewId, userId, dto);
+		reviewService.update(userId, reviewId, dto);
 
 	}
 
@@ -60,10 +60,10 @@ public class ReviewController {
 	// TODO: CustomUserPrincipal 구현 필요.
 	@DeleteMapping("/review/{reviewId}")
 	public void deleteReview(
-			@PathVariable("reviewId") Long reviewId,
-			@AuthenticationPrincipal(expression = "userId") Long userId
+			@AuthenticationPrincipal(expression = "userId") Long userId,
+			@PathVariable("reviewId") Long reviewId
 	) {
-		reviewService.delete(reviewId, userId);
+		reviewService.delete(userId, reviewId);
 	}
 
 }

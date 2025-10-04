@@ -1,8 +1,5 @@
 package com.jslhrd.yorimichi.service;
 
-import java.security.Principal;
-import java.util.List;
-
 import com.jslhrd.yorimichi.domain.ReportDTO;
 import com.jslhrd.yorimichi.domain.ReviewDTO;
 
@@ -42,15 +39,17 @@ public interface ReviewService {
 	/**
 	 * 부적절한 내용의 리뷰를 신고합니다.
 	 *
-	 * @param dto 신고 대상, 신고자, 기타등등 데이터 필요
+	 * @param userId   유저 ID
+	 * @param reviewId 리뷰 ID
+	 * @param dto      신고 데이터
 	 */
-	public void report(ReportDTO dto);
+	public void report(Long userId, Long reviewId, ReportDTO dto);
 
 	/**
 	 * Review 작성 데이터를 저장합니다.
 	 *
-	 * @param userId  리뷰 작성 유저 ID
-	 * @param storeId 리뷰 작성 상점 ID
+	 * @param userId  유저 ID
+	 * @param storeId 상점 ID
 	 * @param dto     리뷰 데이터
 	 */
 	public void save(Long userId, Long storeId, ReviewDTO dto);
@@ -58,20 +57,20 @@ public interface ReviewService {
 	/**
 	 * Review 수정 데이터를 반영합니다.
 	 *
-	 * @param reviewId 수정할 리뷰 ID
-	 * @param userId   권한 확인 유저 ID
-	 * @param dto      수정된 리뷰 데이터
+	 * @param userId   유저 ID
+	 * @param reviewId 리뷰 ID
+	 * @param dto      리뷰 데이터
 	 */
-	public void update(Long reviewId, Long userId, ReviewDTO dto);
+	public void update(Long userId, Long reviewId, ReviewDTO dto);
 
 
 	/**
 	 * 리뷰아이디 (reviewId) 를 이용해 리뷰를 삭제합니다.
 	 * TODO: 컨트롤러의 임시 작성을 위해 principal을 추가했습니다. 검토 바랍니다.
 	 *
-	 * @param reviewId 삭제할 리뷰 ID
 	 * @param userId   권한 확인 유저 ID
+	 * @param reviewId 삭제할 리뷰 ID
 	 */
-	public void delete(Long reviewId, Long userId);
+	public void delete(Long userId, Long reviewId);
 
 }
