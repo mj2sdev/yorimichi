@@ -40,14 +40,14 @@ public class ReviewManager implements ReviewService {
 
 	@Override
 	public ReviewDTO findById(Long reviewId) {
-
+		// TODO: 연관 DTO 조회 추구 구현
 		return reviewMapper.selectById(reviewId)
 				.orElseThrow(() -> new ReviewNotFoundException(reviewId));
 	}
 
 	@Override
-	public void report(ReportDTO dto) {
-		// TODO: 리뷰 신고하기 있었나요?
+	public void report(Long userId, Long reviewId, ReportDTO dto) {
+		// TODO: 추후 구현
 	}
 
 	@Override
@@ -70,8 +70,8 @@ public class ReviewManager implements ReviewService {
 
 		int reviewAffected = reviewMapper.insert(dto);
 		if (reviewAffected == 0) {
-			log.warn("review insert failed: reviewAffected={}, dto={}", reviewAffected, dto);
-			throw new IllegalStateException("review insert failed");
+			log.warn("Review insert failed: reviewAffected={}, dto={}", reviewAffected, dto);
+			throw new IllegalStateException("Review insert failed");
 		}
 
 		log.info("Review created id={}", dto.getId());
@@ -79,9 +79,9 @@ public class ReviewManager implements ReviewService {
 
 	@Override
 	@Transactional
-	public void update(Long reviewId, Long userId, ReviewDTO dto) {
+	public void update(Long userId, Long reviewId, ReviewDTO dto) {
 
-		int affected = reviewMapper.update(reviewId, userId, dto);
+		int affected = reviewMapper.update(userId, reviewId, dto);
 		if (affected == 1) {
 			log.info("Review updated id={}", reviewId);
 			return;
@@ -97,11 +97,11 @@ public class ReviewManager implements ReviewService {
 
 	@Override
 	@Transactional
-	public void delete(Long reviewId, Long userId) {
+	public void delete(Long userId, Long reviewId) {
 
-		int affected = reviewMapper.deleteById(reviewId, userId);
+		int affected = reviewMapper.deleteById(userId, reviewId);
 		if (affected == 1) {
-			log.info("Review Soft deleted id={}", reviewId);
+			log.info("Review soft deleted id={}", reviewId);
 			return;
 		}
 
