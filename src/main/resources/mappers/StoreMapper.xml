@@ -109,14 +109,13 @@
     </sql>
 
     <select id="selectAll" parameterType="map" resultMap="StoreLightMap">
-        SELECT
-            s.id,
-            s.address_id,
-            s.name,
-            s.description,
-            s.phone,
-            r.created_at,
-            r.updated_at
+        SELECT s.id,
+               s.address_id,
+               s.name,
+               s.description,
+               s.phone,
+               r.created_at,
+               r.updated_at
         FROM store s
         JOIN root r ON s.id = r.id
             AND r.type = 'STORE'
@@ -124,14 +123,13 @@
     </select>
 
     <select id="selectById" parameterType="long" resultMap="StoreMap">
-        SELECT
-            s.id,
-            s.address_id,
-            s.name,
-            s.description,
-            s.phone,
-            r.created_at,
-            r.updated_at
+        SELECT s.id,
+               s.address_id,
+               s.name,
+               s.description,
+               s.phone,
+               r.created_at,
+               r.updated_at
         FROM store s
         JOIN root r ON r.id = s.id
             AND r.type = 'STORE'
@@ -160,8 +158,7 @@
         JOIN root r ON s.id = r.id
             AND r.type = 'STORE'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        SET
-            s.address_id = #{addressId},
+        SET s.address_id = #{addressId},
             s.name = #{name},
             s.description = #{description},
             s.phone = #{phone},
