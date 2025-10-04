@@ -15,6 +15,20 @@ import java.util.List;
 public interface CategoryService {
 
 	/**
+	 * 모든 카테고리 목록을 조회합니다.
+	 *
+	 * @return {@code List<CategoryDTO>} 카테고리 리스트
+	 */
+	public List<CategoryDTO> findAll();
+
+	/**
+	 * 모든 카테고리 목록을 조회합니다.
+	 *
+	 * @return {@code List<CategoryDTO>} 카테고리 리스트
+	 */
+	public List<CategoryDTO> findAllByDTO(SearchDTO dto);
+
+	/**
 	 * 새로운 카테고리를 생성합니다.
 	 *
 	 * @param dto 카테고리 정보
@@ -37,26 +51,12 @@ public interface CategoryService {
 	public void delete(Long categoryId);
 
 	/**
-	 * 모든 카테고리 목록을 조회합니다.
-	 *
-	 * @return {@code List<CategoryDTO>} 카테고리 리스트
-	 */
-	public List<CategoryDTO> findAllByDTO(SearchDTO dto);
-
-	/**
-	 * 정보 없이 모든 카테고리 목록을 조회합니다.
-	 * 
-	 * @return {@code List<CategoryDTO>} 카테고리 리스트
-	 */
-	public List<CategoryDTO> findAll();
-
-	/**
 	 * 특정 가게(store)에 카테고리를 연결합니다.
 	 *
 	 * @param storeId    카테고리를 연결할 가게의 ID
 	 * @param categoryId 연결될 카테고리의 ID
 	 */
-	public void linkCategoryToStore(Long storeId, Long categoryId);
+	public void addCategoryToStore(Long storeId, Long categoryId);
 
 	/**
 	 * 특정 가게(store)에서 카테고리 연결을 해제합니다.
@@ -64,6 +64,6 @@ public interface CategoryService {
 	 * @param storeId    카테고리 연결을 해제할 가게의 ID
 	 * @param categoryId 연결 해제될 카테고리의 ID
 	 */
-	public void unlinkCategoryFromStore(Long storeId, Long categoryId);
+	public void removeCategoryFromStore(Long storeId, Long categoryId);
 
 }

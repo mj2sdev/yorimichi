@@ -2,7 +2,6 @@ package com.jslhrd.yorimichi.service.manager;
 
 import com.jslhrd.yorimichi.domain.CategoryDTO;
 import com.jslhrd.yorimichi.domain.SearchDTO;
-import com.jslhrd.yorimichi.domain.StoreCategoryDTO;
 import com.jslhrd.yorimichi.exception.*;
 import com.jslhrd.yorimichi.mapper.CategoryMapper;
 import com.jslhrd.yorimichi.mapper.StoreCategoryMapper;
@@ -26,10 +25,15 @@ public class CategoryManager implements CategoryService {
 	private final StoreCategoryMapper storeCategoryMapper;
 	private final StoreMapper storeMapper;
 
-	@Transactional(readOnly = true)
 	@Override
-	public List<CategoryDTO> findAll(SearchDTO q) {
-		return categoryMapper.selectAll(q);
+	public List<CategoryDTO> findAll() {
+		return categoryMapper.selectAll();
+	}
+
+	@Override
+	public List<CategoryDTO> findAllByDTO(SearchDTO dto) {
+		// TODO: 어떤 역할인가요?
+		return List.of();
 	}
 
 	@Override
@@ -80,7 +84,7 @@ public class CategoryManager implements CategoryService {
 	}
 
 	@Override
-	public void linkCategoryToStore(Long storeId, Long categoryId) {
+	public void addCategoryToStore(Long storeId, Long categoryId) {
 
 		boolean storeExists = storeMapper.existsActive(storeId);
 		if (!storeExists) {
@@ -92,32 +96,30 @@ public class CategoryManager implements CategoryService {
 			throw new CategoryNotFoundException(categoryId);
 		}
 
-		StoreCategoryDTO dto = new StoreCategoryDTO(storeId, categoryId);
 		try {
-			int affected = storeCategoryMapper.insert(dto);
+			int affected = storeCategoryMapper.insert(storeId, categoryId);
 			if (affected == 0) {
-				log.warn("StoreCategory liked failed: affected={}, dto={}", affected, dto);
+				log.warn("StoreCategory liked failed: affected={}, storeId={}, categoryId={}", affected, storeId, categoryId);
 				throw new IllegalStateException("StoreCategory liked failed");
 			}
 		} catch (DataIntegrityViolationException e) {
 			throw new DuplicateStoreCategoryException(storeId, categoryId);
 		}
 
-		log.info("StoreCategory liked storeId={} and categoryId={}", storeId, categoryId);
+		log.info("StoreCategory liked storeId={}, categoryId={}", storeId, categoryId);
 	}
 
 
 	@Override
-	public void unlinkCategoryFromStore(Long storeId, Long categoryId) {
+	public void removeCategoryFromStore(Long storeId, Long categoryId) {
 
-		StoreCategoryDTO dto = new StoreCategoryDTO(storeId, categoryId);
-		int affected = storeCategoryMapper.delete(dto);
+		int affected = storeCategoryMapper.delete(storeId, categoryId);
 		if (affected == 1) {
-			log.info("StoreCategory unliked storeId={} and categoryId={}", storeId, categoryId);
+			log.info("StoreCategory unliked storeId={}, categoryId={}", storeId, categoryId);
 			return;
 		}
 
-		boolean exists = storeCategoryMapper.exists(dto);
+		boolean exists = storeCategoryMapper.exists(storeId, categoryId);
 		if (!exists) {
 			throw new StoreCategoryNotFoundException(storeId, categoryId);
 		}

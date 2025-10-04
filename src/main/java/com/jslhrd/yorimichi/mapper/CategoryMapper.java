@@ -1,7 +1,6 @@
 package com.jslhrd.yorimichi.mapper;
 
 import com.jslhrd.yorimichi.domain.CategoryDTO;
-import com.jslhrd.yorimichi.domain.SearchDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,7 +19,7 @@ import java.util.Optional;
 @Mapper
 public interface CategoryMapper {
 
-	List<CategoryDTO> selectAll(SearchDTO q);
+	List<CategoryDTO> selectAll();
 
 	/**
 	 * 카테고리 단건 조회.
