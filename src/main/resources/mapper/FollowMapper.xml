@@ -4,14 +4,57 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.FollowMapper">
 
-    <insert id="insert" parameterType="FollowDTO">
+    <!-- @formatter:off -->
+
+    <select id="selectFollowersByUserId" parameterType="long" resultType="FollowDTO">
+        SELECT *
+        FROM follow
+        WHERE followee_id = #{userId}
+        ORDER BY created_at DESC;
+    </select>
+
+    <select id="selectFolloweesByUserId" parameterType="long" resultType="FollowDTO">
+        SELECT *
+        FROM follow
+        WHERE follower_id = #{userId}
+        ORDER BY created_at DESC;
+    </select>
+
+    <select id="exists" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1
+            FROM follow
+            WHERE follower_id = #{followerId}
+              AND followee_id = #{followeeId}
+        )
+    </select>
+
+    <insert id="insert">
         INSERT INTO follow (follower_id, followee_id)
         VALUES (#{followerId}, #{followeeId})
     </insert>
 
-    <delete id="delete" parameterType="FollowDTO">
-        DELETE FROM follow
-        WHERE follower_id = #{followerId} AND followee_id = #{followeeId}
+    <update id="updateNotification">
+        UPDATE follow
+        SET notified = #{notified}
+        WHERE follower_id = #{followerId}
+          AND followee_id = #{followeeId}
+    </update>
+
+    <delete id="delete">
+        DELETE
+        FROM follow
+        WHERE follower_id = #{followerId}
+          AND followee_id = #{followeeId}
     </delete>
+
+    <delete id="deleteBothDirections">
+        DELETE
+        FROM follow
+        WHERE (follower_id = #{followerId} AND followee_id = #{followeeId})
+           OR (follower_id = #{followeeId} AND followee_id = #{followerId})
+    </delete>
+
+    <!-- @formatter:on -->
 
 </mapper>

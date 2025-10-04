@@ -37,4 +37,9 @@ public class BlockDTO {
 	 * 수정일시 (DB 자동 갱신)
 	 */
 	private LocalDateTime updatedAt;
+
+	public BlockDTO(Long blockerId, Long blockeeId) {
+		this.blockerId = blockerId;
+		this.blockeeId = blockeeId;
+	}
 }
