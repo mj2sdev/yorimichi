@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
+
 @RestController
 @RequiredArgsConstructor
 public class CoeatController {
@@ -30,49 +31,69 @@ public class CoeatController {
 		 return coeatService.getCoeatList();
 	}
 
-	//같이먹기 상세
-	//	"/coeat/{id}"
-	@GetMapping("/coeat/{id}")
-	public CoeatDTO showCoeat(@PathVariable("id") Long feedId) {
-		return coeatService.getCoeatDetail(feedId);
+	//특정 가게 같이먹기 리스트
+	@GetMapping("/coeats/{id}")
+	public List<CoeatDTO> getMethodName(@PathVariable("id") Long storeId) {
+		return coeatService.getCoeatListById(storeId);
 	}
+	
 
-	//같이먹기 삭제
-	@DeleteMapping("/coeat/{id}")
-	public void deleteCoeat(@PathVariable("id") Long feedId){
-		coeatService.deleteCoeat(feedId);
+	//같이먹기 상세
+	@GetMapping("/coeat/{id}")
+	public CoeatDTO showCoeat(@PathVariable("id") Long coeatId) {
+		return coeatService.getCoeatDetail(coeatId);
 	}
 
 	//같이먹기 작성
 	@PostMapping("/coeat")
-	public void postCoeat(@RequestBody CoeatDTO coeat) {
+	public void postCoeat(@RequestBody CoeatDTO coeat, Principal principal) {
+		//TODO: 유저id 찾아오는 커스텀 USER 
 		coeatService.save(coeat);
 	}
-	
+
 	//같이먹기 수정
-	@PutMapping("/coeat")
-	public void putCoeat(@RequestBody CoeatDTO coeat) {
-		coeatService.updateCoeat(coeat);
+	@PutMapping("/coeat/{id}")
+	public void putCoeat(@PathVariable("id") Long coeatId, @RequestBody CoeatDTO coeat, Principal principal) {
+		//TODO: 유저id 찾아오는 커스텀 USER 
+		coeatService.updateCoeat(coeatId, coeat);
+	}
+
+	//같이먹기 삭제
+	@DeleteMapping("/coeat/{id}")
+	public void deleteCoeat(@PathVariable("id") Long coeatId, Principal principal){
+		//TODO: 유저id 찾아오는 커스텀 USER 
+		coeatService.deleteCoeat(coeatId);
 	}
 
 	//같이먹기 신청
-	@PostMapping("/coeat/participant")
-	public void participateCoeat(@RequestBody CoeatDTO coeat,Principal principal) {
-		coeatService.joinCoeat(null, null);
-		//TODO: 현재 userId를 알아낼 방법이 없습니다.
+	@PostMapping("/coeat/{coeatId}/participant")
+	public void participateCoeat(
+		@PathVariable("coeatId") Long coeatId,
+		@RequestBody CoeatRequestDTO coeatRequest, 
+		Principal principal) {
+		long userId = 0;
+		coeatService.joinCoeat(coeatId, coeatRequest, userId);
 	}
 	
 	//같이먹기 수락
 	//대기 상태에서 수락상태로 변경하는 거로 처리될 것 같아요
-	@PatchMapping("/coeat/participant")
-	public void acceptParticipant(@RequestBody CoeatRequestDTO coeatRequest, Principal principal){
-		coeatService.acceptParticipant(principal, coeatRequest);
+	@PatchMapping("/coeat/{coeatId}/participant/{participantId}")
+	public void acceptParticipant(
+		@PathVariable("coeatId") Long coeatId,
+		@PathVariable("participantId") Long participantId, 
+		Principal principal){
+		long userId = 0;
+		coeatService.acceptParticipant(coeatId, participantId, userId);
 	}
 
 	//같이먹기 제외/거절/취소
-	@DeleteMapping("/coeat/participant")
-	public void deleteParticipant(@RequestBody CoeatRequestDTO coeatRequest, Principal principal){
-		coeatService.rejectParticipant(principal, coeatRequest);
+	@DeleteMapping("/coeat/{coeatid}/participant")
+	public void deleteParticipant(
+		@PathVariable("coeatId") Long coeatId,
+		@PathVariable("participantId") Long participantId,
+		Principal principal){
+		long userId = 0;
+		coeatService.rejectParticipant(coeatId, participantId, userId);
 	}
 	
 

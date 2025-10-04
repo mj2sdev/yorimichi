@@ -1,57 +1,45 @@
-const state = {
-	stores: []
-}
-
-function render() {
-	const storeListContainer = document.querySelector('.storeList');
-	const storeTemplate = document.getElementById('storelist-template');
-	storeListContainer.innerHTML = '';
-	state.stores.forEach(store => {
-		const clone = document.importNode(storeTemplate.content, true);
-		const link = clone.querySelector('a');
-		link.href = `/store/detail/${store.id}`;
-		clone.querySelector('.store-name').textContent = store.storeName;
-        clone.querySelector('.store-category').textContent = store.category;
-        clone.querySelector('.store-address').textContent = store.address;
-        clone.querySelector('.store-rating-number').textContent = `${store.rating}점`;
-        clone.querySelector('.store-reviews-count').textContent = store.reviewCount;
-		const starContainer = clone.querySelector('.store-rating-star');
-		starContainer.innerHTML = generateStars(store.rating);
-		storeListContainer.appendChild(clone);
-	});
-}
-
-function generateStars(rating) {
-    let starsHTML = '';
-	const roundedRating = Math.round(rating);
-	for (let i = 1; i <= 5; i++) {
-        if (i <= roundedRating) {
-            starsHTML += '<i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>';
-        } else {
-            starsHTML += '<i class="bi bi-star" style="font-size: 1em; color: lightgray;"></i>';
-        }
-    }
-    return starsHTML;
-}
-
-let fetchTimerId = null; 
-async function fetchStores() {
-		if(fetchTimerId) {
-        clearTimeout(fetchTimerId);
-    	}
-	try{
-		const response = await fetch('/search');
-		if(!response.ok){
-			throw new Error('HTTP error! status: '+ response.status);
+(function(){
+	async function updateStores(){
+		const stores = await request('get', '/search');
+		if(stores){
+			renderStores(stores);
 		}
-		const newStores = await response.json();
-		state.stores = newStores;
-		render();
-	} catch (error){
-		console.error("가게 목록 불러오기 실패.", error);
-	} finally{
-		fetchTimerId = setTimeout(fetchStores, 30000);
+		
 	}
-}
 
-fetchStores();
+
+	function renderStores(stores) {
+		const storeListContainer = document.querySelector('.storeList');
+		const storeTemplate = document.getElementById('storelist-template');
+		storeListContainer.innerHTML = '';
+		stores.slice(0,6).forEach(store => {
+			const clone = document.importNode(storeTemplate.content, true);
+			const link = clone.querySelector('a');
+			link.href = `/store/detail/${store.id}`;
+			clone.querySelector('.store-name').textContent = store.storeName;
+			clone.querySelector('.store-category').textContent = store.category;
+			clone.querySelector('.store-address').textContent = store.address;
+			clone.querySelector('.store-rating-number').textContent = `${store.rating}점`;
+			clone.querySelector('.store-reviews-count').textContent = store.reviewCount;
+			const starContainer = clone.querySelector('.store-rating-star');
+			starContainer.innerHTML = generateStars(store.rating);
+			storeListContainer.appendChild(clone);
+		});
+	}
+
+	function generateStars(rating) {
+		let starsHTML = '';
+		const roundedRating = Math.round(rating);
+		for (let i = 1; i <= 5; i++) {
+			if (i <= roundedRating) {
+				starsHTML += '<i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>';
+			} else {
+				starsHTML += '<i class="bi bi-star" style="font-size: 1em; color: lightgray;"></i>';
+			}
+		}
+		return starsHTML;
+	}
+	updateStores();
+	setInterval(updateStores, 30000);
+
+})();

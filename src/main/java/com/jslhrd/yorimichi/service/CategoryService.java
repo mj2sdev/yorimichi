@@ -41,7 +41,14 @@ public interface CategoryService {
 	 *
 	 * @return {@code List<CategoryDTO>} 카테고리 리스트
 	 */
-	public List<CategoryDTO> findAll(SearchDTO dto);
+	public List<CategoryDTO> findAllByDTO(SearchDTO dto);
+
+	/**
+	 * 정보 없이 모든 카테고리 목록을 조회합니다.
+	 * 
+	 * @return {@code List<CategoryDTO>} 카테고리 리스트
+	 */
+	public List<CategoryDTO> findAll();
 
 	/**
 	 * 특정 가게(store)에 카테고리를 연결합니다.
