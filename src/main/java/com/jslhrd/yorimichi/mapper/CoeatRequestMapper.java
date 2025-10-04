@@ -16,20 +16,26 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface CoeatRequestMapper {
 
+	boolean exists(@Param("userId") Long userId,
+	               @Param("id") Long coeatId);
+
 	/**
-	 * 주소 추가.
+	 * 같이먹기 요청 추가.
+	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
 	int insert(CoeatRequestDTO dto);
 
-	// TODO: 같이먹기 기준 요청 목록 조회.
-
-	// TODO: 요청 처리.
+	int updateStatusByOwner(@Param("coeatId") Long coeatId,
+	                        @Param("dto") CoeatRequestDTO dto);
 
 	/**
 	 * 같이먹기 요청 삭제.
-	 * @param id 같이먹기 요청 ID
+	 *
+	 * @param userId  유저 ID
+	 * @param coeatId 같이먹기 ID
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */
-	int deleteById(@Param("id") Long id);
+	int cancelByRequester(@Param("userId") Long userId,
+	                      @Param("coeatId") Long coeatId);
 }
