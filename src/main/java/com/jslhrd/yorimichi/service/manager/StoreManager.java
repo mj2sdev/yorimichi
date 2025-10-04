@@ -92,7 +92,7 @@ public class StoreManager implements StoreService {
 
 		int affected = storeMapper.deleteById(storeId);
 		if (affected == 1) {
-			log.info("Store Soft Deleted id={}", storeId);
+			log.info("Store soft deleted id={}", storeId);
 			return;
 		}
 
