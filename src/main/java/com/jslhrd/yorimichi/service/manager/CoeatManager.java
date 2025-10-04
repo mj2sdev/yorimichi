@@ -1,63 +1,174 @@
 package com.jslhrd.yorimichi.service.manager;
 
-import java.security.Principal;
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
 import com.jslhrd.yorimichi.domain.CoeatDTO;
 import com.jslhrd.yorimichi.domain.CoeatRequestDTO;
+import com.jslhrd.yorimichi.exception.CoeatNotFoundException;
+import com.jslhrd.yorimichi.exception.DuplicateCoeatRequestException;
+import com.jslhrd.yorimichi.exception.StoreNotFoundException;
+import com.jslhrd.yorimichi.mapper.CoeatMapper;
+import com.jslhrd.yorimichi.mapper.CoeatRequestMapper;
+import com.jslhrd.yorimichi.mapper.RootMapper;
+import com.jslhrd.yorimichi.mapper.StoreMapper;
 import com.jslhrd.yorimichi.service.CoeatService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+@Slf4j
 @Service
-public class CoeatManager implements CoeatService{
+@RequiredArgsConstructor
+@Transactional
+public class CoeatManager implements CoeatService {
 
-    @Override
-    public void acceptParticipant(Principal principal, CoeatRequestDTO coeatRequest) {
-        // TODO Auto-generated method stub
-        
-    }
+	private final RootMapper rootMapper;
+	private final StoreMapper storeMapper;
+	private final CoeatMapper coeatMapper;
+	private final CoeatRequestMapper coeatRequestMapper;
 
-    @Override
-    public void deleteCoeat(Long feedId) {
-        // TODO Auto-generated method stub
-        
-    }
 
-    @Override
-    public CoeatDTO getCoeatDetail(Long feedId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	@Transactional(readOnly = true)
+	public List<CoeatDTO> findAll() {
+		// TODO: 무한 스크룰 및 coeat 상세 정보 추후 구현
+		return coeatMapper.selectAll();
+	}
 
-    @Override
-    public List<CoeatDTO> getCoeatList() {
-        // TODO Auto-generated method stub
-        return null;
-    }
+	@Override
+	@Transactional(readOnly = true)
+	public List<CoeatDTO> findAllByStoreId(Long storeId) {
+		// TODO: 무한 스크룰 및 coeat 상세 정보 추후 구현
+		return coeatMapper.selectAllByStoreId(storeId);
+	}
 
-    @Override
-    public void joinCoeat(Long userId, Long feedId) {
-        // TODO Auto-generated method stub
-        
-    }
+	@Override
+	@Transactional(readOnly = true)
+	public CoeatDTO findById(Long coeatId) {
+		return coeatMapper.selectById(coeatId)
+				.orElseThrow(() -> new CoeatNotFoundException(coeatId));
+	}
 
-    @Override
-    public void rejectParticipant(Principal principal, CoeatRequestDTO coeatRequest) {
-        // TODO Auto-generated method stub
-        
-    }
+	@Override
+	public void save(Long userId, Long storeId, CoeatDTO dto) {
 
-    @Override
-    public void save(Object dto) {
-        // TODO Auto-generated method stub
-        
-    }
+		boolean exists = storeMapper.existsActive(storeId);
+		if (!exists) {
+			throw new StoreNotFoundException(storeId);
+		}
 
-    @Override
-    public void updateCoeat(Object dto) {
-        // TODO Auto-generated method stub
-        
-    }
+		dto.setUserId(userId);
+		dto.setStoreId(storeId);
 
+		int rootAffected = rootMapper.insert(dto);
+		if (rootAffected == 0 || dto.getId() == null) {
+			log.warn("Root insert failed or id not generated: rootAffected={}, dto={}", rootAffected, dto);
+			throw new IllegalStateException("Root insert failed or no generated id");
+		}
+
+		int coeatAffected = coeatMapper.insert(dto);
+		if (coeatAffected == 0) {
+			log.warn("Coeat insert failed: coeatAffected={}, dto={}", coeatAffected, dto);
+			throw new IllegalStateException("Coeat insert failed");
+		}
+
+		log.info("Coeat created id={}", dto.getId());
+	}
+
+	@Override
+	public void update(Long userId, Long coeatId, CoeatDTO dto) {
+
+		int affected = coeatMapper.update(userId, coeatId, dto);
+		if (affected == 1) {
+			log.info("Coeat updated id={}", coeatId);
+			return;
+		}
+
+		boolean exists = coeatMapper.existsActive(coeatId);
+		if (!exists) {
+			throw new CoeatNotFoundException(coeatId);
+		}
+
+		throw new AccessDeniedException("같이먹기 수정 권한이 없습니다.");
+
+	}
+
+	@Override
+	public void delete(Long userId, Long coeatId) {
+
+		int affected = coeatMapper.deleteById(userId, coeatId);
+		if (affected == 1) {
+			log.info("Coeat soft deleted id={}", coeatId);
+			return;
+		}
+
+		boolean exists = coeatMapper.existsActive(coeatId);
+		if (!exists) {
+			throw new CoeatNotFoundException(coeatId);
+		}
+
+		throw new AccessDeniedException("같이먹기 삭제 권한이 없습니다.");
+	}
+
+
+	@Override
+	public void saveCoeatRequest(Long userId, Long coeatId, CoeatRequestDTO dto) {
+
+		boolean exists = coeatMapper.existsActive(coeatId);
+		if (!exists) {
+			throw new CoeatNotFoundException(coeatId);
+		}
+
+		boolean isOwner = coeatMapper.isOwner(userId, coeatId);
+		if (isOwner) {
+			throw new IllegalStateException("작성자는 신청할 수 없습니다.");
+		}
+
+		dto.setUserId(userId);
+		dto.setCoeatId(coeatId);
+
+		try {
+			int affected = coeatRequestMapper.insert(dto);
+			if (affected == 0) {
+				log.warn("CoeatRequest insert failed: coeatRequestAffected={}, dto={}", affected, dto);
+				throw new IllegalStateException("CoeatRequest insert failed");
+			}
+		} catch (DataIntegrityViolationException e) {
+			throw new DuplicateCoeatRequestException(userId, coeatId);
+		}
+
+		log.info("CoeatRequest created userId={}, coeatId={}", userId, coeatId);
+	}
+
+	@Override
+	public void updateCoeatRequestStatus(Long ownerId, Long coeatId, CoeatRequestDTO dto) {
+
+		boolean isOwner = coeatMapper.isOwner(ownerId, coeatId);
+		if (!isOwner) {
+			throw new AccessDeniedException("작성자만 승인/거절이 가능합니다.");
+		}
+
+		int affected = coeatRequestMapper.updateStatusByOwner(coeatId, dto);
+		if (affected == 1) {
+			log.info("CoeatRequest status updated requestUserId={}, coeatId={}, to={}", dto.getUserId(), coeatId, dto.getStatus());
+			return;
+		}
+
+		throw new AccessDeniedException("같이먹기 신청 상태를 변경 할 수 없습니다.");
+	}
+
+	@Override
+	public void cancelCoeatRequest(Long userId, Long coeatId) {
+
+		int affected = coeatRequestMapper.cancelByRequester(userId, coeatId);
+		if (affected == 1) {
+			log.info("CoeatRequest cancelled userId={}, coeatId={}", userId, coeatId);
+			return;
+		}
+
+		throw new AccessDeniedException("같이먹기 신청 취소 권한이 없습니다.");
+	}
 }

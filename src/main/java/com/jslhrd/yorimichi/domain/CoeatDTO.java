@@ -57,6 +57,8 @@ public class CoeatDTO extends RootDTO {
 	 * 자동 수락 여부
 	 */
 	private Boolean autoAccept;
+
+
 	/**
 	 * 같이먹기 상점
 	 */
@@ -74,7 +76,7 @@ public class CoeatDTO extends RootDTO {
 	 */
 	private List<CommentDTO> comments;
 
-	
+
 	public CoeatDTO() {
 		super(RootType.COEAT);
 	}
