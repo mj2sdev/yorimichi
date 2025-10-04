@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class ReviewDTO extends RootDTO {
+public class ReviewDTO extends RootDTO implements FeedDTO {
 
 	/**
 	 * FK: 유저 ID

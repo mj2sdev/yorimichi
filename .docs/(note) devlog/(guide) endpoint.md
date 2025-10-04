@@ -52,7 +52,9 @@
 -   DELETE `/block/{targetId}` || :: 유저차단해제 - 차단목록에서 제거. // mypage.html
 
 ## ReportController
--   POST `/report` |null| :: 신고 - 신고해서 신고 대상/ 카테고리/ 내용을 리스트에 전달. // store/detail.html
+-   POST `/report/{category}/{rootId}` |null| :: 신고 - 신고해서 신고 대상/ 카테고리/ 내용을 리스트에 전달. // store/detail.html
+-   Put `/report/(reportId)` || :: 접수된 신고 수락 및 조치.
+-   DELETE `/report/{reportId}`|| :: 접수된 신고 반려.
 
 ## ReviewController
 -   GET `/reviews` |List<ReviewDTO>| :: 가게와 상관 없이 최신 리뷰 리스트를 불러옴.
@@ -62,7 +64,8 @@
 -   DELETE `/review` |List<ReviewDTO>| :: 리뷰삭제 - 삭제 // store/detail.html
 
 ## StationController
-- GET `/feed` || :: 리뷰와 같이먹기의 목록을 가져오는 용도.
+- GET `/station` || :: 정류장으로 이동
+- GET `/feed/{count}` |List<FeedDTO>| :: 리뷰와 같이먹기의 목록을 가져오는 용도.
 
 ## StoreController
 -   GET `/search` |List<StoreDTO>| :: 가게 리스트를 비동기로 불러오기 위함. index 페이지에서 맛집 리스트를 요구하기 때문에, 키워드나 태그 없이 가져오도록 함.

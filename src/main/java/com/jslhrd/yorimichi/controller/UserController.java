@@ -46,7 +46,7 @@ public class UserController {
 
 	//자기 정보 수정
 	@ResponseBody
-	@PutMapping("mypage")
+	@PutMapping("/mypage")
 	public void updateMyDetail(@RequestBody UserDTO user) {
 		userService.update(user);
 	}
