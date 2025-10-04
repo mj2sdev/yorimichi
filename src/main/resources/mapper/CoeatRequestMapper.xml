@@ -4,13 +4,48 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.CoeatRequestMapper">
 
+    <!-- @formatter:off -->
+
+    <select id="exists" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM coeat_request c
+            WHERE c.user_id = #{userId}
+              AND c.coeat_id = #{coeatId}
+        )
+    </select>
+
     <insert id="insert" parameterType="CoeatRequestDTO">
-        INSERT INTO feed_coeat_request (coeat_id, user_id, status, message)
+        INSERT INTO coeat_request (coeat_id, user_id, status, message)
         VALUES (#{coeatId}, #{userId}, #{status}, #{message})
     </insert>
 
-    <delete id="deleteByCoeatId" parameterType="Long">
-        DELETE FROM feed_coeat_request WHERE coeat_id = #{coeatId}
-    </delete>
+    <update id="updateStatusByOwner">
+        UPDATE coeat_request r
+        JOIN coeat c ON r.coeat_id = c.id
+        SET r.status = #{dto.status}
+        WHERE r.coeat_id = #{coeatId}
+            AND r.user_id = #{dto.userId}
+            AND c.status = 'OPEN'
+            AND r.status IN ('PENDING', 'REJECTED')
+            AND (
+                (#{dto.status} = 'APPROVED'
+                AND (SELECT COUNT(*)
+                     FROM coeat_request
+                     WHERE coeat_id = #{coeatId}
+                        AND status = 'APPROVED') < c.capacity)
+                OR (#{dto.status} <> 'APPROVED')
+            )
+    </update>
+
+    <update id="cancelByRequester">
+        UPDATE coeat_request
+        SET status = 'CANCELLED'
+        WHERE coeat_id = #{coeatId}
+          AND user_id = #{userId}
+          AND status <> 'CANCELLED'
+    </update>
+
+    <!-- @formatter:on -->
 
 </mapper>
