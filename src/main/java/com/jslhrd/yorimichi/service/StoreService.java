@@ -15,11 +15,18 @@ public interface StoreService {
 
 	/**
 	 * 가게를 검색하는 함수입니다.
+	 * 아무 정보 없이 가게 리스트를 찾아서 반환합니다.
+	 * @return
+	 */
+	public List<StoreDTO> findAll();
+
+	/**
+	 * 가게를 검색하는 함수입니다.
 	 *
 	 * @param dto 검색관련 데이터 DTO 입니다.
 	 * @return {@code List<StoreDTO>} 가게 정보 리스트를 반환합니다.
 	 */
-	public List<StoreDTO> findAll(SearchDTO dto);
+	public List<StoreDTO> findAllByDTO(SearchDTO dto);
 
 	/**
 	 * 사용자가 좋아요 표시한 가게 정보 리스트를 가져옵니다.

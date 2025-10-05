@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.security.Principal;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -22,7 +25,7 @@ public class AuthController {
 
 	//로그아웃
 	@PostMapping("/logout")
-	public String logout() {
+	public String logout(Principal principal) {
 		return "redirect:/index";
 	}
 
@@ -36,7 +39,7 @@ public class AuthController {
 	@PostMapping("/signup")
 	public String signup(@RequestBody UserDTO user) {
 		accountService.signup(user);
-		return "redirect:index";
+		return "redirect:user/login";
 	}
 
 	//소셜회원가입 작업 실행

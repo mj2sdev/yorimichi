@@ -15,14 +15,18 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface StoreCategoryMapper {
 
+	boolean exists(StoreCategoryDTO dto);
+
 	/**
 	 * 상점 - 카테고리 매핑 추가.
+	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
 	int insert(StoreCategoryDTO dto);
 
 	/**
 	 * 상점 - 카테고리 매핑 삭제.
+	 *
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */
 	int delete(StoreCategoryDTO dto);

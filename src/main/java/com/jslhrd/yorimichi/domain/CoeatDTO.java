@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class CoeatDTO extends RootDTO {
+public class CoeatDTO extends RootDTO implements FeedDTO {
 
 	/**
 	 * FK: 유저 ID

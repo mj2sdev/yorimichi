@@ -4,25 +4,61 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.CategoryMapper">
 
-    <insert id="insert" parameterType="CategoryDTO">
-        INSERT INTO category (parent_id, name)
-        VALUES (#{parentId}, #{name})
-    </insert>
+    <!-- @formatter:off -->
 
-    <select id="selectById" parameterType="Long" resultType="CategoryDTO">
-        SELECT id, parent_id, name, created_at, updated_at
+    <select id="selectAll" resultType="CategoryDTO">
+        SELECT
+            id,
+            parent_id,
+            name,
+            created_at,
+            updated_at
+        FROM category
+        ORDER BY name
+    </select>
+
+    <select id="selectById" parameterType="long" resultType="CategoryDTO">
+        SELECT
+            id,
+            parent_id,
+            name,
+            created_at,
+            updated_at
         FROM category
         WHERE id = #{id}
     </select>
 
-    <update id="update" parameterType="CategoryDTO">
+    <select id="existsById" parameterType="long" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM category
+            WHERE id = #{id}
+       )
+    </select>
+
+    <insert id="insert"
+            parameterType="CategoryDTO"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
+        INSERT INTO category (parent_id, name)
+        VALUES (#{parentId}, #{name})
+    </insert>
+
+    <update id="update">
         UPDATE category
-        SET parent_id = #{parentId}, name = #{name}
+        SET
+            parent_id = #{dto.parentId},
+            name      = #{dto.name}
         WHERE id = #{id}
     </update>
 
-    <delete id="deleteById" parameterType="Long">
-        DELETE FROM category WHERE id = #{id}
+    <delete id="deleteById" parameterType="long">
+        DELETE
+        FROM category
+        WHERE id = #{id}
     </delete>
+
+    <!-- @formatter:on -->
 
 </mapper>
