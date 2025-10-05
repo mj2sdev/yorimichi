@@ -53,37 +53,37 @@ public class CoeatManager implements CoeatService {
 	}
 
 	@Override
-	public void save(Long userId, Long storeId, CoeatDTO dto) {
+	public void save(Long userId, Long storeId, CoeatDTO coeat) {
 
 		boolean exists = storeMapper.existsActive(storeId);
 		if (!exists) {
 			throw new StoreNotFoundException(storeId);
 		}
 
-		dto.setUserId(userId);
-		dto.setStoreId(storeId);
+		coeat.setUserId(userId);
+		coeat.setStoreId(storeId);
 
-		int rootAffected = rootMapper.insert(dto);
-		if (rootAffected == 0 || dto.getId() == null) {
-			log.warn("Root insert failed or id not generated: rootAffected={}, dto={}", rootAffected, dto);
-			throw new IllegalStateException("Root insert failed or no generated id");
+		boolean affectedRoot = rootMapper.insert(coeat) > 0;
+		if (!affectedRoot || coeat.getId() == null) {
+			log.warn("Root insert failed or coeatId not generated: affectedRoot={}, coeat={}", affectedRoot, coeat);
+			throw new IllegalStateException("Root insert failed or no generated coeatId");
 		}
 
-		int coeatAffected = coeatMapper.insert(dto);
-		if (coeatAffected == 0) {
-			log.warn("Coeat insert failed: coeatAffected={}, dto={}", coeatAffected, dto);
+		boolean affectedCoeat = coeatMapper.insert(coeat) > 0;
+		if (affectedCoeat) {
+			log.warn("Coeat insert failed: affectedCoeat={}, coeat={}", affectedCoeat, coeat);
 			throw new IllegalStateException("Coeat insert failed");
 		}
 
-		log.info("Coeat created id={}", dto.getId());
+		log.info("Coeat created coeatId={}", coeat.getId());
 	}
 
 	@Override
-	public void update(Long userId, Long coeatId, CoeatDTO dto) {
+	public void update(Long userId, Long coeatId, CoeatDTO coeat) {
 
-		int affected = coeatMapper.update(userId, coeatId, dto);
-		if (affected == 1) {
-			log.info("Coeat updated id={}", coeatId);
+		boolean affected = coeatMapper.update(userId, coeatId, coeat) > 0;
+		if (affected) {
+			log.info("Coeat updated coeatId={}", coeatId);
 			return;
 		}
 
@@ -93,15 +93,14 @@ public class CoeatManager implements CoeatService {
 		}
 
 		throw new AccessDeniedException("같이먹기 수정 권한이 없습니다.");
-
 	}
 
 	@Override
 	public void delete(Long userId, Long coeatId) {
 
-		int affected = coeatMapper.deleteById(userId, coeatId);
-		if (affected == 1) {
-			log.info("Coeat soft deleted id={}", coeatId);
+		boolean affected = coeatMapper.deleteById(userId, coeatId) > 0;
+		if (affected) {
+			log.info("Coeat soft deleted coeatId={}", coeatId);
 			return;
 		}
 
@@ -115,7 +114,7 @@ public class CoeatManager implements CoeatService {
 
 
 	@Override
-	public void saveCoeatRequest(Long userId, Long coeatId, CoeatRequestDTO dto) {
+	public void saveCoeatRequest(Long userId, Long coeatId, CoeatRequestDTO coeatRequest) {
 
 		boolean exists = coeatMapper.existsActive(coeatId);
 		if (!exists) {
@@ -127,13 +126,13 @@ public class CoeatManager implements CoeatService {
 			throw new IllegalStateException("작성자는 신청할 수 없습니다.");
 		}
 
-		dto.setUserId(userId);
-		dto.setCoeatId(coeatId);
+		coeatRequest.setUserId(userId);
+		coeatRequest.setCoeatId(coeatId);
 
 		try {
-			int affected = coeatRequestMapper.insert(dto);
-			if (affected == 0) {
-				log.warn("CoeatRequest insert failed: coeatRequestAffected={}, dto={}", affected, dto);
+			boolean affected = coeatRequestMapper.insert(coeatRequest) > 0;
+			if (affected) {
+				log.warn("CoeatRequest insert failed: coeatRequestAffected={}, coeat={}", affected, coeatRequest);
 				throw new IllegalStateException("CoeatRequest insert failed");
 			}
 		} catch (DataIntegrityViolationException e) {
@@ -144,16 +143,16 @@ public class CoeatManager implements CoeatService {
 	}
 
 	@Override
-	public void updateCoeatRequestStatus(Long ownerId, Long coeatId, CoeatRequestDTO dto) {
+	public void updateCoeatRequestStatus(Long ownerId, Long coeatId, CoeatRequestDTO coeatRequest) {
 
 		boolean isOwner = coeatMapper.isOwner(ownerId, coeatId);
 		if (!isOwner) {
 			throw new AccessDeniedException("작성자만 승인/거절이 가능합니다.");
 		}
 
-		int affected = coeatRequestMapper.updateStatusByOwner(coeatId, dto);
-		if (affected == 1) {
-			log.info("CoeatRequest status updated requestUserId={}, coeatId={}, to={}", dto.getUserId(), coeatId, dto.getStatus());
+		boolean affected = coeatRequestMapper.updateStatusByOwner(coeatId, coeatRequest) > 0;
+		if (affected) {
+			log.info("CoeatRequest status updated requestUserId={}, coeatId={}, to={}", coeatRequest.getUserId(), coeatId, coeatRequest.getStatus());
 			return;
 		}
 
@@ -163,8 +162,8 @@ public class CoeatManager implements CoeatService {
 	@Override
 	public void cancelCoeatRequest(Long userId, Long coeatId) {
 
-		int affected = coeatRequestMapper.cancelByRequester(userId, coeatId);
-		if (affected == 1) {
+		boolean affected = coeatRequestMapper.cancelByRequester(userId, coeatId) > 0;
+		if (affected) {
 			log.info("CoeatRequest cancelled userId={}, coeatId={}", userId, coeatId);
 			return;
 		}
