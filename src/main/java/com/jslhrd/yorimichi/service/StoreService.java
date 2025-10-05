@@ -15,18 +15,11 @@ public interface StoreService {
 
 	/**
 	 * 가게를 검색하는 함수입니다.
-	 * 아무 정보 없이 가게 리스트를 찾아서 반환합니다.
-	 * @return
-	 */
-	public List<StoreDTO> findAll();
-
-	/**
-	 * 가게를 검색하는 함수입니다.
 	 *
-	 * @param dto 검색관련 데이터 DTO 입니다.
+	 * @param store 검색관련 데이터 store 입니다.
 	 * @return {@code List<StoreDTO>} 가게 정보 리스트를 반환합니다.
 	 */
-	public List<StoreDTO> findAllByDTO(SearchDTO dto);
+	public List<StoreDTO> findAll(SearchDTO store);
 
 	/**
 	 * 사용자가 좋아요 표시한 가게 정보 리스트를 가져옵니다.
@@ -56,17 +49,17 @@ public interface StoreService {
 	/**
 	 * 가게 정보를 저장하는 함수입니다.
 	 *
-	 * @param dto 가게정보
+	 * @param store 가게정보
 	 */
-	public void save(StoreDTO dto);
+	public void save(StoreDTO store);
 
 	/**
 	 * 가게 정보를 업데이트 하는 함수입니다.
 	 *
 	 * @param storeId 가게 아이디
-	 * @param dto     가게 정보
+	 * @param store   가게 정보
 	 */
-	public void update(Long storeId, StoreDTO dto);
+	public void update(Long storeId, StoreDTO store);
 
 	/**
 	 * 가게 정보를 삭제하는 함수 입니다.
