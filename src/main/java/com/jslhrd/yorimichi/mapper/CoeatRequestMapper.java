@@ -17,17 +17,17 @@ import org.apache.ibatis.annotations.Param;
 public interface CoeatRequestMapper {
 
 	boolean exists(@Param("userId") Long userId,
-	               @Param("id") Long coeatId);
+	               @Param("coeatId") Long coeatId);
 
 	/**
 	 * 같이먹기 요청 추가.
 	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
-	int insert(CoeatRequestDTO dto);
+	int insert(CoeatRequestDTO coeatRequest);
 
 	int updateStatusByOwner(@Param("coeatId") Long coeatId,
-	                        @Param("dto") CoeatRequestDTO dto);
+	                        @Param("coeatRequest") CoeatRequestDTO coeatRequest);
 
 	/**
 	 * 같이먹기 요청 삭제.
