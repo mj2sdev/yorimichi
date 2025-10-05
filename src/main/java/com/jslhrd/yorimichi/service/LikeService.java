@@ -1,30 +1,26 @@
 package com.jslhrd.yorimichi.service;
 
-import com.jslhrd.yorimichi.domain.LikeDTO;
-
 /**
  * 좋아요 관련 서비스 입니다.
- * 
+ *
  * @author mj2sdev
  * @since 1.0
  */
-public interface LikeServie {
-	
+public interface LikeService {
+
 	/**
-	 * 가게를 좋아요 처리합니다. 
-	 * 
-	 * @param dto 좋아요 정보
+	 * 가게를 좋아요 처리합니다.
+	 *
 	 * <p>
 	 * userId, rootId 를 필수로 요구합니다.
 	 */
-	public void save(LikeDTO dto);
+	public void save(Long userId, Long rootId);
 
 	/**
 	 * 좋아요 삭제
-	 * 
-	 * @param dto 좋아요 정보
+	 *
 	 * <p>
 	 * userId, rootId 를 필수로 요구합니다.
 	 */
-	public void delete(LikeDTO dto);
+	public void delete(Long userId, Long rootId);
 }

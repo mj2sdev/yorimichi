@@ -4,6 +4,16 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.RootMapper">
 
+    <!-- @formatter:off -->
+
+    <select id="existsActive" parameterType="long" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1
+            FROM root
+            WHERE id = #{rootId}
+        )
+    </select>
+
     <insert id="insert"
             parameterType="RootDTO"
             useGeneratedKeys="true"
@@ -13,10 +23,12 @@
         VALUES (#{type})
     </insert>
 
-    <update id="deleteById" parameterType="Long">
+    <update id="deleteById" parameterType="long">
         UPDATE root
         SET deleted_at = CURRENT_TIMESTAMP
-        WHERE id = #{id}
+        WHERE id = #{rootId}
     </update>
+
+    <!-- @formatter:on -->
 
 </mapper>

@@ -16,6 +16,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface RootMapper {
 
+	boolean existsActive(@Param("rootId") Long rootId);
+
 	/**
 	 * 루트 추가.
 	 *
@@ -26,8 +28,8 @@ public interface RootMapper {
 	/**
 	 * 루트 삭제.
 	 *
-	 * @param id 루트 ID
+	 * @param rootId 루트 ID
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */
-	int deleteById(@Param("id") Long id);
+	int deleteById(@Param("rootId") Long rootId);
 }
