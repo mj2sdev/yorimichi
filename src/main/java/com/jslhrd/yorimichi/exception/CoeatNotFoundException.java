@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class CoeatNotFoundException extends RuntimeException {
 
-	public CoeatNotFoundException(Long id) {
-		super("Coeat not found: " + id);
+	public CoeatNotFoundException(Long coeatId) {
+		super("Coeat not found: " + coeatId);
 	}
 }
