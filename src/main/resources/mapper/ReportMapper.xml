@@ -4,14 +4,47 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.ReportMapper">
 
-    <insert id="insert" parameterType="ReportDTO">
-        INSERT INTO report (reporter_id, root_id, reason)
-        VALUES (#{reporter_id}, #{root_id}, #{reason})
-    </insert>
+    <!-- @formatter:off -->
 
-    <delete id="delete" parameterType="ReportDTO">
-        DELETE FROM report
-        WHERE reporter_id = #{reporterId} AND root_id = #{rootId}
-    </delete>
+    <select id="selectAll" resultType="ReportDTO">
+        SELECT *
+        FROM report
+        ORDER BY created_at DESC;
+    </select>
+
+    <select id="existsById" parameterType="long" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1
+            FROM report
+            WHERE id = #{reportId}
+        )
+    </select>
+
+    <insert id="insert"
+            parameterType="ReportDTO"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
+        INSERT INTO report (reporter_id, root_id, reason)
+        VALUES (#{reporterId}, #{rootId}, #{reason})
+    </insert>
+    
+    <update id="updateStatus">
+        UPDATE report r
+        SET r.status = #{report.status}
+        WHERE r.id = #{reportId}
+            AND #{report.status} IN ('IN_REVIEW', 'REJECTED', 'RESOLVED')
+            AND r.status IN ('PENDING', 'IN_REVIEW')
+    </update>
+
+    <update id="cancelByReporter">
+        UPDATE report
+        SET status = 'CANCELLED'
+        WHERE id = #{reportId}
+            AND reporter_id = #{reporteId}
+            AND status <> 'CANCELLED'
+    </update>
+
+    <!-- @formatter:on -->
 
 </mapper>
