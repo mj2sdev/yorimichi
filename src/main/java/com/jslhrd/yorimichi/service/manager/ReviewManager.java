@@ -56,15 +56,15 @@ public class ReviewManager implements ReviewService {
 		review.setUserId(userId);
 		review.setStoreId(storeId);
 
-		int rootAffected = rootMapper.insert(review);
-		if (rootAffected == 0 || review.getId() == null) {
-			log.warn("Root insert failed or reviewId not generated: rootAffected={}, review={}", rootAffected, review);
+		boolean affectedRoot = rootMapper.insert(review) > 0;
+		if (!affectedRoot || review.getId() == null) {
+			log.warn("Root insert failed or reviewId not generated: affectedRoot={}, review={}", affectedRoot, review);
 			throw new IllegalStateException("Root insert failed or no generated reviewId");
 		}
 
-		int reviewAffected = reviewMapper.insert(review);
-		if (reviewAffected == 0) {
-			log.warn("Review insert failed: reviewAffected={}, review={}", reviewAffected, review);
+		boolean affectedReview = reviewMapper.insert(review) > 0;
+		if (affectedReview) {
+			log.warn("Review insert failed: affectedReview={}, review={}", affectedReview, review);
 			throw new IllegalStateException("Review insert failed");
 		}
 
@@ -75,8 +75,8 @@ public class ReviewManager implements ReviewService {
 	@Transactional
 	public void update(Long userId, Long reviewId, ReviewDTO review) {
 
-		int affected = reviewMapper.update(userId, reviewId, review);
-		if (affected == 1) {
+		boolean affected = reviewMapper.update(userId, reviewId, review) > 0;
+		if (affected) {
 			log.info("Review updated reviewId={}", reviewId);
 			return;
 		}
@@ -93,8 +93,8 @@ public class ReviewManager implements ReviewService {
 	@Transactional
 	public void delete(Long userId, Long reviewId) {
 
-		int affected = reviewMapper.deleteById(userId, reviewId);
-		if (affected == 1) {
+		boolean affected = reviewMapper.deleteById(userId, reviewId) > 0;
+		if (affected) {
 			log.info("Review soft deleted reviewId={}", reviewId);
 			return;
 		}
