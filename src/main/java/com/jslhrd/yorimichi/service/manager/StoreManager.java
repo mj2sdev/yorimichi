@@ -2,12 +2,16 @@ package com.jslhrd.yorimichi.service.manager;
 
 import com.jslhrd.yorimichi.domain.SearchDTO;
 import com.jslhrd.yorimichi.domain.StoreDTO;
+import com.jslhrd.yorimichi.exception.AddressNotFoundException;
+import com.jslhrd.yorimichi.exception.DuplicateStoreException;
 import com.jslhrd.yorimichi.exception.StoreNotFoundException;
+import com.jslhrd.yorimichi.mapper.AddressMapper;
 import com.jslhrd.yorimichi.mapper.RootMapper;
 import com.jslhrd.yorimichi.mapper.StoreMapper;
 import com.jslhrd.yorimichi.service.StoreService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +23,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class StoreManager implements StoreService {
 
+	private final AddressMapper addressMapper;
 	private final RootMapper rootMapper;
 	private final StoreMapper storeMapper;
 
@@ -54,16 +59,25 @@ public class StoreManager implements StoreService {
 	@Transactional
 	public void save(StoreDTO store) {
 
+		boolean exists = addressMapper.existsById(store.getAddressId());
+		if (!exists) {
+			throw new AddressNotFoundException(store.getAddressId());
+		}
+
 		boolean affectedRoot = rootMapper.insert(store) > 0;
 		if (!affectedRoot || store.getId() == null) {
 			log.warn("Root insert failed or storeId not generated: affectedRoot={}, store={}", affectedRoot, store);
 			throw new IllegalStateException("Root insert failed or no generated storeId");
 		}
 
-		boolean affectedStore = storeMapper.insert(store) > 0;
-		if (affectedStore) {
-			log.warn("Store insert failed: affectedStore={}, store={}", affectedStore, store);
-			throw new IllegalStateException("Store insert failed");
+		try {
+			boolean affectedStore = storeMapper.insert(store) > 0;
+			if (!affectedStore) {
+				log.warn("Store insert failed: affectedStore={}, store={}", affectedStore, store);
+				throw new IllegalStateException("Store insert failed");
+			}
+		} catch (DataIntegrityViolationException e) {
+			throw new DuplicateStoreException(store.getAddressId(), store.getName());
 		}
 
 		log.info("Store created storeId={}", store.getId());
