@@ -63,7 +63,7 @@ public class ReviewManager implements ReviewService {
 		}
 
 		boolean affectedReview = reviewMapper.insert(review) > 0;
-		if (affectedReview) {
+		if (!affectedReview) {
 			log.warn("Review insert failed: affectedReview={}, review={}", affectedReview, review);
 			throw new IllegalStateException("Review insert failed");
 		}
