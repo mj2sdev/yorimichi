@@ -1,7 +1,7 @@
 package com.jslhrd.yorimichi.service.manager;
 
 import com.jslhrd.yorimichi.domain.UserDTO;
-import com.jslhrd.yorimichi.exception.*;
+import com.jslhrd.yorimichi.exception.UserNotFoundException;
 import com.jslhrd.yorimichi.mapper.BlockMapper;
 import com.jslhrd.yorimichi.mapper.FollowMapper;
 import com.jslhrd.yorimichi.mapper.UserMapper;
@@ -49,33 +49,35 @@ public class RelationshipManager implements RelationshipService {
 			throw new UserNotFoundException(followeeId);
 		}
 
-		if (blockMapper.exists(followerId, followeeId) || blockMapper.exists(followeeId, followerId)) {
+		boolean existsEitherWay = blockMapper.existsEitherWay(followerId, followeeId);
+		if (existsEitherWay) {
 			throw new AccessDeniedException("차단 상태에서는 팔로우할 수 없습니다.");
 		}
 
 		try {
 			boolean affected = followMapper.insert(followerId, followeeId) > 0;
 			if (!affected) {
-				log.warn("Follow insert failed: affected={}, followerId={}, followeeId={}", affected, followerId, followeeId);
+				log.warn("Follow insert failed, affected={}, followerId={}, followeeId={}", affected, followerId, followeeId);
 				throw new IllegalStateException("Follow insert failed");
 			}
 		} catch (DataIntegrityViolationException e) {
-			throw new DuplicateFollowException(followerId, followeeId);
-		}
-
-		log.info("Follow created followerId={}, followeeId={}", followerId, followeeId);
-	}
-
-	@Override
-	public void updateFollowNotification(Long followerId, Long followeeId, Boolean notified) {
-
-		boolean affected = followMapper.updateNotification(followerId, followeeId, notified) > 0;
-		if (affected) {
-			log.info("Follow notification updated followerId={}, followeeId={}, notified={}", followerId, followeeId, notified);
+			log.debug("Follow already exists no-op, followerId={}, followeeId={}", followerId, followeeId);
 			return;
 		}
 
-		throw new FollowNotFoundException(followerId, followeeId);
+		log.info("Follow created, followerId={}, followeeId={}", followerId, followeeId);
+	}
+
+	@Override
+	public void updateFollowNotification(Long followerId, Long followeeId, boolean notified) {
+
+		boolean affected = followMapper.updateNotification(followerId, followeeId, notified) > 0;
+		if (affected) {
+			log.info("Follow notification updated, followerId={}, followeeId={}, notified={}", followerId, followeeId, notified);
+			return;
+		}
+
+		log.debug("Follow notification update no_op, followerId={}, followeeId={}, notified={}", followerId, followeeId, notified);
 	}
 
 
@@ -84,11 +86,11 @@ public class RelationshipManager implements RelationshipService {
 
 		boolean affected = followMapper.delete(followerId, followeeId) > 0;
 		if (affected) {
-			log.info("Follow deleted followerId={}, followeeId={}", followerId, followeeId);
+			log.info("Follow deleted, followerId={}, followeeId={}", followerId, followeeId);
 			return;
 		}
 
-		throw new FollowNotFoundException(followerId, followeeId);
+		log.debug("Follow delete no_op, followerId={}, followeeId={}", followerId, followeeId);
 	}
 
 	@Override
@@ -112,17 +114,18 @@ public class RelationshipManager implements RelationshipService {
 		try {
 			boolean affected = blockMapper.insert(blockerId, blockeeId) > 0;
 			if (!affected) {
-				log.warn("Block insert failed: affected={}, blockerId={}, blockeeId={}", affected, blockerId, blockeeId);
+				log.warn("Block insert failed, affected={}, blockerId={}, blockeeId={}", affected, blockerId, blockeeId);
 				throw new IllegalStateException("Block insert failed");
 			}
 		} catch (DataIntegrityViolationException e) {
-			throw new DuplicateBlockException(blockerId, blockeeId);
+			log.debug("Block already exists no-op, blockerId={}, blockeeId={}", blockerId, blockeeId);
+			return;
 		}
 
-		log.info("Block created blockerId={}, blockeeId={}", blockerId, blockeeId);
+		log.info("Block created, blockerId={}, blockeeId={}", blockerId, blockeeId);
 
 		boolean affected = followMapper.deleteBothDirections(blockerId, blockeeId) > 0;
-		log.info("Unfollow both directions done: {}↔{}, affected={}", blockerId, blockeeId, affected);
+		log.info("Unfollow both directions done, affected={}, {}↔{}", affected, blockerId, blockeeId);
 
 		// TODO: (선택) 요청 취소 등
 		// coeatRequestMapper.cancelAllBetween(blockerId, blockeeId);
@@ -133,10 +136,10 @@ public class RelationshipManager implements RelationshipService {
 
 		boolean affected = blockMapper.delete(blockerId, blockeeId) > 0;
 		if (affected) {
-			log.info("Block deleted blockerId={}, blockeeId={}", blockerId, blockeeId);
+			log.info("Block deleted, blockerId={}, blockeeId={}", blockerId, blockeeId);
 			return;
 		}
 
-		throw new BlockNotFoundException(blockerId, blockeeId);
+		log.debug("Block delete no-op, blockerId={}, blockeeId={}", blockerId, blockeeId);
 	}
 }

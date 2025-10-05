@@ -37,7 +37,7 @@ public interface RelationshipService {
 	 */
 	public void saveFollow(Long followerId, Long followeeId);
 
-	public void updateFollowNotification(Long followerId, Long followeeId, Boolean followed);
+	public void updateFollowNotification(Long followerId, Long followeeId, boolean followed);
 
 	/**
 	 * 사용자가 대상과의 관계를 전부 삭제합니다.
