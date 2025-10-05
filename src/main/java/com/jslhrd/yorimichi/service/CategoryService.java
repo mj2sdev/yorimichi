@@ -26,22 +26,22 @@ public interface CategoryService {
 	 *
 	 * @return {@code List<CategoryDTO>} 카테고리 리스트
 	 */
-	public List<CategoryDTO> findAllByDTO(SearchDTO dto);
+	public List<CategoryDTO> findAllByDTO(SearchDTO category);
 
 	/**
 	 * 새로운 카테고리를 생성합니다.
 	 *
-	 * @param dto 카테고리 정보
+	 * @param category 카테고리 정보
 	 */
-	public void save(CategoryDTO dto);
+	public void save(CategoryDTO category);
 
 	/**
 	 * 기존 카테고리 정보를 수정합니다.
 	 *
 	 * @param categoryId 카테고리 ID
-	 * @param dto        수정할 카테고리 정보가 담긴 DTO
+	 * @param category   수정할 카테고리 정보가 담긴 category
 	 */
-	public void update(Long categoryId, CategoryDTO dto);
+	public void update(Long categoryId, CategoryDTO category);
 
 	/**
 	 * 특정 카테고리를 삭제합니다.
@@ -65,5 +65,4 @@ public interface CategoryService {
 	 * @param categoryId 연결 해제될 카테고리의 ID
 	 */
 	public void removeCategoryFromStore(Long storeId, Long categoryId);
-
 }
