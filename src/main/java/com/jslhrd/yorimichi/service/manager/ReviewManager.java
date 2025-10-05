@@ -1,6 +1,5 @@
 package com.jslhrd.yorimichi.service.manager;
 
-import com.jslhrd.yorimichi.domain.ReportDTO;
 import com.jslhrd.yorimichi.domain.ReviewDTO;
 import com.jslhrd.yorimichi.exception.ReviewNotFoundException;
 import com.jslhrd.yorimichi.exception.StoreNotFoundException;
@@ -46,44 +45,39 @@ public class ReviewManager implements ReviewService {
 	}
 
 	@Override
-	public void report(Long userId, Long reviewId, ReportDTO dto) {
-		// TODO: 추후 구현
-	}
-
-	@Override
 	@Transactional
-	public void save(Long userId, Long storeId, ReviewDTO dto) {
+	public void save(Long userId, Long storeId, ReviewDTO review) {
 
 		boolean exists = storeMapper.existsActive(storeId);
 		if (!exists) {
 			throw new StoreNotFoundException(storeId);
 		}
 
-		dto.setUserId(userId);
-		dto.setStoreId(storeId);
+		review.setUserId(userId);
+		review.setStoreId(storeId);
 
-		int rootAffected = rootMapper.insert(dto);
-		if (rootAffected == 0 || dto.getId() == null) {
-			log.warn("Root insert failed or id not generated: rootAffected={}, dto={}", rootAffected, dto);
-			throw new IllegalStateException("Root insert failed or no generated id");
+		int rootAffected = rootMapper.insert(review);
+		if (rootAffected == 0 || review.getId() == null) {
+			log.warn("Root insert failed or reviewId not generated: rootAffected={}, review={}", rootAffected, review);
+			throw new IllegalStateException("Root insert failed or no generated reviewId");
 		}
 
-		int reviewAffected = reviewMapper.insert(dto);
+		int reviewAffected = reviewMapper.insert(review);
 		if (reviewAffected == 0) {
-			log.warn("Review insert failed: reviewAffected={}, dto={}", reviewAffected, dto);
+			log.warn("Review insert failed: reviewAffected={}, review={}", reviewAffected, review);
 			throw new IllegalStateException("Review insert failed");
 		}
 
-		log.info("Review created id={}", dto.getId());
+		log.info("Review created reviewId={}", review.getId());
 	}
 
 	@Override
 	@Transactional
-	public void update(Long userId, Long reviewId, ReviewDTO dto) {
+	public void update(Long userId, Long reviewId, ReviewDTO review) {
 
-		int affected = reviewMapper.update(userId, reviewId, dto);
+		int affected = reviewMapper.update(userId, reviewId, review);
 		if (affected == 1) {
-			log.info("Review updated id={}", reviewId);
+			log.info("Review updated reviewId={}", reviewId);
 			return;
 		}
 
@@ -101,7 +95,7 @@ public class ReviewManager implements ReviewService {
 
 		int affected = reviewMapper.deleteById(userId, reviewId);
 		if (affected == 1) {
-			log.info("Review soft deleted id={}", reviewId);
+			log.info("Review soft deleted reviewId={}", reviewId);
 			return;
 		}
 

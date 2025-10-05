@@ -39,9 +39,9 @@ public class ReviewController {
 	public void createReview(
 			@AuthenticationPrincipal(expression = "userId") Long userId,
 			@PathVariable("storeId") Long storeId,
-			@RequestBody ReviewDTO dto
+			@RequestBody ReviewDTO review
 	) {
-		reviewService.save(userId, storeId, dto);
+		reviewService.save(userId, storeId, review);
 	}
 
 	//리뷰수정
@@ -50,9 +50,9 @@ public class ReviewController {
 	public void updateReview(
 			@PathVariable("reviewId") Long reviewId,
 			@AuthenticationPrincipal(expression = "userId") Long userId,
-			@RequestBody ReviewDTO dto
+			@RequestBody ReviewDTO review
 	) {
-		reviewService.update(userId, reviewId, dto);
+		reviewService.update(userId, reviewId, review);
 
 	}
 
