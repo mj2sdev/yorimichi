@@ -23,18 +23,18 @@
     <update id="updateStatusByOwner">
         UPDATE coeat_request r
         JOIN coeat c ON r.coeat_id = c.id
-        SET r.status = #{dto.status}
+        SET r.status = #{coeatRequest.status}
         WHERE r.coeat_id = #{coeatId}
-            AND r.user_id = #{dto.userId}
+            AND r.user_id = #{coeatRequest.userId}
             AND c.status = 'OPEN'
             AND r.status IN ('PENDING', 'REJECTED')
             AND (
-                (#{dto.status} = 'APPROVED'
+                (#{coeatRequest.status} = 'APPROVED'
                 AND (SELECT COUNT(*)
                      FROM coeat_request
                      WHERE coeat_id = #{coeatId}
                         AND status = 'APPROVED') < c.capacity)
-                OR (#{dto.status} <> 'APPROVED')
+                OR (#{coeatRequest.status} <> 'APPROVED')
             )
     </update>
 
