@@ -54,8 +54,8 @@ public class RelationshipManager implements RelationshipService {
 		}
 
 		try {
-			int affected = followMapper.insert(followerId, followeeId);
-			if (affected == 0) {
+			boolean affected = followMapper.insert(followerId, followeeId) > 0;
+			if (!affected) {
 				log.warn("Follow insert failed: affected={}, followerId={}, followeeId={}", affected, followerId, followeeId);
 				throw new IllegalStateException("Follow insert failed");
 			}
@@ -69,8 +69,8 @@ public class RelationshipManager implements RelationshipService {
 	@Override
 	public void updateFollowNotification(Long followerId, Long followeeId, Boolean notified) {
 
-		int affected = followMapper.updateNotification(followerId, followeeId, notified);
-		if (affected == 1) {
+		boolean affected = followMapper.updateNotification(followerId, followeeId, notified) > 0;
+		if (affected) {
 			log.info("Follow notification updated followerId={}, followeeId={}, notified={}", followerId, followeeId, notified);
 			return;
 		}
@@ -82,8 +82,8 @@ public class RelationshipManager implements RelationshipService {
 	@Override
 	public void deleteFollow(Long followerId, Long followeeId) {
 
-		int affected = followMapper.delete(followerId, followeeId);
-		if (affected == 1) {
+		boolean affected = followMapper.delete(followerId, followeeId) > 0;
+		if (affected) {
 			log.info("Follow deleted followerId={}, followeeId={}", followerId, followeeId);
 			return;
 		}
@@ -110,8 +110,8 @@ public class RelationshipManager implements RelationshipService {
 		}
 
 		try {
-			int affected = blockMapper.insert(blockerId, blockeeId);
-			if (affected == 0) {
+			boolean affected = blockMapper.insert(blockerId, blockeeId) > 0;
+			if (!affected) {
 				log.warn("Block insert failed: affected={}, blockerId={}, blockeeId={}", affected, blockerId, blockeeId);
 				throw new IllegalStateException("Block insert failed");
 			}
@@ -121,7 +121,7 @@ public class RelationshipManager implements RelationshipService {
 
 		log.info("Block created blockerId={}, blockeeId={}", blockerId, blockeeId);
 
-		int affected = followMapper.deleteBothDirections(blockerId, blockeeId);
+		boolean affected = followMapper.deleteBothDirections(blockerId, blockeeId) > 0;
 		log.info("Unfollow both directions done: {}↔{}, affected={}", blockerId, blockeeId, affected);
 
 		// TODO: (선택) 요청 취소 등
@@ -131,8 +131,8 @@ public class RelationshipManager implements RelationshipService {
 	@Override
 	public void deleteBlock(Long blockerId, Long blockeeId) {
 
-		int affected = blockMapper.delete(blockerId, blockeeId);
-		if (affected == 1) {
+		boolean affected = blockMapper.delete(blockerId, blockeeId) > 0;
+		if (affected) {
 			log.info("Block deleted blockerId={}, blockeeId={}", blockerId, blockeeId);
 			return;
 		}
