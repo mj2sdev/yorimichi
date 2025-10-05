@@ -22,6 +22,15 @@
         )
     </select>
 
+    <select id="existsEitherWay" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1
+            FROM block
+            WHERE (blocker_id = #{blockerId} AND blockee_id = #{blockeeId})
+                OR (blocker_id = #{blockeeId} AND blockee_id = #{blockerId})
+        )
+    </select>
+
     <insert id="insert">
         INSERT INTO block (blocker_id, blockee_id)
         VALUES (#{blockerId}, #{blockeeId})

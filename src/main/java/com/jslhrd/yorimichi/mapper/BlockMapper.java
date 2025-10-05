@@ -22,6 +22,8 @@ public interface BlockMapper {
 
 	boolean exists(@Param("blockerId") Long blockerId, @Param("blockeeId") Long blockeeId);
 
+	boolean existsEitherWay(@Param("blockerId") Long blockerId, @Param("blockeeId") Long blockeeId);
+
 	/**
 	 * 차단 추가.
 	 *
