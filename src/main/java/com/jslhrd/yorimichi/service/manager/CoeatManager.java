@@ -70,7 +70,7 @@ public class CoeatManager implements CoeatService {
 		}
 
 		boolean affectedCoeat = coeatMapper.insert(coeat) > 0;
-		if (affectedCoeat) {
+		if (!affectedCoeat) {
 			log.warn("Coeat insert failed: affectedCoeat={}, coeat={}", affectedCoeat, coeat);
 			throw new IllegalStateException("Coeat insert failed");
 		}
@@ -131,7 +131,7 @@ public class CoeatManager implements CoeatService {
 
 		try {
 			boolean affected = coeatRequestMapper.insert(coeatRequest) > 0;
-			if (affected) {
+			if (!affected) {
 				log.warn("CoeatRequest insert failed: coeatRequestAffected={}, coeat={}", affected, coeatRequest);
 				throw new IllegalStateException("CoeatRequest insert failed");
 			}
