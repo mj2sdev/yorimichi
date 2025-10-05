@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RestController
 @RequiredArgsConstructor
 public class CoeatController {
-	
+
 	private final CoeatService coeatService;
 
 	//같이먹기 리스트
@@ -74,7 +74,7 @@ public class CoeatController {
 		long userId = 0;
 		coeatService.joinCoeat(coeatId, coeatRequest, userId);
 	}
-	
+
 	//같이먹기 수락
 	//대기 상태에서 수락상태로 변경하는 거로 처리될 것 같아요
 	@PatchMapping("/coeat/{coeatId}/participant/{participantId}")
@@ -95,6 +95,6 @@ public class CoeatController {
 		long userId = 0;
 		coeatService.rejectParticipant(coeatId, participantId, userId);
 	}
-	
+
 
 }
