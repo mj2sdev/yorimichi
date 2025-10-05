@@ -23,9 +23,9 @@ public class StoreManager implements StoreService {
 	private final StoreMapper storeMapper;
 
 	@Override
-	public List<StoreDTO> findAll(SearchDTO q) {
+	public List<StoreDTO> findAll(SearchDTO search) {
 		// TODO: 무한 스크롤 구현 후 교체
-		return storeMapper.selectAll(q);
+		return storeMapper.selectAll(search);
 	}
 
 	@Override
@@ -52,31 +52,31 @@ public class StoreManager implements StoreService {
 
 	@Override
 	@Transactional
-	public void save(StoreDTO dto) {
+	public void save(StoreDTO store) {
 
-		int rootAffected = rootMapper.insert(dto);
-		if (rootAffected == 0 || dto.getId() == null) {
-			log.warn("Root insert failed or id not generated: rootAffected={}, dto={}", rootAffected, dto);
-			throw new IllegalStateException("Root insert failed or no generated id");
+		boolean affectedRoot = rootMapper.insert(store) > 0;
+		if (!affectedRoot || store.getId() == null) {
+			log.warn("Root insert failed or storeId not generated: affectedRoot={}, store={}", affectedRoot, store);
+			throw new IllegalStateException("Root insert failed or no generated storeId");
 		}
 
-		int storeAffected = storeMapper.insert(dto);
-		if (storeAffected == 0) {
-			log.warn("Store insert failed: storeAffected={}, dto={}", storeAffected, dto);
+		boolean affectedStore = storeMapper.insert(store) > 0;
+		if (affectedStore) {
+			log.warn("Store insert failed: affectedStore={}, store={}", affectedStore, store);
 			throw new IllegalStateException("Store insert failed");
 		}
 
-		log.info("Store created id={}", dto.getId());
+		log.info("Store created storeId={}", store.getId());
 	}
 
 	@Override
 	@Transactional
-	public void update(Long storeId, StoreDTO dto) {
+	public void update(Long storeId, StoreDTO store) {
 
 		// TODO: address 변경 시 추가 검증/처리
-		int affected = storeMapper.update(storeId, dto);
-		if (affected == 1) {
-			log.info("Store updated id={}", storeId);
+		boolean affected = storeMapper.update(storeId, store) > 0;
+		if (affected) {
+			log.info("Store updated storeId={}", storeId);
 			return;
 		}
 
@@ -90,9 +90,9 @@ public class StoreManager implements StoreService {
 	@Transactional
 	public void delete(Long storeId) {
 
-		int affected = storeMapper.deleteById(storeId);
-		if (affected == 1) {
-			log.info("Store soft deleted id={}", storeId);
+		boolean affected = storeMapper.deleteById(storeId) > 0;
+		if (affected) {
+			log.info("Store soft deleted storeId={}", storeId);
 			return;
 		}
 
