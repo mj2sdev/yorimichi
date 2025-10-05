@@ -134,7 +134,7 @@
         JOIN root r ON r.id = s.id
             AND r.type = 'STORE'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        WHERE s.id = #{id}
+        WHERE s.id = #{storeId}
     </select>
 
     <select id="existsActive" parameterType="long" resultType="boolean">
@@ -144,7 +144,7 @@
             JOIN root r ON s.id = r.id
                 AND r.type = 'STORE'
                 AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-            WHERE s.id = #{id}
+            WHERE s.id = #{storeId}
         )
     </select>
 
@@ -158,12 +158,12 @@
         JOIN root r ON s.id = r.id
             AND r.type = 'STORE'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        SET s.address_id = #{addressId},
-            s.name = #{name},
-            s.description = #{description},
-            s.phone = #{phone},
+        SET s.address_id = #{store.addressId},
+            s.name = #{store.name},
+            s.description = #{store.description},
+            s.phone = #{store.phone},
             r.updated_at = CURRENT_TIMESTAMP
-        WHERE s.id = #{id}
+        WHERE s.id = #{storeId}
     </update>
 
     <update id="deleteById" parameterType="long">
@@ -172,7 +172,7 @@
             AND r.type = 'STORE'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
         SET r.deleted_at = CURRENT_TIMESTAMP
-        WHERE s.id = #{id}
+        WHERE s.id = #{storeId}
     </update>
 
     <!-- @formatter:on -->
