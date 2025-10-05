@@ -31,34 +31,34 @@ public class CategoryManager implements CategoryService {
 	}
 
 	@Override
-	public List<CategoryDTO> findAllByDTO(SearchDTO dto) {
+	public List<CategoryDTO> findAllByDTO(SearchDTO category) {
 		// TODO: 어떤 역할인가요?
 		return List.of();
 	}
 
 	@Override
-	public void save(CategoryDTO dto) {
+	public void save(CategoryDTO category) {
 
 		try {
-			int affected = categoryMapper.insert(dto);
-			if (affected == 0) {
-				log.warn("Category insert failed: affected={}, dto={}", affected, dto);
+			boolean affected = categoryMapper.insert(category) > 0;
+			if (!affected) {
+				log.warn("Category insert failed: affected={}, category={}", affected, category);
 				throw new IllegalStateException("Category insert failed");
 			}
 		} catch (DataIntegrityViolationException e) {
 
-			throw new DuplicateCategoryException(dto.getName());
+			throw new DuplicateCategoryException(category.getName());
 		}
 
-		log.info("Category created id={}", dto.getId());
+		log.info("Category created categoryId={}", category.getId());
 	}
 
 	@Override
-	public void update(Long categoryId, CategoryDTO dto) {
+	public void update(Long categoryId, CategoryDTO category) {
 
-		int affected = categoryMapper.update(categoryId, dto);
-		if (affected == 1) {
-			log.info("Category updated id={}", categoryId);
+		boolean affected = categoryMapper.update(categoryId, category) > 0;
+		if (affected) {
+			log.info("Category updated categoryId={}", categoryId);
 			return;
 		}
 
@@ -71,9 +71,9 @@ public class CategoryManager implements CategoryService {
 	@Override
 	public void delete(Long categoryId) {
 
-		int affected = categoryMapper.deleteById(categoryId);
-		if (affected == 1) {
-			log.info("Category deleted id={}", categoryId);
+		boolean affected = categoryMapper.deleteById(categoryId) > 0;
+		if (affected) {
+			log.info("Category deleted categoryId={}", categoryId);
 			return;
 		}
 
@@ -97,8 +97,8 @@ public class CategoryManager implements CategoryService {
 		}
 
 		try {
-			int affected = storeCategoryMapper.insert(storeId, categoryId);
-			if (affected == 0) {
+			boolean affected = storeCategoryMapper.insert(storeId, categoryId) > 0;
+			if (affected) {
 				log.warn("StoreCategory liked failed: affected={}, storeId={}, categoryId={}", affected, storeId, categoryId);
 				throw new IllegalStateException("StoreCategory liked failed");
 			}
@@ -113,8 +113,8 @@ public class CategoryManager implements CategoryService {
 	@Override
 	public void removeCategoryFromStore(Long storeId, Long categoryId) {
 
-		int affected = storeCategoryMapper.delete(storeId, categoryId);
-		if (affected == 1) {
+		boolean affected = storeCategoryMapper.delete(storeId, categoryId) > 0;
+		if (affected) {
 			log.info("StoreCategory unliked storeId={}, categoryId={}", storeId, categoryId);
 			return;
 		}

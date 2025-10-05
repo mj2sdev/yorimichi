@@ -7,32 +7,30 @@
     <!-- @formatter:off -->
 
     <select id="selectAll" resultType="CategoryDTO">
-        SELECT
-            id,
-            parent_id,
-            name,
-            created_at,
-            updated_at
+        SELECT id,
+               parent_id,
+               name,
+               created_at,
+               updated_at
         FROM category
         ORDER BY name
     </select>
 
     <select id="selectById" parameterType="long" resultType="CategoryDTO">
-        SELECT
-            id,
-            parent_id,
-            name,
-            created_at,
-            updated_at
+        SELECT id,
+               parent_id,
+               name,
+               created_at,
+               updated_at
         FROM category
-        WHERE id = #{id}
+        WHERE id = #{categoryId}
     </select>
 
     <select id="existsById" parameterType="long" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
             FROM category
-            WHERE id = #{id}
+            WHERE id = #{categoryId}
        )
     </select>
 
@@ -47,16 +45,15 @@
 
     <update id="update">
         UPDATE category
-        SET
-            parent_id = #{dto.parentId},
-            name      = #{dto.name}
-        WHERE id = #{id}
+        SET parent_id = #{category.parentId},
+            name = #{category.name}
+        WHERE id = #{categoryId}
     </update>
 
     <delete id="deleteById" parameterType="long">
         DELETE
         FROM category
-        WHERE id = #{id}
+        WHERE id = #{categoryId}
     </delete>
 
     <!-- @formatter:on -->
