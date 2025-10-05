@@ -9,24 +9,33 @@ import java.util.List;
  * 같이먹기 서비스 인터페이스입니다.
  *
  * @author mj2sdev
- * @since 1.0
+ * @version 1.0 초안 작성
+ * 
+ * @author LancerAlert
+ * @version 1.1 실제 서비스에 맞게 수정
  */
 public interface CoeatService {
 
 	/**
 	 * 같이먹기 리스트를 반환합니다.
 	 *
-	 * @return coeatDTO list
+	 * @return {@code List<CoeatDTO>} 같이먹기 리스트
 	 */
 	public List<CoeatDTO> findAll();
 
+	/**
+	 * 가게별 같이먹기 리스트를 찾습니다.
+	 * 
+	 * @param  storeId 가게 ID
+	 * @return {@code List<CoeatDTO>} 가게별 같이먹기 리스트
+	 */
 	public List<CoeatDTO> findAllByStoreId(Long storeId);
 
 	/**
-	 * coeatId를 통해 같이먹기 상세정보를 반환합니다.
+	 * coeatId를 통해 같이먹기 상세정보를 찾습니다.
 	 *
-	 * @param coeatId 같이먹기 ID
-	 * @return CoeatDTO
+	 * @param  coeatId 같이먹기 ID
+	 * @return {@code CoeatDTO} 같이먹기 정보
 	 */
 	public CoeatDTO findById(Long coeatId);
 
@@ -51,6 +60,7 @@ public interface CoeatService {
 	/**
 	 * coeatId 를 통해 같이먹기를 삭제합니다.
 	 *
+	 * @param userId  유저 ID
 	 * @param coeatId 같이먹기 ID
 	 */
 	public void delete(Long userId, Long coeatId);
