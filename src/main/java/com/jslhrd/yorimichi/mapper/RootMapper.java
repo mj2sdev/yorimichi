@@ -16,6 +16,8 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface RootMapper {
 
+	boolean existsActive(@Param("id") Long id);
+
 	/**
 	 * 루트 추가.
 	 *
