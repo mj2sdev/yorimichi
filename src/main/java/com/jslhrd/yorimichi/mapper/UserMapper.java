@@ -20,34 +20,40 @@ public interface UserMapper {
 
 	/**
 	 * 유저 추가.
+	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
-	int insert(UserDTO dto);
+	int insert(UserDTO user);
 
 	/**
 	 * 유저 단건 조회.
-	 * @param id 유저 ID
+	 *
+	 * @param userId 유저 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
-	Optional<UserDTO> selectById(@Param("id") Long id);
+	Optional<UserDTO> selectById(@Param("userId") Long userId);
 
 	// TODO: 유저 목록 조회.
 
 	/**
 	 * 유저 수정.
+	 *
 	 * @return 영향 행 수 (수정 1, 대상 없음 0)
 	 */
-	int update(UserDTO dto);
+	int update(UserDTO user);
 
 	Optional<UserDTO> selectByEmail(@Param("email") String email);
 
-    int updatePassword(@Param("id") Long id, @Param("password") String password);
+	int updatePassword(@Param("userId") Long userId, @Param("password") String password);
 
 
 	/**
 	 * 유저 삭제.
-	 * @param id 유저 ID
+	 *
+	 * @param userId 유저 ID
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */
-	int deleteById(@Param("id") Long id);
+	int deleteById(@Param("userId") Long userId);
+
+	boolean existsActive(@Param("userId") Long userId);
 }

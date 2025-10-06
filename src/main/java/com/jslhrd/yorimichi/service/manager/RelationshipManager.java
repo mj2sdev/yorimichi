@@ -1,6 +1,9 @@
 package com.jslhrd.yorimichi.service.manager;
 
 import com.jslhrd.yorimichi.domain.UserDTO;
+import com.jslhrd.yorimichi.exception.BadRequestException;
+import com.jslhrd.yorimichi.exception.FollowNotFoundException;
+import com.jslhrd.yorimichi.exception.ForbiddenException;
 import com.jslhrd.yorimichi.exception.UserNotFoundException;
 import com.jslhrd.yorimichi.mapper.BlockMapper;
 import com.jslhrd.yorimichi.mapper.FollowMapper;
@@ -8,8 +11,7 @@ import com.jslhrd.yorimichi.mapper.UserMapper;
 import com.jslhrd.yorimichi.service.RelationshipService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,56 +43,55 @@ public class RelationshipManager implements RelationshipService {
 	public void saveFollow(Long followerId, Long followeeId) {
 
 		if (followerId.equals(followeeId)) {
-			throw new IllegalArgumentException("자기 자신은 팔로우할 수 없습니다.");
+			throw new BadRequestException("자기 자신은 팔로우할 수 없습니다.");
 		}
 
-		boolean exists = userMapper.existsActive(followeeId);
-		if (!exists) {
-			throw new UserNotFoundException(followeeId);
-		}
+		assertActiveUser(followerId);
+		assertActiveUser(followeeId);
 
 		boolean existsEitherWay = blockMapper.existsEitherWay(followerId, followeeId);
 		if (existsEitherWay) {
-			throw new AccessDeniedException("차단 상태에서는 팔로우할 수 없습니다.");
+			throw new ForbiddenException("차단 상태에서는 팔로우할 수 없습니다.");
 		}
 
 		try {
-			boolean affected = followMapper.insert(followerId, followeeId) > 0;
-			if (!affected) {
-				log.warn("Follow insert failed, affected={}, followerId={}, followeeId={}", affected, followerId, followeeId);
-				throw new IllegalStateException("Follow insert failed");
-			}
-		} catch (DataIntegrityViolationException e) {
-			log.debug("Follow already exists no-op, followerId={}, followeeId={}", followerId, followeeId);
-			return;
+			followMapper.insert(followerId, followeeId);
+			log.info("Follow: created followerId={}, followeeId={}", followerId, followeeId);
+		} catch (DuplicateKeyException e) {
+			log.debug("Follow: already exists (no-op) followerId={}, followeeId={}", followerId, followeeId);
 		}
-
-		log.info("Follow created, followerId={}, followeeId={}", followerId, followeeId);
 	}
 
 	@Override
 	public void updateFollowNotification(Long followerId, Long followeeId, boolean notified) {
 
+		boolean exists = followMapper.exists(followerId, followeeId);
+		if (!exists) {
+			throw new FollowNotFoundException(followerId, followeeId);
+		}
+
 		boolean affected = followMapper.updateNotification(followerId, followeeId, notified) > 0;
 		if (affected) {
-			log.info("Follow notification updated, followerId={}, followeeId={}, notified={}", followerId, followeeId, notified);
+			log.info("Follow: notification updated followerId={}, followeeId={}, notified={}", followerId, followeeId, notified);
 			return;
 		}
 
-		log.debug("Follow notification update no_op, followerId={}, followeeId={}, notified={}", followerId, followeeId, notified);
+		log.debug("Follow: notification update no-op followerId={}, followeeId={}, notified={}", followerId, followeeId, notified);
 	}
 
 
 	@Override
 	public void deleteFollow(Long followerId, Long followeeId) {
 
+		assertActiveUser(followerId);
+
 		boolean affected = followMapper.delete(followerId, followeeId) > 0;
 		if (affected) {
-			log.info("Follow deleted, followerId={}, followeeId={}", followerId, followeeId);
+			log.info("Follow: deleted followerId={}, followeeId={}", followerId, followeeId);
 			return;
 		}
 
-		log.debug("Follow delete no_op, followerId={}, followeeId={}", followerId, followeeId);
+		log.debug("Follow: delete no-op followerId={}, followeeId={}", followerId, followeeId);
 	}
 
 	@Override
@@ -103,43 +104,44 @@ public class RelationshipManager implements RelationshipService {
 	public void saveBlock(Long blockerId, Long blockeeId) {
 
 		if (blockerId.equals(blockeeId)) {
-			throw new IllegalArgumentException("자기 자신은 차단할 수 없습니다.");
+			throw new BadRequestException("자기 자신은 차단할 수 없습니다.");
 		}
 
-		boolean exists = userMapper.existsActive(blockeeId);
-		if (!exists) {
-			throw new UserNotFoundException(blockeeId);
-		}
+		assertActiveUser(blockerId);
+		assertActiveUser(blockeeId);
 
 		try {
-			boolean affected = blockMapper.insert(blockerId, blockeeId) > 0;
-			if (!affected) {
-				log.warn("Block insert failed, affected={}, blockerId={}, blockeeId={}", affected, blockerId, blockeeId);
-				throw new IllegalStateException("Block insert failed");
-			}
-		} catch (DataIntegrityViolationException e) {
-			log.debug("Block already exists no-op, blockerId={}, blockeeId={}", blockerId, blockeeId);
-			return;
+			blockMapper.insert(blockerId, blockeeId);
+			log.info("Block: created blockerId={}, blockeeId={}", blockerId, blockeeId);
+		} catch (DuplicateKeyException e) {
+			log.debug("Block: already exists (no-op) blockerId={}, blockeeId={}", blockerId, blockeeId);
 		}
 
-		log.info("Block created, blockerId={}, blockeeId={}", blockerId, blockeeId);
-
 		boolean affected = followMapper.deleteBothDirections(blockerId, blockeeId) > 0;
-		log.info("Unfollow both directions done, affected={}, {}↔{}", affected, blockerId, blockeeId);
+		log.info("Block: unfollow both-directions done={}, {}↔{}", affected, blockerId, blockeeId);
 
-		// TODO: (선택) 요청 취소 등
+		// TODO: (선택) coeat 등 양방향 상호작용 취소/거절도 여기서 처리(멱등)
 		// coeatRequestMapper.cancelAllBetween(blockerId, blockeeId);
 	}
 
 	@Override
 	public void deleteBlock(Long blockerId, Long blockeeId) {
 
+		assertActiveUser(blockerId);
+
 		boolean affected = blockMapper.delete(blockerId, blockeeId) > 0;
 		if (affected) {
-			log.info("Block deleted, blockerId={}, blockeeId={}", blockerId, blockeeId);
+			log.info("Block: deleted blockerId={}, blockeeId={}", blockerId, blockeeId);
 			return;
 		}
 
-		log.debug("Block delete no-op, blockerId={}, blockeeId={}", blockerId, blockeeId);
+		log.debug("Block: delete no-op blockerId={}, blockeeId={}", blockerId, blockeeId);
+	}
+
+	private void assertActiveUser(Long userId) {
+		boolean exist = userMapper.existsActive(userId);
+		if (!exist) {
+			throw new UserNotFoundException(userId);
+		}
 	}
 }

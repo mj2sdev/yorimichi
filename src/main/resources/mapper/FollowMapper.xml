@@ -25,7 +25,7 @@
             SELECT 1
             FROM follow
             WHERE follower_id = #{followerId}
-              AND followee_id = #{followeeId}
+                AND followee_id = #{followeeId}
         )
     </select>
 
@@ -38,21 +38,22 @@
         UPDATE follow
         SET notified = #{notified}
         WHERE follower_id = #{followerId}
-          AND followee_id = #{followeeId}
+            AND followee_id = #{followeeId}
+            AND notified <> #{notified}
     </update>
 
     <delete id="delete">
         DELETE
         FROM follow
         WHERE follower_id = #{followerId}
-          AND followee_id = #{followeeId}
+            AND followee_id = #{followeeId}
     </delete>
 
     <delete id="deleteBothDirections">
         DELETE
         FROM follow
         WHERE (follower_id = #{followerId} AND followee_id = #{followeeId})
-           OR (follower_id = #{followeeId} AND followee_id = #{followerId})
+            OR (follower_id = #{followeeId} AND followee_id = #{followerId})
     </delete>
 
     <!-- @formatter:on -->
