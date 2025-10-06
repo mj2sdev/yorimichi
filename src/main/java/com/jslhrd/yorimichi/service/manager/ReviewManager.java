@@ -58,17 +58,17 @@ public class ReviewManager implements ReviewService {
 
 		boolean affectedRoot = rootMapper.insert(review) > 0;
 		if (!affectedRoot || review.getId() == null) {
-			log.warn("Root insert failed or reviewId not generated: affectedRoot={}, review={}", affectedRoot, review);
+			log.warn("Root insert failed or reviewId not generated, affectedRoot={}, review={}", affectedRoot, review);
 			throw new IllegalStateException("Root insert failed or no generated reviewId");
 		}
 
 		boolean affectedReview = reviewMapper.insert(review) > 0;
 		if (!affectedReview) {
-			log.warn("Review insert failed: affectedReview={}, review={}", affectedReview, review);
+			log.warn("Review insert failed, affectedReview={}, review={}", affectedReview, review);
 			throw new IllegalStateException("Review insert failed");
 		}
 
-		log.info("Review created reviewId={}", review.getId());
+		log.info("Review created, reviewId={}", review.getId());
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class ReviewManager implements ReviewService {
 
 		boolean affected = reviewMapper.update(userId, reviewId, review) > 0;
 		if (affected) {
-			log.info("Review updated reviewId={}", reviewId);
+			log.info("Review updated, reviewId={}", reviewId);
 			return;
 		}
 
@@ -95,7 +95,7 @@ public class ReviewManager implements ReviewService {
 
 		boolean affected = reviewMapper.deleteById(userId, reviewId) > 0;
 		if (affected) {
-			log.info("Review soft deleted reviewId={}", reviewId);
+			log.info("Review soft deleted, reviewId={}", reviewId);
 			return;
 		}
 
