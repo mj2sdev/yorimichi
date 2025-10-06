@@ -11,10 +11,11 @@ import com.jslhrd.yorimichi.mapper.StoreMapper;
 import com.jslhrd.yorimichi.service.StoreService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -36,15 +37,14 @@ public class StoreManager implements StoreService {
 	@Override
 	public List<StoreDTO> findAllByUserLike(Long userId) {
 		// TODO: mappers 구현 후 교체
-		throw new UnsupportedOperationException();
+		return Collections.emptyList();
 
 	}
 
 	@Override
 	public List<StoreDTO> findAllByRecommend(Long userId) {
 		// TODO: mappers 구현 후 교체
-		throw new UnsupportedOperationException();
-
+		return Collections.emptyList();
 	}
 
 	@Override
@@ -64,33 +64,39 @@ public class StoreManager implements StoreService {
 			throw new AddressNotFoundException(store.getAddressId());
 		}
 
-		boolean affectedRoot = rootMapper.insert(store) > 0;
-		if (!affectedRoot || store.getId() == null) {
-			log.warn("Root insert failed or storeId not generated: affectedRoot={}, store={}", affectedRoot, store);
-			throw new IllegalStateException("Root insert failed or no generated storeId");
+		rootMapper.insert(store);
+		if (store.getId() == null) {
+			throw new IllegalStateException("Root: insert failed or no generated storeId");
 		}
 
 		try {
-			boolean affectedStore = storeMapper.insert(store) > 0;
-			if (!affectedStore) {
-				log.warn("Store insert failed: affectedStore={}, store={}", affectedStore, store);
-				throw new IllegalStateException("Store insert failed");
-			}
-		} catch (DataIntegrityViolationException e) {
+			storeMapper.insert(store);
+		} catch (DuplicateKeyException e) {
 			throw new DuplicateStoreException(store.getAddressId(), store.getName());
 		}
 
-		log.info("Store created storeId={}", store.getId());
+		log.info("Store: created storeId={}", store.getId());
 	}
 
 	@Override
 	@Transactional
 	public void update(Long storeId, StoreDTO store) {
 
+		if (store.getId() != null && !storeId.equals(store.getId())) {
+			throw new BadRequestException("경로의 storeId와 본문의 id가 다릅니다.");
+		}
+
+		if (store.getAddressId() != null) {
+			boolean exists = addressMapper.existsById(store.getAddressId());
+			if (!exists) {
+				throw new AddressNotFoundException(store.getAddressId());
+			}
+		}
+
 		// TODO: address 변경 시 추가 검증/처리
 		boolean affected = storeMapper.update(storeId, store) > 0;
 		if (affected) {
-			log.info("Store updated storeId={}", storeId);
+			log.info("Store: updated storeId={}", storeId);
 			return;
 		}
 
@@ -98,6 +104,8 @@ public class StoreManager implements StoreService {
 		if (!exists) {
 			throw new StoreNotFoundException(storeId);
 		}
+
+		log.debug("Store: update no-op storeId={}, store={}", storeId, store);
 	}
 
 	@Override
@@ -106,7 +114,7 @@ public class StoreManager implements StoreService {
 
 		boolean affected = storeMapper.deleteById(storeId) > 0;
 		if (affected) {
-			log.info("Store soft deleted storeId={}", storeId);
+			log.info("Store: soft deleted storeId={}", storeId);
 			return;
 		}
 
