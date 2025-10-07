@@ -4,32 +4,96 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.CommentMapper">
 
+    <!-- @formatter:off -->
+
+    <select id="selectAll" resultType="CommentDTO">
+        SELECT c.id,
+               c.coeat_id,
+               c.parent_id,
+               c.user_id,
+               c.content,
+               r.created_at,
+               r.updated_at
+        FROM comment c
+        JOIN root r ON c.id = r.id
+            AND r.type = 'COMMENT'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        ORDER BY r.created_at DESC;
+    </select>
+
+    <select id="selectAllByCoeatId" parameterType="long" resultType="CommentDTO">
+        SELECT c.id,
+                c.coeat_id,
+                c.parent_id,
+                c.user_id,
+                c.content,
+                r.created_at,
+                r.updated_at
+        FROM comment c
+        JOIN root r ON c.id = r.id
+            AND r.type = 'COMMENT'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        WHERE c.coeat_id = #{coeatId}
+        ORDER BY r.created_at DESC;
+    </select>
+
+    <select id="selectAllByParentId" resultType="CommentDTO">
+        SELECT c.id,
+               c.coeat_id,
+               c.parent_id,
+               c.user_id,
+               c.content,
+               r.created_at,
+               r.updated_at
+        FROM comment c
+        JOIN root r ON c.id = r.id
+            AND r.type = 'COMMENT'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        WHERE c.content = #{coeatId}
+            AND c.parent_id = #{parentId}
+        ORDER BY r.created_at DESC;
+    </select>
+
+    <select id="existsActive" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM comment c
+            JOIN root r ON c.id = r.id
+                AND r.type = 'COMMENT'
+                AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+            WHERE c.coeat_id = #{coeatId}
+                AND c.id = #{commentId}
+        )
+    </select>
+
     <insert id="insert" parameterType="CommentDTO">
         INSERT INTO comment (id, coeat_id, parent_id, user_id, content)
         VALUES (#{id}, #{coeatId}, #{parentId}, #{userId}, #{content})
     </insert>
 
-    <select id="selectById" parameterType="Long" resultType="CommentDTO">
-        SELECT
-            c.id, c.coeat_id, c.parent_id, c.user_id, c.content,
-            r.created_at, r.updated_at, r.deleted_at, r.blinded_at
-        FROM comment c
-        JOIN root r ON c.id = r.id
-        WHERE c.id = #{id}
-    </select>
-
-    <update id="update" parameterType="CommentDTO">
+    <update id="update">
         UPDATE comment c
         JOIN root r ON c.id = r.id
-        SET c.content = #{content},
+            AND r.type = 'COMMENT'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        SET c.content = #{comment.content},
             r.updated_at = NOW()
-        WHERE c.id = #{id}
+        WHERE c.coeat_id = #{coeatId}
+            AND c.user_id = #{userId}
+            AND c.id = #{commentId}
     </update>
 
-    <update id="deleteById" parameterType="Long">
-        UPDATE root
-        SET deleted_at = NOW()
-        WHERE id = #{id}
+    <update id="deleteById">
+        UPDATE comment c
+        JOIN root r ON c.id = r.id
+            AND r.type = 'COMMENT'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        SET r.deleted_at = NOW()
+        WHERE c.coeat_id = #{coeatId}
+            AND c.user_id = #{userId}
+            AND c.id = #{commentId}
     </update>
+
+    <!-- @formatter:on -->
 
 </mapper>
