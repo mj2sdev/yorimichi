@@ -6,109 +6,7 @@
 
     <!-- @formatter:off -->
 
-    <!-- 라이트 목록 매핑 -->
-    <resultMap id="StoreLightMap" type="StoreDTO">
-        <id property="id" column="id"/>
-        <result property="addressId" column="address_id"/>
-        <result property="name" column="name"/>
-        <result property="description" column="description"/>
-        <result property="phone" column="phone"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="updatedAt" column="updated_at"/>
-    </resultMap>
-
-    <!-- 상세 맵(연관 주입) -->
-    <resultMap id="StoreMap" type="StoreDTO">
-        <id property="id" column="id"/>
-        <result property="addressId" column="address_id"/>
-        <result property="name" column="name"/>
-        <result property="description" column="description"/>
-        <result property="phone" column="phone"/>
-        <result property="createdAt" column="created_at"/>
-        <result property="updatedAt" column="updated_at"/>
-
-        <association property="address" javaType="AddressDTO"
-                     select="com.jslhrd.yorimichi.mapper.AddressMapper.selectById"
-                     column="{id=address_id}"/>
-
-        <collection property="categories" ofType="CategoryDTO"
-                    select="com.jslhrd.yorimichi.mapper.CategoryMapper.selectByStoreId"
-                    column="{storeId=id}"/>
-
-        <collection property="facilities" ofType="FacilityCategoryDTO"
-                    select="com.jslhrd.yorimichi.mapper.FacilityCategoryMapper.selectByStoreId"
-                    column="{storeId=id}"/>
-
-        <collection property="images" ofType="ImageDTO"
-                    select="com.jslhrd.yorimichi.mapper.ImageMapper.selectByRootId"
-                    column="{rootId=id}"/>
-
-        <collection property="foods" ofType="FoodDTO"
-                    select="com.jslhrd.yorimichi.mapper.FoodMapper.selectByStoreId"
-                    column="{storeId=id}"/>
-    </resultMap>
-
-    <!-- 검색 WHERE (공용 조각 include) -->
-    <!-- 검색 WHERE: searchType = name|desc|all 만 사용 -->
-    <sql id="StoreSearchWhere">
-        <where>
-            <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-
-            <!-- 음식/시설 카테고리 AND 필터(이미 구성한 조각 사용) -->
-            <if test="q.foodCategoryIds != null and q.foodCategoryIds.size() > 0">
-                <include refid="com.jslhrd.yorimichi.mapper.common.AndExistsAllFoodCategoryIds">
-                    <property name="storeIdCol" value="s.id"/>
-                </include>
-            </if>
-            <if test="q.facilityCategoryIds != null and q.facilityCategoryIds.size() > 0">
-                <include refid="com.jslhrd.yorimichi.mapper.common.AndExistsAllFacilityCategoryIds">
-                    <property name="storeIdCol" value="s.id"/>
-                </include>
-            </if>
-
-            <!-- 키워드 ID 필터 (OR/AND 토글) -->
-            <if test="q.keywordIds != null and q.keywordIds.size() > 0">
-                <choose>
-                    <when test="q.matchAllKeyword">
-                        <include refid="com.jslhrd.yorimichi.mapper.common.AndExistsKeywordIdsAnd">
-                            <property name="rootIdCol" value="s.id"/>
-                        </include>
-                    </when>
-                    <otherwise>
-                        <include refid="com.jslhrd.yorimichi.mapper.common.AndExistsKeywordIdsOr">
-                            <property name="rootIdCol" value="s.id"/>
-                        </include>
-                    </otherwise>
-                </choose>
-            </if>
-
-            <!-- 검색어: 제목/내용 (키워드 이름 검색은 제거; 전부 ID로 통일) -->
-            <if test="q.searchWord != null and q.searchWord != ''">
-                <choose>
-                    <when test="q.searchType == 'name'">
-                        <include refid="com.jslhrd.yorimichi.mapper.common.AndLike">
-                            <property name="col" value="s.name"/>
-                        </include>
-                    </when>
-                    <when test="q.searchType == 'desc'">
-                        <include refid="com.jslhrd.yorimichi.mapper.common.AndLike">
-                            <property name="col" value="s.description"/>
-                        </include>
-                    </when>
-                    <otherwise>
-                        <!-- ✅ all 은 OR 매칭으로 -->
-                        AND (
-                            s.name LIKE CONCAT('%', <include refid="com.jslhrd.yorimichi.mapper.common.EscapedLike"/>, '%') ESCAPE '\\'
-                        OR
-                            s.description LIKE CONCAT('%', <include refid="com.jslhrd.yorimichi.mapper.common.EscapedLike"/>, '%') ESCAPE '\\'
-                        )
-                    </otherwise>
-                </choose>
-            </if>
-        </where>
-    </sql>
-
-    <select id="selectAll" parameterType="map" resultMap="StoreLightMap">
+    <select id="selectAll" resultType="StoreDTO">
         SELECT s.id,
                s.address_id,
                s.name,
@@ -120,9 +18,10 @@
         JOIN root r ON s.id = r.id
             AND r.type = 'STORE'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        ORDER BY r.created_at DESC
     </select>
 
-    <select id="selectById" parameterType="long" resultMap="StoreMap">
+    <select id="selectById" parameterType="long" resultMap="StoreDTO">
         SELECT s.id,
                s.address_id,
                s.name,
@@ -131,7 +30,7 @@
                r.created_at,
                r.updated_at
         FROM store s
-        JOIN root r ON r.id = s.id
+        JOIN root r ON s.id = r.id
             AND r.type = 'STORE'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
         WHERE s.id = #{storeId}
@@ -153,7 +52,7 @@
         VALUES (#{id}, #{addressId}, #{name}, #{description}, #{phone})
     </insert>
 
-    <update id="update" parameterType="StoreDTO">
+    <update id="update">
         UPDATE store s
         JOIN root r ON s.id = r.id
             AND r.type = 'STORE'
@@ -162,7 +61,7 @@
             s.name = #{store.name},
             s.description = #{store.description},
             s.phone = #{store.phone},
-            r.updated_at = CURRENT_TIMESTAMP
+            r.updated_at = NOW()
         WHERE s.id = #{storeId}
     </update>
 
@@ -171,7 +70,7 @@
         JOIN root r ON s.id = r.id
             AND r.type = 'STORE'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        SET r.deleted_at = CURRENT_TIMESTAMP
+        SET r.deleted_at = NOW()
         WHERE s.id = #{storeId}
     </update>
 
