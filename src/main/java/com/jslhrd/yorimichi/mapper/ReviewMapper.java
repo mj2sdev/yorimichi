@@ -21,44 +21,44 @@ public interface ReviewMapper {
 
 	List<ReviewDTO> selectAll();
 
-	List<ReviewDTO> selectAllByStoreId(Long storeId);
+	List<ReviewDTO> selectAllByStoreId(@Param("storeId") Long storeId);
 
 	/**
 	 * 리뷰 단건 조회.
 	 *
-	 * @param id 리뷰 ID
+	 * @param reviewId 리뷰 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
-	Optional<ReviewDTO> selectById(@Param("id") Long id);
+	Optional<ReviewDTO> selectById(@Param("reviewId") Long reviewId);
 
-	boolean existsActive(@Param("id") Long id);
+	boolean existsActive(@Param("reviewId") Long reviewId);
 
 	/**
 	 * 리뷰 추가.
 	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
-	int insert(ReviewDTO dto);
+	int insert(ReviewDTO review);
 
 	/**
 	 * 리뷰 수정.
 	 *
-	 * @param id     리뷰 ID
-	 * @param userId 유저 ID
-	 * @param dto    수정된 DTO
+	 * @param userId   유저 ID
+	 * @param reviewId 리뷰 ID
+	 * @param review   수정된 DTO
 	 * @return 영향 행 수 (수정 1, 대상 없음 0)
 	 */
-	int update(@Param("id") Long id,
-	           @Param("userId") Long userId,
-	           @Param("dto") ReviewDTO dto);
+	int update(@Param("userId") Long userId,
+	           @Param("reviewId") Long reviewId,
+	           @Param("review") ReviewDTO review);
 
 	/**
 	 * 리뷰 삭제.
 	 *
-	 * @param id     리뷰 ID
-	 * @param userId 유저 ID
+	 * @param userId   유저 ID
+	 * @param reviewId 리뷰 ID
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */
-	int deleteById(@Param("id") Long id,
-	               @Param("userId") Long userId);
+	int deleteById(@Param("userId") Long userId,
+	               @Param("reviewId") Long reviewId);
 }
