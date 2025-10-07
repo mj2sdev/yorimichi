@@ -25,6 +25,11 @@ public class StoreDTO extends RootDTO {
 	private Long addressId;
 
 	/**
+	 * 상점 ID
+	 */
+	private Long storeId;
+
+	/**
 	 * 상점 이름
 	 */
 	private String name;

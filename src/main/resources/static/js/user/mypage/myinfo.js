@@ -1,7 +1,6 @@
 (function (){
      const submitBtn = document.getElementById('myinfosubmit');
      
-
      submitBtn.addEventListener('click', async function() {
         const data = formData('myinfo');
         const response = await request('PUT', '/mypage', {body: data});
