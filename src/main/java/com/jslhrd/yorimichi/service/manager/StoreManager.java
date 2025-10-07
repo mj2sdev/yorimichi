@@ -3,6 +3,7 @@ package com.jslhrd.yorimichi.service.manager;
 import com.jslhrd.yorimichi.domain.SearchDTO;
 import com.jslhrd.yorimichi.domain.StoreDTO;
 import com.jslhrd.yorimichi.exception.AddressNotFoundException;
+import com.jslhrd.yorimichi.exception.BadRequestException;
 import com.jslhrd.yorimichi.exception.DuplicateStoreException;
 import com.jslhrd.yorimichi.exception.StoreNotFoundException;
 import com.jslhrd.yorimichi.mapper.AddressMapper;
@@ -59,10 +60,7 @@ public class StoreManager implements StoreService {
 	@Transactional
 	public void save(StoreDTO store) {
 
-		boolean exists = addressMapper.existsById(store.getAddressId());
-		if (!exists) {
-			throw new AddressNotFoundException(store.getAddressId());
-		}
+		assertActiveAddress(store.getAddressId());
 
 		rootMapper.insert(store);
 		if (store.getId() == null) {
@@ -82,30 +80,26 @@ public class StoreManager implements StoreService {
 	@Transactional
 	public void update(Long storeId, StoreDTO store) {
 
-		if (store.getId() != null && !storeId.equals(store.getId())) {
-			throw new BadRequestException("경로의 storeId와 본문의 id가 다릅니다.");
+		if (store.getId() != null && storeId.equals(store.getId())) {
+			throw new BadRequestException("경로의 storeId 와 본문의 id 가 다릅니다.");
 		}
 
 		if (store.getAddressId() != null) {
-			boolean exists = addressMapper.existsById(store.getAddressId());
-			if (!exists) {
-				throw new AddressNotFoundException(store.getAddressId());
+			assertActiveAddress(store.getAddressId());
+		}
+
+		try {
+			boolean affected = storeMapper.update(storeId, store) > 0;
+			if (!affected) {
+				assertActiveStore(storeId);
+				log.debug("Store: update no-op storeId={}, store={}", storeId, store);
+				return;
 			}
+		} catch (DuplicateKeyException e) {
+			throw new DuplicateStoreException(store.getAddressId(), store.getName());
 		}
 
-		// TODO: address 변경 시 추가 검증/처리
-		boolean affected = storeMapper.update(storeId, store) > 0;
-		if (affected) {
-			log.info("Store: updated storeId={}", storeId);
-			return;
-		}
-
-		boolean exists = storeMapper.existsActive(storeId);
-		if (!exists) {
-			throw new StoreNotFoundException(storeId);
-		}
-
-		log.debug("Store: update no-op storeId={}, store={}", storeId, store);
+		log.info("Store: updated storeId={}", storeId);
 	}
 
 	@Override
@@ -113,11 +107,22 @@ public class StoreManager implements StoreService {
 	public void delete(Long storeId) {
 
 		boolean affected = storeMapper.deleteById(storeId) > 0;
-		if (affected) {
-			log.info("Store: soft deleted storeId={}", storeId);
+		if (!affected) {
+			assertActiveStore(storeId);
 			return;
 		}
 
+		log.info("Store: soft deleted storeId={}", storeId);
+	}
+
+	private void assertActiveAddress(Long addressId) {
+		boolean exists = addressMapper.existsById(addressId);
+		if (!exists) {
+			throw new AddressNotFoundException(addressId);
+		}
+	}
+
+	private void assertActiveStore(Long storeId) {
 		boolean exists = storeMapper.existsActive(storeId);
 		if (!exists) {
 			throw new StoreNotFoundException(storeId);
