@@ -1,12 +1,14 @@
 package com.jslhrd.yorimichi.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import java.util.Map;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class CoeatNotFoundException extends RuntimeException {
+public class CoeatNotFoundException extends DomainException {
 
 	public CoeatNotFoundException(Long coeatId) {
-		super("Coeat not found: " + coeatId);
+		super(
+				"COEAT_NOT_FOUND",
+				"같이먹기를 찾을 수 없습니다.",
+				Map.of("coeatId", coeatId)
+		);
 	}
 }
