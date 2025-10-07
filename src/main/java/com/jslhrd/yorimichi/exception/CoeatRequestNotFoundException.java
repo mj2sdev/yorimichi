@@ -1,12 +1,17 @@
 package com.jslhrd.yorimichi.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import java.util.Map;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class CoeatRequestNotFoundException extends RuntimeException {
+public class CoeatRequestNotFoundException extends DomainException {
 
 	public CoeatRequestNotFoundException(Long userId, Long coeatId) {
-		super("CoeatRequest not found user id " + userId + " and coeat id " + coeatId);
+		super(
+				"COEAT_REQUEST_NOT_FOUND",
+				"같이먹기 신청을 찾을 수 없습니다.",
+				Map.of(
+						"userId", userId,
+						"coeatId", coeatId
+				)
+		);
 	}
 }

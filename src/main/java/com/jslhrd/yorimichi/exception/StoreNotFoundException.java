@@ -1,12 +1,14 @@
 package com.jslhrd.yorimichi.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import java.util.Map;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class StoreNotFoundException extends RuntimeException {
-	
-	public StoreNotFoundException(Long id) {
-		super("Store not found: " + id);
+public class StoreNotFoundException extends DomainException {
+
+	public StoreNotFoundException(Long storeId) {
+		super(
+				"STORE_NOT_FOUND",
+				"가게를 찾을 수 없습니다.",
+				Map.of("storeId", storeId)
+		);
 	}
 }
