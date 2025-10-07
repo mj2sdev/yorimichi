@@ -1,0 +1,16 @@
+<template th:fragment="fragments/user/mypage/follower :: template" id="user-follower">
+    <div class="col user-follower-item">
+        <div class="row">
+            <div class="col-2">
+                <button type="button" class="btn follower-delete-btn" data-user-id="">
+                    <i class="bi bi-toggle-on" style="font-size: 1em; color:gold;"></i>
+                </button>
+            </div>
+            <div class="col">
+                <a href="/user/detail/{userId}" class="btn d-block user-link">
+                    닉네임
+                </a>
+            </div>
+        </div>
+    </div>
+</template>
