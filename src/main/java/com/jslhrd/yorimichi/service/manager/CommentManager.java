@@ -2,10 +2,7 @@ package com.jslhrd.yorimichi.service.manager;
 
 import com.jslhrd.yorimichi.domain.CommentDTO;
 import com.jslhrd.yorimichi.exception.*;
-import com.jslhrd.yorimichi.mapper.CoeatMapper;
-import com.jslhrd.yorimichi.mapper.CommentMapper;
-import com.jslhrd.yorimichi.mapper.RootMapper;
-import com.jslhrd.yorimichi.mapper.UserMapper;
+import com.jslhrd.yorimichi.mapper.*;
 import com.jslhrd.yorimichi.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +21,7 @@ public class CommentManager implements CommentService {
 	private final UserMapper userMapper;
 	private final CoeatMapper coeatMapper;
 	private final CommentMapper commentMapper;
+	private final CoeatRequestMapper coeatRequestMapper;
 
 	@Override
 	public List<CommentDTO> findAll() {
@@ -49,6 +47,7 @@ public class CommentManager implements CommentService {
 		assertActiveUser(userId);
 		assertActiveCoeat(coeatId);
 		assertActiveParent(coeatId, comment.getParentId());
+		assertCanComment(userId, coeatId);
 
 		comment.setUserId(userId);
 		comment.setCoeatId(coeatId);
@@ -71,6 +70,7 @@ public class CommentManager implements CommentService {
 		}
 
 		assertActiveCoeat(coeatId);
+		assertCanComment(userId, coeatId);
 
 		boolean affected = commentMapper.update(userId, coeatId, commentId, comment) > 0;
 		if (!affected) {
@@ -86,6 +86,7 @@ public class CommentManager implements CommentService {
 	public void delete(Long userId, Long coeatId, Long commentId) {
 
 		assertActiveCoeat(coeatId);
+		assertCanComment(userId, coeatId);
 
 		boolean affected = commentMapper.deleteById(userId, coeatId, commentId) > 0;
 		if (!affected) {
@@ -124,6 +125,17 @@ public class CommentManager implements CommentService {
 		boolean exists = commentMapper.existsActive(coeatId, parentId);
 		if (!exists) {
 			throw new CommentNotFoundException(coeatId, parentId);
+		}
+	}
+
+	private void assertCanComment(Long userId, Long coeatId) {
+		boolean isOwner = coeatMapper.isOwner(userId, coeatId);
+		if (isOwner) {
+			return;
+		}
+		boolean approved = coeatRequestMapper.isApproved(userId, coeatId);
+		if (!approved) {
+			throw new ForbiddenException("승인된 참가자만 댓글을 작성할 수 있습니다.");
 		}
 	}
 }

@@ -27,6 +27,8 @@ public interface CoeatRequestMapper {
 	boolean exists(@Param("userId") Long userId,
 	               @Param("coeatId") Long coeatId);
 
+	boolean isApproved(Long userId, Long coeatId);
+
 	/**
 	 * 같이먹기 요청 추가.
 	 *
@@ -37,4 +39,5 @@ public interface CoeatRequestMapper {
 	                 @Param("coeatId") Long coeatId,
 	                 @Param("from") CoeatRequestStatus from,
 	                 @Param("to") CoeatRequestStatus to);
+
 }
