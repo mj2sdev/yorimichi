@@ -36,16 +36,20 @@ public interface CoeatMapper {
 	 */
 	Optional<CoeatDTO> selectById(@Param("coeatId") Long coeatId);
 
+	int selectCapacityById(@Param("coeatId") Long coeatId);
+
 	boolean existsActive(@Param("coeatId") Long coeatId);
 
-	boolean isOwner(Long userId, Long coeatId);
+	boolean isOwner(@Param("userId") Long userId,
+	                @Param("coeatId") Long coeatId);
+
+	boolean isOpen(@Param("coeatId") Long coeatId);
 
 	/**
 	 * 같이먹기 추가.
 	 *
-	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
-	int insert(CoeatDTO coeat);
+	void insert(CoeatDTO coeat);
 
 	/**
 	 * 같이먹기 수정.

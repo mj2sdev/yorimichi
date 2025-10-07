@@ -1,12 +1,17 @@
 package com.jslhrd.yorimichi.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import java.util.Map;
 
-@ResponseStatus(HttpStatus.CONFLICT)
-public class DuplicateCoeatRequestException extends RuntimeException {
+public class DuplicateCoeatRequestException extends DomainException {
 
 	public DuplicateCoeatRequestException(Long userId, Long coeatId) {
-		super("CoeatRequest exists user id " + userId + " and coeat id " + coeatId);
+		super(
+				"DUPLICATE_COEAT_REQUEST",
+				"이미 신청되어 있습니다",
+				Map.of(
+						"userId", userId,
+						"coeatId", coeatId
+				)
+		);
 	}
 }
