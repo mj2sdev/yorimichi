@@ -20,8 +20,6 @@ import java.util.Optional;
 @Mapper
 public interface StoreMapper {
 
-	int countAll(@Param("search") SearchDTO search);
-
 	List<StoreDTO> selectAll(@Param("search") SearchDTO search);
 
 	/**
