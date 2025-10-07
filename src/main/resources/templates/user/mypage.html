@@ -72,46 +72,25 @@
 								<div class="tab-content" id="nav-tabContent">
 									<div class="tab-pane fade show active" id="nav-review" role="tabpanel"
 										aria-labelledby="nav-review-tab" tabindex="0">
-											<!--mypage review-->
-											<div class="row bg-ymwhite mb-3" id="review-list-container">
-												
-											</div>
-											<th:block th:replace="~{ fragments/user/mypage/review :: template }"></th:block>
-										
+										<!--마이페이지, 사용자가 그동안 작성한 리뷰들-->
+										<div class="row bg-ymwhite mb-3" id="review-list-container">
+											
+										</div>
+										<th:block th:replace="~{ fragments/user/mypage/review :: template }"></th:block>
 									</div>
 									<div class="tab-pane fade" id="nav-like" role="tabpanel"
 										aria-labelledby="nav-like-tab" tabindex="1">
-										<th:block th:each="like : ${#numbers.sequence(1,10)}">
-											<div class="row">
-												<div class="col">
-													<a href="/store/detail" class="btn">
-														<img src="https://picsum.photos/50">
-														<span>가게명</span>
-														<span>위치</span>
-														<th:block th:each="tag : ${#numbers.sequence(1,5)}">
-															<span>#태그</span>
-														</th:block>
-													</a>
-												</div>
-											</div>
-										</th:block>
+										<!--마이페이지, 사용자가 좋아요 한 가게들-->
+										<div class="row" id=like-list-container>
+											
+										</div>
+										<th:block th:replace="~{ fragments/user/mypage/like :: template }"></th:block>
 									</div>
 									<div class="tab-pane fade" id="nav-bookmark" role="tabpanel"
 										aria-labelledby="nav-bookmark-tab" tabindex="1">
-										<th:block th:each="bookmark : ${#numbers.sequence(1,10)}">
-											<div class="row">
-												<div class="col">
-													<a href="/store/detail" class="btn">
-														<img src="https://picsum.photos/50">
-														<span>가게명</span>
-														<span>위치</span>
-														<th:block th:each="tag : ${#numbers.sequence(1,5)}">
-															<span>#태그</span>
-														</th:block>
-													</a>
-												</div>
-											</div>
-										</th:block>
+										<div class="row" id="bookmart-list-container">
+											
+										</div>
 									</div>
 								</div>
 							</div>
