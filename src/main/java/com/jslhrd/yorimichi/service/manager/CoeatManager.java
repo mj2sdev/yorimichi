@@ -72,7 +72,7 @@ public class CoeatManager implements CoeatService {
 	@Override
 	public void update(Long userId, Long coeatId, CoeatDTO coeat) {
 
-		if (coeat.getId() != null && coeatId.equals(coeat.getId())) {
+		if (coeat.getId() != null && !coeatId.equals(coeat.getId())) {
 			throw new BadRequestException("경로의 coeatId 와 본문의 id 가 다릅니다.");
 		}
 
