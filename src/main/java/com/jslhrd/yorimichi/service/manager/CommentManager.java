@@ -69,9 +69,6 @@ public class CommentManager implements CommentService {
 			throw new BadRequestException("경로의 commentId 와 본문의 id 가 다릅니다.");
 		}
 
-		assertActiveCoeat(coeatId);
-		assertCanComment(userId, coeatId);
-
 		boolean affected = commentMapper.update(userId, coeatId, commentId, comment) > 0;
 		if (!affected) {
 			assertActiveComment(coeatId, commentId);
