@@ -72,70 +72,12 @@
 								<div class="tab-content" id="nav-tabContent">
 									<div class="tab-pane fade show active" id="nav-review" role="tabpanel"
 										aria-labelledby="nav-review-tab" tabindex="0">
-										<th:block th:each="reviewItem : ${#numbers.sequence(1,5)}">
-											<div class="row bg-ymwhite mb-3">
-												<div class="col-3 border">
-													<img src="https://picsum.photos/50"
-														style="height:100%; width:100%;">
-												</div>
-												<div class="col-9 border">
-													<div class="row justify-content-between align-items-center">
-														<div class="col-auto dropdown">
-															<button class="btn fw-bold dropdown-toggle"
-																data-bs-toggle="dropdown"
-																aria-expanded="false">작성자</button>
-															<ul class="dropdown-menu">
-																<li><a class="dropdown-item" href="#"><i
-																			class="bi bi-heart"
-																			style="font-size: 1em;"></i>팔로우</a></li>
-																<li th:if="${#false}"><a class="dropdown-item"
-																		href="#"><i class="bi bi-heart-fill"
-																			style="font-size: 1em; color: red;"></i>팔로우취소</a>
-																</li>
-																<li><a class="dropdown-item" href="#"><i
-																			class="bi bi-search"
-																			style="font-size: 1em;"></i> 상세보기</a></li>
-															</ul>
-														</div>
-														<div class="col">
-															<span th:each="star : ${#numbers.sequence(1,5)}">
-																<i class="bi bi-star-fill"
-																	style="font-size: 1em; color: gold;"></i>
-															</span>
-														</div>
-														<div class="col-auto">
-															<a href="/store/detail"
-																class="text-ymprimary text-decoration-none">
-																가게보기
-															</a>
-														</div>
-														<div class="col-auto">
-															2025.09.15
-														</div>
-														<div class="col-auto">
-															<button type="button" class="btn btn-sm p-0"
-																data-bs-toggle="modal" data-bs-target="#reviewwriting">
-																<i class="bi bi-pencil-fill text-ymprimary"
-																	style="font-size: 1em;"></i>
-															</button>
-														</div>
-													</div>
-													<div class="p-2" data-bs-toggle="collapse"
-														th:attr="data-bs-target='#menu' + ${reviewItem}">
-														<div class="row mt-2">
-															<div class="col">
-																리뷰 본문 내용...
-															</div>
-														</div>
-													</div>
-													<div class="collapse" th:id="'menu' + ${reviewItem}">
-														<div class="card card-body">
-															메뉴 내용...
-														</div>
-													</div>
-												</div>
+											<!--mypage review-->
+											<div class="row bg-ymwhite mb-3" id="review-list-container">
+												
 											</div>
-										</th:block>
+											<th:block th:replace="~{ fragments/user/mypage/review :: template }"></th:block>
+										
 									</div>
 									<div class="tab-pane fade" id="nav-like" role="tabpanel"
 										aria-labelledby="nav-like-tab" tabindex="1">
