@@ -80,7 +80,7 @@ public class StoreManager implements StoreService {
 	@Transactional
 	public void update(Long storeId, StoreDTO store) {
 
-		if (store.getId() != null && storeId.equals(store.getId())) {
+		if (store.getId() != null && !storeId.equals(store.getId())) {
 			throw new BadRequestException("경로의 storeId 와 본문의 id 가 다릅니다.");
 		}
 
