@@ -71,10 +71,6 @@ public class ReviewManager implements ReviewService {
 			throw new BadRequestException("경로의 reviewId 와 본문의 id 가 다릅니다.");
 		}
 
-		if (reviewId != null) {
-			throw new BadRequestException("리뷰 수정 시 storeId는 변경할 수 없습니다.");
-		}
-
 		boolean affected = reviewMapper.update(userId, reviewId, review) > 0;
 		if (!affected) {
 			assertActiveReview(reviewId);
