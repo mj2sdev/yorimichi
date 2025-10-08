@@ -9,15 +9,13 @@
     <select id="selectAll" resultType="ReportDTO">
         SELECT *
         FROM report
-        ORDER BY created_at DESC;
+        ORDER BY created_at DESC, id DESC;
     </select>
 
-    <select id="existsById" parameterType="long" resultType="boolean">
-        SELECT EXISTS(
-            SELECT 1
-            FROM report
-            WHERE id = #{reportId}
-        )
+    <select id="selectStatus" resultType="com.jslhrd.yorimichi.enums.ReportStatus">
+        SELECT status
+        FROM report
+        WHERE id = #{reportId}
     </select>
 
     <insert id="insert"
@@ -30,19 +28,18 @@
     </insert>
     
     <update id="updateStatus">
-        UPDATE report r
-        SET r.status = #{report.status}
-        WHERE r.id = #{reportId}
-            AND #{report.status} IN ('IN_REVIEW', 'REJECTED', 'RESOLVED')
-            AND r.status IN ('PENDING', 'IN_REVIEW')
+        UPDATE report
+        SET status = #{to}
+        WHERE id = #{reportId}
+            AND status = #{cur}
     </update>
 
     <update id="cancelByReporter">
         UPDATE report
         SET status = 'CANCELLED'
         WHERE id = #{reportId}
-            AND reporter_id = #{reporteId}
-            AND status <> 'CANCELLED'
+            AND reporter_id = #{userId}
+            AND status = 'PENDING'
     </update>
 
     <!-- @formatter:on -->

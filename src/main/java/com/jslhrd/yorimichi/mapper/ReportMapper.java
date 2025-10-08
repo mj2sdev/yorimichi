@@ -1,10 +1,12 @@
 package com.jslhrd.yorimichi.mapper;
 
 import com.jslhrd.yorimichi.domain.ReportDTO;
+import com.jslhrd.yorimichi.enums.ReportStatus;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 신고 Mapper.
@@ -20,7 +22,7 @@ public interface ReportMapper {
 
 	List<ReportDTO> selectAll();
 
-	boolean existsById(@Param("reportId") Long reportId);
+	Optional<ReportStatus> selectStatus(@Param("reportId") Long reportId);
 
 	/**
 	 * 신고 추가.
@@ -30,13 +32,14 @@ public interface ReportMapper {
 	int insert(ReportDTO report);
 
 	int updateStatus(@Param("reportId") Long reportId,
-	                 @Param("report") ReportDTO report);
+	                 @Param("cur") ReportStatus cur,
+	                 @Param("to") ReportStatus to);
 
 	/**
 	 * 신고 삭제.
 	 *
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */
-	int cancelByReporter(@Param("userId") Long reporterId,
+	int cancelByReporter(@Param("userId") Long userId,
 	                     @Param("reportId") Long reportId);
 }
