@@ -69,9 +69,6 @@ public class CommentManager implements CommentService {
 			throw new BadRequestException("경로의 commentId 와 본문의 id 가 다릅니다.");
 		}
 
-		assertActiveCoeat(coeatId);
-		assertCanComment(userId, coeatId);
-
 		boolean affected = commentMapper.update(userId, coeatId, commentId, comment) > 0;
 		if (!affected) {
 			assertActiveComment(coeatId, commentId);
@@ -84,9 +81,6 @@ public class CommentManager implements CommentService {
 	@Override
 	@Transactional
 	public void delete(Long userId, Long coeatId, Long commentId) {
-
-		assertActiveCoeat(coeatId);
-		assertCanComment(userId, coeatId);
 
 		boolean affected = commentMapper.deleteById(userId, coeatId, commentId) > 0;
 		if (!affected) {
@@ -111,13 +105,6 @@ public class CommentManager implements CommentService {
 		}
 	}
 
-	private void assertActiveComment(Long coeatId, Long commentId) {
-		boolean exists = commentMapper.existsActive(coeatId, commentId);
-		if (!exists) {
-			throw new CommentNotFoundException(coeatId, commentId);
-		}
-	}
-
 	private void assertActiveParent(Long coeatId, Long parentId) {
 		if (parentId == null) {
 			return;
@@ -136,6 +123,13 @@ public class CommentManager implements CommentService {
 		boolean approved = coeatRequestMapper.isApproved(userId, coeatId);
 		if (!approved) {
 			throw new ForbiddenException("승인된 참가자만 댓글을 작성할 수 있습니다.");
+		}
+	}
+
+	private void assertActiveComment(Long coeatId, Long commentId) {
+		boolean exists = commentMapper.existsActive(coeatId, commentId);
+		if (!exists) {
+			throw new CommentNotFoundException(coeatId, commentId);
 		}
 	}
 }
