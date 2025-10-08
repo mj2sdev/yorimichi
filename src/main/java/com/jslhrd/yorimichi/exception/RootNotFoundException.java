@@ -1,12 +1,14 @@
 package com.jslhrd.yorimichi.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import java.util.Map;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class RootNotFoundException extends RuntimeException {
+public class RootNotFoundException extends DomainException {
 
 	public RootNotFoundException(Long rootId) {
-		super("Root not found: " + rootId);
+		super(
+				"ROOT_NOT_FOUND",
+				"컨텐츠를 찾을 수 없습니다.",
+				Map.of("rootId", rootId)
+		);
 	}
 }

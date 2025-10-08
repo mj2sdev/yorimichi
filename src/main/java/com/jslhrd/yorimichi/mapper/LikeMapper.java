@@ -1,6 +1,9 @@
 package com.jslhrd.yorimichi.mapper;
 
+import com.jslhrd.yorimichi.domain.StoreDTO;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * 좋아요 Mapper.
@@ -13,6 +16,8 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface LikeMapper {
+
+	List<StoreDTO> selectByUserId(Long userId);
 
 	/**
 	 * 좋아요 추가.
