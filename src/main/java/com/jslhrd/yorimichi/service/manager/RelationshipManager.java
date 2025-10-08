@@ -29,14 +29,14 @@ public class RelationshipManager implements RelationshipService {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<UserDTO> findFollowees(Long userId) {
-		return followMapper.selectFolloweesByUserId(userId);
+	public List<UserDTO> findFollowees(Long followerId) {
+		return followMapper.selectFolloweesByUserId(followerId);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<UserDTO> findFollowers(Long userId) {
-		return followMapper.selectFollowersByUserId(userId);
+	public List<UserDTO> findFollowers(Long followeeId) {
+		return followMapper.selectFollowersByUserId(followeeId);
 	}
 
 	@Override
@@ -65,33 +65,25 @@ public class RelationshipManager implements RelationshipService {
 	@Override
 	public void updateFollowNotification(Long followerId, Long followeeId, boolean notified) {
 
-		boolean exists = followMapper.exists(followerId, followeeId);
-		if (!exists) {
+		boolean affected = followMapper.updateNotification(followerId, followeeId, notified) > 0;
+		if (!affected) {
 			throw new FollowNotFoundException(followerId, followeeId);
 		}
 
-		boolean affected = followMapper.updateNotification(followerId, followeeId, notified) > 0;
-		if (affected) {
-			log.info("Follow: notification updated followerId={}, followeeId={}, notified={}", followerId, followeeId, notified);
-			return;
-		}
-
-		log.debug("Follow: notification update no-op followerId={}, followeeId={}, notified={}", followerId, followeeId, notified);
+		log.info("Follow: notification updated followerId={}, followeeId={}, notified={}", followerId, followeeId, notified);
 	}
 
 
 	@Override
 	public void deleteFollow(Long followerId, Long followeeId) {
 
-		assertActiveUser(followerId);
-
 		boolean affected = followMapper.delete(followerId, followeeId) > 0;
-		if (affected) {
-			log.info("Follow: deleted followerId={}, followeeId={}", followerId, followeeId);
+		if (!affected) {
+			log.debug("Follow: delete no-op followerId={}, followeeId={}", followerId, followeeId);
 			return;
 		}
 
-		log.debug("Follow: delete no-op followerId={}, followeeId={}", followerId, followeeId);
+		log.info("Follow: deleted followerId={}, followeeId={}", followerId, followeeId);
 	}
 
 	@Override
@@ -118,7 +110,7 @@ public class RelationshipManager implements RelationshipService {
 		}
 
 		boolean affected = followMapper.deleteBothDirections(blockerId, blockeeId) > 0;
-		log.info("Block: unfollow both-directions done={}, {}↔{}", affected, blockerId, blockeeId);
+		log.debug("Block: unfollow both-directions done={}, {}↔{}", affected, blockerId, blockeeId);
 
 		// TODO: (선택) coeat 등 양방향 상호작용 취소/거절도 여기서 처리(멱등)
 		// coeatRequestMapper.cancelAllBetween(blockerId, blockeeId);
@@ -127,15 +119,13 @@ public class RelationshipManager implements RelationshipService {
 	@Override
 	public void deleteBlock(Long blockerId, Long blockeeId) {
 
-		assertActiveUser(blockerId);
-
 		boolean affected = blockMapper.delete(blockerId, blockeeId) > 0;
-		if (affected) {
-			log.info("Block: deleted blockerId={}, blockeeId={}", blockerId, blockeeId);
+		if (!affected) {
+			log.debug("Block: delete no-op blockerId={}, blockeeId={}", blockerId, blockeeId);
 			return;
 		}
 
-		log.debug("Block: delete no-op blockerId={}, blockeeId={}", blockerId, blockeeId);
+		log.info("Block: deleted blockerId={}, blockeeId={}", blockerId, blockeeId);
 	}
 
 	private void assertActiveUser(Long userId) {

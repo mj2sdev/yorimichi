@@ -36,7 +36,8 @@
 
     <update id="updateNotification">
         UPDATE follow
-        SET notified = #{notified}
+        SET notified = #{notified},
+            updated_at = NOW()
         WHERE follower_id = #{followerId}
             AND followee_id = #{followeeId}
             AND notified <> #{notified}
