@@ -1,12 +1,17 @@
 package com.jslhrd.yorimichi.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import java.util.Map;
 
-@ResponseStatus(HttpStatus.CONFLICT)
-public class DuplicateReportException extends RuntimeException {
+public class DuplicateReportException extends DomainException {
 
 	public DuplicateReportException(Long userId, Long rootId) {
-		super("Report exists user id " + userId + " and root id " + rootId);
+		super(
+				"DUPLICATE_REPORT_REQUEST",
+				"이미 신고되어 있습니다.",
+				Map.of(
+						"userId", userId,
+						"rootId", rootId
+				)
+		);
 	}
 }
