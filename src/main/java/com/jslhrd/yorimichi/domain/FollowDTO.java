@@ -42,4 +42,9 @@ public class FollowDTO {
 	 * 수정일시 (DB 자동 갱신)
 	 */
 	private LocalDateTime updatedAt;
+
+	public FollowDTO(Long followerId, Long followeeId) {
+		this.followerId = followerId;
+		this.followeeId = followeeId;
+	}
 }
