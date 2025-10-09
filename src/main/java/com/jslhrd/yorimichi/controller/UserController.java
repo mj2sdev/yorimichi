@@ -34,16 +34,16 @@ public class UserController {
 		List<ReviewDTO> reviews = reviewService.findAllByUserId(null);
 		List<StoreDTO> likes = storeService.findAllByUserLike(null);
 		List<BookmarkDTO> bookmarks = null;
-		List<UserDTO> follow = relationshipService.findFollowees(null);
-		List<UserDTO> follower = relationshipService.findFollowers(null);
-		List<UserDTO> block = relationshipService.findBlocks(null);
+		List<UserDTO> followees = relationshipService.findFollowees(null);
+		List<UserDTO> followers = relationshipService.findFollowers(null);
+		List<UserDTO> blocks = relationshipService.findBlocks(null);
 		model.addAttribute("user", user);
 		model.addAttribute("reviews", reviews);
 		model.addAttribute("likes", likes);
 		model.addAttribute("bookmarks", bookmarks);
-		model.addAttribute("follow", follow);
-		model.addAttribute("follower", follower);
-		model.addAttribute("block", block);
+		model.addAttribute("followees", followees);
+		model.addAttribute("followers", followers);
+		model.addAttribute("blocks", blocks);
 		return "user/detail";
 	}
 
@@ -54,16 +54,16 @@ public class UserController {
 		List<ReviewDTO> reviews = reviewService.findAllByUserId(null);
 		List<StoreDTO> likes = storeService.findAllByUserLike(null);
 		List<BookmarkDTO> bookmarks = null;
-		List<UserDTO> follow = relationshipService.findFollowees(null);
-		List<UserDTO> follower = relationshipService.findFollowees(null);
-		List<UserDTO> block = relationshipService.findBlocks(null);
+		List<UserDTO> followees = relationshipService.findFollowees(null);
+		List<UserDTO> followers = relationshipService.findFollowers(null);
+		List<UserDTO> blocks = relationshipService.findBlocks(null);
 		model.addAttribute("user", user);
 		model.addAttribute("reviews", reviews);
 		model.addAttribute("likes", likes);
 		model.addAttribute("bookmarks", bookmarks);
-		model.addAttribute("follow", follow);
-		model.addAttribute("follower", follower);
-		model.addAttribute("block", block);
+		model.addAttribute("followees", followees);
+		model.addAttribute("followers", followers);
+		model.addAttribute("blocks", blocks);
 		return "user/mypage";
 	}
 
