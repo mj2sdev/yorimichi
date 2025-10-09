@@ -99,12 +99,12 @@ public class CoeatManager implements CoeatService {
 
 
 	@Override
-	public void saveCoeatRequest(Long userId, Long coeatId, CoeatRequestDTO coeatRequest) {
+	public void saveCoeatRequest(Long requesterId, Long coeatId, CoeatRequestDTO coeatRequest) {
 
-		assertActiveUser(userId);
+		assertActiveUser(requesterId);
 		assertActiveCoeat(coeatId);
 
-		boolean isOwner = coeatMapper.isOwner(userId, coeatId);
+		boolean isOwner = coeatMapper.isOwner(requesterId, coeatId);
 		if (isOwner) {
 			throw new BadRequestException("작성자는 신청할 수 없습니다.");
 		}
@@ -114,23 +114,20 @@ public class CoeatManager implements CoeatService {
 			throw new InvalidStateException("모집 중이 아닙니다.");
 		}
 
-		coeatRequest.setUserId(userId);
+		coeatRequest.setUserId(requesterId);
 		coeatRequest.setCoeatId(coeatId);
 
 		try {
 			coeatRequestMapper.insert(coeatRequest);
 		} catch (DuplicateKeyException e) {
-			throw new DuplicateCoeatRequestException(userId, coeatId);
+			throw new DuplicateCoeatRequestException(requesterId, coeatId);
 		}
 
-		log.info("CoeatRequest: created userId={}, coeatId={}", userId, coeatId);
+		log.info("CoeatRequest: created requesterId={}, coeatId={}", requesterId, coeatId);
 	}
 
 	@Override
 	public void updateCoeatRequestStatus(Long ownerId, Long coeatId, CoeatRequestDTO coeatRequest) {
-
-		assertActiveUser(ownerId);
-		assertActiveCoeat(coeatId);
 
 		boolean isOwner = coeatMapper.isOwner(ownerId, coeatId);
 		if (!isOwner) {
@@ -143,10 +140,9 @@ public class CoeatManager implements CoeatService {
 		}
 
 		Long requesterId = coeatRequest.getUserId();
-		CoeatRequestStatus to = coeatRequest.getStatus();
 
-		CoeatRequestStatus cur = coeatRequestMapper.selectStatus(requesterId, coeatId)
-				.orElseThrow(() -> new CoeatRequestNotFoundException(requesterId, coeatId));
+		CoeatRequestStatus to = coeatRequest.getStatus();
+		CoeatRequestStatus cur = findStatus(requesterId, coeatId);
 
 		if (!(cur == PENDING && (to == APPROVED || to == REJECTED))) {
 			throw new BadRequestException("허용되지 않은 전이");
@@ -162,40 +158,48 @@ public class CoeatManager implements CoeatService {
 
 		boolean affected = coeatRequestMapper.updateStatus(requesterId, coeatId, cur, to) > 0;
 		if (!affected) {
-			CoeatRequestStatus after = coeatRequestMapper.selectStatus(requesterId, coeatId)
-					.orElseThrow(() -> new CoeatRequestNotFoundException(requesterId, coeatId));
+			CoeatRequestStatus after = findStatus(requesterId, coeatId);
 			if (after == to) {
-				throw new BadRequestException("이미 처리되었습니다.");
+				log.debug("CoeatRequest: status update no-op requesterId={}, coeatId={}", requesterId, coeatId);
+				return;
 			}
-			if (to == APPROVED && after == PENDING) {
-				throw new ConflictException("정원 초과 또는 동시 승인 충돌");
+			if (after == cur) {
+				throw new ConflictException("동시 승인 충돌");
 			}
 			throw new BadRequestException("허용되지 않은 전이");
 		}
 
-		log.info("CoeatRequest status updated: userId={}, coeatId={}, to={}",
-				coeatRequest.getUserId(), coeatId, coeatRequest.getStatus());
+		log.info("CoeatRequest: status updated requesterId={}, coeatId={}, to={}",
+				requesterId, coeatId, to);
 	}
 
 	@Override
-	public void cancelCoeatRequest(Long userId, Long coeatId) {
+	public void cancelCoeatRequest(Long requesterId, Long coeatId) {
 
-		assertActiveCoeat(coeatId);
-
-		CoeatRequestStatus cur = coeatRequestMapper.selectStatus(userId, coeatId)
-				.orElseThrow(() -> new CoeatRequestNotFoundException(userId, coeatId));
-
-		if (cur == REJECTED) {
-			throw new BadRequestException("거절된 요청은 취소할 수 없습니다.");
+		boolean isRequester = coeatRequestMapper.isRequester(requesterId, coeatId);
+		if (!isRequester) {
+			throw new ForbiddenException("본인만 취소할 수 있습니다.");
 		}
 
-		boolean affected = coeatRequestMapper.updateStatus(userId, coeatId, cur, CANCELLED) > 0;
+		CoeatRequestStatus cur = findStatus(requesterId, coeatId);
+		if (cur == CANCELLED || cur == REJECTED) {
+			throw new BadRequestException("현재 상태에서는 취소할 수 없습니다.");
+		}
+
+		boolean affected = coeatRequestMapper.updateStatus(requesterId, coeatId, cur, CANCELLED) > 0;
 		if (!affected) {
-			log.debug("CoeatRequest: cancel no-op userId={}, coeatId={}", userId, coeatId);
-			return;
+			CoeatRequestStatus after = findStatus(requesterId, coeatId);
+			if (after == CANCELLED) {
+				log.debug("CoeatRequest: cancel no-op requesterId={}, coeatId={}", requesterId, coeatId);
+				return;
+			}
+			if (after == cur) {
+				throw new ConflictException("동시 상태 변경 충돌");
+			}
+			throw new BadRequestException("허용되지 않은 전이");
 		}
 
-		log.info("CoeatRequest: cancelled userId={}, coeatId={}", userId, coeatId);
+		log.info("CoeatRequest: cancelled requesterId={}, coeatId={}", requesterId, coeatId);
 	}
 
 
@@ -218,5 +222,10 @@ public class CoeatManager implements CoeatService {
 		if (!exists) {
 			throw new CoeatNotFoundException(coeatId);
 		}
+	}
+
+	private CoeatRequestStatus findStatus(Long requesterId, Long coeatId) {
+		return coeatRequestMapper.selectStatus(requesterId, coeatId)
+				.orElseThrow(() -> new CoeatRequestNotFoundException(requesterId, coeatId));
 	}
 }
