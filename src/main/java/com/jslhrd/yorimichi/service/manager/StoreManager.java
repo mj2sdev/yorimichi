@@ -109,6 +109,7 @@ public class StoreManager implements StoreService {
 		boolean affected = storeMapper.deleteById(storeId) > 0;
 		if (!affected) {
 			assertActiveStore(storeId);
+			log.debug("Store: delete no-op storeId={}", storeId);
 			return;
 		}
 
