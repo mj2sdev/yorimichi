@@ -1,32 +1,20 @@
 package com.jslhrd.yorimichi.controller;
 
-import java.security.Principal;
-import java.util.List;
-
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.jslhrd.yorimichi.domain.BookmarkDTO;
 import com.jslhrd.yorimichi.domain.ReviewDTO;
 import com.jslhrd.yorimichi.domain.StoreDTO;
 import com.jslhrd.yorimichi.domain.UserDTO;
+import com.jslhrd.yorimichi.service.RelationshipService;
 import com.jslhrd.yorimichi.service.ReviewService;
 import com.jslhrd.yorimichi.service.StoreService;
 import com.jslhrd.yorimichi.service.UserService;
-import com.jslhrd.yorimichi.service.RelationshipService;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.PutMapping;
-
-
-
+import java.security.Principal;
+import java.util.List;
 
 
 @Controller
@@ -46,16 +34,16 @@ public class UserController {
 		List<ReviewDTO> reviews = reviewService.findAllByUserId(null);
 		List<StoreDTO> likes = storeService.findAllByUserLike(null);
 		List<BookmarkDTO> bookmarks = null;
-		List<UserDTO> follow = relationshipService.findFollowById(null);
-		List<UserDTO> follower = relationshipService.findFollowerById(null);
-		List<UserDTO> block = relationshipService.findBlockById(null);
+		List<UserDTO> followees = relationshipService.findFollowees(null);
+		List<UserDTO> followers = relationshipService.findFollowers(null);
+		List<UserDTO> blocks = relationshipService.findBlocks(null);
 		model.addAttribute("user", user);
 		model.addAttribute("reviews", reviews);
 		model.addAttribute("likes", likes);
 		model.addAttribute("bookmarks", bookmarks);
-		model.addAttribute("follow", follow);
-		model.addAttribute("follower", follower);
-		model.addAttribute("block", block);
+		model.addAttribute("followees", followees);
+		model.addAttribute("followers", followers);
+		model.addAttribute("blocks", blocks);
 		return "user/detail";
 	}
 
@@ -66,16 +54,16 @@ public class UserController {
 		List<ReviewDTO> reviews = reviewService.findAllByUserId(null);
 		List<StoreDTO> likes = storeService.findAllByUserLike(null);
 		List<BookmarkDTO> bookmarks = null;
-		List<UserDTO> follow = relationshipService.findFollowById(null);
-		List<UserDTO> follower = relationshipService.findFollowerById(null);
-		List<UserDTO> block = relationshipService.findBlockById(null);
+		List<UserDTO> followees = relationshipService.findFollowees(null);
+		List<UserDTO> followers = relationshipService.findFollowers(null);
+		List<UserDTO> blocks = relationshipService.findBlocks(null);
 		model.addAttribute("user", user);
 		model.addAttribute("reviews", reviews);
 		model.addAttribute("likes", likes);
 		model.addAttribute("bookmarks", bookmarks);
-		model.addAttribute("follow", follow);
-		model.addAttribute("follower", follower);
-		model.addAttribute("block", block);
+		model.addAttribute("followees", followees);
+		model.addAttribute("followers", followers);
+		model.addAttribute("blocks", blocks);
 		return "user/mypage";
 	}
 

@@ -29,6 +29,16 @@
         )
     </select>
 
+    <select id="isApproved" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM coeat_request c
+            WHERE c.user_id = #{userId}
+                AND c.coeat_id = #{coeatId}
+                AND c.status = 'APPROVED'
+        )
+    </select>
+
     <insert id="insert" parameterType="CoeatRequestDTO">
         INSERT INTO coeat_request (coeat_id, user_id, message)
         VALUES (#{coeatId}, #{userId}, #{message})

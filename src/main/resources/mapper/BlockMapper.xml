@@ -4,16 +4,45 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.BlockMapper">
 
-    <insert id="insert" parameterType="BlockDTO">
+    <!-- @formatter:off -->
+
+    <select id="selectAllByUserId" parameterType="long" resultType="BlockDTO">
+        SELECT *
+        FROM block
+        WHERE blocker_id = #{userId}
+        ORDER BY created_at DESC;
+    </select>
+
+    <select id="exists" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1
+            FROM block
+            WHERE blocker_id = #{blockerId}
+                AND blockee_id = #{blockeeId}
+        )
+    </select>
+
+    <select id="existsEitherWay" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1
+            FROM block
+            WHERE (blocker_id = #{blockerId} AND blockee_id = #{blockeeId})
+                OR (blocker_id = #{blockeeId} AND blockee_id = #{blockerId})
+        )
+    </select>
+
+    <insert id="insert">
         INSERT INTO block (blocker_id, blockee_id)
-        VALUES (#{blockerId}, #{blockedId})
+        VALUES (#{blockerId}, #{blockeeId})
     </insert>
 
-    <delete id="delete" parameterType="BlockDTO">
+    <delete id="delete">
         DELETE
         FROM block
         WHERE blocker_id = #{blockerId}
-          AND blockee_id = #{blockee_id}
+          AND blockee_id = #{blockeeId}
     </delete>
+
+    <!-- @formatter:on -->
 
 </mapper>
