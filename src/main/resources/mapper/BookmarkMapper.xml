@@ -4,14 +4,28 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.BookmarkMapper">
 
-    <insert id="insert" parameterType="BookmarkDTO">
+    <!-- @formatter:off -->
+
+    <select id="selectByUserId" parameterType="long" resultType="StoreDTO">
+        SELECT s.*
+        FROM store s
+        JOIN bookmark b ON s.id = b.store_id
+        WHERE b.user_id = #{userId}
+        ORDER BY b.created_at DESC, b.store_id DESC
+    </select>
+
+    <insert id="insert">
         INSERT INTO bookmark (user_id, store_id)
         VALUES (#{userId}, #{storeId})
     </insert>
 
-    <delete id="delete" parameterType="BookmarkDTO">
-        DELETE FROM bookmark
-        WHERE user_id = #{userId} AND store_id = #{storeId}
+    <delete id="delete">
+        DELETE
+        FROM bookmark
+        WHERE user_id = #{userId}
+          AND store_id = #{storeId}
     </delete>
+
+    <!-- @formatter:off -->
 
 </mapper>
