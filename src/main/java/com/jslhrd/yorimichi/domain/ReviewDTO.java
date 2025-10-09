@@ -30,11 +30,6 @@ public class ReviewDTO extends RootDTO implements FeedDTO {
 	private Long storeId;
 	
 	/**
-	 * 리뷰 자체 ID
-	 */
-	private Long reviewId;
-
-	/**
 	 * 리뷰 평점
 	 */
 	private Integer rating;
