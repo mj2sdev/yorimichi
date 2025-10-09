@@ -33,11 +33,6 @@ public class UserDTO extends RootDTO implements Serializable {
 	private Role role;
 
 	/**
-	 * 유저 ID
-	 */
-	private Long userId;
-
-	/**
 	 * 유저 이메일/아이디
 	 */
 	private String email;
