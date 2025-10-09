@@ -105,6 +105,7 @@ public class CoeatManager implements CoeatService {
 	@Override
 	public void saveCoeatRequest(Long userId, Long coeatId, CoeatRequestDTO coeatRequest) {
 
+		assertActiveUser(userId);
 		assertActiveCoeat(coeatId);
 
 		boolean isOwner = coeatMapper.isOwner(userId, coeatId);
@@ -131,8 +132,6 @@ public class CoeatManager implements CoeatService {
 
 	@Override
 	public void updateCoeatRequestStatus(Long ownerId, Long coeatId, CoeatRequestDTO coeatRequest) {
-
-		assertActiveCoeat(coeatId);
 
 		boolean isOwner = coeatMapper.isOwner(ownerId, coeatId);
 		if (!isOwner) {
@@ -181,8 +180,6 @@ public class CoeatManager implements CoeatService {
 
 	@Override
 	public void cancelCoeatRequest(Long userId, Long coeatId) {
-
-		assertActiveCoeat(coeatId);
 
 		CoeatRequestStatus cur = coeatRequestMapper.selectStatus(userId, coeatId)
 				.orElseThrow(() -> new CoeatRequestNotFoundException(userId, coeatId));
