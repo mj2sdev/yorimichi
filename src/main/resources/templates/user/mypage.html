@@ -275,7 +275,7 @@
 				<div class="tab-content" id="nav-tabContent-side">
 					<div class="tab-pane fade show active" id="nav-follow" role="tabpanel"
 						aria-labelledby="nav-follow-tab" tabindex="0">
-						<th:block th:each="person : ${follow}">
+						<th:block th:each="person : ${followees}">
 							<div class="row">
 								<div class="col-2">
 									<button type="button" class="btn follow-switch-btn" th:data-user-id="${person.userId}">
@@ -292,7 +292,7 @@
 					</div>
 					<div class="tab-pane fade" id="nav-follower" role="tabpanel"
 						aria-labelledby="nav-follower-tab" tabindex="0">
-						<th:block th:each="person : ${follower}">
+						<th:block th:each="person : ${followers}">
 							<div class="row">
 								<div class="col-2">
 									<i class="bi bi-toggle-on" style="font-size: 1em; color:gold;"></i>
@@ -307,7 +307,7 @@
 					</div>
 					<div class="tab-pane fade" id="nav-block" role="tabpanel" aria-labelledby="nav-block-tab"
 						tabindex="0">
-						<th:block th:each="person : ${block}">
+						<th:block th:each="person : ${blocks}">
 							<div class="row">
 								<div class="col-2">
 									<button type="button" class="btn block-switch-btn" th:data-user-id="${person.userId}">
