@@ -1,8 +1,11 @@
 package com.jslhrd.yorimichi.mapper;
 
 import com.jslhrd.yorimichi.domain.CoeatRequestDTO;
+import com.jslhrd.yorimichi.enums.CoeatRequestStatus;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.Optional;
 
 /**
  * 같이먹기 요청 Mapper.
@@ -16,20 +19,22 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface CoeatRequestMapper {
 
-	/**
-	 * 주소 추가.
-	 * @return 영향 행 수 (추가 1, 그 외 0)
-	 */
-	int insert(CoeatRequestDTO dto);
+	Optional<CoeatRequestStatus> selectStatus(@Param("userId") Long userId,
+	                                          @Param("coeatId") Long coeatId);
 
-	// TODO: 같이먹기 기준 요청 목록 조회.
+	int countApprovedById(@Param("coeatId") Long coeatId);
 
-	// TODO: 요청 처리.
+	boolean exists(@Param("userId") Long userId,
+	               @Param("coeatId") Long coeatId);
 
 	/**
-	 * 같이먹기 요청 삭제.
-	 * @param id 같이먹기 요청 ID
-	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
+	 * 같이먹기 요청 추가.
+	 *
 	 */
-	int deleteById(@Param("id") Long id);
+	void insert(CoeatRequestDTO coeatRequest);
+
+	int updateStatus(@Param("userId") Long userId,
+	                 @Param("coeatId") Long coeatId,
+	                 @Param("from") CoeatRequestStatus from,
+	                 @Param("to") CoeatRequestStatus to);
 }

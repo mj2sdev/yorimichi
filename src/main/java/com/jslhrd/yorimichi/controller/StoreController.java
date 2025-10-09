@@ -8,17 +8,9 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import lombok.RequiredArgsConstructor;
-
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-
-
-
-
-
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -32,40 +24,40 @@ public class StoreController {
 	@ResponseBody
 	@GetMapping("/search")
 	public void showStores() {
-		
+
 	}
-	
+
 
 	//첫검색 혹은 검색 버튼을 눌러서 검색.
 	// /search/async?keyword={keyword}&tags={tags}
 	@ResponseBody
 	@GetMapping("/search/sync")
 	public String showStoresBySearch(
-		@RequestParam(value = "keyword", required = false) String keyword, 
-		@RequestParam(value = "tags", required = false) String tags
+			@RequestParam(value = "keyword", required = false) String keyword,
+			@RequestParam(value = "tags", required = false) String tags
 	) {
 		//List<StoreDTO> stores
 		//List<StoreCategoryDTO> categories
 		//List<StoreFacilityCategoryDTO> Facilities
 		return "store/list";
 	}
-	
+
 	//비동기로 리스트를 가져오기 위한 메서드
 	//카테고리나 시설 등 버튼을 눌러 설정이 바뀌면 리스트가 달라지는 형태.
 	// /search/async?keyword={keyword}&tags={tags}
 	@ResponseBody
 	@GetMapping("/search/async")
 	public void showStoresByFilter(
-		@RequestParam(value = "keyword", required = false) String keyword, 
-		@RequestParam(value = "tags", required = false) String tags
+			@RequestParam(value = "keyword", required = false) String keyword,
+			@RequestParam(value = "tags", required = false) String tags
 	) {
 		//서비스로 가서 키워드로 가져온 가게 리스를 보여줄 수 있어야 함.
 		//return List<StoreDTO> stores;
 	}
-	
+
 	//가게 상세정보로 이동
-	@GetMapping("/detail/{id}")
-	public String showDetail(){
+	@GetMapping("/detail/{storeId}")
+	public String showDetail() {
 		//StoreDTO
 		return "store/detail";
 	}
@@ -75,6 +67,7 @@ public class StoreController {
 	@ResponseBody
 	@PostMapping("/bookmark/{storeId}")
 	public void submitBookmark(@PathVariable Long storeId) {
+
 		//등록 처리 후 북마크 갱신
 		//return List<BookmarkDTO> Bookmarks;
 	}
@@ -103,5 +96,5 @@ public class StoreController {
 	public void deleteLikes(@PathVariable Long storeId){
 		//return List<LikeDTO> likes;
 	}
-	
+
 }
