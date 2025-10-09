@@ -43,4 +43,5 @@ public interface CoeatRequestMapper {
 	                 @Param("coeatId") Long coeatId,
 	                 @Param("cur") CoeatRequestStatus cur,
 	                 @Param("to") CoeatRequestStatus to);
+
 }

@@ -41,8 +41,6 @@
         )
     </select>
 
-
-
     <insert id="insert" parameterType="CoeatRequestDTO">
         INSERT INTO coeat_request (coeat_id, user_id, message)
         VALUES (#{coeatId}, #{userId}, #{message})

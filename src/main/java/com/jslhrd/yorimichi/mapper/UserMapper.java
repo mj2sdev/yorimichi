@@ -37,8 +37,6 @@ public interface UserMapper {
 	 */
 	int insert(UserDTO user);
 
-	// TODO: 유저 목록 조회.
-
 	/**
 	 * 유저 수정.
 	 *
@@ -46,7 +44,8 @@ public interface UserMapper {
 	 */
 	int update(UserDTO user);
 
-	int updatePassword(@Param("userId") Long userId, @Param("password") String password);
+	int updatePassword(@Param("userId") Long userId,
+	                   @Param("password") String password);
 
 	/**
 	 * 유저 삭제.
