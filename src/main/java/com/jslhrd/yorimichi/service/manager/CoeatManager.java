@@ -54,8 +54,8 @@ public class CoeatManager implements CoeatService {
 	@Override
 	public void save(Long userId, Long storeId, CoeatDTO coeat) {
 
-		assertActiveStore(storeId);
 		assertActiveUser(userId);
+		assertActiveStore(storeId);
 
 		coeat.setUserId(userId);
 		coeat.setStoreId(storeId);
@@ -74,10 +74,6 @@ public class CoeatManager implements CoeatService {
 
 		if (coeat.getId() != null && !coeatId.equals(coeat.getId())) {
 			throw new BadRequestException("경로의 coeatId 와 본문의 id 가 다릅니다.");
-		}
-
-		if (coeat.getStoreId() != null) {
-			assertActiveStore(coeat.getStoreId());
 		}
 
 		boolean affected = coeatMapper.update(userId, coeatId, coeat) > 0;
@@ -105,6 +101,7 @@ public class CoeatManager implements CoeatService {
 	@Override
 	public void saveCoeatRequest(Long userId, Long coeatId, CoeatRequestDTO coeatRequest) {
 
+		assertActiveUser(userId);
 		assertActiveCoeat(coeatId);
 
 		boolean isOwner = coeatMapper.isOwner(userId, coeatId);
@@ -132,6 +129,7 @@ public class CoeatManager implements CoeatService {
 	@Override
 	public void updateCoeatRequestStatus(Long ownerId, Long coeatId, CoeatRequestDTO coeatRequest) {
 
+		assertActiveUser(ownerId);
 		assertActiveCoeat(coeatId);
 
 		boolean isOwner = coeatMapper.isOwner(ownerId, coeatId);
