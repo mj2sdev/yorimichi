@@ -70,7 +70,7 @@ public class ReportManager implements ReportService {
 				throw new BadRequestException("이미 처리되었습니다.");
 			}
 			if (after == PENDING) {
-				throw new ConflictException("정원 초과 또는 동시 승인 충돌");
+				throw new ConflictException("동시 상태 변경 충돌");
 			}
 			throw new BadRequestException("허용되지 않은 전이");
 		}
