@@ -3,10 +3,16 @@ package com.jslhrd.yorimichi.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-public class ReviewNotFoundException extends RuntimeException {
+import java.util.Map;
 
-	public ReviewNotFoundException(Long id) {
-		super("Review not found: " + id);
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class ReviewNotFoundException extends DomainException {
+
+	public ReviewNotFoundException(Long reviewId) {
+		super(
+				"REVIEW_NOT_FOUND",
+				"",
+				Map.of("reviewId", reviewId)
+		);
 	}
 }

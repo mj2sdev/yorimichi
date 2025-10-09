@@ -4,29 +4,77 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.FoodMapper">
 
+    <!-- @formatter:off -->
+
+    <select id="selectAll" resultType="FoodDTO">
+        SELECT f.id,
+               f.store_id,
+               f.name,
+               f.price,
+               f.description,
+               r.created_at,
+               r.updated_at
+        FROM food f
+        JOIN root r ON f.id = r.id
+            AND r.type = 'FOOD'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        ORDER BY r.created_at DESC;
+    </select>
+
+    <select id="selectById" parameterType="long" resultType="FoodDTO">
+        SELECT f.id,
+               f.store_id,
+               f.name,
+               f.price,
+               f.description,
+               r.created_at,
+               r.updated_at
+        FROM food f
+        JOIN root r ON f.id = r.id
+            AND r.type = 'FOOD'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        WHERE f.id = #{foodId}
+    </select>
+
+    <select id="existsActive" parameterType="long" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM food f
+            JOIN root r ON f.id = r.id
+                AND r.type = 'FOOD'
+                AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+            WHERE f.id = #{foodId}
+        )
+    </select>
+
     <insert id="insert" parameterType="FoodDTO">
         INSERT INTO food (id, store_id, name, price, description)
         VALUES (#{id}, #{storeId}, #{name}, #{price}, #{description})
     </insert>
 
-    <select id="selectById" parameterType="Long" resultType="FoodDTO">
-        SELECT f.id, f.store_id, f.name, f.price, f.description,
-               r.created_at, r.updated_at, r.deleted_at, r.blinded_at
-        FROM food f
-        JOIN root r ON f.id = r.id
-        WHERE f.id = #{id}
-    </select>
-
-    <update id="update" parameterType="FoodDTO">
+    <update id="update">
         UPDATE food f
         JOIN root r ON f.id = r.id
-        SET f.name = #{name}, f.price = #{price}, f.description = #{description},
+            AND r.type = 'FOOD'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        SET f.name = #{food.name},
+            f.price = #{food.price},
+            f.description = #{food.description},
             r.updated_at = NOW()
-        WHERE f.id = #{id}
+        WHERE f.store_id = #{storeId}
+            AND f.id = #{foodId}
     </update>
 
-    <delete id="deleteById" parameterType="Long">
-        DELETE FROM root WHERE id = #{id}
-    </delete>
+    <update id="deleteById">
+        UPDATE food f
+        JOIN root r ON f.id = r.id
+            AND r.type = 'FOOD'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        SET r.deleted_at = NOW()
+        WHERE f.store_id = #{storeId}
+            AND f.id = #{foodId}
+    </update>
+
+    <!-- @formatter:on -->
 
 </mapper>
