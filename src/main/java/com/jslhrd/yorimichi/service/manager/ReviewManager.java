@@ -86,6 +86,23 @@ public class ReviewManager implements ReviewService {
 
 	@Override
 	@Transactional
+	public void update(Long userId, Long reviewId, ReviewDTO review) {
+
+		if (review.getId() != null && !reviewId.equals(review.getId())) {
+			throw new BadRequestException("경로의 reviewId 와 본문의 id 가 다릅니다.");
+		}
+
+		boolean affected = reviewMapper.update(userId, reviewId, review) > 0;
+		if (!affected) {
+			assertActiveReview(reviewId);
+			throw new ForbiddenException("리뷰 수정 권한이 없습니다.");
+		}
+
+		log.info("Review: updated reviewId={}", reviewId);
+	}
+
+	@Override
+	@Transactional
 	public void delete(Long userId, Long reviewId) {
 
 		boolean affected = reviewMapper.deleteById(userId, reviewId) > 0;
@@ -93,6 +110,7 @@ public class ReviewManager implements ReviewService {
 			assertActiveReview(reviewId);
 			throw new ForbiddenException("리뷰 삭제 권한이 없습니다.");
 		}
+	}
 
 		log.info("Review: soft deleted reviewId={}", reviewId);
 	}

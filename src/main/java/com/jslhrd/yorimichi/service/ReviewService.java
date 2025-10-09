@@ -29,6 +29,13 @@ public interface ReviewService {
 	public List<ReviewDTO> findAllByStoreId(Long storeId);
 
 	/**
+	 * 작성자(userId)를 기준으로 리뷰 리스트를 조회
+	 * @param userId
+	 * @return
+	 */
+	public List<ReviewDTO> findAllByUserId(Long userId);
+
+	/**
 	 * 리뷰 상세 데이터를 조회합니다.
 	 *
 	 * @param reviewId 리뷰 ID
