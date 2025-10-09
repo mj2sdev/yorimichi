@@ -210,6 +210,11 @@
 						aria-labelledby="nav-like-tab" tabindex="1">
 						<th:block th:each="like : ${likes}">
 							<div class="row">
+								<div class="col-2">
+									<button type="button" class="btn like-switch-btn" th:data-like-storeId="${like.storeId}">
+										<i class="bi bi-heart-fill" style="font-size: 1em; color: red;"></i>
+									</button>
+								</div>
 								<div class="col">
 									<a th:href="@{'/store/detail/'+${like.storeId}}" class="btn">
 										<img th:src="${like.images[0]}">
@@ -227,6 +232,11 @@
 						aria-labelledby="nav-bookmark-tab" tabindex="1">
 						<th:block th:each="bookmark : ${bookmarks}">
 							<div class="row">
+								<div class="col-2">
+									<button type="button" class="bookmark-switch-btn" th:data-bookmark-storeId="${bookmark.storeId}">
+										<i class="bi bi-bookmark-fill" style="font-size: 1em; color: gold"></i>
+									</button>
+								</div>
 								<div class="col">
 									<a th:href="@{'/store/detail/'+${bookmark.storeId}}" class="btn">
 										<img th:src="${bookmark.images[0]}">
@@ -268,7 +278,7 @@
 						<th:block th:each="person : ${follow}">
 							<div class="row">
 								<div class="col-2">
-									<button type="button" class="btn" th:data-user-id="${person.userId}">
+									<button type="button" class="btn follow-switch-btn" th:data-user-id="${person.userId}">
 										<i class="bi bi-heart-fill" style="font-size: 1em; color:red"></i>
 									</button>
 								</div>
@@ -285,9 +295,7 @@
 						<th:block th:each="person : ${follower}">
 							<div class="row">
 								<div class="col-2">
-									<button type="button" class="btn" th:data-user-id="${person.userId}">
-										<i class="bi bi-toggle-on" style="font-size: 1em; color:gold;"></i>
-									</button>
+									<i class="bi bi-toggle-on" style="font-size: 1em; color:gold;"></i>
 								</div>
 								<div class="col">
 									<a th:href="@{'/user/detail/'+${person.userId}}" th:text="${person.nickname}" class="btn d-block">
@@ -302,7 +310,7 @@
 						<th:block th:each="person : ${block}">
 							<div class="row">
 								<div class="col-2">
-									<button type="button" class="btn" th:data-user-id="${person.userId}">
+									<button type="button" class="btn block-switch-btn" th:data-user-id="${person.userId}">
 										<i class="bi bi-toggle-on" style="font-size: 1em; color:red;"></i>
 									</button>
 								</div>

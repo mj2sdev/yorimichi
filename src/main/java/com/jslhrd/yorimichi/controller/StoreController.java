@@ -1,10 +1,12 @@
 package com.jslhrd.yorimichi.controller;
 
+import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.RequiredArgsConstructor;
@@ -71,16 +73,16 @@ public class StoreController {
 
 	//북마크 등록
 	@ResponseBody
-	@PostMapping("/bookmark")
-	public void submitBookmark(@RequestBody Long id) {
+	@PostMapping("/bookmark/{storeId}")
+	public void submitBookmark(@PathVariable Long storeId) {
 		//등록 처리 후 북마크 갱신
 		//return List<BookmarkDTO> Bookmarks;
 	}
 
 	//북마크 삭제
 	@ResponseBody
-	@DeleteMapping("/bookmark")
-	public void deleteBookmark(@RequestBody Long Id){
+	@DeleteMapping("/bookmark/{storeId}")
+	public void deleteBookmark(@PathVariable Long storeId){
 		//삭제 처리 후 북마크 갱신
 		//return List<BookmarkDTO> Bookmarks;
 	}
@@ -91,14 +93,14 @@ public class StoreController {
 	}
 
 	@ResponseBody
-	@PostMapping("/like")
-	public void submitLike() {
+	@PostMapping("/like/{storeId}")
+	public void submitLike(@PathVariable Long storeId) {
 		//return List<LikeDTO> likes;
 	}
 
 	@ResponseBody
-	@DeleteMapping("/like")
-	public void deleteLikes(){
+	@DeleteMapping("/like/{storeId}")
+	public void deleteLikes(@PathVariable Long storeId){
 		//return List<LikeDTO> likes;
 	}
 	
