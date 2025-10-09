@@ -24,6 +24,9 @@ public interface ReportMapper {
 
 	Optional<ReportStatus> selectStatus(@Param("reportId") Long reportId);
 
+	boolean isReporter(@Param("userId") Long userId,
+	                   @Param("reportId") Long reportId);
+
 	/**
 	 * 신고 추가.
 	 *
@@ -41,5 +44,6 @@ public interface ReportMapper {
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */
 	int cancelByReporter(@Param("userId") Long userId,
-	                     @Param("reportId") Long reportId);
+	                     @Param("reportId") Long reportId,
+	                     @Param("cur") ReportStatus cur);
 }

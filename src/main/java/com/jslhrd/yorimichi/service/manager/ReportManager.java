@@ -55,8 +55,7 @@ public class ReportManager implements ReportService {
 	public void updateStatus(Long reportId, ReportDTO report) {
 
 		ReportStatus to = report.getStatus();
-		ReportStatus cur = reportMapper.selectStatus(reportId)
-				.orElseThrow(() -> new ReportNotFoundException(reportId));
+		ReportStatus cur = findReportStatus(reportId);
 
 		if (!(cur == PENDING && (to == RESOLVED || to == REJECTED))) {
 			throw new BadRequestException("허용되지 않은 전이");
@@ -64,37 +63,49 @@ public class ReportManager implements ReportService {
 
 		boolean affected = reportMapper.updateStatus(reportId, cur, to) > 0;
 		if (!affected) {
-			ReportStatus after = reportMapper.selectStatus(reportId)
-					.orElseThrow(() -> new ReportNotFoundException(reportId));
+			ReportStatus after = findReportStatus(reportId);
 			if (after == to) {
-				throw new BadRequestException("이미 처리되었습니다.");
+				log.debug("Report: status update no-op reportId={}", reportId);
+				return;
 			}
-			if (after == PENDING) {
+			if (after == cur) {
 				throw new ConflictException("동시 상태 변경 충돌");
 			}
 			throw new BadRequestException("허용되지 않은 전이");
 		}
 
-		log.info("Report: status updated reportId={}, report={}", reportId, report);
+		log.info("Report: status updated reportId={}, report={}, to={}",
+				reportId, report, to);
 	}
 
 	@Override
-	public void cancel(Long userId, Long reportId) {
+	public void cancel(Long reporterId, Long reportId) {
 
-		ReportStatus cur = reportMapper.selectStatus(reportId)
-				.orElseThrow(() -> new ReportNotFoundException(reportId));
-
-		if (cur == RESOLVED || cur == REJECTED) {
-			throw new BadRequestException("해결/거절된 신고는 취소할 수 없습니다.");
+		boolean isReporter = reportMapper.isReporter(reporterId, reportId);
+		if (!isReporter) {
+			throw new ForbiddenException("본인만 취소할 수 있습니다.");
 		}
 
-		boolean affected = reportMapper.cancelByReporter(userId, reportId) > 0;
+		ReportStatus cur = findReportStatus(reportId);
+
+		if (cur != PENDING) {
+			throw new BadRequestException("현재 상태에서는 취소할 수 없습니다.");
+		}
+
+		boolean affected = reportMapper.cancelByReporter(reporterId, reportId, cur) > 0;
 		if (!affected) {
-			log.debug("Report: cancel no-op userId={}, reportId={}", userId, reportId);
-			return;
+			ReportStatus after = findReportStatus(reportId);
+			if (after == CANCELLED) {
+				log.debug("Report: cancel no-op userId={}, reportId={}", reporterId, reportId);
+				return;
+			}
+			if (after == cur) {
+				throw new ConflictException("동시 상태 변경 충돌");
+			}
+			throw new BadRequestException("허용되지 않은 전이");
 		}
 
-		log.info("Report: cancelled userId={} reportId={}", userId, reportId);
+		log.info("Report: cancelled userId={} reportId={}", reporterId, reportId);
 	}
 
 	private void assertActiveRoot(Long rootId) {
@@ -109,5 +120,10 @@ public class ReportManager implements ReportService {
 		if (!exists) {
 			throw new UserNotFoundException(userId);
 		}
+	}
+
+	private ReportStatus findReportStatus(Long reportId) {
+		return reportMapper.selectStatus(reportId)
+				.orElseThrow(() -> new ReportNotFoundException(reportId));
 	}
 }

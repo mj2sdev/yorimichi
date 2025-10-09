@@ -18,6 +18,15 @@
         WHERE id = #{reportId}
     </select>
 
+    <select id="isReporter" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM report
+            WHERE id = #{reportId}
+                AND reporter_id = #{reporterId}
+        )
+    </select>
+
     <insert id="insert"
             parameterType="ReportDTO"
             useGeneratedKeys="true"
@@ -39,7 +48,7 @@
         SET status = 'CANCELLED'
         WHERE id = #{reportId}
             AND reporter_id = #{userId}
-            AND status = 'PENDING'
+            AND status = #{cur}
     </update>
 
     <!-- @formatter:on -->
