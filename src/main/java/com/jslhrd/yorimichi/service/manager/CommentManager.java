@@ -109,10 +109,7 @@ public class CommentManager implements CommentService {
 		if (parentId == null) {
 			return;
 		}
-		boolean exists = commentMapper.existsActive(coeatId, parentId);
-		if (!exists) {
-			throw new CommentNotFoundException(coeatId, parentId);
-		}
+		assertActiveComment(coeatId, parentId);
 	}
 
 	private void assertCanComment(Long userId, Long coeatId) {
@@ -120,8 +117,8 @@ public class CommentManager implements CommentService {
 		if (isOwner) {
 			return;
 		}
-		boolean approved = coeatRequestMapper.isApproved(userId, coeatId);
-		if (!approved) {
+		boolean isApproved = coeatRequestMapper.isApproved(userId, coeatId);
+		if (!isApproved) {
 			throw new ForbiddenException("승인된 참가자만 댓글을 작성할 수 있습니다.");
 		}
 	}
