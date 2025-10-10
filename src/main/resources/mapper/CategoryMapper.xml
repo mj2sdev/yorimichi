@@ -13,7 +13,7 @@
                created_at,
                updated_at
         FROM category
-        ORDER BY name
+        ORDER BY name, id DESC
     </select>
 
     <select id="selectById" parameterType="long" resultType="CategoryDTO">

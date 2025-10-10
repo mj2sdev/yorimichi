@@ -29,14 +29,14 @@ public interface CategoryMapper {
 	 */
 	Optional<CategoryDTO> selectById(@Param("categoryId") Long categoryId);
 
+	boolean existsById(@Param("categoryId") Long categoryId);
+
 	/**
 	 * 카테고리 추가.
 	 *
 	 * @return 영향 행 수 (추가 1, 그 외 0)
 	 */
 	int insert(CategoryDTO category);
-
-	boolean existsById(@Param("categoryId") Long categoryId);
 
 	/**
 	 * 카테고리 수정.
