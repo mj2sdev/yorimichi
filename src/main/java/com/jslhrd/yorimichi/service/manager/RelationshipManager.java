@@ -56,10 +56,12 @@ public class RelationshipManager implements RelationshipService {
 
 		try {
 			followMapper.insert(followerId, followeeId);
-			log.info("Follow: created followerId={}, followeeId={}", followerId, followeeId);
 		} catch (DuplicateKeyException e) {
-			log.debug("Follow: already exists (no-op) followerId={}, followeeId={}", followerId, followeeId);
+			log.debug("Follow: create no-op followerId={}, followeeId={}", followerId, followeeId);
+			return;
 		}
+
+		log.info("Follow: created followerId={}, followeeId={}", followerId, followeeId);
 	}
 
 	@Override
@@ -104,10 +106,12 @@ public class RelationshipManager implements RelationshipService {
 
 		try {
 			blockMapper.insert(blockerId, blockeeId);
-			log.info("Block: created blockerId={}, blockeeId={}", blockerId, blockeeId);
 		} catch (DuplicateKeyException e) {
-			log.debug("Block: already exists (no-op) blockerId={}, blockeeId={}", blockerId, blockeeId);
+			log.debug("Block: no-op blockerId={}, blockeeId={}", blockerId, blockeeId);
+			return;
 		}
+
+		log.info("Block: created blockerId={}, blockeeId={}", blockerId, blockeeId);
 
 		boolean affected = followMapper.deleteBothDirections(blockerId, blockeeId) > 0;
 		log.debug("Block: unfollow both-directions done={}, {}↔{}", affected, blockerId, blockeeId);
