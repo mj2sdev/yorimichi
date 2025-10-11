@@ -4,25 +4,46 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.ImageMapper">
 
-    <insert id="insert" parameterType="ImageDTO">
+    <!-- @formatter:off -->
+
+    <select id="selectById" parameterType="long" resultType="ImageDTO">
+        SELECT id,
+               url,
+               created_at,
+               updated_at
+        FROM image
+        WHERE id = #{imageId}
+    </select>
+
+    <select id="existsById" parameterType="long" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM image
+            WHERE id = #{imageId}
+        )
+    </select>
+
+    <insert id="insert"
+            parameterType="ImageDTO"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
         INSERT INTO image (url)
         VALUES (#{url})
     </insert>
 
-    <select id="selectById" parameterType="Long" resultType="ImageDTO">
-        SELECT id, url, created_at, updated_at
-        FROM image
-        WHERE id = #{id}
-    </select>
-
-    <update id="update" parameterType="ImageDTO">
+    <update id="update">
         UPDATE image
-        SET url = #{url}
-        WHERE id = #{id}
+        SET url = #{image.url}
+        WHERE id = #{imageId}
     </update>
 
-    <delete id="deleteById" parameterType="Long">
-        DELETE FROM image WHERE id = #{id}
+    <delete id="deleteById" parameterType="long">
+        DELETE
+        FROM image
+        WHERE id = #{imageId}
     </delete>
+
+    <!-- @formatter:on -->
 
 </mapper>
