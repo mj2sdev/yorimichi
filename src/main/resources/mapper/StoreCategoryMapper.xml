@@ -6,20 +6,21 @@
 
     <!-- @formatter:off -->
 
-    <select id="exists" parameterType="StoreCategoryDTO" resultType="boolean">
+    <select id="exists" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
             FROM store_category
-            WHERE store_id = #{storeId} AND category_id = #{categoryId}
+            WHERE store_id = #{storeId}
+                AND category_id = #{categoryId}
         )
     </select>
 
-    <insert id="insert" parameterType="StoreCategoryDTO">
+    <insert id="insert">
         INSERT INTO store_category (store_id, category_id)
         VALUES (#{storeId}, #{categoryId})
     </insert>
 
-    <delete id="delete" parameterType="StoreCategoryDTO">
+    <delete id="delete">
         DELETE
         FROM store_category
         WHERE store_id = #{storeId}
