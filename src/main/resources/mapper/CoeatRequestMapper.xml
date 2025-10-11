@@ -10,7 +10,8 @@
         SELECT status
         FROM coeat_request
         WHERE coeat_id = #{coeatId}
-          AND user_id = #{userId}
+            AND user_id = #{userId}
+        FOR UPDATE
     </select>
 
     <select id="countApprovedById" parameterType="long" resultType="int">
@@ -18,15 +19,7 @@
         FROM coeat_request
         WHERE coeat_id = #{coeatId}
             AND status = 'APPROVED'
-    </select>
-
-    <select id="exists" resultType="boolean">
-        SELECT EXISTS (
-            SELECT 1
-            FROM coeat_request c
-            WHERE c.user_id = #{userId}
-              AND c.coeat_id = #{coeatId}
-        )
+        FOR UPDATE
     </select>
 
     <select id="isApproved" resultType="boolean">
@@ -34,8 +27,17 @@
             SELECT 1
             FROM coeat_request c
             WHERE c.user_id = #{userId}
-                AND c.coeat_id = #{coeatId}
-                AND c.status = 'APPROVED'
+              AND c.coeat_id = #{coeatId}
+              AND c.status = 'APPROVED'
+        )
+    </select>
+
+    <select id="isRequester" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM coeat_request
+            WHERE coeat_id = #{coeatId}
+                AND user_id = #{userId}
         )
     </select>
 
@@ -46,11 +48,10 @@
 
     <update id="updateStatus">
         UPDATE coeat_request
-        SET status = #{to},
-            updated_at = NOW()
+        SET status = #{to}
         WHERE coeat_id = #{coeatId}
             AND user_id = #{userId}
-            AND status = #{from}
+            AND status = #{cur}
     </update>
 
     <!-- @formatter:on -->

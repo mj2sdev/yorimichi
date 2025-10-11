@@ -71,6 +71,7 @@
         SELECT capacity
         FROM coeat
         WHERE id = #{coeatId}
+        FOR UPDATE
     </select>
 
     <select id="existsActive" parameterType="long" resultType="boolean">
