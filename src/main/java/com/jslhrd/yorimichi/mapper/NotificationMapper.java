@@ -4,6 +4,7 @@ import com.jslhrd.yorimichi.domain.NotificationDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,25 +19,35 @@ import java.util.Optional;
 @Mapper
 public interface NotificationMapper {
 
-	/**
-	 * 알림 추가.
-	 * @return 영향 행 수 (추가 1, 그 외 0)
-	 */
-	int insert(NotificationDTO dto); // 알림 등록
-	
-	// TODO: 수신자 기준 알림 목록 조회.
+	List<NotificationDTO> selectByUserId(@Param("userId") Long userId);
 
 	/**
 	 * 알림 단건 조회.
-	 * @param id 알림 ID
+	 *
+	 * @param notificationId 알림 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
-	Optional<NotificationDTO> selectById(@Param("id") Long id);
+	Optional<NotificationDTO> selectById(@Param("notificationId") Long notificationId);
+
+	boolean existsById(@Param("notificationId") Long notificationId);
+
+	boolean isOwner(@Param("userId") Long userId,
+	                @Param("notificationId") Long notificationId);
+
+	/**
+	 * 알림 추가.
+	 *
+	 * @return 영향 행 수 (추가 1, 그 외 0)
+	 */
+	int insert(NotificationDTO notification); // 알림 등록
 
 	/**
 	 * 알림 삭제 (읽음).
-	 * @param id 주소 ID
+	 *
+	 * @param userId         유저 ID
+	 * @param notificationId 주소 ID
 	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
 	 */
-	int deleteById(@Param("id") Long id);
+	int update(@Param("userId") Long userId,
+	           @Param("notificationId") Long notificationId);
 }

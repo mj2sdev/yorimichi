@@ -4,22 +4,68 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.NotificationMapper">
 
-    <insert id="insert" parameterType="NotificationDTO">
-        INSERT INTO notification (actor_user_id, root_id, target_user_id, message)
-        VALUES (#{actor_userId}, #{root_id}, #{target_userId}, #{message})
-    </insert>
+    <!-- @formatter:off -->
 
-    <select id="selectById" parameterType="Long" resultType="NotificationDTO">
-        SELECT id, actor_user_id, root_id, target_user_id,
-               message, created_at, updated_at, read_at
+    <select id="selectByUserId" parameterType="long" resultType="NotificationDTO">
+        SELECT id,
+               actor_user_id,
+               root_id,
+               target_user_id,
+               message,
+               created_at,
+               updated_at,
+               read_at
         FROM notification
-        WHERE id = #{id}
+        WHERE target_user_id = #{userId}
     </select>
 
-    <update id="deleteById" parameterType="Long">
+    <select id="selectById" parameterType="long" resultType="NotificationDTO">
+        SELECT id,
+               actor_user_id,
+               root_id,
+               target_user_id,
+               message,
+               created_at,
+               updated_at,
+               read_at
+        FROM notification
+        WHERE id = #{notificationId}
+    </select>
+
+    <select id="existsById" parameterType="long" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM notification n
+            WHERE n.id = #{notificationId}
+        )
+    </select>
+
+    <select id="isOwner" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM notification n
+            WHERE n.id = #{notificationId}
+                AND n.target_user_id = #{userId}
+        )
+    </select>
+
+    <insert id="insert"
+            parameterType="NotificationDTO"
+            useGeneratedKeys="true"
+            keyColumn="id"
+            keyProperty="id">
+        INSERT INTO notification (actor_user_id, root_id, target_user_id, message)
+        VALUES (#{actorUserId}, #{rootId}, #{targetUserId}, #{message})
+    </insert>
+
+    <update id="update">
         UPDATE notification
         SET read_at = NOW()
-        WHERE id = #{id}
+        WHERE id = #{notificationId}
+            AND target_user_id = #{userId}
+            AND read_at IS NULL
     </update>
+
+    <!-- @formatter:on -->
 
 </mapper>
