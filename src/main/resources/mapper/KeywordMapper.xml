@@ -4,25 +4,55 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.KeywordMapper">
 
-    <insert id="insert" parameterType="KeywordDTO">
+    <!-- @formatter:off -->
+
+    <select id="selectAll" resultType="KeywordDTO">
+        SELECT id,
+               name,
+               created_at,
+               updated_at
+        FROM keyword
+        ORDER BY name, id DESC
+    </select>
+
+    <select id="selectById" parameterType="long" resultType="KeywordDTO">
+        SELECT id,
+               name,
+               created_at,
+               updated_at
+        FROM keyword
+        WHERE id = #{keywordId}
+    </select>
+
+    <select id="existsById" parameterType="long" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM keyword
+            WHERE id = #{keywordId}
+        )
+    </select>
+
+    <insert id="insert"
+            parameterType="KeywordDTO"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
         INSERT INTO keyword (name)
         VALUES (#{name})
     </insert>
 
-    <select id="selectById" parameterType="Long" resultType="KeywordDTO">
-        SELECT id, name, created_at, updated_at
-        FROM keyword
-        WHERE id = #{id}
-    </select>
-
-    <update id="update" parameterType="KeywordDTO">
+    <update id="update">
         UPDATE keyword
-        SET name = #{name}
-        WHERE id = #{id}
+        SET name = #{keyword.name}
+        WHERE id = #{keywordId}
     </update>
 
-    <delete id="deleteById" parameterType="Long">
-        DELETE FROM keyword WHERE id = #{id}
+    <delete id="deleteById" parameterType="long">
+        DELETE
+        FROM keyword
+        WHERE id = #{keywordId}
     </delete>
+
+    <!-- @formatter:on -->
 
 </mapper>
