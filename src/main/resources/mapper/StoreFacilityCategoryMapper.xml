@@ -4,16 +4,20 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.StoreFacilityCategoryMapper">
 
-    <insert id="insert" parameterType="StoreFacilityCategoryDTO">
+    <!-- @formatter:off -->
+
+    <insert id="insert">
         INSERT INTO store_facility_category (store_id, facility_category_id)
-        VALUES (#{storeId}, #{facilityCategoryId})
+        VALUES (#{storeId}, #{facilityId})
     </insert>
 
-    <delete id="delete" parameterType="StoreFacilityCategoryDTO">
+    <delete id="delete">
         DELETE
         FROM store_facility_category
         WHERE store_id = #{storeId}
-          AND facility_category_id = #{facilityCategoryId}
+          AND facility_category_id = #{facilityId}
     </delete>
+
+    <!-- @formatter:on -->
 
 </mapper>
