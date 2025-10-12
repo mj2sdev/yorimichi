@@ -1,20 +1,10 @@
 package com.jslhrd.yorimichi.service;
 
-import com.jslhrd.yorimichi.domain.UserDTO;
-
 /**
  * 계정관련 서비스
- * 
+ *
  * @author mj2sdev
- * 
- * @version 1.0 초안 작성
- * @version 1.1 {@code UserDetails} 삭제
- * <p>
- * 실제 필요했던건 {@code UserDetailsService}
- * 해당 인터페이스는 {@code UserService} 이쪽으로 옮김
  * @author mj2sdev
- * 
- * @version 1.0 초안 작성
  * @version 1.1 {@code UserDetails} 삭제
  * <p>
  * 실제 필요했던건 {@code UserDetailsService}
@@ -23,46 +13,49 @@ import com.jslhrd.yorimichi.domain.UserDTO;
 public interface AccountService {
 
 	/**
-	 * 제공된 사용자 세부 사항에 새 사용자 계정을 등록합니다.
+	 * 소셜 최초 로그인 시 계정 생성 or 기존 계정에 링크.
+	 * - SocialUserService.loadUser(...)에서 호출됨.
+	 * - 멱등: (provider, sub) UNIQUE 제약으로 중복 링크 방지.
 	 *
-	 * @param dto 사용자 등록 정보가 포함 된 사용자 데이터 전송 개체
+	 * @return userId (생성되었거나 링크된 사용자 ID)
 	 */
-	public void signup(UserDTO dto);
+	Long signupOrLinkSocial(String provider, String sub,
+	                        String email, boolean emailVerified,
+	                        String displayName, String avatarUrl);
 
 	/**
-	 * 제공된 사용자 세부 정보에 지정된 사용자의 비밀번호를 변경합니다.
-	 *
-	 * @param dto 사용자 식별 및 새 비밀번호가 포함 된 사용자 데이터 전송
-	 *            객체
+	 * 로컬 계정 가입.
+	 * - 내부에서 root(USER) 생성 → user INSERT → (필요 시) 초기 role 부여.
+	 * - password는 반드시 BCrypt 등으로 해시되어 저장.
 	 */
-	public void changePassword(UserDTO dto);
-	/**
-	 * 제공된 사용자 세부 정보에 지정된 사용자의 비밀번호를 변경합니다.
-	 *
-	 * @param dto 사용자 식별 및 새 비밀번호가 포함 된 사용자 데이터 전송
-	 *            객체
-	 */
-	public void delete(Long userId);
+	Long signupLocal(String email, String rawPassword, String nickname);
 
 	/**
-	 * 제공된 토큰으로 소셜 인증을 사용하여 새 사용자 계정을
-	 * 등록합니다.
-	 *
-	 * @param token 토큰 사용자 등록에 사용되는 소셜 인증 토큰
+	 * 비밀번호 변경(본인 인증 후).
+	 * - oldPassword 검증 → newPassword 해시 저장.
 	 */
-	public void signupSocial(String token);
+	void changePassword(Long userId, String oldPassword, String newPassword);
 
 	/**
-	 * 사용자가 입력한 닉네임이 DB에서 중복되어 있는지 유효성검사
-	 *
-	 * @param nickname
+	 * 계정 삭제(또는 비활성/탈퇴 처리).
+	 * - 보통 root.deleted_at 세팅으로 soft delete를 수행.
 	 */
-	public boolean validateNickname(String nickname);
+	void deleteAccount(Long userId);
 
 	/**
-	 * 이메일 인증을 구현해야 합니다.
-	 * @param email
-	 * @return
+	 * 닉네임 중복 검사.
 	 */
-	public boolean verificateEmail(String email);
+	boolean isNicknameAvailable(String nickname);
+
+	/**
+	 * 이메일 인증 토큰 발급(전송) 트리거.
+	 * - 토큰 저장 및 메일 발송을 수행.
+	 */
+	void sendEmailVerification(String email);
+
+	/**
+	 * 이메일 인증 토큰 검증(확정).
+	 * - 토큰 검증 성공 시 user/social_account의 email_verified 반영.
+	 */
+	boolean confirmEmailVerification(String token);
 }
