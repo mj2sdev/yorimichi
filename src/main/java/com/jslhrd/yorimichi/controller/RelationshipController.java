@@ -40,7 +40,7 @@ public class RelationshipController {
 		relationshipService.saveFollow(userId, targetId);
 	}
 
-	//사용자가 상대와의 관계를 삭제
+	//사용자가 상대 언팔로우
 	@DeleteMapping("/follow/{targetId}")
 	public void unfollowUser(Principal principal, @PathVariable("targetId") Long targetId) {
 		//TODO: userid

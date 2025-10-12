@@ -22,8 +22,8 @@
 									<input type="text" name="nickname" th:value="${user.nickname}" class="form-control text-center"
 										aria-label="Username" aria-describedby="addon-wrapping">
 								</li>
-								<li class="fs-5 bg-ymwhitesmoke form-control">
-									3ll37023@gmail.com
+								<li class="fs-5 bg-ymwhitesmoke form-control" th:text="${user.email}">
+									user.email@example.com
 								</li>
 							</ul>
 						</div>
@@ -118,7 +118,7 @@
 		<div class="row justify-content-center">
 			<div class="col-8 my-4 border border-3">
 				<nav>
-					<div class="nav nav-tabs" id="nav-tab" role="tablist">
+					<div class="nav nav-tabs" id="nav-tab-main" role="tablist">
 						<button class="nav-link active" id="nav-review-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-review" type="button" role="tab"
 							aria-controls="nav-review" aria-selected="true">
@@ -142,67 +142,64 @@
 						</button>
 					</div>
 				</nav>
-				<div class="tab-content" id="nav-tabContent">
+				<div class="tab-content" id="nav-tabContent-main">
 					<div class="tab-pane fade show active" id="nav-review" role="tabpanel"
 						aria-labelledby="nav-review-tab" tabindex="0">
 						<th:block th:each="review : ${reviews}">
 							<div class="row bg-ymwhite mb-3">
 								<div class="col-3 border">
-									<img src="https://picsum.photos/50" style="height:100%; width:100%;">
+									<img th:src="'https://picsum.photos/'+${review.images[0]}" style="height:100%; width:100%;">
 								</div>
 								<div class="col-9 border">
 									<div class="row justify-content-between align-items-center">
-										<div class="col-auto dropdown">
-											<button class="btn fw-bold dropdown-toggle"
-												data-bs-toggle="dropdown"
-												aria-expanded="false">작성자</button>
-											<ul class="dropdown-menu">
-												<li><a class="dropdown-item" href="#"><i
-															class="bi bi-heart"
-															style="font-size: 1em;"></i>팔로우</a></li>
-												<li th:if="${#false}"><a class="dropdown-item"
-														href="#"><i class="bi bi-heart-fill"
-															style="font-size: 1em; color: red;"></i>팔로우취소</a>
-												</li>
-												<li><a class="dropdown-item" href="#"><i
-															class="bi bi-search"
-															style="font-size: 1em;"></i> 상세보기</a></li>
-											</ul>
-										</div>
 										<div class="col">
-											<span th:each="star : ${#numbers.sequence(1,5)}">
-												<i class="bi bi-star-fill"
-													style="font-size: 1em; color: gold;"></i>
-											</span>
+											<div class="star-rating-container">
+												<span th:each="i : ${#numbers.sequence(1, 5)}">
+													<th:block th:switch="true">
+														<i th:case="${i <= review.rating}" class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
+														<i th:case="${i - 0.5 <= review.rating}" class="bi bi-star-half" style="font-size: 1em; color: gold;"></i>
+														<i th:case="*" class="bi bi-star" style="font-size: 1em; color: gold;"></i>
+													</th:block>
+												</span>
+											</div>
 										</div>
 										<div class="col-auto">
-											<a href="/store/detail/${review.storeId}"
+											<a th:href="@{'/store/detail/'+${review.storeId}}"
 												class="text-ymprimary text-decoration-none">
 												가게보기
 											</a>
 										</div>
-										<div class="col-auto" th:text="${review.createdAt}">
+										<div class="col-auto" th:text="#temporals.format(${review.createdAt, 'yyyy.MM.dd'})">
 											2025.09.15
 										</div>
 										<div class="col-auto">
 											<button type="button" class="btn btn-sm p-0"
-												data-bs-toggle="modal" data-bs-target="#reviewwriting">
-												<i class="bi bi-pencil-fill text-ymprimary"
-													style="font-size: 1em;"></i>
+												data-bs-toggle="modal" data-bs-target="#reviewwriting"
+												th:data-review-id="${review.reviewId}"
+												th:data-review-content="${review.content}">
+												<i class="bi bi-pencil-fill text-ymprimary" style="font-size: 1em;"></i>
+											</button>
+										</div>
+										<div class="col-auto">
+											<button type="button" class="delete-review-btn btn btn-sm p-0" 
+											th:data-review-id="${review.reviewId}">
+												<i class="bi bi-trash text-ymprimary" style="font-size: 1em;"></i>
 											</button>
 										</div>
 									</div>
 									<div class="p-2" data-bs-toggle="collapse"
-										th:attr="data-bs-target='#menu' + ${reviewItem}">
+										th:attr="data-bs-target='#menu' + ${review.reviewId}">
 										<div class="row mt-2">
-											<div class="col">
+											<div class="col" th:text="${review.content}">
 												리뷰 본문 내용...
 											</div>
 										</div>
 									</div>
-									<div class="collapse" th:id="'menu' + ${reviewItem}">
+									<div class="collapse" th:id="'menu' + ${review.reviewId}">
 										<div class="card card-body">
-											메뉴 내용...
+											<th:block th:each="food : ${review.foods}">
+												<span th:text="${food}"></span>
+											</th:block>
 										</div>
 									</div>
 								</div>
@@ -211,15 +208,20 @@
 					</div>
 					<div class="tab-pane fade" id="nav-like" role="tabpanel"
 						aria-labelledby="nav-like-tab" tabindex="1">
-						<th:block th:each="like : ${#numbers.sequence(1,10)}">
+						<th:block th:each="like : ${likes}">
 							<div class="row">
+								<div class="col-2">
+									<button type="button" class="btn like-switch-btn" th:data-like-storeId="${like.storeId}">
+										<i class="bi bi-heart-fill" style="font-size: 1em; color: red;"></i>
+									</button>
+								</div>
 								<div class="col">
-									<a href="/store/detail" class="btn">
-										<img src="https://picsum.photos/50">
-										<span>가게명</span>
-										<span>위치</span>
-										<th:block th:each="tag : ${#numbers.sequence(1,5)}">
-											<span>#태그</span>
+									<a th:href="@{'/store/detail/'+${like.storeId}}" class="btn">
+										<img th:src="${like.images[0]}">
+										<span th:text="${like.name}">가게명</span>
+										<span th:text="${like.address}">위치</span>
+										<th:block th:each="category: ${like.categories}">
+											<span th:text="${category}">#태그</span>
 										</th:block>
 									</a>
 								</div>
@@ -228,15 +230,20 @@
 					</div>
 					<div class="tab-pane fade" id="nav-bookmark" role="tabpanel"
 						aria-labelledby="nav-bookmark-tab" tabindex="1">
-						<th:block th:each="bookmark : ${#numbers.sequence(1,10)}">
+						<th:block th:each="bookmark : ${bookmarks}">
 							<div class="row">
+								<div class="col-2">
+									<button type="button" class="bookmark-switch-btn" th:data-bookmark-storeId="${bookmark.storeId}">
+										<i class="bi bi-bookmark-fill" style="font-size: 1em; color: gold"></i>
+									</button>
+								</div>
 								<div class="col">
-									<a href="/store/detail" class="btn">
-										<img src="https://picsum.photos/50">
-										<span>가게명</span>
-										<span>위치</span>
-										<th:block th:each="tag : ${#numbers.sequence(1,5)}">
-											<span>#태그</span>
+									<a th:href="@{'/store/detail/'+${bookmark.storeId}}" class="btn">
+										<img th:src="${bookmark.images[0]}">
+										<span th:text="${bookmark.name}">가게명</span>
+										<span th:text="${bookmark.address}">위치</span>
+										<th:block th:each="category: ${bookmark.categories}">
+											<span th:text="${category}">#태그</span>
 										</th:block>
 									</a>
 								</div>
@@ -247,7 +254,7 @@
 			</div>
 			<div class="col-3 border border-3 overflow-auto" style="height:400px; top: 145px;">
 				<nav>
-					<div class="nav nav-tabs" id="nav-tab" role="tablist">
+					<div class="nav nav-tabs" id="nav-tab-side" role="tablist">
 						<button class="nav-link active" id="nav-follow-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-follow" type="button" role="tab" aria-controls="nav-follow"
 							aria-selected="true">
@@ -265,18 +272,18 @@
 						</button>
 					</div>
 				</nav>
-				<div class="tab-content" id="nav-tabContent">
+				<div class="tab-content" id="nav-tabContent-side">
 					<div class="tab-pane fade show active" id="nav-follow" role="tabpanel"
 						aria-labelledby="nav-follow-tab" tabindex="0">
-						<th:block th:each="person : ${#numbers.sequence(1,10)}">
+						<th:block th:each="person : ${followees}">
 							<div class="row">
 								<div class="col-2">
-									<button type="button" class="btn">
+									<button type="button" class="btn follow-switch-btn" th:data-user-id="${person.userId}">
 										<i class="bi bi-heart-fill" style="font-size: 1em; color:red"></i>
 									</button>
 								</div>
 								<div class="col">
-									<a href="/user/detail" class="btn d-block">
+									<a th:href="@{'/user/detail/'+${person.userId}}" th:text="${person.nickname}" class="btn d-block">
 										닉네임
 									</a>
 								</div>
@@ -285,15 +292,13 @@
 					</div>
 					<div class="tab-pane fade" id="nav-follower" role="tabpanel"
 						aria-labelledby="nav-follower-tab" tabindex="0">
-						<th:block th:each="person : ${#numbers.sequence(1,10)}">
+						<th:block th:each="person : ${followers}">
 							<div class="row">
 								<div class="col-2">
-									<button type="button" class="btn">
-										<i class="bi bi-toggle-on" style="font-size: 1em; color:gold;"></i>
-									</button>
+									<i class="bi bi-toggle-on" style="font-size: 1em; color:gold;"></i>
 								</div>
 								<div class="col">
-									<a href="/user/detail" class="btn d-block">
+									<a th:href="@{'/user/detail/'+${person.userId}}" th:text="${person.nickname}" class="btn d-block">
 										닉네임
 									</a>
 								</div>
@@ -302,15 +307,15 @@
 					</div>
 					<div class="tab-pane fade" id="nav-block" role="tabpanel" aria-labelledby="nav-block-tab"
 						tabindex="0">
-						<th:block th:each="person : ${#numbers.sequence(1,10)}">
+						<th:block th:each="person : ${blocks}">
 							<div class="row">
 								<div class="col-2">
-									<button type="button" class="btn">
+									<button type="button" class="btn block-switch-btn" th:data-user-id="${person.userId}">
 										<i class="bi bi-toggle-on" style="font-size: 1em; color:red;"></i>
 									</button>
 								</div>
 								<div class="col">
-									<a href="/user/detail" class="btn d-block">
+									<a th:href="@{'/user/detail/'+${person.userId}}" th:text="${person.nickname}" class="btn d-block">
 										닉네임
 									</a>
 								</div>
