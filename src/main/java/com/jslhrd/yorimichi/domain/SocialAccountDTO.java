@@ -1,9 +1,9 @@
 package com.jslhrd.yorimichi.domain;
 
 import com.jslhrd.yorimichi.enums.ProviderName;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -16,7 +16,10 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-public class SocialAccountDTO extends RootDTO {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class SocialAccountDTO implements Serializable {
 
 	/**
 	 * PK1, FK: 유저 ID
@@ -41,7 +44,7 @@ public class SocialAccountDTO extends RootDTO {
 	/**
 	 * 이메일 인증여부
 	 */
-	private String emailVerified;
+	private boolean emailVerified;
 
 	/**
 	 * 제공자 유저 닉네임
