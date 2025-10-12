@@ -4,14 +4,32 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.RootImageMapper">
 
+    <!-- @formatter:off -->
+
+    <select id="selectByRootId" parameterType="long" resultType="ImageDTO">
+        SELECT i.id,
+               i.url,
+               ri.created_at,
+               ri.updated_at
+        FROM image i
+        JOIN root_image ri ON i.id = ri.image_id
+        WHERE id = #{rootId}
+        ORDER BY ri.created_at DESC
+    </select>
+
+
     <insert id="insert" parameterType="RootImageDTO">
         INSERT INTO root_image (root_id, image_id)
         VALUES (#{rootId}, #{imageId})
     </insert>
 
     <delete id="delete" parameterType="RootImageDTO">
-        DELETE FROM root_image
-        WHERE root_id = #{rootId} AND image_id = #{imageId}
+        DELETE
+        FROM root_image
+        WHERE root_id = #{rootId}
+            AND image_id = #{imageId}
     </delete>
+
+    <!-- @formatter:on -->
 
 </mapper>
