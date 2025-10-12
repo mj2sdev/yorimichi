@@ -1,0 +1,23 @@
+<div class="d-flex align-items-center">
+	<img class="rounded-circle" th:src="${ user?.image ?: 'https://picsum.photos/50' }">
+	<div>
+		<div class="dropdown">
+			<button type="button" data-bs-toggle="dropdown" class="btn btn-link text-decoration-none btn-sm" th:text="${ user?.nickname ?: '홍길동' }">
+			</button>
+			<ul class="dropdown-menu">
+				<button type="button" class="dropdown-item">
+					<i class="bi bi-heart-fill text-danger"></i>
+					<span>팔로우</span>
+				</button>
+				<a th:href="@{'/user/detail/' + ${ user?.id } }" class="dropdown-item">
+					<i class="bi bi-search text-info"></i>
+					<span>상세보기</span>
+				</a>
+			</ul>
+		</div>
+		<div class="px-2" style="font-size: .75rem;">
+			<span>팔로워</span>
+			<span>5</span>
+		</div>
+	</div>
+</div>
