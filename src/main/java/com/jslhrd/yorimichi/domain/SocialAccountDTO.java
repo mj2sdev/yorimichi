@@ -1,7 +1,6 @@
 package com.jslhrd.yorimichi.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.jslhrd.yorimichi.enums.Provider;
+import com.jslhrd.yorimichi.enums.ProviderName;
 import lombok.*;
 
 import java.io.Serializable;
@@ -20,10 +19,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"userId", "provider"})
 public class SocialAccountDTO implements Serializable {
-
-	private static final long serialVersionUID = 1L;
 
 	/**
 	 * PK1, FK: 유저 ID
@@ -33,7 +29,7 @@ public class SocialAccountDTO implements Serializable {
 	/**
 	 * PK2: 제공자
 	 */
-	private Provider provider;
+	private ProviderName provider;
 
 	/**
 	 * 제공자 유저 ID
@@ -43,7 +39,6 @@ public class SocialAccountDTO implements Serializable {
 	/**
 	 * 제공자 유저 이메일
 	 */
-	@JsonIgnore
 	private String providerEmail;
 
 	/**
@@ -75,15 +70,4 @@ public class SocialAccountDTO implements Serializable {
 	 * 마지막 로그인 일시
 	 */
 	private LocalDateTime lastLoginAt;
-
-	private UserDTO user;
-
-	public SocialAccountDTO(Provider provider, String providerUserId, String providerEmail, boolean emailVerified, String displayName, String avatarUrl) {
-		this.provider = provider;
-		this.providerUserId = providerUserId;
-		this.providerEmail = providerEmail;
-		this.emailVerified = emailVerified;
-		this.displayName = displayName;
-		this.avatarUrl = avatarUrl;
-	}
 }

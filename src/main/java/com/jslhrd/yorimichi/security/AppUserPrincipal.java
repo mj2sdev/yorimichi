@@ -1,8 +1,7 @@
 package com.jslhrd.yorimichi.security;
 
-import com.jslhrd.yorimichi.domain.SocialAccountDTO;
-import com.jslhrd.yorimichi.domain.UserDTO;
-import com.jslhrd.yorimichi.enums.Role;
+import com.jslhrd.yorimichi.domain.AccountDTO;
+import com.jslhrd.yorimichi.enums.RoleName;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -39,7 +38,7 @@ import java.util.Map;
 @Builder
 @EqualsAndHashCode(of = "userId")
 @ToString(exclude = "password")
-public final class AppUserPrincipal implements UserDetails, OAuth2User, Serializable {
+public class AppUserPrincipal implements UserDetails, OAuth2User, Serializable {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
@@ -49,12 +48,12 @@ public final class AppUserPrincipal implements UserDetails, OAuth2User, Serializ
        ========================= */
 
 	/**
-	 * 애플리케이션 사용자 고유 식별자 = user.id (= root.id)
+	 * 애플리케이션 사용자 고유 식별자 = account.id (= root.id)
 	 */
 	private final Long userId;
 
 	/**
-	 * 로그인 아이디로 쓰이는 이메일 = user.email
+	 * 로그인 아이디로 쓰이는 이메일 = account.email
 	 */
 	private final String email;
 
@@ -81,7 +80,7 @@ public final class AppUserPrincipal implements UserDetails, OAuth2User, Serializ
 	 * - 정책 예: root.blinded_at == null → true, 값이 있으면 false
 	 * - 로그인 자체를 막지 않고 기능만 제한하려면 true로 두고 비즈니스 레이어에서 제한하세요.
 	 */
-	private final boolean nonLocked;
+	private final boolean accountNonLocked;
 
 	/**
 	 * 계정 활성화 여부.
@@ -110,52 +109,50 @@ public final class AppUserPrincipal implements UserDetails, OAuth2User, Serializ
 	/**
 	 * 로컬(폼) 로그인 사용자 → AppUserPrincipal 변환
 	 *
-	 * @param user 인증 전용 최소 필드만 채워진 UserDTO
+	 * @param account 인증 전용 최소 필드만 채워진 AccountDTO
 	 */
-	public static AppUserPrincipal fromLocal(UserDTO user) {
+	public static AppUserPrincipal fromLocal(AccountDTO account) {
+
+		// 권한(Role) 결정: null 방어 후 기본값 USER
+		RoleName role = (account.getRole() != null) ? account.getRole() : RoleName.USER;
 
 		return AppUserPrincipal.builder()
-				.userId(user.getId())
-				.email(normEmail(user.getEmail()))
-				.password(user.getPassword()) // 반드시 해시(BCrypt 등)
-				.authorities(toAuthorities(user.getRole())) // "ROLE_USER" 등
-				.enabled(user.isEnabled())
-				.nonLocked(user.isNonLocked())
+				.userId(account.getId())
+				.email(account.getEmail())
+				.password(account.getPassword()) // 반드시 해시(BCrypt 등)
+				.authorities(List.of(new SimpleGrantedAuthority(role.asAuthority()))) // "ROLE_USER" 등
+				.enabled(account.isEnabled())
+				.accountNonLocked(account.isNonLocked())
 				.build();
 	}
 
 	/**
 	 * 소셜(OAuth2/OIDC) 로그인 사용자 → AppUserPrincipal 변환
 	 *
-	 * @param user 인증 전용 최소 필드만 채워진 UserDTO
+	 * @param account        인증 전용 최소 필드만 채워진 AccountDTO
+	 * @param provider       소셜 공급자(예: "GOOGLE")
+	 * @param providerUserId 공급자 사용자 고유 ID(예: Google sub)
 	 */
-	public static AppUserPrincipal fromSocial(UserDTO user, SocialAccountDTO socialAccountDTO) {
+	public static AppUserPrincipal fromSocial(AccountDTO account, String provider, String providerUserId) {
+
+		// 권한(Role) 결정: null 방어 후 기본값 USER
+		RoleName role = (account.getRole() != null) ? account.getRole() : RoleName.USER;
 
 		return AppUserPrincipal.builder()
-				.userId(user.getId())
-				.email(normEmail(user.getEmail()))
+				.userId(account.getId())
+				.email(account.getEmail())
 				.password(null) // 소셜은 비번 검증 안 함 → 세션에 보관 불필요
-				.authorities(toAuthorities(user.getRole())) // "ROLE_USER" 등
-				.enabled(user.isEnabled())
-				.nonLocked(user.isNonLocked())
-				.provider(socialAccountDTO.getProvider().name())
-				.providerUserId(socialAccountDTO.getProviderUserId())
+				.authorities(List.of(new SimpleGrantedAuthority(role.asAuthority()))) // "ROLE_USER" 등
+				.enabled(account.isEnabled())
+				.accountNonLocked(account.isNonLocked())
+				.provider(provider)
+				.providerUserId(providerUserId)
 				.build();
 	}
 
     /* =========================
        OAuth2User 구현 (슬림)
        ========================= */
-
-	private static String normEmail(String email) {
-		return (email == null) ? null : email.trim().toLowerCase();
-	}
-
-	private static List<GrantedAuthority> toAuthorities(Role role) {
-		// 권한(Role) 결정: null 방어 후 기본값 USER
-		Role r = (role != null) ? role : Role.USER;
-		return List.of(new SimpleGrantedAuthority(r.asAuthority())); // 불변
-	}
 
 	/**
 	 * OAuth2User의 attributes.
@@ -203,5 +200,5 @@ public final class AppUserPrincipal implements UserDetails, OAuth2User, Serializ
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
-
+	
 }
