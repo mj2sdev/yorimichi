@@ -1,9 +1,9 @@
 package com.jslhrd.yorimichi.config;
 
 import com.jslhrd.yorimichi.security.LocalUserDetailsManager;
-import com.jslhrd.yorimichi.security.SocialUserManager;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -12,9 +12,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -46,19 +46,9 @@ public class SecurityConfig {
 	private final LocalUserDetailsManager localUserDetailsManager;
 
 	// 소셜(OAuth2/OIDC) 로그인 시 외부 사용자 → 내부 계정 매핑/생성 담당
-	private final SocialUserManager socialUserManager;
-
-	/**
-	 * 비밀번호 인코더
-	 * <p>
-	 * - BCrypt는 단방향 해시 + salt + cost(작업량) 조절 기능 제공.
-	 * - DB에는 원문 비밀번호 저장 금지(반드시 해시).
-	 * - cost(Strength)는 기본값도 충분하나, 서버 성능/요구에 따라 조정 가능.
-	 */
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+	private final OAuth2UserService<OAuth2UserRequest, OAuth2User> socialOAuth2UserService;
+	private final OAuth2UserService<OidcUserRequest, OidcUser> socialOidcUserService;
+	private final PasswordEncoder passwordEncoder;
 
 	/**
 	 * WebSecurityCustomizer
@@ -79,35 +69,19 @@ public class SecurityConfig {
 	}
 
 	/**
-	 * OAuth2 공급자(GitHub/Naver/Kakao 등)용 UserService 어댑터
-	 * <p>
-	 * - SocialUserManager의 공통 로직을 재사용하기 위해 메서드 레퍼런스로 바인딩.
-	 * - 제네릭: OAuth2UserRequest → OAuth2User
-	 */
-	@Bean
-	public OAuth2UserService<OAuth2UserRequest, OAuth2User> socialOAuth2UserService(SocialUserManager m) {
-		return m::loadOAuth2User;
-	}
-
-	/**
-	 * OIDC 공급자(Google/Apple 등)용 UserService 어댑터
-	 * <p>
-	 * - OIDC는 별도 훅(oidcUserService)을 통해 호출됨 → OAuth2와 제네릭이 다름에 주의.
-	 * - 제네릭: OidcUserRequest → OidcUser
-	 */
-	@Bean
-	public OAuth2UserService<OidcUserRequest, OidcUser> socialOidcUserService(SocialUserManager m) {
-		return m::loadOidcUser;
-	}
-
-	/**
 	 * 보안 필터 체인(핵심 설정)
 	 * <p>
 	 * - 이 메서드에서 대부분의 보안 정책을 선언적으로 구성한다.
 	 * - http.build() 시 체인이 동결되어 애플리케이션에 적용.
 	 */
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain securityFilterChain(
+			HttpSecurity http,
+			// 클라이언트 등록이 없을 때 oauth2Login() 스킵 (개발, 로컬에서 유용)
+			@Autowired(required = false) ClientRegistrationRepository clients,
+			@Autowired(required = false) OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2Svc,
+			@Autowired(required = false) OAuth2UserService<OidcUserRequest, OidcUser> oidcSvc
+	) throws Exception {
 
 		http
 				/* =========================
@@ -155,15 +129,15 @@ public class SecurityConfig {
 					 userInfoEndpoint().oidcUserService(...): OIDC 공급자 (id_token/claims 기반)
 				   - 성공/실패 핸들러에서 후처리(마지막 로그인 시각 갱신, 최초 가입 분기 등) 가능.
 				   ========================= */
-				.oauth2Login(oauth -> oauth
+				/*.oauth2Login(oauth -> oauth
 						.loginPage("/login")
 						.userInfoEndpoint(u -> u
-								.userService(socialOAuth2UserService(socialUserManager))     // OAuth2
-								.oidcUserService(socialOidcUserService(socialUserManager))   // OIDC
+								.userService(socialOAuth2UserService)     // OAuth2
+								.oidcUserService(socialOidcUserService)   // OIDC
 						)
 						.defaultSuccessUrl("/", false)
 						.failureHandler((req, res, ex) -> res.sendRedirect("/login?oauth2_error"))
-				)
+				)*/
 
 				/* =========================
 				   로그아웃
@@ -232,6 +206,19 @@ public class SecurityConfig {
 						})
 				);
 
+		// 등록 정보가 있을 때만 소셜 로그인 구성
+		if (clients != null) {
+			http.oauth2Login(o -> o
+					.loginPage("/login")
+					.userInfoEndpoint(u -> {
+						if (oauth2Svc != null) u.userService(oauth2Svc);
+						if (oidcSvc != null) u.oidcUserService(oidcSvc);
+					})
+					.defaultSuccessUrl("/", false)
+					.failureUrl("/login?oauth2_error")
+			);
+		}
+
 		// DaoAuthenticationProvider를 명시 등록
 		// - 내부적으로 UserDetailsService + PasswordEncoder 조합으로 폼 로그인 인증 수행
 		// - 아래 Bean에서 PasswordEncoder 연동을 보장하므로, http.userDetailsService(...) 중복 설정 불필요
@@ -251,7 +238,7 @@ public class SecurityConfig {
 	public DaoAuthenticationProvider daoAuthenticationProvider() {
 		DaoAuthenticationProvider p = new DaoAuthenticationProvider();
 		p.setUserDetailsService(localUserDetailsManager);
-		p.setPasswordEncoder(passwordEncoder());
+		p.setPasswordEncoder(passwordEncoder);
 		return p;
 	}
 }
