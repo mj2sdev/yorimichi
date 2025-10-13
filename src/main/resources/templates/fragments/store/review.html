@@ -5,7 +5,7 @@
 		<h3>가게 리뷰</h3>
 			<button type="button" class="btn btn-ymprimary"
 			data-bs-toggle="modal"
-			data-bs-target="#reviewmodal">
+			data-bs-target="#writeReviewModal">
 			리뷰작성
 		</button>
 	</div>
@@ -40,11 +40,19 @@
 				2일 전
 			</div>
 		</div>
+		
 		<!-- 내용 -->
 		<div>
 			1.	“제육이 불맛 나고 밥이랑 찰떡궁합임”<br>
 			2.	“사장님이 진짜 친절함, 덤도 챙겨주심”<br>
 			3.	“가격 대비 양 많고, 반찬 리필 가능해서 굳👍”
+		</div>
+
+		<!-- 메뉴 리스트 -->
+		<div class="d-flex gap-2">
+			<div class="text-primary" th:each="menu : ${ {'유니짜장', '야끼짬뽕', '간짜장' } }">
+				<span class="badge bg-secondary" th:text="${ menu }"></span>
+			</div>
 		</div>
 	</div>
 

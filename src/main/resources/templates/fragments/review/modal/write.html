@@ -1,5 +1,5 @@
 <div class="modal fade" id="writeReviewModal" tabindex="-1">
-	<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h1 class="modal-title fs-5" id="reviewwritingLabel">리뷰 남기기</h1>
@@ -7,9 +7,10 @@
 			</div>
 			<div class="modal-body">
 				<form class="d-flex flex-column gap-2" th:action="@{/store/review/write}" method="post">
+					<input type="hidden" name="storeId" th:value="${ store?.id }">
 
-					<div>
-						<label for="rating" class="form-label">별점</label>
+					<div class="input-group">
+						<label for="rating" class="input-group-text">별점</label>
 						<select name="rating" id="rating" class="form-select" required>
 							<option value="">선택</option>
 							<option th:value="${ star }" th:each="star : ${#numbers.sequence(1, 5)}">
@@ -18,24 +19,48 @@
 						</select>
 					</div>
 
-					<div>
-						<label class="form-label" for="reviewContent">내용</label>
+					<div class="input-group">
+						<label class="input-group-text" for="reviewContent">내용</label>
 						<textarea class="form-control" name="content" rows="5" placeholder="맛, 분위기, 서비스 등...
 자유롭게 작성해주세요 :)" required></textarea>
 					</div>
 
-					<div>
-						<label class="form-label" for="reviewImages">사진 업로드</label>
-						<input class="form-control" name="images" type="file" multiple accept="image/*">
+					<div class="input-group input-group-sm">
+						<input
+							class="form-control"
+							id="reviewImages"
+							name="uploadImages"
+							type="file"
+							multiple
+							accept="image/*"
+							onchange="previewReviewImages(event)">
+						<label class="input-group-text" for="reviewImages">사진 업로드</label>
+						<input type="hidden" name="changedReviewImages" value="false">
+					</div>
+
+					<div class="d-flex gap-2 overflow-x-scroll scroll-smooth previewReviewImages">
+						<div class="flex-shrink-0 fs-0" style="width: 10rem;" th:each="image : ${#numbers.sequence(1, 1)}">
+							<div class="ratio ratio-1x1">
+								<img src="https://picsum.photos/200" class="w-100 rounded border border-secondary">
+							</div>
+						</div>
+						<div class="flex-shrink-0 template fs-0" style="width: 10rem;" hidden>
+							<div class="ratio ratio-1x1">
+								<img src="https://picsum.photos/200" class="w-100 rounded border border-secondary">
+							</div>
+						</div>
 					</div>
 
 					<div>
-						<label class="form-label" for="reviewReceipt">영수증 인증 (선택)</label>
-						<input class="form-control" type="file" accept="image/*">
+						<div class="input-group input-group-sm">
+							<input class="form-control" type="file" accept="image/*" id="reviewReceipt">
+							<label class="input-group-text" for="reviewReceipt">영수증 인증</label>
+						</div>
+						<p class="text-end m-0" style="font-size: .75rem;">영수증은 선택사항 입니다.</p>
 					</div>
 
 					<div>
-						<button type="button" data-bs-toggle="collapse" data-bs-target="#reviewMenus" class="btn btn-outline-ymprimary mb-2">메뉴 선택하기</button>
+						<button type="button" data-bs-toggle="collapse" data-bs-target="#reviewMenus" class="btn btn-outline-ymprimary btn-sm mb-2">메뉴 선택하기</button>
 						<div class="collapse" id="reviewMenus">
 							<ul class="list-group">
 								<li class="list-group-item" th:each="menu : ${ {'유니짜장', '삼선짜장', '야끼짬뽕'} }">
