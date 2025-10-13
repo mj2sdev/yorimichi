@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html th:fragment="params(head, body)" xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html th:fragment="params(head, content)" xmlns:th="http://thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 	<th:block th:replace="~{ fragments/common/metadata }"/>
 	<th:block th:replace="~{ fragments/common/resource }"/>
 	<th:block th:replace="${ head }"/>
 </head>
-<body th:replace="${ body }">
+<body>
+	<th:block th:replace="${ content }" />
+	<th:block th:replace="~{ fragments/common/modal }" />
+	<th:block th:replace="~{ fragments/common/offcanvas }" />
 </body>
 </html>

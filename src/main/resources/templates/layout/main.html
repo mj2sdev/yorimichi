@@ -6,8 +6,10 @@
 	<th:block th:replace="${ head }"/>
 </head>
 <body>
-	<header th:replace="~{ fragments/header :: header }"></header>
+	<header th:replace="~{ fragments/header }"></header>
 	<th:block th:replace="${ content }"></th:block>
 	<footer th:replace="~{ fragments/footer :: footer }"></footer>
+	<th:block th:replace="~{ fragments/common/modal }" />
+	<th:block th:replace="~{ fragments/common/offcanvas }" />
 </body>
 </html>
