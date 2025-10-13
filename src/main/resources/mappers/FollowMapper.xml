@@ -40,7 +40,7 @@
             updated_at = NOW()
         WHERE follower_id = #{followerId}
             AND followee_id = #{followeeId}
-            AND notified <> #{notified}
+            AND notified != #{notified}
     </update>
 
     <delete id="delete">
