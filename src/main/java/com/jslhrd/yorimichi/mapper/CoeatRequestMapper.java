@@ -27,6 +27,12 @@ public interface CoeatRequestMapper {
 	boolean exists(@Param("userId") Long userId,
 	               @Param("coeatId") Long coeatId);
 
+	boolean isApproved(@Param("userId") Long userId,
+	                   @Param("coeatId") Long coeatId);
+
+	boolean isRequester(@Param("userId") Long userId,
+	                    @Param("coeatId") Long coeatId);
+
 	/**
 	 * 같이먹기 요청 추가.
 	 *
@@ -35,6 +41,7 @@ public interface CoeatRequestMapper {
 
 	int updateStatus(@Param("userId") Long userId,
 	                 @Param("coeatId") Long coeatId,
-	                 @Param("from") CoeatRequestStatus from,
+	                 @Param("cur") CoeatRequestStatus cur,
 	                 @Param("to") CoeatRequestStatus to);
+
 }

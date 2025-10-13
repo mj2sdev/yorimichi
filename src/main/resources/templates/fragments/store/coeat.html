@@ -1,0 +1,39 @@
+<div class="row shadow p-4 gx-0 gap-2">
+
+	<h4>
+		같이 먹기
+	</h4>
+
+	<div class="btn-toolbar justify-content-between">
+		<div class="btn-group">
+			<input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
+  		<label class="btn btn-outline-secondary btn-sm" for="btncheck1">팔로우만</label>
+
+			<input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
+  		<label class="btn btn-outline-secondary btn-sm" for="btncheck2">팔로워만</label>
+		</div>
+		<div class="btn-group">
+			<button
+				type="button"
+				class="btn btn-sm btn-ymsecondary"
+				data-bs-target="#coeatwriting"
+				data-bs-toggle="modal">
+				모임 만들기 ➕
+			</button>
+		</div>
+	</div>
+
+	<div
+		class="d-flex shadow-sm p-2 justify-content-between align-items-center"
+		th:each="item : ${ #numbers.sequence(1, 5) }">
+		<th:block th:replace="~{ fragments/common/profile }"></th:block>
+		<button
+			data-bs-toggle="modal"
+			data-bs-target="#coeatmodal"
+			type="button"
+			class="btn btn-sm btn-ymprimary">
+			같이먹기
+		</button>
+	</div>
+
+</div>

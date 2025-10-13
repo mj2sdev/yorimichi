@@ -1,0 +1,28 @@
+<div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="notification">
+	<div class="offcanvas-header">
+		<h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
+			<i class="bi bi-lightbulb"></i>
+			<span>알림</span>
+		</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	</div>
+	<div class="offcanvas-body">
+		<ul class="list-group">
+			<li
+				th:each="item : ${#numbers.sequence(1, 4)}"
+				class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
+				<div class="ms-2 me-auto">
+					<div class="fw-bold">같이먹기 알림</div>
+					팔로우 한 '킹건호'님이 같이먹기를 작성하였습니다.
+				</div>
+				<span class="badge text-bg-primary rounded-pill">안읽음</span>
+			</li>
+
+			<!-- 알림이 없을 경우 -->
+			<li class="list-group-item text-center fs-5" th:if="${ false }">
+				알림이 없습니다.
+			</li>
+		</ul>
+
+	</div>
+</div>

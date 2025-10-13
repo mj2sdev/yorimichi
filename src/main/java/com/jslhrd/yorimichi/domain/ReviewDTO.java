@@ -28,7 +28,7 @@ public class ReviewDTO extends RootDTO implements FeedDTO {
 	 * FK: 상점 ID
 	 */
 	private Long storeId;
-
+	
 	/**
 	 * 리뷰 평점
 	 */

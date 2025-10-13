@@ -4,14 +4,19 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.RootKeywordMapper">
 
-    <insert id="insert" parameterType="RootKeywordDTO">
+    <!-- @formatter:off -->
+
+    <insert id="insert">
         INSERT INTO root_keyword (root_id, keyword_id)
         VALUES (#{rootId}, #{keywordId})
     </insert>
 
-    <delete id="delete" parameterType="RootKeywordDTO">
+    <delete id="delete">
         DELETE FROM root_keyword
-        WHERE root_id = #{rootId} AND keyword_id = #{keywordId}
+        WHERE root_id = #{rootId}
+            AND keyword_id = #{keywordId}
     </delete>
+
+    <!-- @formatter:off -->
 
 </mapper>

@@ -91,6 +91,31 @@ public class UserDTO extends RootDTO {
 	 */
 	private List<CoeatDTO> coeats;
 
+	/**
+	 * 리뷰 공개 여부
+	 */
+	private boolean reviewPrivacy;
+    
+	/**
+	 * 좋아요 공개 여부
+	 */
+    private boolean likePrivacy;
+    
+	/**
+	 * 즐겨찾기 공개 여부
+	 */
+    private boolean bookmarkPrivacy;
+    
+	/**
+	 * 팔로우 공개 여부
+	 */
+    private boolean followPrivacy;
+    
+	/**
+	 * 팔로워 공개 여부
+	 */
+    private boolean followerPrivacy;
+
 
 	public UserDTO() {
 		super(RootType.USER);
