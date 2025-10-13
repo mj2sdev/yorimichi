@@ -1,0 +1,59 @@
+<div class="modal fade" id="writeReviewModal" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="reviewwritingLabel">리뷰 남기기</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+			<div class="modal-body">
+				<form class="d-flex flex-column gap-2" th:action="@{/store/review/write}" method="post">
+
+					<div>
+						<label for="rating" class="form-label">별점</label>
+						<select name="rating" id="rating" class="form-select" required>
+							<option value="">선택</option>
+							<option th:value="${ star }" th:each="star : ${#numbers.sequence(1, 5)}">
+								<i class="bi bi-star text-warning" th:each="item : ${#numbers.sequence(1, star)}">⭐️</i>
+							</option>
+						</select>
+					</div>
+
+					<div>
+						<label class="form-label" for="reviewContent">내용</label>
+						<textarea class="form-control" name="content" rows="5" placeholder="맛, 분위기, 서비스 등...
+자유롭게 작성해주세요 :)" required></textarea>
+					</div>
+
+					<div>
+						<label class="form-label" for="reviewImages">사진 업로드</label>
+						<input class="form-control" name="images" type="file" multiple accept="image/*">
+					</div>
+
+					<div>
+						<label class="form-label" for="reviewReceipt">영수증 인증 (선택)</label>
+						<input class="form-control" type="file" accept="image/*">
+					</div>
+
+					<div>
+						<button type="button" data-bs-toggle="collapse" data-bs-target="#reviewMenus" class="btn btn-outline-ymprimary mb-2">메뉴 선택하기</button>
+						<div class="collapse" id="reviewMenus">
+							<ul class="list-group">
+								<li class="list-group-item" th:each="menu : ${ {'유니짜장', '삼선짜장', '야끼짬뽕'} }">
+									<input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">
+									<label class="form-check-label" for="firstCheckbox" th:text="${ menu }"></label>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+				</form>
+
+			</div>
+
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
+				<button class="btn btn-ymprimary">작성완료</button>
+			</div>
+		</div>
+	</div>
+</div>
