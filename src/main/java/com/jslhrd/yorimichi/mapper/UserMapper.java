@@ -26,8 +26,6 @@ public interface UserMapper {
 	 */
 	Optional<UserDTO> selectById(@Param("userId") Long userId);
 
-	Optional<UserDTO> selectByEmail(@Param("email") String email);
-
 	boolean existsActive(@Param("userId") Long userId);
 
 	/**
@@ -43,9 +41,6 @@ public interface UserMapper {
 	 * @return 영향 행 수 (수정 1, 대상 없음 0)
 	 */
 	int update(UserDTO user);
-
-	int updatePassword(@Param("userId") Long userId,
-	                   @Param("password") String password);
 
 	/**
 	 * 유저 삭제.
