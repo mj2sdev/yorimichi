@@ -1,9 +1,12 @@
 package com.jslhrd.yorimichi.domain;
 
 import com.jslhrd.yorimichi.enums.RootType;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
@@ -17,16 +20,19 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-public abstract class RootDTO {
+@ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public abstract class RootDTO implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 루트 타입 (USER, STORE, FOOD, COEAT, COMMENT, REVIEW)
+	 */
+	private final RootType type;
 	/**
 	 * PK: 루트 ID
 	 */
 	private Long id;
-	/**
-	 * 루트 타입 (USER, STORE, FOOD, COEAT, COMMENT, REVIEW)
-	 */
-	private RootType type;
 	/**
 	 * 생성일시 (DB 자동 생성)
 	 */
@@ -48,6 +54,7 @@ public abstract class RootDTO {
 	 * MyBatis용 기본 생성자
 	 */
 	protected RootDTO() {
+		type = null;
 	}
 
 	/**
@@ -55,5 +62,21 @@ public abstract class RootDTO {
 	 */
 	protected RootDTO(RootType type) {
 		this.type = type;
+	}
+
+	/**
+	 * 편의 헬퍼
+	 */
+
+	public boolean isActive() {
+		return deletedAt == null && blindedAt == null;
+	}
+
+	public boolean isEnabled() {
+		return deletedAt == null;
+	}
+
+	public boolean isNonLocked() {
+		return blindedAt == null;
 	}
 }

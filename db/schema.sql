@@ -237,13 +237,22 @@ CREATE TABLE food (
 
 -- 유저
 CREATE TABLE user (
-    id            BIGINT       NOT NULL,
-    role_id       BIGINT       NOT NULL,
-    email         VARCHAR(100) NOT NULL,
-    password      VARCHAR(256),
-    nickname      VARCHAR(20)  NOT NULL,
-    description   TEXT,
-    last_login_at DATETIME,
+    id                BIGINT       NOT NULL,
+    role_id           BIGINT       NOT NULL,
+    email             VARCHAR(100) NOT NULL,
+    password          VARCHAR(256),
+    nickname          VARCHAR(20)  NOT NULL,
+    description       TEXT,
+    gender            ENUM('M', 'F'),
+    birth             DATE,
+    email_verified    BOOLEAN      NOT NULL DEFAULT FALSE,
+    enabled           BOOLEAN      NOT NULL DEFAULT FALSE,
+    show_reviews   BOOLEAN      NOT NULL DEFAULT FALSE,
+    show_likes     BOOLEAN      NOT NULL DEFAULT FALSE,
+    show_bookmarks BOOLEAN      NOT NULL DEFAULT FALSE,
+    show_following BOOLEAN      NOT NULL DEFAULT FALSE,
+    show_followers BOOLEAN      NOT NULL DEFAULT FALSE,
+    last_login_at     DATETIME,
 
     CONSTRAINT pk_user          PRIMARY KEY (id),
     CONSTRAINT fk_user_root     FOREIGN KEY (id)      REFERENCES root(id) ON DELETE CASCADE,
@@ -281,17 +290,20 @@ CREATE TABLE bookmark (
 );
 
 CREATE TABLE review (
-    id      BIGINT NOT NULL,
-    store_id BIGINT NOT NULL,
-    user_id BIGINT NOT NULL,
-    rating  INT    NOT NULL,
-    content TEXT,
+    id               BIGINT  NOT NULL,
+    user_id          BIGINT  NOT NULL,
+    store_id         BIGINT  NOT NULL,
+    receipt_image_id BIGINT,
+    receipt_status   BOOLEAN NOT NULL DEFAULT FALSE,
+    rating           INT     NOT NULL,
+    content          TEXT,
 
-    CONSTRAINT pk_review        PRIMARY KEY (id),
-    CONSTRAINT fk_review_root   FOREIGN KEY (id)       REFERENCES root(id)  ON DELETE CASCADE,
-    CONSTRAINT fk_review_user   FOREIGN KEY (user_id)  REFERENCES user(id)  ON DELETE CASCADE,
-    CONSTRAINT fk_review_store  FOREIGN KEY (store_id) REFERENCES store(id) ON DELETE CASCADE,
-    CONSTRAINT ck_review_rating CHECK       (rating BETWEEN 1 AND 5)
+    CONSTRAINT pk_review               PRIMARY KEY (id),
+    CONSTRAINT fk_review_root          FOREIGN KEY (id)               REFERENCES root(id)  ON DELETE CASCADE,
+    CONSTRAINT fk_review_user          FOREIGN KEY (user_id)          REFERENCES user(id)  ON DELETE CASCADE,
+    CONSTRAINT fk_review_store         FOREIGN KEY (store_id)         REFERENCES store(id) ON DELETE CASCADE,
+    CONSTRAINT fk_review_receipt_image FOREIGN KEY (receipt_image_id) REFERENCES image(id) ON DELETE SET NULL,
+    CONSTRAINT ck_review_rating        CHECK       (rating            BETWEEN 1 AND 5)
 );
 
 CREATE TABLE review_food (

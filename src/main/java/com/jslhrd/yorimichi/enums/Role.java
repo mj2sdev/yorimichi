@@ -3,14 +3,14 @@ package com.jslhrd.yorimichi.enums;
 import lombok.Getter;
 
 @Getter
-public enum RoleName {
+public enum Role {
 
 	USER,
 	ADMIN;
 
-	public static RoleName from(String value) {
+	public static Role from(String value) {
 		if (value == null) throw new IllegalArgumentException("role is null");
-		return RoleName.valueOf(value.toUpperCase());
+		return Role.valueOf(value.toUpperCase());
 	}
 
 	public String asAuthority() {
