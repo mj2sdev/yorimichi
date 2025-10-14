@@ -16,6 +16,10 @@ import java.util.Optional;
  * @author GeonHoKoo
  * @author LancerAlert
  * @since 1.0
+ * 
+ * @author mj2sdev
+ * @version 1.1
+ * validateNickname 을 구현하기 위해 existsNickname 추가
  */
 @Mapper
 public interface UserMapper {
@@ -37,6 +41,14 @@ public interface UserMapper {
 
 	/**
 	 * 닉네임 존재 여부 (XML에서 SELECT EXISTS(...)로 구현 권장)
+	 */
+	boolean existsNickname(@Param("nickname") String nickname);
+
+	/**
+	 * 닉네임이 사용 가능한지 검사합니다. (중복검사)
+	 * 
+	 * @param nickname
+	 * @return {@code boolean} 닉네임 사용 가능여부
 	 */
 	boolean existsNickname(@Param("nickname") String nickname);
 

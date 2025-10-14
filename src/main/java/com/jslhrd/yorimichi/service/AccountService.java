@@ -22,7 +22,12 @@ import com.jslhrd.yorimichi.domain.UserDTO;
  * </ul>
  *
  * @author mj2sdev
- * @version 1.1 {@code UserDetails} 삭제 (실제 필요는 {@code UserDetailsService})
+ * 
+ * @version 1.0 초안 작성
+ * @version 1.1 {@code UserDetails} 삭제
+ * <p>
+ * 실제 필요했던건 {@code UserDetailsService}
+ * 해당 인터페이스는 {@code UserService} 이쪽으로 옮김
  */
 public interface AccountService {
 
