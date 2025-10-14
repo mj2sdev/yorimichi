@@ -39,12 +39,6 @@ public class AccountManager implements AccountService {
 	private final AccountMapper accountMapper;
 	private final PasswordEncoder passwordEncoder;
 
-	@Override
-	@Transactional(readOnly = true)
-	public boolean isNicknameAvailable(String nickname) {
-		return !userMapper.existsNickname(nickname.trim());
-	}
-
 	/**
 	 * 로컬 회원가입 (이메일 중복 확인 → root → user).
 	 * - password는 반드시 BCrypt 해시로 저장

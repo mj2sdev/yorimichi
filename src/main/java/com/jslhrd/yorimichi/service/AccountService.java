@@ -27,14 +27,6 @@ import com.jslhrd.yorimichi.domain.UserDTO;
 public interface AccountService {
 
 	/**
-	 * 닉네임 중복 검사.
-	 *
-	 * @param nickname 검사할 닉네임(정규화/트리밍은 구현체에서 처리)
-	 * @return 사용 가능하면 true, 아니면 false
-	 */
-	boolean isNicknameAvailable(String nickname);
-
-	/**
 	 * 로컬 계정 가입.
 	 * <p>
 	 * 구현 예:
