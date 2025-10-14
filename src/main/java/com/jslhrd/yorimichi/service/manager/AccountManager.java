@@ -120,7 +120,12 @@ public class AccountManager implements AccountService {
 
 		// 3) 신규 생성
 		UserDTO newUser = new UserDTO();
+
 		rootMapper.insert(newUser);
+		if (newUser.getId() == null) {
+			throw new IllegalStateException("Root: insert failed or no generated userId");
+		}
+
 		Long userId = newUser.getId();
 
 		// 닉네임: 공급자 displayName 있으면 사용, 없으면 "user{ID}"
