@@ -5,7 +5,9 @@ import com.jslhrd.yorimichi.service.AccountService;
 import com.jslhrd.yorimichi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+
 
 
 @Controller
@@ -21,25 +23,26 @@ public class AuthController {
 	}
 
 	@GetMapping("/signup")
-	public String showSignup() {
+	public String showSignup(@ModelAttribute UserDTO user){
 		return "user/signup";
 	}
 
 	@PostMapping("/signup")
-	public String signup(@ModelAttribute UserDTO user) {
-		accountService.signupLocal(user);
-		return "redirect:/login";
+	public String signup(UserDTO user) {
+		accountService.signup(user);
+		return "redirect:/";
 	}
 
 	@ResponseBody
 	@GetMapping("/signup/nickname")
-	public boolean validateNickname(@RequestParam String nickname) {
-		return userService.isNicknameAvailable(nickname);
+	public boolean validateNickname(@RequestParam("nickname") String nickname) {
+		return accountService.validateNickname(nickname);
 	}
 
 	@ResponseBody
 	@PostMapping("/signup/email/verification")
-	public boolean verificateEmail(@RequestParam("token") String token) {
-		return accountService.confirmEmailVerification(token);
+	public boolean verificateEmail(@RequestBody UserDTO user) {
+		final String email = user.getEmail();
+		return accountService.verificateEmail(email);
 	}
 }
