@@ -8,6 +8,7 @@ import com.jslhrd.yorimichi.mapper.UserMapper;
 import com.jslhrd.yorimichi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +49,7 @@ public class UserManager implements UserService {
 		}
 
 		user.setNickname(trimmedNickname);
-		
+
 		try {
 			boolean affected = userMapper.update(userId, user) > 0;
 			if (!affected) {
@@ -56,7 +57,7 @@ public class UserManager implements UserService {
 				log.debug("User: update no-op userId={}", userId);
 				return;
 			}
-		} catch (DuplicateNicknameException e) {
+		} catch (DuplicateKeyException e) {
 			throw new DuplicateNicknameException(trimmedNickname);
 		}
 
