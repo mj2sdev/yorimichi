@@ -11,20 +11,16 @@ spring:
   profiles:
     group:
       oauth-drive: local-drive-test,oauth-drive-only
-  # config:
-  #   activate:
-  #     on-profile: oauth-drive-only
-  web:
-    resources:            # ✅ plural
-      add-mappings: false
 
 # MySQL 데이터베이스 연결 설정
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://yorimichi.duckdns.org:3306/yorimichi?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+
 # mysql에서 db와 서버의 시간이 다른 경우 문제가 발생할 수 있어서 시간대를 명시하게 함.
     username: jsl3team
-    password: 1234 #[wi-fi password]
+    password: 1234 #[701 wi-fi password]
+
 # Thymeleaf 설정
 # 캐시를 저장하지 않게 해둬서 변경시 바로바로 확인 가능
   thymeleaf:
@@ -45,8 +41,15 @@ mybatis:
 
 google:
   drive:
-    folder-id: 1zmXzxFMUcpvM4n08f3sv8UB4l9U_yd1J 
-    upload-folder-id: 1zmXzxFMUcpvM4n08f3sv8UB4l9U_yd1J
-  oauth:
-    redirect-uri: "http://localhost:8080/oauth2/callback"
+    credentials-file-path: /credentials.json
+    token-path: tokens
+    folder-id: 1zmXzxFMUcpvM4n08f3sv8UB4l9U_yd1J
+
+gemini:
+  mime-type: application/json
+  model: gemini-2.5-flash
+  
+
+
+
 
