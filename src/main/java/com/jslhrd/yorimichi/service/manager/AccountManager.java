@@ -61,6 +61,11 @@ public class AccountManager implements AccountService {
 		user.setEmail(normalizedEmail);
 		rootMapper.insert(user);
 
+		Long userId = user.getId();
+		if (userId == null) {
+			throw new IllegalStateException("Root: insert failed or no generated userId");
+		}
+
 		user.setPassword(passwordEncoder.encode(rawPassword));
 		accountMapper.insertLocalAccount(user);
 
@@ -122,11 +127,11 @@ public class AccountManager implements AccountService {
 		UserDTO newUser = new UserDTO();
 
 		rootMapper.insert(newUser);
-		if (newUser.getId() == null) {
-			throw new IllegalStateException("Root: insert failed or no generated userId");
-		}
 
 		Long userId = newUser.getId();
+		if (userId == null) {
+			throw new IllegalStateException("Root: insert failed or no generated userId");
+		}
 
 		// 닉네임: 공급자 displayName 있으면 사용, 없으면 "user{ID}"
 		String displayName = socialAccount.getDisplayName();
