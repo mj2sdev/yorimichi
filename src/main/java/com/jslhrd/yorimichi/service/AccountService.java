@@ -27,6 +27,30 @@ import com.jslhrd.yorimichi.domain.UserDTO;
 public interface AccountService {
 
 	/**
+	 * 닉네임 중복 검사.
+	 *
+	 * @param nickname 검사할 닉네임(정규화/트리밍은 구현체에서 처리)
+	 * @return 사용 가능하면 true, 아니면 false
+	 */
+	boolean isNicknameAvailable(String nickname);
+
+	/**
+	 * 로컬 계정 가입.
+	 * <p>
+	 * 구현 예:
+	 * <ol>
+	 *   <li>email 정규화 및 중복 검사(LOWER(email) UNIQUE)</li>
+	 *   <li>password 해시(BCrypt)</li>
+	 *   <li>root(USER) → user INSERT → 초기 role 부여</li>
+	 * </ol>
+	 *
+	 * @param user 이메일/비밀번호(해시 전 or 후 여부는 구현 합의), 닉네임 등
+	 * @throws IllegalArgumentException 필수 값 누락/형식 오류
+	 * @throws IllegalStateException    이메일 중복 등 정책 위반
+	 */
+	void signupLocal(UserDTO user);
+
+	/**
 	 * 소셜 <b>최초 로그인</b> 시 계정 생성 또는 기존 계정에 링크한다(멱등).
 	 * <p>
 	 * 구현 예:
@@ -46,23 +70,7 @@ public interface AccountService {
 	 * @return userId (생성되었거나 이미 링크된 사용자 ID)
 	 * @throws IllegalArgumentException 필수 키 누락 시 (provider, providerUserId)
 	 */
-	Long signupOrLinkSocial(SocialAccountDTO socialAccount);
-
-	/**
-	 * 로컬 계정 가입.
-	 * <p>
-	 * 구현 예:
-	 * <ol>
-	 *   <li>email 정규화 및 중복 검사(LOWER(email) UNIQUE)</li>
-	 *   <li>password 해시(BCrypt)</li>
-	 *   <li>root(USER) → user INSERT → 초기 role 부여</li>
-	 * </ol>
-	 *
-	 * @param user 이메일/비밀번호(해시 전 or 후 여부는 구현 합의), 닉네임 등
-	 * @throws IllegalArgumentException 필수 값 누락/형식 오류
-	 * @throws IllegalStateException    이메일 중복 등 정책 위반
-	 */
-	void signupLocal(UserDTO user);
+	Long signupSocial(SocialAccountDTO socialAccount);
 
 	/**
 	 * 비밀번호 변경(본인 인증 후).
@@ -90,15 +98,7 @@ public interface AccountService {
 	 *
 	 * @param userId 대상 사용자 ID
 	 */
-	void deleteAccount(Long userId);
-
-	/**
-	 * 닉네임 중복 검사.
-	 *
-	 * @param nickname 검사할 닉네임(정규화/트리밍은 구현체에서 처리)
-	 * @return 사용 가능하면 true, 아니면 false
-	 */
-	boolean isNicknameAvailable(String nickname);
+	void delete(Long userId);
 
 	/**
 	 * 이메일 인증 토큰 발급(전송) 트리거.

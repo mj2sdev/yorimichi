@@ -3,10 +3,13 @@ package com.jslhrd.yorimichi.service.manager;
 import com.jslhrd.yorimichi.domain.SocialAccountDTO;
 import com.jslhrd.yorimichi.domain.UserDTO;
 import com.jslhrd.yorimichi.enums.Provider;
+import com.jslhrd.yorimichi.exception.UserNotFoundException;
 import com.jslhrd.yorimichi.mapper.AccountMapper;
 import com.jslhrd.yorimichi.mapper.RootMapper;
+import com.jslhrd.yorimichi.mapper.UserMapper;
 import com.jslhrd.yorimichi.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,24 +28,21 @@ import java.util.Optional;
  * - 소셜 자격의 절대 키: (provider, providerUserId) UNIQUE 제약으로 멱등 보장.
  * - 신규 사용자 생성: root(USER) → user → (optional) social_account
  */
+@Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class AccountManager implements AccountService {
 
 	private final RootMapper rootMapper;
+	private final UserMapper userMapper;
 	private final AccountMapper accountMapper;
 	private final PasswordEncoder passwordEncoder;
-
-	private static String normEmail(String email) {
-		return (email == null) ? null : email.trim().toLowerCase();
-	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public boolean isNicknameAvailable(String nickname) {
-		if (nickname == null || nickname.isBlank()) return false;
-		return !accountMapper.existsNickname(nickname.trim());
+		return !userMapper.existsNickname(nickname.trim());
 	}
 
 	/**
@@ -52,32 +52,26 @@ public class AccountManager implements AccountService {
 	 */
 	@Override
 	public void signupLocal(UserDTO user) {
-		// 1) 파라미터 필수값 검증
-		String email = user.getEmail();
+
+		String normalizedEmail = normalizeEmail(user.getEmail());
 		String rawPassword = user.getPassword();
-		String nickname = user.getNickname();
-		if (email == null || rawPassword == null || nickname == null) {
-			throw new IllegalArgumentException("email, password, nickname은 필수입니다.");
+
+		if (userMapper.selectByEmail(normalizedEmail).isPresent()) {
+			throw new IllegalStateException("이미 가입된 이메일입니다.");
 		}
 
-		// 2) 이메일 정규화
-		String normalizedEmail = normEmail(email);
+		if (userMapper.existsNickname(user.getNickname())) {
+			throw new IllegalStateException("이미 사용 중인 닉네임입니다.");
+		}
+
 		user.setEmail(normalizedEmail);
+		rootMapper.insert(user);
 
-		// 3) 이메일 중복 확인
-		if (accountMapper.selectByEmail(normalizedEmail).isPresent()) {
-			throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
-		}
-
-		// 4) root(USER) 생성 → root PK가 user.id가 됨
-		//    - user는 RootDTO를 상속한다고 가정 (id/type을 rootMapper.insert에서 세팅)
-		rootMapper.insert(user); // useGeneratedKeys=true 필수
-
-		// 5) 비밀번호 해시 저장
 		user.setPassword(passwordEncoder.encode(rawPassword));
+		accountMapper.insertLocalAccount(user);
 
-		// 6) account INSERT (role 기본값은 DB default 또는 별도 설정)
-		accountMapper.insertUser(user);
+		// 정책: 이메일 인증 메일 발송(옵션)
+		// emailVerificationService.issueAndSend(email, rootId);
 	}
 
 	/**
@@ -92,86 +86,67 @@ public class AccountManager implements AccountService {
 	 * - social_account(provider, provider_user_id) UNIQUE로 보장
 	 */
 	@Override
-	public Long signupOrLinkSocial(SocialAccountDTO socialAccount) {
-		// 0) 필수 키 검증
+	public Long signupSocial(SocialAccountDTO socialAccount) {
+
 		Provider provider = socialAccount.getProvider();
 		String providerUserId = socialAccount.getProviderUserId();
-		if (provider == null || providerUserId == null || providerUserId.isBlank()) {
-			throw new IllegalArgumentException("provider, providerUserId는 필수입니다.");
-		}
 
 		// 1) 이미 링크되어 있으면 그 userId 바로 반환
-		Optional<UserDTO> findUser = accountMapper.selectUserByProviderAndSub(provider, providerUserId);
-		if (findUser.isPresent()) {
-			// 마지막 로그인 시각을 이 지점에서 갱신할 수 있음(옵션)
+		Optional<UserDTO> findSocialAccount = accountMapper.selectByProviderAndSub(provider, providerUserId);
+		if (findSocialAccount.isPresent()) {
 
-			Long userId = findUser.get().getId();
+			// 마지막 로그인 시각을 이 지점에서 갱신할 수 있음(옵션)
+			Long userId = findSocialAccount.get().getId();
 			accountMapper.updateLastLoginAt(userId);
 			accountMapper.updateSocialLastLoginAt(userId, provider);
+
 			return userId;
 		}
 
+
 		// 2) 이메일로 기존 유저 매칭 시도
-		String email = normEmail(socialAccount.getProviderEmail());
-		if (email != null && !email.isBlank()) {
-			Optional<UserDTO> byEmail = accountMapper.selectByEmail(email);
-			if (byEmail.isPresent()) {
-				Long userId = byEmail.get().getId();
-				socialAccount.setUserId(userId);
-				// 2-1) 기존 유저에 소셜 계정 링크
-				accountMapper.insertSocialAccount(
-						/*provider,
-						providerUserId,
-						userId,
-						email,
-						socialAccount.isEmailVerified(),
-						socialAccount.getDisplayName(),
-						socialAccount.getAvatarUrl()*/
-						socialAccount
-				);
-				// (선택) 마지막 로그인 갱신
-				accountMapper.updateLastLoginAt(userId);
-				accountMapper.updateSocialLastLoginAt(userId, provider);
-				return userId;
-			}
+		String normalizedEmail = normalizeEmail(socialAccount.getProviderEmail());
+
+		Optional<UserDTO> findUser = userMapper.selectByEmail(normalizedEmail);
+		if (findUser.isPresent()) {
+
+			// 2-1) 기존 유저에 소셜 계정 링크
+			Long userId = findUser.get().getId();
+			socialAccount.setUserId(userId);
+
+			accountMapper.insertSocialAccount(socialAccount);
+
+			// (선택) 마지막 로그인 갱신
+			accountMapper.updateLastLoginAt(userId);
+			accountMapper.updateSocialLastLoginAt(userId, provider);
+
+			return userId;
 		}
 
-		// 3) 신규 생성: root(USER) → user → social_account
-		// 3-1) root 생성 (type='USER'), 생성된 PK를 userId로 사용
+
+		// 3) 신규 생성
 		UserDTO newUser = new UserDTO();
-		// 필요 시 기본 닉네임/설명 등 초기값 세팅
-		rootMapper.insert(newUser); // PK 채워짐
+		rootMapper.insert(newUser);
 		Long userId = newUser.getId();
 
-		// 3-2) user 생성 (소셜 전용: password NULL, role=USER 기본)
-		//      닉네임: 공급자 displayName 있으면 사용, 없으면 "user{ID}"
+		// 닉네임: 공급자 displayName 있으면 사용, 없으면 "user{ID}"
 		String displayName = socialAccount.getDisplayName();
 		String nickname = (displayName != null && !displayName.isBlank()) ? displayName.trim() : "user" + userId;
+
+		// 3-2) user 생성
 		newUser.setId(userId);
-		newUser.setEmail(email);            // 소셜 이메일 제공 시 저장 (nullable)
-		newUser.setPassword(null);          // 소셜 가입이므로 비번 없음
+		newUser.setEmail(normalizedEmail); // 소셜 이메일 제공 시 저장 (nullable)
+		newUser.setPassword(null);         // 소셜 가입이므로 비번 없음
 		newUser.setNickname(nickname);
-		// role은 DB default 또는 별도 세터/매퍼에서 처리
-		accountMapper.insertUser(newUser);
+		accountMapper.insertLocalAccount(newUser);
 
+		// 3-2) social_account 링크
 		socialAccount.setUserId(userId);
-
-		// 3-3) social_account 링크
-		accountMapper.insertSocialAccount(
-				/*provider,
-				providerUserId,
-				userId,
-				email,
-				socialAccount.isEmailVerified(),
-				socialAccount.getDisplayName(),
-				socialAccount.getAvatarUrl()*/
-				socialAccount
-		);
+		accountMapper.insertSocialAccount(socialAccount);
 
 		// (선택) 마지막 로그인 갱신
 		accountMapper.updateLastLoginAt(userId);
 		accountMapper.updateSocialLastLoginAt(userId, provider);
-
 		return userId;
 	}
 
@@ -181,15 +156,21 @@ public class AccountManager implements AccountService {
 	 */
 	@Override
 	public void changePassword(Long userId, String oldPassword, String newPassword) {
-		if (userId == null || newPassword == null || newPassword.isBlank()) {
-			throw new IllegalArgumentException("userId와 newPassword는 필수입니다.");
+
+		userMapper.selectById(userId)
+				.orElseThrow(() -> new UserNotFoundException(userId));
+
+		if (!passwordEncoder.matches(oldPassword, newPassword)) {
+			throw new SecurityException("기존 비밀번호가 일치하지 않습니다.");
 		}
-		// (선택) oldPassword 매칭 로직: accountMapper.selectPasswordHash(userId) 후 matches 검사
-		String hash = passwordEncoder.encode(newPassword);
-		int updated = accountMapper.updatePassword(userId, hash);
-		if (updated != 1) {
+
+		String hashed = passwordEncoder.encode(newPassword);
+		boolean affected = accountMapper.updatePassword(userId, hashed) > 0;
+		if (!affected) {
 			throw new IllegalStateException("비밀번호 변경 실패 (userId=" + userId + ")");
 		}
+
+		log.info("Account: updated password userId={}", userId);
 	}
 
 	/**
@@ -197,12 +178,19 @@ public class AccountManager implements AccountService {
 	 * - root.deleted_at을 현재 시각으로 설정
 	 */
 	@Override
-	public void deleteAccount(Long userId) {
-		if (userId == null) throw new IllegalArgumentException("삭제할 사용자 ID가 필요합니다.");
-		int updated = accountMapper.deleteUser(userId); // 구현체에서 soft delete 수행
-		if (updated != 1) {
-			throw new IllegalStateException("삭제(비활성) 실패: " + userId);
+	public void delete(Long userId) {
+
+		boolean affected = accountMapper.deleteById(userId) > 0;
+		if (!affected) {
+			boolean exists = userMapper.existsActive(userId);
+			if (!exists) {
+				throw new IllegalStateException("삭제(비활성) 실패: " + userId);
+			}
+			log.debug("Account: delete no-op userId={}", userId);
+			return;
 		}
+
+		log.info("Account: soft deleted userId={}", userId);
 	}
 
 	@Override
@@ -217,5 +205,12 @@ public class AccountManager implements AccountService {
 		// 토큰 검증 → 사용자/소셜 계정의 email_verified 반영
 		// accountMapper.verifyEmailByToken(token) ...
 		throw new UnsupportedOperationException("TODO: 이메일 인증 검증 구현");
+	}
+
+	private String normalizeEmail(String rawEmail) {
+		if (rawEmail == null) {
+			throw new IllegalArgumentException("email은 필수입니다.");
+		}
+		return rawEmail.trim().toLowerCase();
 	}
 }
