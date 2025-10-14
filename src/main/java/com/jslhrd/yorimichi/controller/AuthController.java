@@ -2,6 +2,7 @@ package com.jslhrd.yorimichi.controller;
 
 import com.jslhrd.yorimichi.domain.UserDTO;
 import com.jslhrd.yorimichi.service.AccountService;
+import com.jslhrd.yorimichi.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
 	private final AccountService accountService;
+	private final UserService userService;
 
 	@GetMapping("/login")
 	public String showLogin() {
@@ -32,7 +34,7 @@ public class AuthController {
 	@ResponseBody
 	@GetMapping("/signup/nickname")
 	public boolean validateNickname(@RequestParam String nickname) {
-		return accountService.isNicknameAvailable(nickname);
+		return userService.isNicknameAvailable(nickname);
 	}
 
 	@ResponseBody

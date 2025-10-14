@@ -1,15 +1,16 @@
 package com.jslhrd.yorimichi.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.jslhrd.yorimichi.enums.Role;
 import com.jslhrd.yorimichi.enums.RootType;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString(exclude = "password")
 public class UserDTO extends RootDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -40,7 +42,7 @@ public class UserDTO extends RootDTO implements Serializable {
 	/**
 	 * 유저 비밀번호
 	 */
-	@JsonIgnore
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 
 	/**
@@ -53,9 +55,10 @@ public class UserDTO extends RootDTO implements Serializable {
 	 */
 	private String description;
 
+
 	private String gender;
 
-	private Date birthday;
+	private LocalDate birthday;
 
 	private boolean emailVerified;
 
@@ -68,13 +71,14 @@ public class UserDTO extends RootDTO implements Serializable {
 	private boolean showBookmarks;
 
 	private boolean showFollowing;
-	
+
 	private boolean showFollowers;
 
 	/**
 	 * 마지막 로그인 일시
 	 */
 	private LocalDateTime lastLoginAt;
+
 
 	/**
 	 * 소셜 아이디 목록
@@ -111,30 +115,6 @@ public class UserDTO extends RootDTO implements Serializable {
 	 */
 	private List<CoeatDTO> coeats = new ArrayList<>();
 
-	/**
-	 * 리뷰 공개 여부
-	 */
-	private boolean reviewPrivacy;
-
-	/**
-	 * 좋아요 공개 여부
-	 */
-	private boolean likePrivacy;
-
-	/**
-	 * 즐겨찾기 공개 여부
-	 */
-	private boolean bookmarkPrivacy;
-
-	/**
-	 * 팔로우 공개 여부
-	 */
-	private boolean followPrivacy;
-
-	/**
-	 * 팔로워 공개 여부
-	 */
-	private boolean followerPrivacy;
 
 	public UserDTO() {
 		super(RootType.USER);

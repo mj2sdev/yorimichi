@@ -198,7 +198,7 @@ public class SocialUserManager {
 	private UserDTO findOrProvision(Provider provider, String providerUserId, String email,
 	                                boolean verified, String name, String picture) {
 		// 1) 우선 조회
-		Optional<UserDTO> found = accountMapper.selectUserByProviderAndSub(provider, providerUserId);
+		Optional<UserDTO> found = accountMapper.selectByProviderAndSub(provider, providerUserId);
 		if (found.isPresent()) return found.get();
 
 		// 2) 없으면 link/signup (AccountService 내부에서 root/user/social_account 원자적 처리)
@@ -211,10 +211,10 @@ public class SocialUserManager {
 				.avatarUrl(picture)
 				.build();
 
-		Long userId = accountService.signupOrLinkSocial(sa);
+		Long userId = accountService.signupSocial(sa);
 
 		// 3) 재조회(동시성/정합성 보장). 비어있으면 데이터 이상 → 예외
-		return accountMapper.selectUserByProviderAndSub(provider, providerUserId)
+		return accountMapper.selectByProviderAndSub(provider, providerUserId)
 				.orElseThrow(() -> new UsernameNotFoundException(
 						"Social link failed: " + provider + "/" + providerUserId + " (userId=" + userId + ")"));
 	}
