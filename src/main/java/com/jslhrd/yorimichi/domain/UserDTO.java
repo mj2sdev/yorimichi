@@ -1,10 +1,16 @@
 package com.jslhrd.yorimichi.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.jslhrd.yorimichi.enums.Role;
 import com.jslhrd.yorimichi.enums.RootType;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
+import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,12 +24,15 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class UserDTO extends RootDTO {
+@ToString(exclude = "password")
+public class UserDTO extends RootDTO implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	/**
-	 * FK: 권한/역할 ID
+	 * 권한/역할
 	 */
-	private Long roleId;
+	private Role role;
 
 	/**
 	 * 유저 이메일/아이디
@@ -33,6 +42,7 @@ public class UserDTO extends RootDTO {
 	/**
 	 * 유저 비밀번호
 	 */
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 	private String password;
 
 	/**
@@ -45,6 +55,25 @@ public class UserDTO extends RootDTO {
 	 */
 	private String description;
 
+
+	private String gender;
+
+	private LocalDate birthday;
+
+	private boolean emailVerified;
+
+	private boolean enabled;
+
+	private boolean showReviews;
+
+	private boolean showLikes;
+
+	private boolean showBookmarks;
+
+	private boolean showFollowing;
+
+	private boolean showFollowers;
+
 	/**
 	 * 마지막 로그인 일시
 	 */
@@ -52,69 +81,39 @@ public class UserDTO extends RootDTO {
 
 
 	/**
-	 * 권한/역할
+	 * 소셜 아이디 목록
 	 */
-	private RoleDTO role;
-
-	/**
-	 * 소셜 아이디
-	 */
-	private SocialAccountDTO socialAccount;
+	private List<SocialAccountDTO> socialAccounts = new ArrayList<>();
 
 	/**
 	 * 리뷰 목록
 	 */
-	private List<ReviewDTO> reviews;
+	private List<ReviewDTO> reviews = new ArrayList<>();
 
 	/**
 	 * 팔로잉 목록
 	 */
-	private List<UserDTO> following;
+	private List<UserDTO> following = new ArrayList<>();
 
 	/**
 	 * 팔로우 목록
 	 */
-	private List<UserDTO> followers;
+	private List<UserDTO> followers = new ArrayList<>();
 
 	/**
 	 * 즐겨찾기 목록
 	 */
-	private List<StoreDTO> bookmark;
+	private List<StoreDTO> bookmark = new ArrayList<>();
 
 	/**
 	 * 좋아요 목록
 	 */
-	private List<StoreDTO> likes;
+	private List<StoreDTO> likes = new ArrayList<>();
 
 	/**
 	 * 같이먹기 목록
 	 */
-	private List<CoeatDTO> coeats;
-
-	/**
-	 * 리뷰 공개 여부
-	 */
-	private boolean reviewPrivacy;
-    
-	/**
-	 * 좋아요 공개 여부
-	 */
-    private boolean likePrivacy;
-    
-	/**
-	 * 즐겨찾기 공개 여부
-	 */
-    private boolean bookmarkPrivacy;
-    
-	/**
-	 * 팔로우 공개 여부
-	 */
-    private boolean followPrivacy;
-    
-	/**
-	 * 팔로워 공개 여부
-	 */
-    private boolean followerPrivacy;
+	private List<CoeatDTO> coeats = new ArrayList<>();
 
 
 	public UserDTO() {

@@ -4,53 +4,99 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.UserMapper">
 
-  <!-- AUTO_INCREMENT 대응: id 컬럼 제거 + 키 반환 -->
-  <insert id="insert" parameterType="UserDTO"
-          useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-    INSERT INTO user (role_id, email, password, nickname, description)
-    VALUES (#{roleId}, #{email}, #{password}, #{nickname}, #{description})
-  </insert>
+    <!-- @formatter:off -->
 
-  <select id="selectById" parameterType="Long" resultType="UserDTO">
-    SELECT
-      u.id, u.role_id, u.email, u.password, u.nickname,
-      u.description, u.last_login_at,
-      u.created_at, u.updated_at
-    FROM user u
-    WHERE u.id = #{id}
-  </select>
+    <select id="selectAll" parameterType="SearchDTO" resultType="UserDTO">
+        SELECT u.id,
+               u.role_id,
+               u.email,
+               u.password,
+               u.nickname,
+               u.description,
+               u.last_login_at,
+               r.created_at,
+               r.updated_at
+        FROM user u
+        JOIN root r ON u.id = r.id
+            AND r.type = 'USER'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        ORDER BY r.created_at DESC, u.id
+    </select>
 
-  <!-- 이메일 기준 조회: 로그인/중복체크 -->
-  <select id="selectByEmail" parameterType="String" resultType="UserDTO">
-    SELECT
-      u.id, u.role_id, u.email, u.password, u.nickname,
-      u.description, u.last_login_at,
-      u.created_at, u.updated_at
-    FROM user u
-    WHERE u.email = #{email}
-    LIMIT 1
-  </select>
+    <select id="selectById" parameterType="Long" resultType="UserDTO">
+        SELECT u.id,
+               u.role_id,
+               u.email,
+               u.password,
+               u.nickname,
+               u.description,
+               u.last_login_at,
+               r.created_at,
+               r.updated_at
+        FROM user u
+        JOIN root r ON u.id = r.id
+            AND r.type = 'USER'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        WHERE u.id = #{userId}
+    </select>
 
-  <update id="update" parameterType="UserDTO">
-    UPDATE user
-    SET role_id = #{roleId},
-        email = #{email},
-        password = #{password},
-        nickname = #{nickname},
-        description = #{description}
-    WHERE id = #{id}
-  </update>
+    <select id="selectByEmail" parameterType="String" resultType="UserDTO">
+        SELECT u.id,
+               u.role_id,
+               u.email,
+               u.password,
+               u.nickname,
+               u.description,
+               u.last_login_at,
+               r.created_at,
+               r.updated_at
+        FROM user u
+        JOIN root r ON u.id = r.id
+            AND r.type = 'USER'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        WHERE u.email = #{email}
+    </select>
 
-  <!-- 비밀번호만 단독 변경 -->
-  <update id="updatePassword">
-    UPDATE user
-    SET password = #{password}
-    WHERE id = #{id}
-  </update>
+    <select id="existsNickname" parameterType="string" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM user u
+            JOIN root r ON u.id = r.id
+                AND r.type = 'USER'
+                AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+            WHERE u.nickname = #{nickname}
+        )
+    </select>
 
-  <!-- 현재 삭제는 user만. 정책에 따라 CASCADE/소프트삭제로 변경 가능 -->
-  <delete id="deleteById" parameterType="Long">
-    DELETE FROM user WHERE id = #{id}
-  </delete>
+    <select id="existsActive" parameterType="long" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+            FROM user u
+            JOIN root r ON u.id = r.id
+                AND r.type = 'USER'
+                AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+            WHERE u.id = #{userId}
+        )
+    </select>
+
+    <update id="update">
+        UPDATE user u
+        JOIN root r ON u.id = r.id
+            AND r.type = 'USER'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        SET u.nickname = #{user.nickname},
+            u.description = #{user.description},
+            u.gender = #{user.gender},
+            u.birthday = #{user.birthday},
+            u.show_reviews = #{user.showReviews},
+            u.show_likes = #{user.showLikes},
+            u.show_bookmarks = #{user.showBookmarks},
+            u.show_following = #{user.showFollowing},
+            u.show_followers = #{user.showFollowers},
+            r.updated_at = NOW()
+        WHERE u.id = #{userId}
+    </update>
+
+    <!-- @formatter:on -->
 
 </mapper>
