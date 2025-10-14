@@ -14,8 +14,24 @@
 }
 
 .divider::after {
-    content: '';
-    border-bottom: 1px sold #ccc;
-    width: 100%;
-    background: blue;
+	content: '';
+	border-bottom: 1px sold #ccc;
+	width: 100%;
+	background: blue;
+}
+
+.scroll-smooth {
+	scroll-behavior: smooth;
+}
+
+.fs-075 {
+	font-size: .75rem;
+}
+
+.fs-05 {
+	font-size: .5rem;
+}
+
+.fs-0 {
+	font-size: 0;
 }
