@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jslhrd.yorimichi.mapper.ApiKeyMapper">
+
+  <select id="select" parameterType="ApiKeyDTO" resultType="String">
+    SELECT k.value
+    FROM api_key k
+    WHERE 1 = 1
+    <if test="name != null and name != ''">
+    AND name LIKE CONCAT('%', #{ name }, '%')
+    </if>
+    <if test="owner != null and owner != ''">
+    AND owner LIKE CONCAT('%', #{ owner }, '%')
+    </if>
+    LIMIT 1
+  </select>
+
+</mapper>
