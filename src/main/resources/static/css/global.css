@@ -5,8 +5,9 @@
 }
 
 .bg-wallpaper {
-    background: url("/images/food_wallpaper.jpg") no-repeat;
-    background-size: cover;
+	background: url("/image/food_wallpaper.jpg") no-repeat;
+	background-size: cover;
+	background-position: right;
 }
 
 .divider {
