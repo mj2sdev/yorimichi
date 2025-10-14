@@ -1,9 +1,9 @@
 package com.jslhrd.yorimichi.config;
 
 import com.jslhrd.yorimichi.security.LocalUserDetailsManager;
-import com.jslhrd.yorimichi.security.SocialUserManager;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -12,9 +12,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -27,46 +27,49 @@ import org.springframework.security.web.SecurityFilterChain;
  * 구성 개요
  * - 인증(Authentication): 폼 로그인(로컬) + OAuth2/OIDC(소셜)
  * - 인가(Authorization): 공개/보호 URL 분리
- * - CSRF: 웹 폼 보호 유지, REST API(/api/**)는 토큰 인증 전제하에 예외 처리
+ * - CSRF: 웹 폼 보호 유지, REST API(/api/**)는 토큰 인증 전제하에 예외
  * - 세션: 세션 고정 보호, 동시 로그인 1개 제한
  * - 예외: API는 JSON(401/403), 웹은 페이지 리다이렉트
  * <p>
- * 변경/확장 시 주의
- * - 정적 리소스는 가능한 permitAll() 권장, web.ignoring()은 최소화(보안 훅 완전 우회)
- * - OAuth2 vs OIDC: 서로 다른 제네릭 훅(userService, oidcUserService)에 각기 바인딩해야 함
- * - DaoAuthenticationProvider를 Bean으로 명시 등록(PasswordEncoder 연동 확실히)
+ * 주의
+ * - 정적 리소스는 가급적 permitAll()로 허용하고 web.ignoring()은 최소화(필터 완전 우회라 로깅/보호도 스킵됨).
+ * - OAuth2 vs OIDC: userService(일반 OAuth2)와 oidcUserService(OIDC)는 제네릭이 달라 각각 바인딩.
+ * - DaoAuthenticationProvider를 Bean으로 명시 등록해 PasswordEncoder 확실히 연동.
  */
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true) // @PreAuthorize, @PostAuthorize 활성화
+@EnableMethodSecurity(prePostEnabled = true) // @PreAuthorize, @PostAuthorize 사용
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-	// 로컬(폼) 로그인 시 UserDetails 로딩 담당 (이메일 → 사용자 조회)
+	/**
+	 * 폼 로그인 시 이메일로 사용자 로딩
+	 */
 	private final LocalUserDetailsManager localUserDetailsManager;
 
-	// 소셜(OAuth2/OIDC) 로그인 시 외부 사용자 → 내부 계정 매핑/생성 담당
-	private final SocialUserManager socialUserManager;
+	/**
+	 * 소셜(OAuth2) 사용자 로딩 (attributes 기반)
+	 */
+	private final OAuth2UserService<OAuth2UserRequest, OAuth2User> socialOAuth2UserService;
 
 	/**
-	 * 비밀번호 인코더
-	 * <p>
-	 * - BCrypt는 단방향 해시 + salt + cost(작업량) 조절 기능 제공.
-	 * - DB에는 원문 비밀번호 저장 금지(반드시 해시).
-	 * - cost(Strength)는 기본값도 충분하나, 서버 성능/요구에 따라 조정 가능.
+	 * 소셜(OIDC) 사용자 로딩 (id_token/claims 기반)
 	 */
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+	private final OAuth2UserService<OidcUserRequest, OidcUser> socialOidcUserService;
+
+	/**
+	 * 비밀번호 해시/검증용
+	 */
+	private final PasswordEncoder passwordEncoder;
 
 	/**
 	 * WebSecurityCustomizer
 	 * <p>
-	 * - 보안 필터 체인 자체를 완전히 "우회"할 경로 지정.
-	 * - 인증/인가/로깅/CSRF 등 모든 보안 훅이 적용되지 않으므로 최소화가 원칙.
-	 * - 정적 리소스/헬스체크 등만 등록 권장.
-	 * - 대안: authorizeHttpRequests().requestMatchers(...).permitAll() (필터는 타되 접근만 허용)
+	 * - 보안 "필터 체인 자체"를 완전히 우회할 경로를 정의합니다.
+	 * - 여기 들어간 경로는 인증/인가/로깅/CSRF 등 보안 훅이 전혀 타지 않습니다(매우 강력).
+	 * - 따라서 정말 필요한 최소(정적 리소스, 헬스체크 등)만 넣으세요.
+	 * - 대안: authorizeHttpRequests().requestMatchers(...).permitAll()
+	 * (필터는 거치면서 접근만 허용 → 로깅/보안 기능 일부 유지)
 	 */
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
@@ -79,50 +82,35 @@ public class SecurityConfig {
 	}
 
 	/**
-	 * OAuth2 공급자(GitHub/Naver/Kakao 등)용 UserService 어댑터
+	 * SecurityFilterChain
 	 * <p>
-	 * - SocialUserManager의 공통 로직을 재사용하기 위해 메서드 레퍼런스로 바인딩.
-	 * - 제네릭: OAuth2UserRequest → OAuth2User
+	 * - 보안 정책의 핵심을 선언합니다. http.build() 시 체인이 동결되어 적용됩니다.
+	 * - 아래에서 oauth2Login()은 ClientRegistrationRepository가 있을 때만 동적으로 추가합니다
+	 * (로컬 개발에서 소셜 설정이 비어 있어도 앱이 뜨도록 하기 위한 안전장치).
 	 */
 	@Bean
-	public OAuth2UserService<OAuth2UserRequest, OAuth2User> socialOAuth2UserService(SocialUserManager m) {
-		return m::loadOAuth2User;
-	}
-
-	/**
-	 * OIDC 공급자(Google/Apple 등)용 UserService 어댑터
-	 * <p>
-	 * - OIDC는 별도 훅(oidcUserService)을 통해 호출됨 → OAuth2와 제네릭이 다름에 주의.
-	 * - 제네릭: OidcUserRequest → OidcUser
-	 */
-	@Bean
-	public OAuth2UserService<OidcUserRequest, OidcUser> socialOidcUserService(SocialUserManager m) {
-		return m::loadOidcUser;
-	}
-
-	/**
-	 * 보안 필터 체인(핵심 설정)
-	 * <p>
-	 * - 이 메서드에서 대부분의 보안 정책을 선언적으로 구성한다.
-	 * - http.build() 시 체인이 동결되어 애플리케이션에 적용.
-	 */
-	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+	public SecurityFilterChain securityFilterChain(
+			HttpSecurity http,
+			// ⬇ 아래 3개는 optional 주입 (없으면 null) → 소셜 설정이 없을 때 oauth2Login 블록 자체를 스킵
+			@Autowired(required = false) ClientRegistrationRepository clients,
+			@Autowired(required = false) OAuth2UserService<OAuth2UserRequest, OAuth2User> oauth2Svc,
+			@Autowired(required = false) OAuth2UserService<OidcUserRequest, OidcUser> oidcSvc
+	) throws Exception {
 
 		http
 				/* =========================
-				   CSRF 설정
-				   - 웹 폼(세션 기반)은 CSRF 보호 유지(기본).
-				   - REST API("/api/**")는 일반적으로 세션을 쓰지 않고 토큰 인증(JWT 등)을 사용 → CSRF 예외로 둠.
-				   - 주의: 프론트가 쿠키+세션을 쓰는 API라면, CSRF를 무조건 끄지 말고 전략을 재검토.
+				   CSRF
+				   - 폼 기반 웹은 기본 보호 유지.
+				   - 토큰 기반 REST API(/api/**)는 일반적으로 세션 미사용 → 예외 처리.
+				   - 쿠키+세션으로 API를 때린다면 무조건 예외를 주지 말고 별도 전략 고민 필요.
 				   ========================= */
 				.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
 
 				/* =========================
-				   인가(Authorization) 규칙
-				   - 공개 경로: 홈/로그인/회원가입/소셜 엔드포인트/에러 → permitAll
-				   - 그 외 모든 경로: 인증 필요
-				   - 세밀한 권한(Role) 제어는 메서드 보안(@PreAuthorize)와 함께 조합 사용.
+				   인가(Authorization)
+				   - 공개 경로는 permitAll
+				   - 나머지는 인증 필요
+				   - 세밀한 Role 제어는 @PreAuthorize와 조합
 				   ========================= */
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/", "/login", "/signup", "/oauth2/**", "/error").permitAll()
@@ -131,47 +119,26 @@ public class SecurityConfig {
 
 				/* =========================
 				   폼 로그인(로컬)
-				   - /login 페이지를 커스텀 로그인 페이지로 사용.
-				   - usernameParameter, passwordParameter는 폼 input name과 동일해야 함.
-				   - defaultSuccessUrl("/", false):
-					 1) SavedRequest가 있으면 원래 요청으로 복귀
-					 2) 없으면 "/"로 이동
-				   - 실패 시에는 /login?error로 리다이렉트(메시지는 프론트에서 처리).
+				   - GET /login : 커스텀 로그인 페이지(컨트롤러/뷰가 렌더링)
+				   - POST /login: 인증 처리 엔드포인트(시큐리티 필터가 처리)
+				   - username/password 파라미터명은 폼 input name과 일치시킬 것
+				   - defaultSuccessUrl("/", false): SavedRequest 있으면 복귀, 없으면 "/"
 				   ========================= */
 				.formLogin(form -> form
-						.loginPage("/login")
-						.loginProcessingUrl("/login")   // POST /login 처리 엔드포인트
-						.usernameParameter("email")     // 폼의 name="email"
-						.passwordParameter("password")  // 폼의 name="password"
+						.loginPage("/login")            // 커스텀 로그인 페이지 URL
+						.loginProcessingUrl("/login")   // 인증 처리 엔드포인트(POST)
+						.usernameParameter("email")
+						.passwordParameter("password")
 						.defaultSuccessUrl("/", false)
 						.failureHandler((req, res, ex) -> res.sendRedirect("/login?error"))
 						.permitAll()
 				)
 
 				/* =========================
-				   소셜 로그인(OAuth2/OIDC)
-				   - 동일한 /login 페이지에서 시작 (UI는 소셜 버튼 제공).
-				   - userInfoEndpoint().userService(...)  : OAuth2 공급자 (attributes 기반)
-					 userInfoEndpoint().oidcUserService(...): OIDC 공급자 (id_token/claims 기반)
-				   - 성공/실패 핸들러에서 후처리(마지막 로그인 시각 갱신, 최초 가입 분기 등) 가능.
-				   ========================= */
-				.oauth2Login(oauth -> oauth
-						.loginPage("/login")
-						.userInfoEndpoint(u -> u
-								.userService(socialOAuth2UserService(socialUserManager))     // OAuth2
-								.oidcUserService(socialOidcUserService(socialUserManager))   // OIDC
-						)
-						.defaultSuccessUrl("/", false)
-						.failureHandler((req, res, ex) -> res.sendRedirect("/login?oauth2_error"))
-				)
-
-				/* =========================
 				   로그아웃
-				   - 기본은 POST /logout (CSRF 보호 하).
-				   - logoutUrl("/logout"): 엔드포인트 지정(POST 권장).
-				   - deleteCookies("JSESSIONID"): 세션 쿠키 제거.
-				   - invalidateHttpSession(true): 서버측 세션 무효화.
-				   - GET 로그아웃 허용은 보안상 비권장(필요시 별도 RequestMatcher 지정).
+				   - 기본 POST /logout (CSRF 보호)
+				   - 세션 쿠키 삭제 + 서버 세션 무효화
+				   - GET 로그아웃은 보안상 권장하지 않음(필요시 별도 RequestMatcher)
 				   ========================= */
 				.logout(logout -> logout
 						.logoutUrl("/logout")
@@ -183,10 +150,9 @@ public class SecurityConfig {
 
 				/* =========================
 				   세션 관리
-				   - sessionFixation().migrateSession(): 세션 고정 공격 방지(인증 성공 시 새 세션 발급).
-				   - maximumSessions(1): 동시 로그인 1개로 제한.
-				   - maxSessionsPreventsLogin(false): 새 로그인 허용(이전 세션 무효화).
-					 (true로 바꾸면 기존 세션이 우선, 새 로그인 거부)
+				   - migrateSession: 세션 고정 공격 방지(인증 성공 시 새 세션 발급)
+				   - maximumSessions(1): 동시 로그인 1개 제한
+				   - maxSessionsPreventsLogin(false): 새 로그인 허용(이전 세션 무효화)
 				   ========================= */
 				.sessionManagement(sess -> sess
 						.sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::migrateSession)
@@ -196,13 +162,9 @@ public class SecurityConfig {
 
 				/* =========================
 				   예외 처리
-				   - 인증되지 않은 요청(401):
-					 * API(/api/**): JSON 본문과 함께 401 반환
-					 * 웹 페이지: /login으로 리다이렉트
-				   - 권한 부족(403):
-					 * API(/api/**): JSON 본문과 함께 403 반환
-					 * 웹 페이지: /403 페이지로 리다이렉트
-				   - 보안 예외는 필터 체인에서 발생 → @ControllerAdvice 범위 바깥임에 유의.
+				   - 401(미인증): API는 JSON, 웹은 /login으로 리다이렉트
+				   - 403(권한없음): API는 JSON, 웹은 /403 페이지
+				   - 보안 예외는 필터 체인에서 발생하므로 @ControllerAdvice 외부
 				   ========================= */
 				.exceptionHandling(ex -> ex
 						.authenticationEntryPoint((request, response, authEx) -> {
@@ -211,20 +173,19 @@ public class SecurityConfig {
 								response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 								response.setContentType("application/json;charset=UTF-8");
 								response.getWriter().write("""
-										    {"code":"UNAUTHORIZED","message":"로그인이 필요합니다."}
+										{"code":"UNAUTHORIZED","message":"로그인이 필요합니다."}
 										""");
 							} else {
-								// SavedRequest가 있으면 기본 동작으로 로그인 페이지로
 								response.sendRedirect("/login");
 							}
 						})
-						.accessDeniedHandler((request, response, exDenied) -> {
+						.accessDeniedHandler((request, response, denied) -> {
 							String uri = request.getRequestURI();
 							if (uri.startsWith("/api/")) {
 								response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 								response.setContentType("application/json;charset=UTF-8");
 								response.getWriter().write("""
-										    {"code":"FORBIDDEN","message":"접근 권한이 없습니다."}
+										{"code":"FORBIDDEN","message":"접근 권한이 없습니다."}
 										""");
 							} else {
 								response.sendRedirect("/403");
@@ -232,9 +193,27 @@ public class SecurityConfig {
 						})
 				);
 
+        /* =========================
+           소셜 로그인(OAuth2/OIDC)
+           - ClientRegistrationRepository(=등록 정보)가 있을 때만 구성
+           - userInfoEndpoint().userService(...)     : 일반 OAuth2
+             userInfoEndpoint().oidcUserService(...) : OIDC
+           - 성공/실패 후처리는 필요에 따라 핸들러로 대체 가능
+           ========================= */
+		if (clients != null) {
+			http.oauth2Login(o -> o
+					.loginPage("/login")
+					.userInfoEndpoint(u -> {
+						if (oauth2Svc != null) u.userService(oauth2Svc);
+						if (oidcSvc != null) u.oidcUserService(oidcSvc);
+					})
+					.defaultSuccessUrl("/", false)
+					.failureUrl("/login?oauth2_error")
+			);
+		}
+
 		// DaoAuthenticationProvider를 명시 등록
-		// - 내부적으로 UserDetailsService + PasswordEncoder 조합으로 폼 로그인 인증 수행
-		// - 아래 Bean에서 PasswordEncoder 연동을 보장하므로, http.userDetailsService(...) 중복 설정 불필요
+		// - 내부적으로 UserDetailsService + PasswordEncoder 기반으로 폼 로그인 인증 수행
 		http.authenticationProvider(daoAuthenticationProvider());
 
 		return http.build();
@@ -243,15 +222,14 @@ public class SecurityConfig {
 	/**
 	 * DaoAuthenticationProvider
 	 * <p>
-	 * - 이메일/비밀번호(폼 로그인) 인증 처리에 사용.
-	 * - UserDetailsService로 사용자 조회 → PasswordEncoder로 비밀번호 일치 여부 검증.
-	 * - 실패 시 BadCredentialsException 등 발생, 실패 핸들러로 전달.
+	 * - 폼 로그인 시 이메일/비밀번호 인증을 처리하는 Provider.
+	 * - UserDetailsService로 사용자 조회, PasswordEncoder로 비밀번호 검증.
 	 */
 	@Bean
 	public DaoAuthenticationProvider daoAuthenticationProvider() {
 		DaoAuthenticationProvider p = new DaoAuthenticationProvider();
 		p.setUserDetailsService(localUserDetailsManager);
-		p.setPasswordEncoder(passwordEncoder());
+		p.setPasswordEncoder(passwordEncoder);
 		return p;
 	}
 }

@@ -51,9 +51,9 @@ import java.util.Optional;
  *   <li>세션 슬림 전략: OIDC 토큰/클레임은 DefaultOidcUser에만 담고, AppUserPrincipal에는 최소 정보만</li>
  * </ul>
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class SocialUserManager {
 
 	private final AccountMapper accountMapper;   // 인증 전용 조회/집계/로그 업데이트 등
