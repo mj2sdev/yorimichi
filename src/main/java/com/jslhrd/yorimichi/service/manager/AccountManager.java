@@ -8,6 +8,7 @@ import com.jslhrd.yorimichi.mapper.AccountMapper;
 import com.jslhrd.yorimichi.mapper.RootMapper;
 import com.jslhrd.yorimichi.mapper.UserMapper;
 import com.jslhrd.yorimichi.service.AccountService;
+import com.jslhrd.yorimichi.util.EmailNormalizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,6 +38,7 @@ public class AccountManager implements AccountService {
 	private final RootMapper rootMapper;
 	private final UserMapper userMapper;
 	private final AccountMapper accountMapper;
+	private final EmailNormalizer emailNormalizer;
 	private final PasswordEncoder passwordEncoder;
 
 	/**
@@ -47,7 +49,7 @@ public class AccountManager implements AccountService {
 	@Override
 	public void signupLocal(UserDTO user) {
 
-		String normalizedEmail = normalizeEmail(user.getEmail());
+		String normalizedEmail = emailNormalizer.normalize(user.getEmail());
 		String rawPassword = user.getPassword();
 
 		if (userMapper.selectByEmail(normalizedEmail).isPresent()) {
@@ -104,7 +106,7 @@ public class AccountManager implements AccountService {
 
 
 		// 2) 이메일로 기존 유저 매칭 시도
-		String normalizedEmail = normalizeEmail(socialAccount.getProviderEmail());
+		String normalizedEmail = emailNormalizer.normalize(socialAccount.getProviderEmail());
 
 		Optional<UserDTO> findUser = userMapper.selectByEmail(normalizedEmail);
 		if (findUser.isPresent()) {
@@ -209,12 +211,5 @@ public class AccountManager implements AccountService {
 		// 토큰 검증 → 사용자/소셜 계정의 email_verified 반영
 		// accountMapper.verifyEmailByToken(token) ...
 		throw new UnsupportedOperationException("TODO: 이메일 인증 검증 구현");
-	}
-
-	private String normalizeEmail(String rawEmail) {
-		if (rawEmail == null) {
-			throw new IllegalArgumentException("email은 필수입니다.");
-		}
-		return rawEmail.trim().toLowerCase();
 	}
 }

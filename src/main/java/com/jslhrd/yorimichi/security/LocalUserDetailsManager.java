@@ -2,6 +2,7 @@ package com.jslhrd.yorimichi.security;
 
 import com.jslhrd.yorimichi.domain.UserDTO;
 import com.jslhrd.yorimichi.mapper.UserMapper;
+import com.jslhrd.yorimichi.util.EmailNormalizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,25 +36,7 @@ public class LocalUserDetailsManager implements UserDetailsService {
 	 * 인증 전용 최소 조회를 담당하는 매퍼(이메일 → UserDTO with password/role/state).
 	 */
 	private final UserMapper userMapper;
-
-	/**
-	 * 이메일 정규화 유틸.
-	 * <p>
-	 * 처리 순서:
-	 * 1) 앞뒤 공백 제거 (trim)
-	 * 2) 유니코드 정규화 NFKC (호환성 형태로 정규화; visually similar 문자 혼동 완화)
-	 * 3) 소문자화 (lower-case; DB 저장/조회 모두 소문자로 일관)
-	 * <p>
-	 * 주의:
-	 * - 널 체크는 호출부에서 선행합니다.
-	 */
-	private static String normalizeEmail(String rawEmail) {
-		// 공백 제거 → 유니코드 정규화(NFKC) → 소문자
-		String trimmed = rawEmail.trim();
-		// java.text.Normalizer: JDK 표준 유니코드 정규화 유틸
-		String nfkc = java.text.Normalizer.normalize(trimmed, java.text.Normalizer.Form.NFKC);
-		return nfkc.toLowerCase();
-	}
+	private final EmailNormalizer emailNormalizer;
 
 	/**
 	 * DaoAuthenticationProvider가 호출하는 진입점.
@@ -81,7 +64,7 @@ public class LocalUserDetailsManager implements UserDetailsService {
 		}
 
 		// 1) 이메일 정규화: trim + NFKC + lower
-		final String normEmail = normalizeEmail(email);
+		final String normEmail = emailNormalizer.normalize(email);
 
 		// 2) 이메일 기준으로 인증 최소 정보 조회
 		//  - userMapper.selectByEmail은 Optional<UserDTO>를 반환(단건 관례)
