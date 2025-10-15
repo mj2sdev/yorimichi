@@ -20,86 +20,82 @@
 
 <body>
   <!-- ===================== Hero ===================== -->
-<!-- Compact & Simple Hero (glass 제거 버전) -->
-<div class="hero-compact hero-spacious mb-4">
-  <div class="container">
-    <div class="hero-stack text-center"><!-- 중앙 고정 -->
-      <h1 class="hero-title-sm m-0">내 주변 맛집을 빠르게 찾아보세요</h1>
-      <p class="hero-sub-sm mt-2 mb-0">
-        카테고리·리뷰·정류장 피드를 한곳에서. 오늘의 인기 가게도 바로 확인!
-      </p>
+  <div class="hero-compact hero-spacious mb-4">
+    <div class="container">
+      <div class="hero-stack text-center">
+        <h1 class="hero-title-sm m-0">내 주변 맛집을 빠르게 찾아보세요</h1>
+        <p class="hero-sub-sm mt-2 mb-0">
+          카테고리·리뷰·정류장 피드를 한곳에서. 오늘의 인기 가게도 바로 확인!
+        </p>
 
-      <!-- KPIs -->
-<!-- Bento stats -->
-<div class="stats-bento">
-  <!-- 누적 리뷰 -->
-  <div class="stat-card">
-    <div class="stat-head">
-      <span class="stat-icon"><i class="bi bi-star-fill"></i></span>
-      <span>누적 리뷰</span>
+        <!-- ===== KPIs ===== -->
+        <div class="stats-bento">
+          <!-- 누적 리뷰 -->
+          <div class="stat-card">
+            <div class="stat-head">
+              <span class="stat-icon"><i class="bi bi-star-fill"></i></span>
+              <span>누적 리뷰</span>
+            </div>
+            <div>
+              <span class="stat-value countup"
+                    data-format="comma"
+                    th:attr="data-value=${stats != null ? stats.reviewCount : 12843}">0</span>
+              <span class="stat-unit">리뷰</span>
+            </div>
+          </div>
+
+          <!-- 등록 가게 -->
+          <div class="stat-card">
+            <div class="stat-head">
+              <span class="stat-icon"><i class="bi bi-shop"></i></span>
+              <span>등록 가게</span>
+            </div>
+            <div>
+              <span class="stat-value countup"
+                    data-format="comma"
+                    th:attr="data-value=${stats != null ? stats.storeCount : 8021}">0</span>
+              <span class="stat-unit">곳</span>
+            </div>
+          </div>
+
+          <!-- 오늘의 새 글 -->
+          <div class="stat-card">
+            <div class="stat-head">
+              <span class="stat-icon"><i class="bi bi-chat-dots"></i></span>
+              <span>오늘의 새 글</span>
+            </div>
+            <div>
+              <span class="stat-value countup"
+                    th:attr="data-value=${stats != null ? stats.todayComments : 57}">0</span>
+              <span class="stat-unit">개</span>
+            </div>
+          </div>
+        </div>
+        <!-- /KPIs -->
+      </div>
     </div>
-    <div>
-      <span class="stat-value"
-            th:attr="data-value=${stats != null ? stats.reviewCount : 12843}">12843</span>
-      <span class="stat-unit">리뷰</span>
+
+    <!-- Wave Divider -->
+    <div class="hero-wave">
+      <svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
+        <path fill="white" d="M0,32 C240,72 480,-8 720,12 C960,32 1200,76 1440,20 L1440,60 L0,60 Z"></path>
+      </svg>
     </div>
   </div>
-
-  <!-- 등록 가게 -->
-  <div class="stat-card">
-    <div class="stat-head">
-      <span class="stat-icon"><i class="bi bi-shop"></i></span>
-      <span>등록 가게</span>
-    </div>
-    <div>
-      <span class="stat-value"
-            th:attr="data-value=${stats != null ? stats.storeCount : 8021}">8021</span>
-      <span class="stat-unit">곳</span>
-    </div>
-  </div>
-
-  <!-- 오늘의 댓글 (또는 새 글) -->
-  <div class="stat-card">
-    <div class="stat-head">
-      <span class="stat-icon"><i class="bi bi-chat-dots"></i></span>
-      <span>오늘의 새 글</span>
-    </div>
-    <div>
-      <span class="stat-value"
-            th:attr="data-value=${stats != null ? stats.todayComments : 57}">57</span>
-      <span class="stat-unit">개</span>
-    </div>
-  </div>
-</div>
-
-    </div>
-  </div>
-
-  <!-- Wave Divider (유지) -->
-  <div class="hero-wave">
-    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
-      <path fill="white" d="M0,32 C240,72 480,-8 720,12 C960,32 1200,76 1440,20 L1440,60 L0,60 Z"></path>
-    </svg>
-  </div>
-</div>
-
 
   <!-- ===================== 상단 3열: 카테고리 / 추천 / 미니정류장 ===================== -->
-  <!-- ★ 세 칸 동일 높이 감(align-items-stretch) -->
   <div class="container">
-    <div class="row g-3 align-items-stretch row-tight"><!-- ★ -->
-
+    <div class="row g-3 align-items-stretch row-tight">
       <!-- 좌: 카테고리 -->
-      <!-- ★ equal-rail 로 동일 높이 / rail-scroll 로 내부 스크롤 -->
       <div class="col-12 col-lg-4">
-        <div class="card cat-card p-3 equal-rail rail-compact"><!-- ★ equal-rail -->
+        <div class="card cat-card p-3 equal-rail rail-compact">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <h5 class="m-0 fw-bold cat-title">카테고리로 이동</h5>
             <a href="/category/list" class="small cat-link">전체보기</a>
           </div>
 
           <div class="d-grid gap-2 rail-scroll"
-               th:if="${popularCategories != null and !#lists.isEmpty(popularCategories)}"><!-- ★ rail-scroll -->
+               th:if="${popularCategories != null and !#lists.isEmpty(popularCategories)}">
             <a th:each="c : ${popularCategories}"
                th:href="@{/store/list(categoryId=${c.id})}"
                class="cat-btn">
@@ -123,9 +119,8 @@
       </div>
 
       <!-- 중: 추천(Featured) -->
-      <!-- ★ equal-rail 로 동일 높이, 이미지 높이는 CSS에서 비율로 제어 -->
       <div class="col-12 col-lg-4">
-        <div class="featured p-3 equal-rail rail-compact"><!-- ★ equal-rail -->
+        <div class="featured p-3 equal-rail rail-compact">
           <a th:if="${recommendedStoreList != null and !#lists.isEmpty(recommendedStoreList)}"
              th:href="@{/store/detail(id=${recommendedStoreList[0].id})}"
              class="d-block text-decoration-none">
@@ -154,19 +149,17 @@
       </div>
 
       <!-- 우: 미니 정류장 -->
-      <!-- ★ equal-rail 로 동일 높이 / rail-scroll 로 내부 스크롤 -->
       <div class="col-12 col-lg-4">
-        <div class="card-ym p-3 mini-station equal-rail rail-compact"><!-- ★ equal-rail -->
+        <div class="card-ym p-3 mini-station equal-rail rail-compact">
           <div class="d-flex justify-content-between align-items-center mb-2">
             <div class="fw-bold">정류장에서 더 많은 사람과 만나요</div>
             <a href="/station" class="btn btn-sm btn-ymprimary">전체보기</a>
           </div>
-          <div id="mini-station" class="list-group list-group-flush rail-scroll"><!-- ★ rail-scroll -->
+          <div id="mini-station" class="list-group list-group-flush rail-scroll">
             <!-- feed.js 가 채움 -->
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -178,7 +171,6 @@
     </div>
 
     <div class="store-grid">
-      <!-- 서버에서 미리 그려줄 수 있을 때 (없어도 JS가 picsum으로 채움) -->
       <th:block th:if="${recommendedStoreList != null and !#lists.isEmpty(recommendedStoreList)}"
                 th:each="store, iter : ${recommendedStoreList}">
         <a th:href="@{/store/detail(id=${store.id})}" class="text-decoration-none">
@@ -187,7 +179,6 @@
                  th:if="${imageUrls != null and !#lists.isEmpty(imageUrls)}"
                  th:src="${imageUrls[iter.index % imageUrls.size()]}" alt="store image"/>
 
-            <!-- 이미지 배열 없으면 lazy 로드 + 더미 -->
             <img class="thumb lazy"
                  th:if="${imageUrls == null or #lists.isEmpty(imageUrls)}"
                  data-src="https://picsum.photos/seed/yorimichi__${iter.index}/600/400"
@@ -207,5 +198,66 @@
       </th:block>
     </div>
   </div>
+
+  <!-- ===== CountUp (히어로 KPI 숫자 애니메이션) ===== -->
+  <script>
+  (() => {
+    const DURATION = 1200;           // 전체 재생시간(ms)
+    const STAGGER  = 120;            // 요소 사이 지연(ms)
+    const EASE = t => 1 - Math.pow(1 - t, 3); // easeOutCubic
+
+    const format = (n, el) => {
+      if (el?.dataset.format === 'comma') return n.toLocaleString();
+      return String(n);
+    };
+
+    function runCount(el, delay = 0) {
+      const target = Number(el.dataset.value || el.textContent || 0);
+      if (!isFinite(target)) return;
+
+      const start = performance.now() + delay;
+      const from  = 0;
+      const dec   = Math.pow(10, (el.dataset.decimals|0));
+      const duration = Number(el.dataset.duration || DURATION);
+
+      function tick(now) {
+        if (now < start) { requestAnimationFrame(tick); return; }
+        const t = Math.min(1, (now - start) / duration);
+        const eased = EASE(t);
+        const current = Math.round((from + (target - from) * eased) * dec) / dec;
+        el.textContent = format(current, el);
+        if (t < 1) requestAnimationFrame(tick);
+        else el.textContent = format(target, el);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function boot() {
+      const els = Array.from(document.querySelectorAll('.countup'))
+                        .filter(el => !el.dataset.counted);
+      if (els.length === 0) return;
+
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const idx = els.indexOf(entry.target);
+              runCount(entry.target, idx * STAGGER);
+              entry.target.dataset.counted = '1';
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.6 });
+        els.forEach(el => io.observe(el));
+      } else {
+        els.forEach((el, i) => runCount(el, i * STAGGER));
+      }
+    }
+
+    document.readyState === 'loading'
+      ? document.addEventListener('DOMContentLoaded', boot)
+      : boot();
+  })();
+  </script>
 </body>
 </html>
