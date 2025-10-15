@@ -12,7 +12,7 @@ import com.jslhrd.yorimichi.service.GeminiService;
 
 import lombok.RequiredArgsConstructor;
 
-// @Service
+@Service
 @RequiredArgsConstructor
 public class GeminiManager implements GeminiService {
 
@@ -45,7 +45,7 @@ public class GeminiManager implements GeminiService {
 	@Override
 	public List<String> findStoreNamesByRegion(String region, Integer count) {
 		String prompt = String.format(
-			"(%s)지역의 맛집을 %d개 찾아줄래?",
+			"(%s)지역의 맛집을 %d개 찾아줘, 예를들어 [가게명, 그가게위치동] 이런식으로 형식을 맞춰서",
 			region,
 			count
 		);

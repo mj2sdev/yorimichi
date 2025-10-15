@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 /**
  * 리뷰 DTO.
  *
@@ -59,6 +61,11 @@ public class ReviewDTO extends RootDTO implements FeedDTO {
 	 * 리뷰 이미지 목록
 	 */
 	private List<ImageDTO> images;
+
+	/**
+	 * front에서 등록하려고 하는 multipartFile 형식의 이미지 리스트
+	 */
+	private List<MultipartFile> uploadImages;
 
 
 	public ReviewDTO() {

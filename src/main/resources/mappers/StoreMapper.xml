@@ -21,7 +21,7 @@
         ORDER BY r.created_at DESC
     </select>
 
-    <select id="selectById" parameterType="long" resultMap="StoreDTO">
+    <select id="selectById" parameterType="long" resultType="StoreDTO">
         SELECT s.id,
                s.address_id,
                s.name,

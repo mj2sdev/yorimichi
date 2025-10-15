@@ -6,12 +6,12 @@
 .dvh { height: 100dvh; }
 
 .bg-wallpaper {
-	background: url("/image/food_wallpaper.jpg") no-repeat;
-	background-size: cover;
+    background: url("/images/food_wallpaper.jpg") no-repeat;
+    background-size: cover;
 }
 
 .divider {
-	text-align: center;
+    text-align: center;
 }
 .divider::after {
 	content: '';
@@ -630,3 +630,21 @@ footer .stack svg{
 
 /* 링크 호버 */
 footer a.dev-item:hover{ opacity: .85; }
+	background: blue;
+}
+
+.scroll-smooth {
+	scroll-behavior: smooth;
+}
+
+.fs-075 {
+	font-size: .75rem;
+}
+
+.fs-05 {
+	font-size: .5rem;
+}
+
+.fs-0 {
+	font-size: 0;
+}
