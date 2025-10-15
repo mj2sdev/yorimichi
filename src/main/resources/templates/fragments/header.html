@@ -1,59 +1,97 @@
 <header class="border-bottom shadow-sm sticky-top bg-ymwhite">
-	<div class="container">
-		<div class="row justify-content-between align-items-center py-4">
-			<!-- 로고 -->
-			<div class="col-12 col-lg">
-				<a
-					th:href="@{/}"
-					th:text="Yorimichi"
-					class="me-4 text-decoration-none fs-2 fw-bold text-ymprimary"></a>
-			</div>
+  <div class="container position-relative"><!-- 중앙 고정 검색바 배치용 -->
+    <div class="row justify-content-between align-items-center py-4">
 
-			<!-- 검색  -->
-			<div class="col-12 col-lg">
-				<form action="/search">
-					<div class="input-group">
-						<input name="keyword" placeholder="검색어 입력" class="form-control rounded-start-pill" >
-						<button type="submit" class="btn btn-ymprimary rounded-end-circle">
-							<i class="bi bi-search"></i>
-						</button>
-					</div>
-				</form>
-			</div>
+      <!-- 로고 -->
+      <div class="col-12 col-lg">
+        <a th:href="@{/}" th:text="Yorimichi"
+           class="me-4 text-decoration-none fs-2 fw-bold text-ymprimary"></a>
+      </div>
 
-			<!-- 네비게이션 -->
-			<div class="col-12 col-lg">
-				<div class="d-flex justify-content-around">
-					<button
-						data-bs-toggle="offcanvas"
-						data-bs-target="#notification"
-						class="btn btn-ghost position-relative"
-						type="button">
-						<span class="position-absolute top-0 start-50 badge rounded-pill bg-danger">99+</span>
-						<i class="bi bi-lightbulb fs-3"></i>
-						<div>알림</div>
-					</button>
+      <!-- 가운데 컬럼은 비움 (검색은 아래 .header-center로 절대 배치) -->
+      <div class="col-12 col-lg"></div>
 
-					<a href="/station" class="btn btn-ghost">
-						<i class="bi bi-bus-front fs-3"></i>
-						<div>정류장</div>
-					</a>
+      <!-- 네비게이션 -->
+      <div class="col-12 col-lg">
+        <div class="d-flex justify-content-around">
+          <button
+            data-bs-toggle="offcanvas"
+            data-bs-target="#notification"
+            class="btn btn-ghost position-relative"
+            type="button">
+            <span class="position-absolute top-0 start-50 badge rounded-pill bg-danger">99+</span>
+            <i class="bi bi-lightbulb fs-3"></i>
+            <div>알림</div>
+          </button>
 
-					<!-- 로그인 필요 시  -->
-					<a href="/login" class="btn btn-ghost">
-						<i class="bi bi-door-open fs-3"></i>
-						<div>로그인</div>
-					</a>
+          <a href="/station" class="btn btn-ghost">
+            <i class="bi bi-bus-front fs-3"></i>
+            <div>정류장</div>
+          </a>
 
-					<!-- 로그인 된 경우 -->
-					<a href="/mypage" class="btn btn-ghost" hidden>
-						<i class="bi bi-person fs-3"></i>
-						<div>내정보</div>
-					</a>
+          <!-- 로그인 필요 시  -->
+          <a href="/login" class="btn btn-ghost">
+            <i class="bi bi-door-open fs-3"></i>
+            <div>로그인</div>
+          </a>
 
-				</div>
-				
-			</div>
-		</div>
-	</div>
+          <!-- 로그인 된 경우 -->
+          <a href="/mypage" class="btn btn-ghost" hidden>
+            <i class="bi bi-person fs-3"></i>
+            <div>내정보</div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== 중앙 고정 검색바 (정확히 가운데, 스크립트 없이 모달 오픈) ===== -->
+    <div class="header-center">
+      <form action="/search" class="search-bar" role="search">
+        <div class="search-shell">
+          <i class="bi bi-search search-icon" aria-hidden="true"></i>
+          <input id="headerSearchInput"
+                 type="text"
+                 name="keyword"
+                 placeholder="검색어 입력"
+                 class="form-control-plaintext search-input"
+                 autocomplete="off"
+                 data-bs-toggle="modal" data-bs-target="#searchModal" />
+          <button type="button"
+                  id="button-search"
+                  class="search-btn"
+                  data-bs-toggle="modal" data-bs-target="#searchModal">
+            검색
+          </button>
+        </div>
+      </form>
+    </div>
+    <!-- ====================================================== -->
+  </div>
 </header>
+
+<!-- ===================== Search Modal ===================== -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 720px;">
+    <div class="modal-content border-0 shadow">
+      <div class="modal-body p-3 p-sm-4">
+        <!-- 상단 검색 인풋 -->
+        <div class="input-group mb-3">
+          <span class="input-group-text bg-white border-1"><i class="bi bi-search"></i></span>
+          <input id="modalSearchInput" type="search" class="form-control"
+                 placeholder="가게 이름, 지역, 카테고리로 검색" autocomplete="off" autofocus>
+        </div>
+
+        <!-- 추천/연관 결과 -->
+        <div id="searchSuggest" class="list-group"><!-- JS가 채움 --></div>
+
+        <!-- 비어있을 때 안내 -->
+        <div id="searchEmpty" class="text-muted small py-2" style="display:none;">
+          연관 결과가 없어요. 다른 키워드로 검색해보세요.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 외부 스크립트만 로드 (inline 스크립트 없음) ===== -->
+<script defer src="/js/search-modal.js?v=20251014d"></script>
