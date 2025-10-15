@@ -37,8 +37,8 @@ import java.util.Map;
  */
 @Getter
 @Builder
-@EqualsAndHashCode(of = "userId")
 @ToString(exclude = "password")
+@EqualsAndHashCode(of = "userId")
 public final class AppUserPrincipal implements UserDetails, OAuth2User, Serializable {
 
 	@Serial
@@ -47,7 +47,6 @@ public final class AppUserPrincipal implements UserDetails, OAuth2User, Serializ
     /* =========================
        핵심 식별/인증 정보 (필수)
        ========================= */
-
 	/**
 	 * 애플리케이션 사용자 고유 식별자 = user.id (= root.id)
 	 */
@@ -116,7 +115,7 @@ public final class AppUserPrincipal implements UserDetails, OAuth2User, Serializ
 
 		return AppUserPrincipal.builder()
 				.userId(user.getId())
-				.email(normEmail(user.getEmail()))
+				.email(user.getEmail())
 				.password(user.getPassword()) // 반드시 해시(BCrypt 등)
 				.authorities(toAuthorities(user.getRole())) // "ROLE_USER" 등
 				.enabled(user.isEnabled())
@@ -133,7 +132,7 @@ public final class AppUserPrincipal implements UserDetails, OAuth2User, Serializ
 
 		return AppUserPrincipal.builder()
 				.userId(user.getId())
-				.email(normEmail(user.getEmail()))
+				.email(user.getEmail())
 				.password(null) // 소셜은 비번 검증 안 함 → 세션에 보관 불필요
 				.authorities(toAuthorities(user.getRole())) // "ROLE_USER" 등
 				.enabled(user.isEnabled())
@@ -146,10 +145,6 @@ public final class AppUserPrincipal implements UserDetails, OAuth2User, Serializ
     /* =========================
        OAuth2User 구현 (슬림)
        ========================= */
-
-	private static String normEmail(String email) {
-		return (email == null) ? null : email.trim().toLowerCase();
-	}
 
 	private static List<GrantedAuthority> toAuthorities(Role role) {
 		// 권한(Role) 결정: null 방어 후 기본값 USER

@@ -71,6 +71,6 @@ public class UserController {
 	@ResponseBody
 	@PutMapping("/mypage")
 	public void updateMyDetail(Principal principal, @ModelAttribute UserDTO user) {
-		userService.update(user);
+		userService.update(null, user);
 	}
 }

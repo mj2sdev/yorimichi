@@ -10,10 +10,7 @@ import java.util.List;
  * Spring Security의 UserDetails를 확장하여 인증/인가에 사용됩니다.
  *
  * @author mj2sdev
- * @version 1.1 {@code UserDetailsService} 추가
- * <p>
- * 유저 디테일서비스 인터페이스 확장, 그에따른 findByEmail 삭제
- * -> {@code UserDetailsService} 인터페이스 내부에 이미 loadUserByUsername(String username) 이 존재
+ * @version 1.2 {@code UserDetailsService} 제거. LocalUserDetailsManager 로 이관.
  */
 public interface UserService {
 

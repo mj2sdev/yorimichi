@@ -6,6 +6,7 @@ import com.jslhrd.yorimichi.enums.Provider;
 import com.jslhrd.yorimichi.enums.Role;
 import com.jslhrd.yorimichi.mapper.AccountMapper;
 import com.jslhrd.yorimichi.service.AccountService;
+import com.jslhrd.yorimichi.util.EmailNormalizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -58,14 +59,7 @@ public class SocialUserManager {
 
 	private final AccountMapper accountMapper;   // 인증 전용 조회/집계/로그 업데이트 등
 	private final AccountService accountService; // 최초 소셜 로그인 시 link/signup 처리(트랜잭션)
-
-	/**
-	 * 이메일을 비교·검색 안정성을 위해 소문자/trim으로 정규화.
-	 * 외부 공급자에서 대소문자·공백이 섞여 들어오는 케이스를 대비합니다.
-	 */
-	private static String normEmail(String email) {
-		return email == null ? null : email.trim().toLowerCase();
-	}
+	private final EmailNormalizer emailNormalizer;
 
 	// ==========================================================
 	// OAuth2 전용 (예: GitHub, Kakao, Naver 등 - OIDC 아닌 공급자)
@@ -97,7 +91,7 @@ public class SocialUserManager {
 
 		// 3) 공급자별 키 상이 → 최대공약수 기반 폴백(sub or id)
 		String providerUserId = (String) (attr.getOrDefault("sub", attr.get("id")));
-		String email = normEmail((String) attr.get("email"));                       // 미제공 가능
+		String email = emailNormalizer.normalize((String) attr.get("email"));                       // 미제공 가능
 		String name = (String) (attr.getOrDefault("name", attr.get("login")));     // GitHub: login
 		if (name != null) name = name.trim();
 		String picture = (String) (attr.getOrDefault("picture", attr.get("avatar_url")));
@@ -151,7 +145,7 @@ public class SocialUserManager {
 
 		Map<String, Object> claims = oidc.getClaims();
 		String sub = oidc.getSubject();                          // 필수
-		String email = normEmail((String) claims.get("email"));  // 미제공 가능
+		String email = emailNormalizer.normalize((String) claims.get("email"));  // 미제공 가능
 		Boolean emailVerified = (Boolean) claims.get("email_verified");
 		boolean verified = emailVerified != null && emailVerified;
 		String name = (String) claims.get("name");               // 미제공 가능
