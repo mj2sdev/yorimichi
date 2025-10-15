@@ -244,7 +244,7 @@ CREATE TABLE user (
     nickname          VARCHAR(20)  NOT NULL,
     description       TEXT,
     gender            ENUM('M', 'F'),
-    age               INT,
+    year              TIMESTAMP    NOT NULL,
     email_verified    BOOLEAN      NOT NULL DEFAULT FALSE,
     enabled           BOOLEAN      NOT NULL DEFAULT FALSE,
     show_reviews      BOOLEAN      NOT NULL DEFAULT FALSE,

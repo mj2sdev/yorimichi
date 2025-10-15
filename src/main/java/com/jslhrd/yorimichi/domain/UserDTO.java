@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +58,7 @@ public class UserDTO extends RootDTO implements Serializable {
 
 	private String gender;
 
-	private Integer age;
+	private LocalDate year;
 
 	private boolean emailVerified;
 
