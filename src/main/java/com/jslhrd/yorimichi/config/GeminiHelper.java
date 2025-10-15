@@ -5,6 +5,8 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
 import com.google.common.reflect.TypeToken;
@@ -16,17 +18,22 @@ import com.jslhrd.yorimichi.domain.StoreDTO;
 
 import lombok.RequiredArgsConstructor;
 
-// @Component
+@Component
+@DependsOn("geminiConfig")
 @RequiredArgsConstructor
 public class GeminiHelper {
-
-	private final GeminiConfig geminiConfig;
 
 	private final Client client;
 
 	private final Gson gson;
 
 	public final Integer MAX_LENGTH = 20;
+
+	@Value("${gemini.mime-type}")
+	private String mimeType;
+
+	@Value("${gemini.model}")
+	private String model;
 
 	private Schema simpleListStringSchema() {
 		Schema stringSchema = Schema.builder()
@@ -57,14 +64,14 @@ public class GeminiHelper {
 
 	private GenerateContentConfig storeDtoConfig() {
 		return GenerateContentConfig.builder()
-			.responseMimeType(geminiConfig.getJsonMimeType())
+			.responseMimeType(mimeType)
 			.responseSchema(storeDtoSchema())
 			.build();
 	}
 
 	private GenerateContentConfig simpleListStringConfig() {
 		return GenerateContentConfig.builder()
-			.responseMimeType(geminiConfig.getJsonMimeType())
+			.responseMimeType(mimeType)
 			.responseSchema(simpleListStringSchema())
 			.build();
 	}
@@ -79,7 +86,7 @@ public class GeminiHelper {
 
 	public StoreDTO storePrompt(String prompt) {
 		String jsonData = client.models.generateContent(
-			geminiConfig.getModel(),
+			model,
 			prompt,
 			storeDtoConfig()
 		).text();
@@ -89,7 +96,7 @@ public class GeminiHelper {
 
 	public List<String> listStringPrompt(String prompt) {
 		String jsonData = client.models.generateContent(
-			geminiConfig.getModel(),
+			model,
 			prompt,
 			simpleListStringConfig()
 		).text();
@@ -99,7 +106,7 @@ public class GeminiHelper {
 
 	public String simplePrompt(String prompt) {
 		return client.models.generateContent(
-			geminiConfig.getModel(), 
+			model,
 			prompt, 
 			null
 		).text();

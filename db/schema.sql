@@ -429,6 +429,17 @@ CREATE TABLE notification (
     CONSTRAINT fk_notification_target_user FOREIGN KEY (target_user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
+CREATE TABLE api_key (
+    id          INT           NOT NULL AUTO_INCREMENT COMMENT 'Primary Key',
+    `key`       VARCHAR(1000) NOT NULL,
+    name        VARCHAR(255)  NOT NULL,
+    owner       VARCHAR(255)  NOT NULL,
+    description VARCHAR(255),
+    createdAt   DATETIME      DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT pk_api_key PRIMARY KEY (id)
+) COMMENT 'api key 보관용 테이블 입니다.';
+
 
 /* =========================
    주소 / 지역
