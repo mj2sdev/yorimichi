@@ -246,7 +246,6 @@ CREATE TABLE user (
     gender            ENUM('M', 'F'),
     year              INT     NOT NULL,
     email_verified    BOOLEAN      NOT NULL DEFAULT FALSE,
-    enabled           BOOLEAN      NOT NULL DEFAULT FALSE,
     show_reviews      BOOLEAN      NOT NULL DEFAULT FALSE,
     show_likes        BOOLEAN      NOT NULL DEFAULT FALSE,
     show_bookmarks    BOOLEAN      NOT NULL DEFAULT FALSE,

@@ -61,8 +61,6 @@ public class UserDTO extends RootDTO implements Serializable {
 
 	private boolean emailVerified;
 
-	private boolean enabled;
-
 	private boolean showReviews;
 
 	private boolean showLikes;
