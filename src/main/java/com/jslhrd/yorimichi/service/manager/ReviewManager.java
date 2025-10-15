@@ -99,6 +99,9 @@ public class ReviewManager implements ReviewService {
 			throw new ForbiddenException("리뷰 삭제 권한이 없습니다.");
 		}
 
+		log.info("Review: soft deleted reviewId={}", reviewId);
+	}
+
 	private void assertActiveUser(Long userId) {
 		boolean exists = userMapper.existsActive(userId);
 		if (!exists) {
@@ -118,11 +121,5 @@ public class ReviewManager implements ReviewService {
 		if (!exists) {
 			throw new ReviewNotFoundException(reviewId);
 		}
-	}
-
-	@Override
-	public List<ReviewDTO> findAllByUserId(Long userId) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'findAllByUserId'");
 	}
 }
