@@ -1,134 +1,211 @@
 <!DOCTYPE html>
-<html th:replace="~{layout/main :: params(~{::head/content()},~{::body/content()})}" xmlns:th="http://www.thymeleaf.org">
-
+<html
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{layout/main :: params(~{::head/content()},~{::body/content()})}"
+>
 <head>
-	<title> Yorimichi Project </title>
+  <title>Yorimichi Project</title>
 
-<!--작성해야 하는 스크립트 리스트
-2.피드를 불러와야함.(비동기, 자동(타이머)) 피드에 같이먹기 리스트랑 리뷰 리스트를 동시에 담을 수 있는 DTO가 필요한 것 같음.
-아니면, 따로따로 가져와서 객체배열로 합치고 각 객체의 작성시간을 비교해다가 정렬해서 화면에 띄워야 함.
--->
-<script defer src="/js/index/feed.js"></script>
-<script defer src="/js/index/storelist.js"></script> <!--인기 맛집 리스트 불러오기.js 비동기, 자동(타이머)&&수동(버튼)) 수동 만들어야함.-->
+  <!-- 인덱스 전용 스크립트 -->
+  <script defer src="/js/index/feed.js"></script>
+  <script defer src="/js/index/storelist.js"></script>
+
+  <!-- (옵션) 서버가 내려주는 이미지 배열 주입 -->
+  <script th:inline="javascript">
+  /*<![CDATA[*/
+  window.__IMAGE_URLS__ = /*[[${imageUrls}]]*/ [];
+  /*]]>*/
+  </script>
 </head>
 
 <body>
-	<div class="bg-ymprimary py-5 bg-gradient">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col text-center">
-					<div class="fw-bold pb-2 text-ymwhite" style="font-size:60px;">내 주변 맛집을 찾아보세요</div>
-					<div class="fs-4 text-ymwhite">다양한 카테고리와 리뷰로 완벽한 식사 장소를 발견하세요</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- 클릭시 /store/list로 이동시키기. -->
-	<div class= container>
-		<div class="row">
-			<div class="col-4">
-				<div class="row">
-					<div class="col">
-						<button class="btn border border-1" type="button" >
-							더 다양한 즐거움을 발견해요
-						</button>
-					</div>	
-				</div>
-				<th:block th:each="category : ${#numbers.sequence(1,3)}">
-				<div class="row py-3">
-					<div class="col-4">
-						<a th:href="@{/store/list}" class="btn btn-outline-secondary rounded-5 border-3 text-center">
-							<i class="bi bi-0-circle" style="font-size: 2em; color: #007bff;"></i>
-							<div class="fs-4 fw-bold">와쇼쿠</div>
-						</a>
-					</div>
-				</div>
-				</th:block>
-			</div>
-			<!-- 누르면 버튼들을 애니메이션과 함께 치워버리고 하단에 있는 인기 맛집 리스트를 보이게 바꾸고 애니메이션으로 다시 보이게 한다.-->
-			<!-- 스크롤이 아닌 버튼식으로 해야하는 게 좋을 거 같은 이유. 최상단에서 살짝 스크롤 했다고 인기 맛집으로 넘어가버릴 거 같음. -->
-			<div class="col-4 p-3">
-				<div class="row px-3 border border-2">
-					<div class="col">
-						지금 인기 있는 가게를 찾아가요
-					</div>
-				</div>
-				<div class="bg-ymwhite p-4 my-3 border rounded-5 border-1">
-					<a th:href="@{/store/detail}" class="text-start text-decoration-none text-ymsecondary">
-						<div class="row">
-							<div class="col">
-								<img src="" class="card-img-top my-3" alt="...">
-							</div>
-						</div>
-						<div class="row">
-							<div class="col fs-3 fw-bold my-3 text-ymprimary" th:text="가게이름">가게이름요청</div>
-						</div>
-						<div class="row">
-							<div class="fs-6 my-3" th:text="분류">분류요청</div>
-						</div>
-						<div class="row">
-							<div class="fs-6 my-3" th:text="위치">위치요청</div>
-						</div>
-						<div class="row my-3 justify-content-start">
-							<div class="col-2">별점</div>
-							<div class="col-4">
-								<th:block th:each="item : ${#numbers.sequence(1,5)}">
-									<i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
-								</th:block>
-							</div>
-							<div class="col-3">평가수</div>
-							<div class="col-3">1234</div>
-						</div>
-					</a>
-				</div>
-			</div>
+  <!-- ===================== Hero ===================== -->
+<!-- Compact & Simple Hero (glass 제거 버전) -->
+<div class="hero-compact hero-spacious mb-4">
+  <div class="container">
+    <div class="hero-stack text-center"><!-- 중앙 고정 -->
+      <h1 class="hero-title-sm m-0">내 주변 맛집을 빠르게 찾아보세요</h1>
+      <p class="hero-sub-sm mt-2 mb-0">
+        카테고리·리뷰·정류장 피드를 한곳에서. 오늘의 인기 가게도 바로 확인!
+      </p>
 
-			<div class="col-4">
-				<div class="row">
-					<div class="col">
-						<a th:href="@{/station/list}" class="text-decoration-none fs-4 text-ymsecondary">
-						<ul class="list-unstyled text-center">
-							<li>
-								<i class="bi bi-bus-front" style="font-size: 1em;"></i>
-							</li>
-							<li>
-								<span style="font-size: 15px;">정류장에서 더 많은 사람과 만나요</span>
-							</li>
-						</ul>
-					</a>
-					</div>
-				</div>
-				<!--일정 시간마다 피드가 최신 것으로 갱신된다. 누르면 정류장으로 이동시킴.-->
+      <!-- KPIs -->
+<!-- Bento stats -->
+<div class="stats-bento">
+  <!-- 누적 리뷰 -->
+  <div class="stat-card">
+    <div class="stat-head">
+      <span class="stat-icon"><i class="bi bi-star-fill"></i></span>
+      <span>누적 리뷰</span>
+    </div>
+    <div>
+      <span class="stat-value"
+            th:attr="data-value=${stats != null ? stats.reviewCount : 12843}">12843</span>
+      <span class="stat-unit">리뷰</span>
+    </div>
+  </div>
 
-				<div class="row">
-					<div class="col feed">
-						<button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
-							<span class="feed-address">위치</span>
-							<span class="feed-store-name">가게명</span>
-							<span class="feed-store-category">카테고리</span>
-							<span class="feed-category">같이먹기</span>
-						</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-			
-	<div class="bg-ymwhite py-5">
-		<div class="container">
-			<!-- 인기 맛집 리스트는 일정 시간마다 비동기로 새로고침 된다-->
-			<div class="row">
-				<div class="col text-center">
-					<h1 th:text="인기맛집">인기 맛집</h1> 
-				</div>
-			</div>
-			<!-- <div class="row flexbox row-cols-3 g-4"> -->
-			<div class="storeList gap-4" style="display:grid; grid-template-columns: repeat(3,1fr);">
-				
-			</div>
-		</div>
-	</div>
-	<th:block th:replace="~{ fragments/index/storelist :: template }"/>
-	<th:block th:replace="~{ fragments/index/feed :: template }"/>	
+  <!-- 등록 가게 -->
+  <div class="stat-card">
+    <div class="stat-head">
+      <span class="stat-icon"><i class="bi bi-shop"></i></span>
+      <span>등록 가게</span>
+    </div>
+    <div>
+      <span class="stat-value"
+            th:attr="data-value=${stats != null ? stats.storeCount : 8021}">8021</span>
+      <span class="stat-unit">곳</span>
+    </div>
+  </div>
+
+  <!-- 오늘의 댓글 (또는 새 글) -->
+  <div class="stat-card">
+    <div class="stat-head">
+      <span class="stat-icon"><i class="bi bi-chat-dots"></i></span>
+      <span>오늘의 새 글</span>
+    </div>
+    <div>
+      <span class="stat-value"
+            th:attr="data-value=${stats != null ? stats.todayComments : 57}">57</span>
+      <span class="stat-unit">개</span>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+  <!-- Wave Divider (유지) -->
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
+      <path fill="white" d="M0,32 C240,72 480,-8 720,12 C960,32 1200,76 1440,20 L1440,60 L0,60 Z"></path>
+    </svg>
+  </div>
+</div>
+
+
+  <!-- ===================== 상단 3열: 카테고리 / 추천 / 미니정류장 ===================== -->
+  <!-- ★ 세 칸 동일 높이 감(align-items-stretch) -->
+  <div class="container">
+    <div class="row g-3 align-items-stretch row-tight"><!-- ★ -->
+
+      <!-- 좌: 카테고리 -->
+      <!-- ★ equal-rail 로 동일 높이 / rail-scroll 로 내부 스크롤 -->
+      <div class="col-12 col-lg-4">
+        <div class="card cat-card p-3 equal-rail rail-compact"><!-- ★ equal-rail -->
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="m-0 fw-bold cat-title">카테고리로 이동</h5>
+            <a href="/category/list" class="small cat-link">전체보기</a>
+          </div>
+
+          <div class="d-grid gap-2 rail-scroll"
+               th:if="${popularCategories != null and !#lists.isEmpty(popularCategories)}"><!-- ★ rail-scroll -->
+            <a th:each="c : ${popularCategories}"
+               th:href="@{/store/list(categoryId=${c.id})}"
+               class="cat-btn">
+              <span>•</span>
+              <span class="fw-normal" th:text="${c.name}">카테고리명</span>
+              <i class="bi bi-chevron-right"></i>
+            </a>
+          </div>
+
+          <div class="text-muted small"
+               th:if="${popularCategories == null or #lists.isEmpty(popularCategories)}">
+            아직 등록된 카테고리가 없어요.
+          </div>
+
+          <hr class="my-3">
+
+          <a href="/store/list" class="btn btn-ymprimary w-100">
+            더 다양한 즐거움을 발견해요
+          </a>
+        </div>
+      </div>
+
+      <!-- 중: 추천(Featured) -->
+      <!-- ★ equal-rail 로 동일 높이, 이미지 높이는 CSS에서 비율로 제어 -->
+      <div class="col-12 col-lg-4">
+        <div class="featured p-3 equal-rail rail-compact"><!-- ★ equal-rail -->
+          <a th:if="${recommendedStoreList != null and !#lists.isEmpty(recommendedStoreList)}"
+             th:href="@{/store/detail(id=${recommendedStoreList[0].id})}"
+             class="d-block text-decoration-none">
+            <img class="thumb mb-3 skeleton" th:src="${heroImageUrl}" alt="featured"/>
+            <div class="fs-3 fw-bold text-ymprimary"
+                 th:text="${recommendedStoreList[0].name}">가게이름</div>
+            <div class="meta mt-1"
+                 th:text="${recommendedStoreList[0].address != null ? recommendedStoreList[0].address.roadAddressText : '주소 정보 없음'}">
+              주소
+            </div>
+            <div class="meta mt-1"
+                 th:text="${recommendedStoreList[0].phone != null ? recommendedStoreList[0].phone : '전화번호 없음'}">
+              전화
+            </div>
+            <div class="d-flex align-items-center gap-2 mt-2">
+              <span class="badge-ym">추천</span>
+              <span class="star">★ ★ ★ ★ ★</span>
+            </div>
+          </a>
+
+          <div class="text-muted small"
+               th:if="${recommendedStoreList == null or #lists.isEmpty(recommendedStoreList)}">
+            아직 인기 상점 데이터가 없습니다 🥲
+          </div>
+        </div>
+      </div>
+
+      <!-- 우: 미니 정류장 -->
+      <!-- ★ equal-rail 로 동일 높이 / rail-scroll 로 내부 스크롤 -->
+      <div class="col-12 col-lg-4">
+        <div class="card-ym p-3 mini-station equal-rail rail-compact"><!-- ★ equal-rail -->
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="fw-bold">정류장에서 더 많은 사람과 만나요</div>
+            <a href="/station" class="btn btn-sm btn-ymprimary">전체보기</a>
+          </div>
+          <div id="mini-station" class="list-group list-group-flush rail-scroll"><!-- ★ rail-scroll -->
+            <!-- feed.js 가 채움 -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== 하단: 인기 맛집 그리드 ===================== -->
+  <div class="container my-3">
+    <div class="text-center mb-3">
+      <h2 class="fw-bold text-ymprimary">인기 맛집</h2>
+      <div class="text-muted">리뷰/별점/조회수를 기반으로 추천해요</div>
+    </div>
+
+    <div class="store-grid">
+      <!-- 서버에서 미리 그려줄 수 있을 때 (없어도 JS가 picsum으로 채움) -->
+      <th:block th:if="${recommendedStoreList != null and !#lists.isEmpty(recommendedStoreList)}"
+                th:each="store, iter : ${recommendedStoreList}">
+        <a th:href="@{/store/detail(id=${store.id})}" class="text-decoration-none">
+          <div class="store-card">
+            <img class="thumb"
+                 th:if="${imageUrls != null and !#lists.isEmpty(imageUrls)}"
+                 th:src="${imageUrls[iter.index % imageUrls.size()]}" alt="store image"/>
+
+            <!-- 이미지 배열 없으면 lazy 로드 + 더미 -->
+            <img class="thumb lazy"
+                 th:if="${imageUrls == null or #lists.isEmpty(imageUrls)}"
+                 data-src="https://picsum.photos/seed/yorimichi__${iter.index}/600/400"
+                 alt="store image"/>
+
+            <div class="name" th:text="${store.name}">가게이름</div>
+            <div class="addr"
+                 th:text="${store.address != null ? store.address.roadAddressText : '주소 없음'}">주소</div>
+            <div class="desc" th:text="${store.description}">설명</div>
+
+            <div class="d-flex align-items-center gap-2 mt-2">
+              <span class="star">★</span><span class="text-muted small">4.5</span>
+              <span class="text-muted small">·</span><span class="text-muted small">123 리뷰</span>
+            </div>
+          </div>
+        </a>
+      </th:block>
+    </div>
+  </div>
 </body>
 </html>
