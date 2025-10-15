@@ -68,7 +68,8 @@ google:
   drive:
     credentials-file-path: /credentials.json
     token-path: tokens
-    folder-id: 1zmXzxFMUcpvM4n08f3sv8UB4l9U_yd1J
+    folder-id: 1Awhy7q0VebD8X1w9QaQ6S-U6gd3Wsm-A
+    image-path-prefix: https://lh3.googleusercontent.com/d/
 
 gemini:
   mime-type: application/json

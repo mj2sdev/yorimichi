@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,12 @@ public class GoogleDriveManager implements GoogleDriveService {
 
 	private final Drive drive;
 
+	@Value("${google.gemini.image-path-prefix}")
+	private String imagePathPrefix;
+
+	@Value("${google.gemini.folder-id}")
+	private String folderId;
+
 	@Override
 	public List<String> uploadFiles(List<MultipartFile> files) {
 		List<String> urls = new ArrayList<>();
@@ -30,7 +37,7 @@ public class GoogleDriveManager implements GoogleDriveService {
 				try {
 					File fileMetadata = new File();
 					fileMetadata.setName(file.getOriginalFilename());
-					fileMetadata.setParents(Collections.singletonList("1Awhy7q0VebD8X1w9QaQ6S-U6gd3Wsm-A"));
+					fileMetadata.setParents(Collections.singletonList(folderId));
 
 					java.io.File tempFile = java.io.File.createTempFile("upload-", file.getOriginalFilename());
 					file.transferTo(tempFile);
@@ -39,7 +46,7 @@ public class GoogleDriveManager implements GoogleDriveService {
 						.create(fileMetadata, fileContent)
 						.setFields("id, name, webViewLink")
 						.execute();
-					urls.add("https://lh3.googleusercontent.com/d/" + uploadedFile.getId());
+					urls.add(imagePathPrefix + uploadedFile.getId());
 
 				} catch (Exception e) {
 					log.error("google drice upload error: {}", e.getLocalizedMessage());
