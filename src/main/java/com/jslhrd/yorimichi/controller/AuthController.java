@@ -21,7 +21,7 @@ public class AuthController {
 	}
 
 	@GetMapping("/signup")
-	public String showSignup() {
+	public String showSignup(@ModelAttribute UserDTO user) {
 		return "user/signup";
 	}
 
