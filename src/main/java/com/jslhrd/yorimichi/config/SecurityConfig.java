@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -212,24 +211,7 @@ public class SecurityConfig {
 			);
 		}
 
-		// DaoAuthenticationProvider를 명시 등록
-		// - 내부적으로 UserDetailsService + PasswordEncoder 기반으로 폼 로그인 인증 수행
-		http.authenticationProvider(daoAuthenticationProvider());
-
 		return http.build();
 	}
 
-	/**
-	 * DaoAuthenticationProvider
-	 * <p>
-	 * - 폼 로그인 시 이메일/비밀번호 인증을 처리하는 Provider.
-	 * - UserDetailsService로 사용자 조회, PasswordEncoder로 비밀번호 검증.
-	 */
-	@Bean
-	public DaoAuthenticationProvider daoAuthenticationProvider() {
-		DaoAuthenticationProvider p = new DaoAuthenticationProvider();
-		p.setUserDetailsService(localUserDetailsManager);
-		p.setPasswordEncoder(passwordEncoder);
-		return p;
-	}
 }
