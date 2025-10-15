@@ -469,7 +469,7 @@
 #searchSuggest .list-group-item + .list-group-item { border-top: 0; } /* 경계 중복 제거 */
 
 
-/* === 헤더 중앙 고정 + 폭 캡 === */
+/* 헤더 중앙 검색바: 오른쪽 네비와 겹치지 않도록 폭 제한 */
 .header-center{
   position: absolute;
   left: 50%;
@@ -477,11 +477,11 @@
   transform: translate(-50%,-50%);
   width: 100%;
   display: flex;
-  justify-content: center;          /* 정확히 가운데 */
+  justify-content: center;
   z-index: 5;
-  pointer-events: auto;
+  pointer-events: none;              /* 아이콘 클릭 방해 X */
 }
-.header-center .search-bar{ width: min(680px, 90vw) !important; } /* ✅ 길이 캡 강제 */
+
 
 /* === 외곽 한 겹만 선명한 경계선 === */
 .search-shell{
@@ -523,34 +523,22 @@
   border-color: var(--ym-primary);
 }
 
-/* 좁은 화면에선 정적 배치로 자연스럽게 */
-@media (max-width: 992px){
-  .header-center{ position: static; transform: none; width: 100%; margin-top: .5rem; }
+
+
+
+/* 태블릿 이하는 폭 꽉 채우되, 높이/터치 여백 유지 */
+@media (max-width: 991.98px){
+  .header-center{
+    position: static;
+    transform: none;
+    margin-top: .5rem;
+  }
+  .header-center .search-bar{
+    width: 100% !important;
+  }
 }
 
 /* === 헤더 검색바 컴팩트 사이징 === */
-/* 데스크톱에서만 살짝 줄이기 */
-@media (min-width: 992px){
-  .header-center .search-bar{ width: min(600px, 88vw) !important; } /* 가로 폭 살짝 축소 */
-
-  .search-shell{
-    padding: 6px 10px;          /* 높이 ↓ (기존 8px 12px) */
-    border-radius: 24px;         /* 라운드도 살짝 줄임 */
-  }
-
-  .search-icon{ font-size: .95rem; }
-
-  .search-input{
-    font-size: .95rem;           /* 글자 크기 ↓ */
-    padding: 4px 2px;            /* 내부 여백 ↓ */
-    line-height: 1.2;
-  }
-
-  .search-btn{
-    padding: 6px 12px;           /* 버튼 높이 ↓ */
-    font-size: .95rem;
-  }
-}
 
 /* 모바일 접근성 유지(손가락 탭 영역 최소 확보) */
 @media (max-width: 991.98px){
@@ -562,3 +550,83 @@
   color: var(--ym-primary);
   font-weight: 700;
 }
+
+
+/* ===== 최종: 헤더 중앙 검색바 폭/여백 ===== */
+:root{ --header-safe-right: 560px; }          /* 오른쪽 세이프존(네비 여유) */
+@media (min-width: 1400px){
+  :root{ --header-safe-right: 620px; }
+}
+
+/* 폭을 clamp로 제어: 최소~유동(calc)~최대 */
+header .header-center .search-bar{
+  /* 최소 460px, 최대 520px, 그 사이에서는 오른쪽 여유를 뺀 값 사용 */
+  width: clamp(460px, calc(100% - var(--header-safe-right)), 520px) !important;
+}
+@media (min-width: 1400px){
+  header .header-center .search-bar{
+    /* 대형 화면: 최소 480px, 최대 540px */
+    width: clamp(480px, calc(100% - var(--header-safe-right)), 540px) !important;
+  }
+}
+
+/* 헤더 오른쪽 메뉴를 컨테이너 바깥으로 40~60px 살짝 밀기 */
+@media (min-width: 992px){
+  header .container .row > .col-12.col-lg:last-child{
+    margin-right: -40px;   /* 필요하면 -60px까지 */
+  }
+}
+/* 초대형 화면에서는 여유 조금 더 */
+@media (min-width: 1400px){
+  header .container .row > .col-12.col-lg:last-child{
+    margin-right: -60px;
+  }
+}
+/* 모바일/태블릿에서는 원복 */
+@media (max-width: 991.98px){
+  header .container .row > .col-12.col-lg:last-child{
+    margin-right: 0;
+  }
+}
+
+/* 검색바는 항상 최상단에 */
+header .header-center{
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%,-50%);
+  width: 100%;
+  display: flex; justify-content: center;
+  z-index: 20;                /* ✅ 오른쪽 메뉴보다 위 */
+  pointer-events: none;       /* 겹침 방지 */
+}
+header .header-center .search-bar{
+  pointer-events: auto;       /* ✅ 검색바는 클릭 가능 */
+}
+
+/* 오른쪽 메뉴는 겹쳐도 아래 레이어로 */
+header .container .row > .col-12.col-lg:last-child{
+  position: relative;
+  z-index: 1;                 /* ✅ 검색바보다 아래 */
+}
+
+/* Footer 배경 (테마 변수 없을 때도 보장) */
+.bg-ymsecondary-bright{
+  background-color: var(--ym-secondary-800, #2a1a14) !important;
+}
+
+/* 개발자 아바타 통일 */
+.dev-avatar{
+  width: 2rem; height: 2rem;
+  border-radius: .375rem;      /* 살짝 라운드 */
+  object-fit: cover;
+  display: block;
+}
+
+/* 스택 아이콘 크기 통일 */
+footer .stack svg{
+  width: 2rem; height: 2rem;   /* 한 줄 통일 */
+  display: inline-block;
+}
+
+/* 링크 호버 */
+footer a.dev-item:hover{ opacity: .85; }
