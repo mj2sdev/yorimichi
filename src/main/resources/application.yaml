@@ -26,12 +26,6 @@ spring:
   thymeleaf:
     cache: false
 
-  # Spring Security 임시 사용자 설정
-  security:
-    user:
-      name: admin
-      password: 1234
-
 # 실제 클라이언트 등록 시 추가.
 #    oauth2:
 #      client:
