@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.common">
+
+  <!-- 프로젝트의 '보이는 데이터' 조건을 여기에 정의 -->
+  <sql id="RootVisible">
+    deleted_at IS NULL
+    AND blinded_at IS NULL
+  </sql>
+
+  <!-- (옵션) 자주 쓰는 where 절 템플릿이 있으면 여기 추가 -->
+  <!--
+  <sql id="RootVisibleWhere">
+    WHERE deleted_at IS NULL
+      AND blinded_at IS NULL
+  </sql>
+  -->
+
+</mapper>
