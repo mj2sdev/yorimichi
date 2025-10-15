@@ -12,7 +12,7 @@
     <form class="shadow-lg p-3 bg-ymwhite rounded needs-validation"
           method="post"
           novalidate
-          th:action="@{/user/login}">
+          th:action="@{/login}">
       <div class="row gap-4" style="max-width: 20rem;">
         <div class="col-12">
           <h1 class="fw-bold my-4 text-ymprimary text-center">
@@ -26,7 +26,7 @@
           <label class="form-label" for="email">
             이메일
           </label>
-          <input class="form-control" id="email" placeholder="name@example.com" required type="email">
+          <input class="form-control" id="email" name="email" placeholder="name@example.com" required type="email">
           <div class="invalid-feedback">
             정확한 이메일을 입력해주세요
           </div>
@@ -35,7 +35,7 @@
           <label class="form-label" for="password">
             비밀번호
           </label>
-          <input class="form-control" id="password" minlength="8" placeholder="********" required type="password">
+          <input class="form-control" id="password" name="password" minlength="8" placeholder="********" required type="password">
           <div class="invalid-feedback">
             비밀번호는 8자 이상이어야 합니다.
           </div>
