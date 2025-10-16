@@ -19,7 +19,7 @@ spring:
 
 # mysql에서 db와 서버의 시간이 다른 경우 문제가 발생할 수 있어서 시간대를 명시하게 함.
     username: jsl3team
-    password: 1234 #[701 wi-fi password]
+    password: jslhrd79 #[701 wi-fi password]
 
 # Thymeleaf 설정
 # 캐시를 저장하지 않게 해둬서 변경시 바로바로 확인 가능
