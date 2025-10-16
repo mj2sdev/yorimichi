@@ -67,9 +67,9 @@ public class UserDTO extends RootDTO implements Serializable {
 
 	private boolean showBookmarks;
 
-	private boolean showFollowing;
+	private boolean showFollowees;
 
-	private boolean showFollowers;
+	private boolean showFolloweers;
 
 	/**
 	 * 마지막 로그인 일시
@@ -90,17 +90,22 @@ public class UserDTO extends RootDTO implements Serializable {
 	/**
 	 * 팔로잉 목록
 	 */
-	private List<UserDTO> following = new ArrayList<>();
+	private List<UserDTO> followees = new ArrayList<>();
 
 	/**
 	 * 팔로우 목록
 	 */
 	private List<UserDTO> followers = new ArrayList<>();
+	
+	/**
+	 * 차단 목록
+	 */
+	private List<BlockDTO> blocks = new ArrayList<>();
 
 	/**
 	 * 즐겨찾기 목록
 	 */
-	private List<StoreDTO> bookmark = new ArrayList<>();
+	private List<StoreDTO> bookmarks = new ArrayList<>();
 
 	/**
 	 * 좋아요 목록

@@ -31,19 +31,7 @@ public class UserController {
 	@GetMapping("/detail/{id}")
 	public String showUserDetail(@PathVariable("id") Long userId, Model model) {
 		UserDTO user = userService.findById(userId);
-		List<ReviewDTO> reviews = reviewService.findAllByUserId(null);
-		List<StoreDTO> likes = storeService.findAllByUserLike(null);
-		List<BookmarkDTO> bookmarks = null;
-		List<UserDTO> followees = relationshipService.findFollowees(null);
-		List<UserDTO> followers = relationshipService.findFollowers(null);
-		List<UserDTO> blocks = relationshipService.findBlocks(null);
 		model.addAttribute("user", user);
-		model.addAttribute("reviews", reviews);
-		model.addAttribute("likes", likes);
-		model.addAttribute("bookmarks", bookmarks);
-		model.addAttribute("followees", followees);
-		model.addAttribute("followers", followers);
-		model.addAttribute("blocks", blocks);
 		return "user/detail";
 	}
 
@@ -51,19 +39,7 @@ public class UserController {
 	@GetMapping("/mypage")
 	public String showMypage(Principal principal, Model model) {
 		UserDTO user = userService.findById(null);
-		List<ReviewDTO> reviews = reviewService.findAllByUserId(null);
-		List<StoreDTO> likes = storeService.findAllByUserLike(null);
-		List<BookmarkDTO> bookmarks = null;
-		List<UserDTO> followees = relationshipService.findFollowees(null);
-		List<UserDTO> followers = relationshipService.findFollowers(null);
-		List<UserDTO> blocks = relationshipService.findBlocks(null);
 		model.addAttribute("user", user);
-		model.addAttribute("reviews", reviews);
-		model.addAttribute("likes", likes);
-		model.addAttribute("bookmarks", bookmarks);
-		model.addAttribute("followees", followees);
-		model.addAttribute("followers", followers);
-		model.addAttribute("blocks", blocks);
 		return "user/mypage";
 	}
 
