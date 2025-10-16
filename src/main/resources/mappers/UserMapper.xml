@@ -23,7 +23,13 @@
         ORDER BY r.created_at DESC, u.id
     </select>
 
-    <select id="selectById" parameterType="Long" resultType="UserDTO">
+    <!--오늘은 내가 resultMap 요리사-->
+    <resultMap id="userResultMap" type="UserDTO">
+        <id property="" column=""></id>
+        
+    </resultMap>
+
+    <select id="selectById" resultMap="userResultMap" parameterType="Long">
         SELECT u.id,
                u.role_id,
                u.email,
@@ -39,6 +45,8 @@
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
         WHERE u.id = #{userId}
     </select>
+
+    <!-- 요리 끝-->
 
     <select id="selectByEmail" parameterType="String" resultType="UserDTO">
         SELECT u.id,
