@@ -41,13 +41,15 @@
 
     <!-- user INSERT (로컬/소셜 공용). enabled/email_verified는 다루지 않음 -->
     <insert id="insertLocalAccount" parameterType="UserDTO">
-        INSERT INTO user (id, role_id, email, password, nickname, description)
+        INSERT INTO user (id, role_id, email, password, nickname, description, gender, year)
         VALUES (#{id},
                 (SELECT id FROM role WHERE name = 'USER'),
                 #{email},
                 #{password},
                 #{nickname},
-                #{description})
+                #{description},
+                #{gender},
+                #{year})
     </insert>
 
     <!-- social_account 링크 INSERT -->

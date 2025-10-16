@@ -4,6 +4,8 @@ import com.jslhrd.yorimichi.domain.UserDTO;
 import com.jslhrd.yorimichi.service.AccountService;
 import com.jslhrd.yorimichi.service.UserService;
 import lombok.RequiredArgsConstructor;
+
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,8 +40,8 @@ public class AuthController {
 	}
 
 	@ResponseBody
-	@PostMapping("/signup/email/verification")
-	public boolean verificateEmail(@RequestParam("token") String token) {
-		return accountService.confirmEmailVerification(token);
+	@PostMapping("/signup/email/verification/{email}")
+	public boolean verificateEmail(@PathVariable("email") String email) {
+		return accountService.confirmEmailVerification(email);
 	}
 }

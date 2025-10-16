@@ -127,8 +127,9 @@
 									성별
 								</label>
 								<select class="form-select" id="gender" name="gender" required>
-									<option value="">선택</option>
-									<option th:each="option : ${ {'남자', '여자'} }" th:text="${ option }"></option>
+									<option value="" selected>선택</option>
+									<option th:text="남자" value="M"></option>
+									<option th:text="여자" value="F"></option>
 								</select>
 							</div>
 						</div>

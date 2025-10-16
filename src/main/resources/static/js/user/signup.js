@@ -108,9 +108,9 @@ async function emailDeduplication(event) {
 	const email = input.value;
 
 	const method = "POST";
-	const url = "/signup/email/verification";
-	const body = { email };
-	const usage = await request(method, url, { body });
+	const url = "/signup/email/verification/{email}";
+	const params = { email };
+	const usage = await request(method, url, { params });
 
 	console.log(usage, email);
 	if (usage) {
