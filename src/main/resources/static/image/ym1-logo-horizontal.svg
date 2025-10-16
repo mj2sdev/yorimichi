@@ -1,0 +1,17 @@
+<svg width="340" height="72" viewBox="0 0 340 72" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Yorimichi logo - pin &amp; bowl">
+  <defs>
+    <linearGradient id="g1" x1="12" y1="8" x2="52" y2="54" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF8A00"/>
+      <stop offset="1" stop-color="#FF6000"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(0,4)">
+    <path d="M32 0C19.85 0 10 9.85 10 22c0 15.23 16.17 27.94 20.46 31.06a3 3 0 0 0 3.08 0C37.83 49.94 54 37.23 54 22 54 9.85 44.15 0 32 0Z" fill="url(#g1)"/>
+    <path d="M18 31.5a14 10 0 1 0 28 0H18Z" fill="white" opacity=".96"/>
+    <path d="M18 31.5c0-1.2.96-2.2 2.15-2.2h23.7c1.19 0 2.15 1 2.15 2.2H18Z" fill="#FFE8D1"/>
+    <path d="M26 20.5l13 7.2M38 18.8l4.8 2.6" stroke="white" stroke-width="3" stroke-linecap="round" opacity=".96"/>
+  </g>
+  <text x="76" y="48"
+        font-family="Pretendard, Poppins, Inter, 'Noto Sans KR', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif"
+        font-size="34" font-weight="800" fill="#F28500" letter-spacing="0.5">Yorimichi</text>
+</svg>

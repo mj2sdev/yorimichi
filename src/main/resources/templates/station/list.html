@@ -1,64 +1,32 @@
+<!-- templates/station/list.html -->
 <!DOCTYPE html>
-<html th:replace="~{layout/clean :: params(~{::head/content()},~{::body/content()})}" xmlns:th="http://www.thymeleaf.org">
-
-<head>
-	<title> Yorimichi Project </title>
-</head>
-
+<html th:replace="~{layout/main :: params(~{::head/content()},~{::body/content()})}" xmlns:th="http://www.thymeleaf.org">
+<head><title>정류장</title></head>
 <body>
-	<section>
-		<div class="container my-4 border border-bottom-3">
-			<div class="row mt-4">
-				<div class="col">팔로워</div>
-			</div>
-			<div class="row">
-				<th:block th:each="i : ${#numbers.sequence(1,5)}">
-				<div class="col-1"><!--얘를 반복시켜서 팔로우중인 대상을 보이게 할 것. -->
-					<a href=""><img src=""></a><!-- 이미지로 프사 / href= 유저페이지 링크-->
-					<i class="bi bi-person" style="font-size: 2em; color: #007bff;"></i>
-					<div>닉네임</div>
-				</div>
-				</th:block>
-			</div>
-		</div>
-		<div class="container">
-			<div class="row justify-content-end">
-				<div class="col-1">
-					<input type="checkbox">팔로워만
-				</div>
-				<div class="col-1">
-					<select name="filter">
-						<option value="" selected>전부</option>
-						<option value="review">리뷰</option>
-						<option value="together">같이먹기</option>
-					</select>
-				</div>
-			</div>
-		</div>
-		<div class="container">
-			<th:block th:each="i : ${#numbers.sequence(1,5)}">
-				<div class="row border border-3">
-					<div class="row">
-						<div class="col">
-							<button type="button" class="btn">사용자명</button>
-						</div>
-						<div class="col">
-							<span>같이먹기</span>
-						</div>
-						<div class="col">
-							<span>9월 15일</span>
-						</div>
-						
-					</div>
-					<button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#">
-						<span>가게명</span>
-						<span>메뉴: 가격 별점</span>
-						<span>임시내용 ...</span>
-					</button>
-				</div>
-			</th:block>
-		</div>
-	</section>
-</body>
+<div class="container my-4">
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h3 class="m-0">정류장</h3>
+    <div class="text-muted small">최신 피드</div>
+  </div>
 
+  <div class="list-group">
+    <a th:each="it : ${feed}"
+       th:href="${it.type == 'REVIEW'} ? @{/store/detail(id=${it.data.storeId})} : @{/coeat/{id}(id=${it.data.id})}"
+       class="list-group-item list-group-item-action">
+      <div class="d-flex justify-content-between">
+        <div>
+          <span th:text="${it.type == 'REVIEW' ? '리뷰' : '같이먹기'}">리뷰</span>
+          <span class="text-muted small"> · </span>
+          <span th:if="${it.type == 'REVIEW'}">
+            ★ <span th:text="${it.data.rating}">5</span>
+          </span>
+        </div>
+        <div class="text-muted small" th:text="${#temporals.format(it.createdAt, 'yyyy.MM.dd HH:mm')}">2025.01.01</div>
+      </div>
+      <div class="text-ymsecondary small mt-1"
+           th:text="${it.type == 'REVIEW' ? it.data.content : (it.data.title != null ? it.data.title : it.data.content)}">내용</div>
+    </a>
+  </div>
+</div>
+</body>
 </html>
