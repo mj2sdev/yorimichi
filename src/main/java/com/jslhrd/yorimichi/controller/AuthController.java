@@ -33,7 +33,7 @@ public class AuthController {
 
 	@ResponseBody
 	@GetMapping("/signup/nickname")
-	public boolean validateNickname(@RequestParam String nickname) {
+	public boolean validateNickname(@RequestParam("nickname") String nickname) {
 		return userService.isNicknameAvailable(nickname);
 	}
 

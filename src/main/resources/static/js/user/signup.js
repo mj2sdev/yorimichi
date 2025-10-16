@@ -151,5 +151,5 @@ async function nicknameDeduplication(event) {
 		duplicate.setAttribute("hidden", "");
 		input.setAttribute("pattern", nickname)
 	}
-	
+
 }
