@@ -23,10 +23,10 @@ public class GoogleDriveManager implements GoogleDriveService {
 
 	private final Drive drive;
 
-	@Value("${google.gemini.image-path-prefix}")
+	@Value("${google.drive.image-path-prefix}")
 	private String imagePathPrefix;
 
-	@Value("${google.gemini.folder-id}")
+	@Value("${google.drive.folder-id}")
 	private String folderId;
 
 	@Override
