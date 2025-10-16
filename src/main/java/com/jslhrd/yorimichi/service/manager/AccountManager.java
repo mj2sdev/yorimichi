@@ -207,9 +207,7 @@ public class AccountManager implements AccountService {
 	}
 
 	@Override
-	public boolean confirmEmailVerification(String token) {
-		// 토큰 검증 → 사용자/소셜 계정의 email_verified 반영
-		// accountMapper.verifyEmailByToken(token) ...
-		throw new UnsupportedOperationException("TODO: 이메일 인증 검증 구현");
+	public boolean confirmEmailVerification(String email) {
+		return userMapper.selectByEmail(email).isEmpty();
 	}
 }

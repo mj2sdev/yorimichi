@@ -4,6 +4,8 @@ import com.jslhrd.yorimichi.domain.UserDTO;
 import com.jslhrd.yorimichi.service.AccountService;
 import com.jslhrd.yorimichi.service.UserService;
 import lombok.RequiredArgsConstructor;
+
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +23,7 @@ public class AuthController {
 	}
 
 	@GetMapping("/signup")
-	public String showSignup() {
+	public String showSignup(@ModelAttribute UserDTO user) {
 		return "user/signup";
 	}
 
@@ -33,13 +35,13 @@ public class AuthController {
 
 	@ResponseBody
 	@GetMapping("/signup/nickname")
-	public boolean validateNickname(@RequestParam String nickname) {
+	public boolean validateNickname(@RequestParam("nickname") String nickname) {
 		return userService.isNicknameAvailable(nickname);
 	}
 
 	@ResponseBody
-	@PostMapping("/signup/email/verification")
-	public boolean verificateEmail(@RequestParam("token") String token) {
-		return accountService.confirmEmailVerification(token);
+	@PostMapping("/signup/email/verification/{email}")
+	public boolean verificateEmail(@PathVariable("email") String email) {
+		return accountService.confirmEmailVerification(email);
 	}
 }

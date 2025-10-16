@@ -95,20 +95,61 @@ function changePassword(event) {
 }
 
 /**
- * @author mj2sdev
- * @version 1.0
- * 
  * 이메일 중복검사 함수입니다.
+ * 
+ * @author mj2sdev
+ * @version 1.0 초안작성
+ * @version 1.1 이메일 중복검사 가능하도록 수정
+ * 
  */
-function emailDeduplication(event) {
-	alert("이메일 중복검사 로직을 작성하시면 됩니다.")
+async function emailDeduplication(event) {
+	const input = document.querySelector("#email");
+	const password = document.querySelector("#password");
+	const email = input.value;
+
+	const method = "POST";
+	const url = "/signup/email/verification/{email}";
+	const params = { email };
+	const usage = await request(method, url, { params });
+
+	console.log(usage, email);
+	if (usage) {
+		input.setAttribute("pattern", email);
+		alert("사용 가능한 이메일 입니다.");
+		password.focus();
+	} else {
+		input.setAttribute("pattern", "");
+		alert("이미 사용중인 이메일 입니다.");
+		input.focus();
+	}
 }
 
 /**
- * @author mj2sdev
- * @version 1.0
  * 닉네임 중복검사 함수입니다.
+ * 
+ * @author mj2sdev
+ * @version 1.0 초안 작성
+ * @version 1.1 닉네임 중복검사 가능하도록 수정
  */
-function nicknameDeduplication(event) {
-	console.log("blur event 발생 시 중복검사를 진행하시면 됩니다.")
+async function nicknameDeduplication(event) {
+	const input = event.target;
+	const nickname = input.value;
+	const condition = document.querySelector(".nickname > .condition");
+	const duplicate = document.querySelector(".nickname > .duplicate");
+
+	const method = "GET";
+	const url = "/signup/nickname";
+	const query = { nickname };
+	const usage = await request(method, url, { query });
+	
+	if (!usage) {
+		condition.setAttribute("hidden", true);
+		duplicate.removeAttribute("hidden");
+		input.setAttribute("pattern", "");
+	} else {
+		condition.removeAttribute("hidden");
+		duplicate.setAttribute("hidden", "");
+		input.setAttribute("pattern", nickname)
+	}
+
 }

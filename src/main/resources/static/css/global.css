@@ -6,8 +6,9 @@
 .dvh { height: 100dvh; }
 
 .bg-wallpaper {
-    background: url("/images/food_wallpaper.jpg") no-repeat;
-    background-size: cover;
+	background: url("/images/food_wallpaper.jpg") no-repeat;
+	background-size: cover;
+	background-position: right;
 }
 
 .divider {
