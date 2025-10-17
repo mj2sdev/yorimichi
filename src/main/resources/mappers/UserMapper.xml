@@ -25,20 +25,19 @@
 
     <!--오늘은 내가 resultMap 요리사-->
     <resultMap id="userResultMap" type="UserDTO">
-        <id property="id" column=""></id>
-        <result property="role" column=""></result>
-        <result property="email" column=""></result>
-        <result property="nickname" column=""></result>
-        <result property="description" column=""></result>
-        <result property="gender" column=""></result>
-        <result property="year" column=""></result>
-        <result property="showReviews" column=""></result>
-        <result property="showLikes" column=""></result>
-        <result property="showBookmarks" column=""></result>
-        <result property="showFollowees" column=""></result>
-        <result property="showFollowers" column=""></result>
-        <!--TODO: RevieMapper에 userId를 기준으로 검색하는 select문을 만들어야함.-->
-        <collection property="reviews" ofType="ReviewDTO" select="com.jslhrd.yorimichi.mapper.ReviewMapper." column="id"></collection>
+        <id property="id" column="id"></id>
+        <result property="role" column="role"></result>
+        <result property="email" column="email"></result>
+        <result property="nickname" column="nickname"></result>
+        <result property="description" column="description"></result>
+        <result property="gender" column="gender"></result>
+        <result property="year" column="year"></result>
+        <result property="showReviews" column="show_reveiws"></result>
+        <result property="showLikes" column="show_likes"></result>
+        <result property="showBookmarks" column="show_bookmarks"></result>
+        <result property="showFollowees" column="show_followees"></result>
+        <result property="showFollowers" column="show_followers"></result>
+        <collection property="reviews" ofType="ReviewDTO" select="com.jslhrd.yorimichi.mapper.ReviewMapper.selectAllByUserId" column="id"></collection>
         <collection property="followees" ofType="UserDTO" select="com.jslhrd.yorimichi.mapper.FollowMapper.selectFolloweesByUserId" column="id"></collection>
         <collection property="followers" ofType="UserDTO" select="com.jslhrd.yorimichi.mapper.FollowMapper.selectFollowersByUserId" column="id"></collection>
         <collection property="blocks" ofType="BlockDTO" select="com.jslhrd.yorimichi.mapper.BlockMapper.selectAllByUserId" column="id"></collection>
@@ -57,7 +56,12 @@
                u.description,
                u.last_login_at,
                r.created_at,
-               r.updated_at
+               r.updated_at,
+               u.show_reviews,
+               u.show_likes,
+               u.show_bookmakrs,
+               u.show_following,
+               u.show_followers
         FROM user u
         JOIN root r ON u.id = r.id
             AND r.type = 'USER'

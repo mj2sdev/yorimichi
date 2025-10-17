@@ -6,6 +6,19 @@
 
     <!-- @formatter:off -->
 
+    <select id="selectAllByUserId" resultType="ReviewDTO">
+        SELECT  id, 
+                user_id,
+                store_id,
+                receipt_image_id,
+                receipt_status,
+                rating,
+                content
+        FROM review
+        WHERE user_id = #{userId}
+        ORDER BY created_at DESC
+    </select>
+
     <select id="selectAll" resultType="ReviewDTO">
         SELECT v.id,
                v.user_id,
