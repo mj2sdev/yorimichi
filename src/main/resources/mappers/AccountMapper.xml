@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jslhrd.yorimichi.mapper.AccountMapper">
+
+    <!-- @formatter:off -->
+
+    <!-- (provider, provider_user_id) → UserDTO 조회 -->
+    <select id="selectByProviderAndSub" resultType="UserDTO">
+        SELECT r.id,
+               r.type,
+               r.created_at,
+               r.updated_at,
+               r.deleted_at,
+               r.blinded_at,
+               u.email,
+               u.password,
+               u.nickname,
+               u.description,
+               /* 이후 DB 수정 후 추가. */
+               /*u.gender,
+               u.birth,
+               u.email_verified,
+               u.enabled,
+               u.show_reviews,
+               u.show_likes,
+               u.show_bookmarks,
+               u.show_following,
+               u.show_followers,*/
+               u.last_login_at,
+               ro.name AS role
+        FROM social_account sa
+        JOIN user u ON u.id = sa.user_id
+        JOIN root r ON r.id = u.id
+        JOIN role ro ON ro.id = u.role_id
+        WHERE sa.provider = #{provider}
+            AND sa.provider_user_id = #{providerUserId}
+        LIMIT 1
+    </select>
+
+    <!-- user INSERT (로컬/소셜 공용). enabled/email_verified는 다루지 않음 -->
+    <insert id="insertLocalAccount" parameterType="UserDTO">
+        INSERT INTO user (id, role_id, email, password, nickname, description, gender, year)
+        VALUES (#{id},
+                (SELECT id FROM role WHERE name = 'USER'),
+                #{email},
+                #{password},
+                #{nickname},
+                #{description},
+                #{gender},
+                #{year})
+    </insert>
+
+    <!-- social_account 링크 INSERT -->
+    <insert id="insertSocialAccount" parameterType="SocialAccountDTO">
+        INSERT INTO social_account (user_id, provider, provider_user_id, provider_email,
+                                    email_verified, display_name, avatar_url)
+        VALUES (#{userId},
+                #{provider},
+                #{providerUserId},
+                #{providerEmail},
+                #{emailVerified},
+                #{displayName},
+                #{avatarUrl})
+    </insert>
+
+    <!-- 비밀번호 변경 -->
+    <update id="updatePassword">
+        UPDATE user
+        SET password = #{hashedPassword}
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 마지막 로그인(공통) 갱신 -->
+    <update id="updateLastLoginAt" parameterType="long">
+        UPDATE user
+        SET last_login_at = NOW()
+        WHERE id = #{userId}
+    </update>
+
+    <!-- 소셜별 마지막 로그인 갱신 -->
+    <update id="updateSocialLastLoginAt">
+        UPDATE social_account
+        SET last_login_at = NOW()
+        WHERE user_id = #{userId}
+            AND provider = #{provider}
+    </update>
+
+    <!-- 소프트 삭제 (root.deleted_at 설정) -->
+    <update id="deleteById" parameterType="long">
+        UPDATE root
+        SET deleted_at = NOW()
+        WHERE id = #{userId}
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+    </update>
+
+    <!-- @formatter:on -->
+
+</mapper>

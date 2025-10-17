@@ -1,54 +1,46 @@
 package com.jslhrd.yorimichi.service;
 
-import java.util.List;
-
-import org.springframework.security.core.userdetails.UserDetailsService;
-
 import com.jslhrd.yorimichi.domain.SearchDTO;
 import com.jslhrd.yorimichi.domain.UserDTO;
+
+import java.util.List;
 
 /**
  * 사용자(User) 정보 관련 비즈니스 로직을 처리하는 서비스 인터페이스입니다.
  * Spring Security의 UserDetails를 확장하여 인증/인가에 사용됩니다.
- * 
+ *
  * @author mj2sdev
- * 
- * @version 1.0 초안작성
- * @version 1.1 {@code UserDetailsService} 추가
- * <p>
- * 유저 디테일서비스 인터페이스 확장, 그에따른 findByEmail 삭제
- * -> {@code UserDetailsService} 인터페이스 내부에 이미 loadUserByUsername(String username) 이 존재
+ * @version 1.2 {@code UserDetailsService} 제거. LocalUserDetailsManager 로 이관.
  */
-public interface UserService extends UserDetailsService {
-	
+public interface UserService {
+
 	/**
 	 * 유저 리스트를 검색합니다. (보통 관리자 유저 관리 페이지 등 사용)
-	 * 
-	 * @param dto 검색 파라미터 모음
+	 *
+	 * @param search 검색 파라미터 모음
 	 * @return {@code List<UserDTO>} 유저 리스트
 	 */
-	public List<UserDTO> findAll(SearchDTO dto);
-	
+	public List<UserDTO> findAll(SearchDTO search);
+
 	/**
 	 * 유저 상세 정보를 조회합니다.
-	 * 
+	 *
 	 * @param userId
 	 * @return 유저 특정 정보 반환.
 	 */
 	public UserDTO findById(Long userId);
 
 	/**
-	 * 기존 사용자 정보를 수정합니다.
-	 * 
-	 * @param dto 수정할 사용자 정보가 담긴 DTO
+	 * 단순 헬퍼: 닉네임 중복 체크(도메인 관점)
 	 */
-	public void update(UserDTO dto);
-	
+	boolean isNicknameAvailable(String nickname);
+
+
 	/**
-	 * 사용자 ID를 이용하여 사용자 정보를 삭제(탈퇴)합니다.
-	 * 
-	 * @param userId 삭제할 사용자의 ID
+	 * 기존 사용자 정보를 수정합니다.
+	 *
+	 * @param userId
+	 * @param user   수정할 사용자 정보가 담긴 DTO
 	 */
-	public void delete(Long userId);
-	
+	public void update(Long userId, UserDTO user);
 }

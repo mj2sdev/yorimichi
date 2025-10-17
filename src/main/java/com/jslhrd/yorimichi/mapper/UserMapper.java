@@ -1,9 +1,11 @@
 package com.jslhrd.yorimichi.mapper;
 
+import com.jslhrd.yorimichi.domain.SearchDTO;
 import com.jslhrd.yorimichi.domain.UserDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,6 +20,13 @@ import java.util.Optional;
 @Mapper
 public interface UserMapper {
 
+	List<UserDTO> selectAll(SearchDTO search);
+
+	/**
+	 * 이메일 정규화(소문자/trim)는 호출부에서 보장
+	 */
+	Optional<UserDTO> selectByEmail(@Param("email") String email);
+
 	/**
 	 * 유저 단건 조회.
 	 *
@@ -26,32 +35,17 @@ public interface UserMapper {
 	 */
 	Optional<UserDTO> selectById(@Param("userId") Long userId);
 
-	Optional<UserDTO> selectByEmail(@Param("email") String email);
+	/**
+	 * 닉네임 존재 여부 (XML에서 SELECT EXISTS(...)로 구현 권장)
+	 */
+	boolean existsNickname(@Param("nickname") String nickname);
 
 	boolean existsActive(@Param("userId") Long userId);
-
-	/**
-	 * 유저 추가.
-	 *
-	 * @return 영향 행 수 (추가 1, 그 외 0)
-	 */
-	int insert(UserDTO user);
 
 	/**
 	 * 유저 수정.
 	 *
 	 * @return 영향 행 수 (수정 1, 대상 없음 0)
 	 */
-	int update(UserDTO user);
-
-	int updatePassword(@Param("userId") Long userId,
-	                   @Param("password") String password);
-
-	/**
-	 * 유저 삭제.
-	 *
-	 * @param userId 유저 ID
-	 * @return 영향 행 수 (삭제 1, 대상 없음 0)
-	 */
-	int deleteById(@Param("userId") Long userId);
+	int update(@Param("userId") Long userId, @Param("user") UserDTO user);
 }

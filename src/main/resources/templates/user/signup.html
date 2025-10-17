@@ -14,7 +14,7 @@
 		<div class="d-flex justify-content-center">
 			<form
 				method="post"
-				th:action="@{/user/signup}"
+				th:action="@{/signup}"
 				class="my-5 shadow-lg bg-ymwhite rounded needs-validation"
 				style="max-width: 20rem;"
 				novalidate>
@@ -33,16 +33,21 @@
 							닉네임
 						</label>
 						<input
+							th:field="*{userDTO.nickname}"
 							onblur="nicknameDeduplication(event)"
 							class="form-control"
-							id="nickname"
-							placeholder="낙쿠네무"
+							placeholder="닉네임"
 							minlength="3"
 							maxlength="20"
 							required
 							pattern="">
-						<div class="invalid-feedback">
-							최소 3자 이상 20자 이하로 입력해주세요
+						<div class="invalid-feedback nickname">
+							<span class="condition">
+								최소 3자 이상 20자 이하로 입력해주세요
+							</span>
+							<span class="duplicate" hidden>
+								이미 사용중인 닉네임 입니다.
+							</span>
 						</div>
 					</div>
 
@@ -53,16 +58,20 @@
 						<div class="input-group">
 							<input
 								type="email"
+								th:field="*{userDTO.email}"
+								autocomplete="email"
 								class="form-control"
-								id="email" 
 								placeholder="email@example.com" 
 								required 
 								pattern="">
-							<button type="button" onclick="emailDeduplication(event)" class="btn btn-ymprimary bg-ymprimary-gradient rounded-end">
+							<button
+								type="button"
+								onclick="emailDeduplication(event)"
+								class="btn btn-ymprimary bg-ymprimary-gradient rounded-end">
 								중복검사
 							</button>
 							<div class="invalid-feedback">
-								정확한 이메일, 중복확인을 진행하세요
+								정확한 이메일을 입력 후 중복검사를 진행하세요
 							</div>
 						</div>
 					</div>
@@ -71,7 +80,14 @@
 						<label for="password" class="form-label">
 							비밀번호
 						</label>
-						<input type="password" class="form-control" id="password" placeholder="●●●●●●●●" required onkeyup="changePassword(event)">
+						<input
+							type="password"
+							th:field="*{userDTO.password}"
+							minlength="4"
+							class="form-control"
+							placeholder="●●●●●●●●"
+							onkeyup="changePassword(event)"
+							required>
 						<div class="d-flex align-items-center justify-content-between gap-2">
 							<div style="font-size: .75rem; color: gray;">
 								<span>보안: </span>
@@ -101,7 +117,8 @@
 								<label for="year" class="form-label">
 									출생년도
 								</label>
-								<select class="form-select" id="year" name="year">
+								<select class="form-select" id="year" name="year" required>
+									<option value="">선택</option>
 									<option th:each="year : ${#numbers.sequence(2025, 1900)}" th:text="${ year }"></option>
 								</select>
 							</div>
@@ -109,8 +126,10 @@
 								<label for="gender" class="form-label">
 									성별
 								</label>
-								<select class="form-select" id="gender" name="gender">
-									<option th:each="option : ${ {'남자', '여자'} }" th:text="${ option }"></option>
+								<select class="form-select" id="gender" name="gender" required>
+									<option value="" selected>선택</option>
+									<option th:text="남자" value="M"></option>
+									<option th:text="여자" value="F"></option>
 								</select>
 							</div>
 						</div>

@@ -1,21 +1,651 @@
 @charset "UTF-8";
 
-.dvh {
-	height: 100dvh;
-}
+/* ===========================
+   Base (기존 유지)
+   =========================== */
+.dvh { height: 100dvh; }
 
 .bg-wallpaper {
-	background: url("/image/food_wallpaper.jpg") no-repeat;
+	background: url("/images/food_wallpaper.jpg") no-repeat;
 	background-size: cover;
+	background-position: right;
 }
 
 .divider {
-	text-align: center;
+    text-align: center;
 }
-
 .divider::after {
 	content: '';
-	border-bottom: 1px sold #ccc;
+	border-bottom: 1px solid #ccc; /* sold -> solid 수정 */
 	width: 100%;
+	display: block;
+}
+
+/* ===========================
+   Layout / Elevation
+   =========================== */
+:root{
+  --ym-shadow-sm: 0 6px 14px rgba(0,0,0,.06);
+  --ym-shadow-md: 0 12px 24px rgba(0,0,0,.08);
+  /* --ym-border 는 define_color.css 에서 정의됨 */
+}
+
+.card-ym{
+  border:1px solid var(--ym-border);
+  border-radius:1.25rem;
+  box-shadow:var(--ym-shadow-sm);
+  background: var(--ym-white);
+}
+.card-ym:hover{ box-shadow:var(--ym-shadow-md); transition:box-shadow .15s ease; }
+
+/* ===========================
+   Hero (상단 배너)
+   =========================== */
+.hero-ym{
+  background: linear-gradient(45deg, var(--ym-primary), var(--ym-primary-bright));
+  border-radius: 0 0 1.5rem 1.5rem;
+}
+.hero-title{ font-weight:800; letter-spacing:-.02em; }
+.hero-sub{ opacity:.9 }
+
+/* ===========================
+   Category Navigation (좌측)
+   =========================== */
+.cat-card{
+  border:1px solid var(--ym-border);
+  border-radius:1rem;
+  box-shadow:var(--ym-shadow-sm);
+  background: var(--ym-white);
+}
+.cat-title{ color:var(--ym-secondary-bright); }
+.cat-link{ color:var(--ym-primary); text-decoration:none; }
+.cat-link:hover{ color:var(--ym-primary-bright); }
+
+.cat-btn{
+  border:1.5px solid var(--ym-border);
+  background:var(--ym-white);
+  color:var(--ym-secondary-bright);
+  border-radius:1rem;
+  padding:.7rem 1rem;
+  display:flex; align-items:center; gap:.5rem;
+  text-decoration:none;
+  transition:all .15s ease;
+}
+.cat-btn:hover{ border-color:var(--ym-primary); color:var(--ym-primary); background:var(--ym-whitesmoke); }
+.cat-btn i{ margin-left:auto; }
+
+/* 카테고리 카드 내부 링크 밑줄 제거 */
+.cat-card a, .cat-card a:hover, .cat-card a:focus { text-decoration:none !important; }
+
+/* ===========================
+   Featured Store (중앙 추천)
+   =========================== */
+.featured{
+  border:1px solid var(--ym-border);
+  border-radius:1.5rem;
+  overflow:hidden;
+  box-shadow:var(--ym-shadow-sm);
+  background: var(--ym-white);
+}
+.featured .thumb{ width:100%; height:280px; object-fit:cover; border-radius:1rem; }
+.featured .meta{ color:var(--ym-secondary-bright); }
+
+/* ===========================
+   Mini Station (우측 피드)
+   =========================== */
+.mini-station .list-group-item{
+  border:0; border-top:1px solid var(--ym-border);
+}
+.mini-station .list-group-item:first-child{ border-top:0; }
+.mini-station a{ text-decoration:none; }
+
+/* ===========================
+   Store Grid (하단 3×3)
+   =========================== */
+.store-grid{ display:grid; grid-template-columns: repeat(3,1fr); gap:1.25rem; }
+@media (max-width: 1199px){ .store-grid{ grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 767px){  .store-grid{ grid-template-columns: 1fr; } }
+
+.store-card{
+  border-radius:1rem;
+  border:1px solid var(--ym-border);
+  padding:.9rem;
+  box-shadow:var(--ym-shadow-sm);
+  background: var(--ym-white);
+}
+.store-card .thumb{ width:100%; height:180px; object-fit:cover; border-radius:.8rem; }
+.store-card .name{ color:var(--ym-primary); font-weight:700; margin-top:.5rem; }
+.store-card .addr, .store-card .desc{ color:var(--ym-secondary-bright); font-size:.9rem; }
+
+/* 카드 내부 링크 밑줄 제거 */
+.store-card a, .store-card a:hover, .store-card a:focus { text-decoration:none !important; }
+
+/* ===========================
+   Badges / Stars
+   =========================== */
+.badge-ym{
+  background: var(--ym-primary-100);
+  color: var(--ym-primary);
+  border-radius:999px;
+  padding:.25rem .6rem;
+  font-size:.75rem;
+}
+.star{ color:#ffb703; }
+
+/* ===========================
+   Skeleton (로딩 느낌)
+   =========================== */
+.skeleton{ position:relative; overflow:hidden; background: oklch(0.96 0 0); }
+.skeleton::after{
+  content:""; position:absolute; inset:0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
+  transform: translateX(-100%); animation: shine 1.2s infinite;
+}
+@keyframes shine{ to{ transform: translateX(100%); } }
+
+/* === NEW: 세 칸을 같은 높이로 맞추는 레일(rail) === */
+:root{
+  /* 화면 높이에 따라 유동, 너무 작거나 크지 않게 clamp */
+  --ym-rail-h: clamp(440px, 52vh, 560px);
+}
+
+/* 카드 전체를 동일 높이로 */
+.equal-rail{
+  height: var(--ym-rail-h);
+  display: flex;
+  flex-direction: column;
+}
+
+/* 내부 스크롤 영역(목록/피드 등)에 부여 */
+.rail-scroll{
+  overflow: auto;
+  /* 살짝 부드러운 스크롤 느낌(지원 브라우저) */
+  scroll-behavior: smooth;
+}
+
+/* 미니정류장 리스트가 카드 내부에서 스크롤되도록 보정 */
+.mini-station .rail-scroll{
+  /* 카드 padding(+헤더)만큼 여유 */
+  padding-right: .25rem;
+}
+
+/* 추천(중앙) 이미지가 너무 커서 넘치지 않게 비율 보정 */
+.featured.equal-rail .thumb{
+  height: 55%;            /* 레일 높이의 55%를 이미지 영역으로 */
+  min-height: 220px;      /* 너무 작아지지 않게 */
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
+/* 카테고리 카드에서 버튼은 하단 고정, 목록은 스크롤 */
+.cat-card.equal-rail .rail-scroll{
+  margin-top: .25rem;
+  margin-bottom: .75rem;
+}
+/* === 여백 줄인 버전: 레일 높이/패딩/갭 축소 === */
+:root{
+  /* 기존: clamp(480px, 60vh, 640px) → 살짝 낮춤 */
+  --ym-rail-h: clamp(440px, 52vh, 560px);
+}
+
+/* 세 칸 카드 공통 패딩 축소 */
+.rail-compact{ padding: 1rem !important; }
+
+/* 세 칸의 세로 레일 자체 높이도 자연스럽게 함께 낮아짐 */
+.equal-rail{ height: var(--ym-rail-h); }
+
+/* 미니 정류장 내부 스크롤 영역 */
+.mini-station .rail-scroll{ padding-right: .25rem; }
+
+/* 상단 3칸 사이 간격(gap) 살짝 축소 */
+.row-tight{ row-gap: 1rem; }
+
+/* 하단 그리드 카드 간격도 살짝 축소 */
+.store-grid{ gap: 1rem; }  /* 기존 1.25rem → 1rem */
+
+/* 추천 카드의 상단 이미지 비율 약간 줄이기 (세로 높이 감축) */
+.featured.equal-rail .thumb{
+  height: 50%;      /* 기존 55% → 50% */
+  min-height: 200px;
+  object-fit: cover;
+  border-radius: 1rem;
+}
+
+/* 1) 히어로 배경: 밝고 선명한 오렌지 그라데이션으로 교체 */
+.hero-compact {
+  background: linear-gradient(
+    45deg,
+    /* 따뜻한 선명 오렌지 */
+    oklch(0.74 0.17 58.5),
+    /* 한 톤 더 밝은 오렌지 */
+    oklch(0.82 0.15 72)
+  );
+}
+
+/* 2) 패턴은 살짝만, 전체는 너무 어둡지 않게 오버레이 약화 */
+.hero-compact::before {
+  background:
+    radial-gradient(ellipse at 20% -10%, rgba(255,255,255,.12), transparent 45%),
+    radial-gradient(circle at 120% 30%, rgba(255,255,255,.09), transparent 35%),
+    repeating-linear-gradient(45deg, rgba(255,255,255,.04) 0 2px, transparent 2px 10px);
+}
+.hero-compact::after{
+  background: linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.04)); /* 0.10→0.06 */
+}
+
+/* 글래스 카드는 살짝 더 불투명하게 해서 대비 ↑ */
+.hero-glass{
+  backdrop-filter: blur(6px);
+  background: rgba(255,255,255,.24);        /* 0.18→0.24 */
+  border: 1px solid rgba(255,255,255,.30);
+  color: #fff;
+}
+
+/* 가운데 정렬 전용 플래그 */
+.hero-center{
+  text-align: center;
+}
+
+/* 타이틀/서브타이틀 크게 & 선명하게 */
+.hero-title-sm{
+  font-size: clamp(36px, 5vw, 56px);        /* 크게 (기존 최대 44→56) */
+  font-weight: 900;
+  letter-spacing: -.01em;
+  color:#fff;
+  text-shadow: 0 2px 6px rgba(0,0,0,.15);    /* 미세한 음영으로 선명도 ↑ */
+}
+.hero-sub-sm{
+  font-size: clamp(16px, 2.2vw, 20px);      /* 한 사이즈 키움 */
+  color: oklch(0.99 0 0 / .98);             /* 완전한 흰색에 가깝게 */
+}
+
+/* 칩 (카테고리/키워드) */
+.chips {
+  display: flex; gap: .5rem; flex-wrap: nowrap; overflow: auto; padding-bottom: 2px;
+}
+.chip {
+  white-space: nowrap;
+  background: var(--ym-primary-100);
+  color: var(--ym-primary);
+  border: 1px solid rgba(255,255,255,.35);
+  padding: .35rem .7rem;
+  border-radius: 999px;
+  font-size: .875rem;
+}
+.chip:hover { background: rgba(255,255,255,.85); }
+
+/* CTA 버튼 라인 */
+.hero-cta .btn { border-radius: 999px; padding: .55rem 1rem; }
+
+/* KPI도 중앙 정렬 + 숫자 살짝 키움 */
+.kpis{
+  display:grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap:.75rem;
+  justify-items:center;                      /* 중앙 정렬 */
+}
+.kpi{
+  width:100%;
+  max-width: 260px;                          /* 너무 넓어지지 않게 제한 */
+  background: rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.30);
+  border-radius:12px;
+  padding:.7rem .8rem;
+  color:#fff;
+  text-align:center;
+}
+.kpi strong{ display:block; font-size:1.25rem; color:#fff; } /* 숫자 키움 */
+.kpi span{ font-size:.85rem; color:#fff; opacity:.95; }
+
+/* 웨이브는 그대로 */
+.hero-wave { display:block; line-height:0; margin-top: 8px; }
+.hero-wave svg { display:block; width:100%; height:28px; }
+
+/* 히어로: 웨이브가 차지하던 여백 제거하고 절대 배치용 공간 확보 */
+.hero-compact{
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 0;               /* ↓ 웨이브가 절대 배치되므로 0 */
+}
+
+/* 컨텐츠가 웨이브와 겹치지 않게 바닥 여백만 확보 (웨이브 높이 만큼) */
+.hero-stack{
+  padding-bottom: 28px;            /* 웨이브 svg 높이만큼 */
+}
+
+/* 웨이브를 히어로 바닥에 고정 */
+.hero-wave{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;                       /* ← 여기! 바닥에 붙임 */
+  margin: 0;
+  line-height: 0;
+  height: 28px;                    /* svg와 동일 */
+  pointer-events: none;
+}
+.hero-wave svg{
+  display: block;
+  width: 100%;
+  height: 28px;
+}
+/* === Bento style stats === */
+.stats-bento{
+  display:grid; grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 1rem; justify-items:stretch; margin-top:.75rem;
+}
+.stat-card{
+  position: relative;
+  border-radius: 16px;
+  padding: .9rem 1rem;
+  color:#fff;
+  /* 라이트 글래스 + 그라데이션 라이트 */
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,.12));
+  border:1px solid rgba(255,255,255,.28);
+  backdrop-filter: blur(5px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.06);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.stat-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(0,0,0,.10);
+}
+.stat-head{
+  display:flex; align-items:center; gap:.6rem; margin-bottom:.35rem; opacity:.95;
+  font-size:.9rem; font-weight:600;
+}
+.stat-icon{
+  width:34px; height:34px; display:grid; place-items:center;
+  border-radius:10px; background: rgba(255,255,255,.22);
+  border:1px solid rgba(255,255,255,.28);
+}
+.stat-icon i{ font-size: 1rem; }
+.stat-value{
+  line-height:1; font-weight:800; letter-spacing:-.02em;
+  font-size: clamp(22px, 2.6vw, 30px);
+}
+.stat-unit{
+  margin-left: .35rem; font-size:.95rem; font-weight:700; opacity:.95;
+}
+
+/* 좁은 화면에서 1→2→3단 그리드 */
+@media (max-width: 992px){
+  .stats-bento{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+@media (max-width: 768px){
+  .stats-bento{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+@media (max-width: 480px){
+  .stats-bento{ grid-template-columns: 1fr; }
+}
+/* === "넉넉한" 히어로 버전 === */
+.hero-compact.hero-spacious{
+  /* 상단/하단 여백을 뷰포트 기준으로 크게 (반응형) */
+  padding-top: clamp(48px, 10vh, 120px);
+  padding-bottom: 0;                 /* 웨이브는 절대배치라 0 유지 */
+}
+
+/* 웨이브와 겹치지 않게 바닥 여백을 넉넉히 (웨이브 28px + 여유) */
+.hero-compact.hero-spacious .hero-stack{
+  max-width: 1040px;                 /* 본문 폭 조금 넓힘 */
+  padding-bottom: 44px;              /* 기존 28px → 44px */
+}
+
+/* 히어로 타이틀/서브 더 크게(반응형), 가독성 유지 */
+.hero-compact.hero-spacious .hero-title-sm{
+  font-size: clamp(44px, 6vw, 72px); /* 기존 최대 56 → 72 */
+  text-shadow: 0 3px 10px rgba(0,0,0,.18);
+}
+.hero-compact.hero-spacious .hero-sub-sm{
+  font-size: clamp(18px, 2.4vw, 22px); /* 살짝 업 */
+  margin-top: .6rem;                   /* 타이틀과 간격 */
+}
+
+/* Bento 통계 카드 간격/패딩 확대로 숨통 트이게 */
+.hero-compact.hero-spacious .stats-bento{
+  gap: 1.25rem;                       /* 기존 1rem → 1.25rem */
+  margin-top: 1.1rem;                 /* 서브텍스트와 간격 */
+}
+.hero-compact.hero-spacious .stat-card{
+  padding: 1.05rem 1.15rem;           /* 카드 내부 여백 업 */
+}
+.hero-compact.hero-spacious .stat-value{
+  font-size: clamp(24px, 3vw, 34px);  /* 숫자 크기 살짝 업 */
+}
+
+/* 웨이브는 바닥 고정 + 여백은 hero-stack에서 확보 */
+.hero-wave{
+  position: absolute; left:0; right:0; bottom:0;
+  line-height:0; height:28px; margin:0; pointer-events:none;
+}
+.hero-wave svg{ width:100%; height:28px; display:block; }
+
+/* 히어로 중앙정렬 강제 */
+.hero-compact > .container{
+  /* 부트스트랩 .container의 좌우 패딩/폭 영향 제거 + 중앙 정렬 */
+  max-width: 1280px;              /* 원하는 최대 폭 */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0;
+  padding-right: 0;
+  display: flex;                  /* 내부를 중앙으로 */
+  justify-content: center;
+}
+
+/* 히어로 내부 스택 자체도 중앙 고정 */
+.hero-stack{
+  max-width: 1040px;              /* 타이틀/부제/벤토 묶음 폭 */
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+/* 벤토 그리드도 히어로 스택 폭과 같은 축으로 */
+.stats-bento{
+  max-width: 960px;               /* 히어로 스택보다 살짝 좁게 */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* (옵션) 타이틀이 줄바꿈되면서 시각적 중심이 어긋나 보이면
+   글자 간격/그림자만 살짝 조절해 안정감 보정 */
+.hero-title-sm{
+  letter-spacing: -.01em;
+  text-shadow: 0 3px 10px rgba(0,0,0,.18);
+}
+
+/* Hero 타이틀 줄바꿈 보정 */
+.hero-compact.hero-spacious .hero-title-sm {
+  font-size: clamp(38px, 5vw, 64px); /* 기존 44→38, 최대 72→64 */
+  word-break: keep-all; /* 한글 단어 중간 줄바꿈 방지 */
+}
+
+
+/* 검색 모달 가독성 */
+#searchModal .modal-content { border-radius: 16px; }
+#searchModal .input-group .form-control { border:1.5px solid var(--ym-border); }
+#searchModal .input-group .form-control:focus { border-color: var(--ym-primary); box-shadow: 0 0 0 0.15rem rgba(242,133,0,.25); }
+#searchSuggest .list-group-item { border: 1px solid var(--ym-border); border-left: 0; border-right: 0; }
+#searchSuggest .list-group-item + .list-group-item { border-top: 0; } /* 경계 중복 제거 */
+
+
+/* 헤더 중앙 검색바: 오른쪽 네비와 겹치지 않도록 폭 제한 */
+.header-center{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: none;              /* 아이콘 클릭 방해 X */
+}
+
+
+/* === 외곽 한 겹만 선명한 경계선 === */
+.search-shell{
+  display: flex; align-items: center; gap: 10px;
+  width: 100%;
+  background: #fff;
+  border: 2px solid oklch(0.88 0 0);           /* ✅ 더 진하고 선명한 2px */
+  border-radius: 999px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);      /* 살짝 떠 보이게 */
+  padding: 8px 12px;
+  overflow: hidden;
+}
+.search-icon{ font-size: 1rem; color: oklch(0.55 0 0); }
+
+.search-input{
+  flex: 1 1 auto;
+  border: 0; outline: 0;
+  padding: 6px 4px;
+  line-height: 1.3;
+}
+.search-input::placeholder{ color: oklch(0.62 0 0); }
+
+.search-btn{
+  border: 0;
+  background: var(--ym-primary);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 8px 14px;
+  transition: background .15s ease;
+}
+.search-btn:hover{ background: var(--ym-primary-bright); }
+
+/* 포커스 시 외곽만 강조 (내부 인풋은 보더 없음) */
+.search-input:focus + .search-btn,
+.search-input:focus-visible,
+.search-shell:focus-within{
+  box-shadow: 0 0 0 0.2rem rgba(242,133,0,.18);
+  border-color: var(--ym-primary);
+}
+
+
+
+
+/* 태블릿 이하는 폭 꽉 채우되, 높이/터치 여백 유지 */
+@media (max-width: 991.98px){
+  .header-center{
+    position: static;
+    transform: none;
+    margin-top: .5rem;
+  }
+  .header-center .search-bar{
+    width: 100% !important;
+  }
+}
+
+/* === 헤더 검색바 컴팩트 사이징 === */
+
+/* 모바일 접근성 유지(손가락 탭 영역 최소 확보) */
+@media (max-width: 991.98px){
+  .search-shell{ min-height: 44px; }
+}
+
+/* 검색 자동완성 하이라이트 */
+.ym-hl {
+  color: var(--ym-primary);
+  font-weight: 700;
+}
+
+
+/* ===== 최종: 헤더 중앙 검색바 폭/여백 ===== */
+:root{ --header-safe-right: 560px; }          /* 오른쪽 세이프존(네비 여유) */
+@media (min-width: 1400px){
+  :root{ --header-safe-right: 620px; }
+}
+
+/* 폭을 clamp로 제어: 최소~유동(calc)~최대 */
+header .header-center .search-bar{
+  /* 최소 460px, 최대 520px, 그 사이에서는 오른쪽 여유를 뺀 값 사용 */
+  width: clamp(460px, calc(100% - var(--header-safe-right)), 520px) !important;
+}
+@media (min-width: 1400px){
+  header .header-center .search-bar{
+    /* 대형 화면: 최소 480px, 최대 540px */
+    width: clamp(480px, calc(100% - var(--header-safe-right)), 540px) !important;
+  }
+}
+
+/* 헤더 오른쪽 메뉴를 컨테이너 바깥으로 40~60px 살짝 밀기 */
+@media (min-width: 992px){
+  header .container .row > .col-12.col-lg:last-child{
+    margin-right: -40px;   /* 필요하면 -60px까지 */
+  }
+}
+/* 초대형 화면에서는 여유 조금 더 */
+@media (min-width: 1400px){
+  header .container .row > .col-12.col-lg:last-child{
+    margin-right: -60px;
+  }
+}
+/* 모바일/태블릿에서는 원복 */
+@media (max-width: 991.98px){
+  header .container .row > .col-12.col-lg:last-child{
+    margin-right: 0;
+  }
+}
+
+/* 검색바는 항상 최상단에 */
+header .header-center{
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%,-50%);
+  width: 100%;
+  display: flex; justify-content: center;
+  z-index: 20;                /* ✅ 오른쪽 메뉴보다 위 */
+  pointer-events: none;       /* 겹침 방지 */
+}
+header .header-center .search-bar{
+  pointer-events: auto;       /* ✅ 검색바는 클릭 가능 */
+}
+
+/* 오른쪽 메뉴는 겹쳐도 아래 레이어로 */
+header .container .row > .col-12.col-lg:last-child{
+  position: relative;
+  z-index: 1;                 /* ✅ 검색바보다 아래 */
+}
+
+/* Footer 배경 (테마 변수 없을 때도 보장) */
+.bg-ymsecondary-bright{
+  background-color: var(--ym-secondary-800, #2a1a14) !important;
+}
+
+/* 개발자 아바타 통일 */
+.dev-avatar{
+  width: 2rem; height: 2rem;
+  border-radius: .375rem;      /* 살짝 라운드 */
+  object-fit: cover;
+  display: block;
+}
+
+/* 스택 아이콘 크기 통일 */
+footer .stack svg{
+  width: 2rem; height: 2rem;   /* 한 줄 통일 */
+  display: inline-block;
+}
+
+/* 링크 호버 */
+footer a.dev-item:hover{ opacity: .85; }
 	background: blue;
+}
+
+.scroll-smooth {
+	scroll-behavior: smooth;
+}
+
+.fs-075 {
+	font-size: .75rem;
+}
+
+.fs-05 {
+	font-size: .5rem;
+}
+
+.fs-0 {
+	font-size: 0;
 }

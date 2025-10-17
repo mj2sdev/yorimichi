@@ -1,0 +1,17 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none"
+     xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Yorimichi symbol - pin &amp; bowl">
+  <defs>
+    <linearGradient id="g1" x1="12" y1="8" x2="52" y2="54" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF8A00"/><stop offset="1" stop-color="#FF6000"/>
+    </linearGradient>
+    <filter id="sh1" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity=".12"/>
+    </filter>
+  </defs>
+  <path filter="url(#sh1)"
+        d="M32 4C19.85 4 10 13.85 10 26c0 15.23 16.17 27.94 20.46 31.06a3 3 0 0 0 3.08 0C37.83 53.94 54 41.23 54 26 54 13.85 44.15 4 32 4Z"
+        fill="url(#g1)"/>
+  <path d="M18 35.5a14 10 0 1 0 28 0H18Z" fill="white" opacity=".96"/>
+  <path d="M20.2 33.3h23.6c1.2 0 2.2.98 2.2 2.2H18c0-1.22.98-2.2 2.2-2.2Z" fill="#FFE8D1"/>
+  <path d="M26 24.5l13 7.2M38 22.8l4.8 2.6" stroke="white" stroke-width="3" stroke-linecap="round" opacity=".96"/>
+</svg>

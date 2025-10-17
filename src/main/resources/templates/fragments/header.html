@@ -1,59 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<th:block th:fragment="header">
+
 <header class="border-bottom shadow-sm sticky-top bg-ymwhite">
-	<div class="container">
-		<div class="row justify-content-between align-items-center py-4">
-			<!-- 로고 -->
-			<div class="col-12 col-lg">
-				<a
-					th:href="@{/}"
-					th:text="Yorimichi"
-					class="me-4 text-decoration-none fs-2 fw-bold text-ymprimary"></a>
-			</div>
+  <div class="container">
+    <div class="row align-items-center py-3 g-2">
 
-			<!-- 검색  -->
-			<div class="col-12 col-lg">
-				<form action="/search">
-					<div class="input-group">
-						<input name="keyword" placeholder="검색어 입력" class="form-control rounded-start-pill" >
-						<button type="submit" class="btn btn-ymprimary rounded-end-circle">
-							<i class="bi bi-search"></i>
-						</button>
-					</div>
-				</form>
-			</div>
+      <!-- 로고 : md 이상=가로 락업 / md 미만=아이콘 -->
+      <div class="col-12 col-md-3 d-flex align-items-center">
+        <a th:href="@{/}" class="d-inline-flex align-items-center text-decoration-none">
+          <!-- 데스크톱/태블릿: 가로 락업 -->
+          <img src="/image/ym1-logo-horizontal.svg" alt="Yorimichi"
+               height="44" class="d-none d-md-inline-block" loading="eager">
+          <!-- 모바일: 심벌 -->
+          <img src="/image/ym1-symbol.svg" alt="Yorimichi"
+               height="40" class="d-inline-block d-md-none" loading="eager">
+        </a>
+      </div>
 
-			<!-- 네비게이션 -->
-			<div class="col-12 col-lg">
-				<div class="d-flex justify-content-around">
-					<button
-						data-bs-toggle="offcanvas"
-						data-bs-target="#notification"
-						class="btn btn-ghost position-relative"
-						type="button">
-						<span class="position-absolute top-0 start-50 badge rounded-pill bg-danger">99+</span>
-						<i class="bi bi-lightbulb fs-3"></i>
-						<div>알림</div>
-					</button>
+      <!-- 검색창 -->
+      <div class="col-12 col-md-5">
+        <form action="/search" method="get" class="w-100">
+          <div class="input-group">
+            <span class="input-group-text bg-white border-1">
+              <i class="bi bi-search"></i>
+            </span>
+            <input name="keyword"
+                   class="form-control border-1"
+                   placeholder="검색어 입력"
+                   autocomplete="off">
+            <button type="submit" class="btn btn-ymprimary px-3">
+              검색
+            </button>
+          </div>
+        </form>
+      </div>
 
-					<a href="/station" class="btn btn-ghost">
-						<i class="bi bi-bus-front fs-3"></i>
-						<div>정류장</div>
-					</a>
+      <!-- 오른쪽 메뉴 -->
+      <div class="col-12 col-md-4">
+        <div class="d-flex justify-content-md-end justify-content-between align-items-center gap-3">
 
-					<!-- 로그인 필요 시  -->
-					<a href="/login" class="btn btn-ghost">
-						<i class="bi bi-door-open fs-3"></i>
-						<div>로그인</div>
-					</a>
+          <!-- 알림 -->
+          <a href="/notice" class="text-decoration-none text-ymsecondary text-center">
+            <div class="position-relative">
+              <i class="bi bi-lightbulb fs-3"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">99+</span>
+            </div>
+            <div class="small mt-1">알림</div>
+          </a>
 
-					<!-- 로그인 된 경우 -->
-					<a href="/mypage" class="btn btn-ghost" hidden>
-						<i class="bi bi-person fs-3"></i>
-						<div>내정보</div>
-					</a>
+          <!-- 정류장 -->
+          <a href="/station" class="text-decoration-none text-ymsecondary text-center">
+            <i class="bi bi-bus-front fs-3"></i>
+            <div class="small mt-1">정류장</div>
+          </a>
 
-				</div>
-				
-			</div>
-		</div>
-	</div>
+          <!-- 로그인 (로그인 상태에 따라 교체해서 사용) -->
+          <a href="/login" class="text-decoration-none text-ymsecondary text-center">
+            <i class="bi bi-door-open fs-3"></i>
+            <div class="small mt-1">로그인</div>
+          </a>
+
+          <!-- 로그인 된 경우 예시
+          <a href="/mypage" class="text-decoration-none text-ymsecondary text-center">
+            <i class="bi bi-person-circle fs-3"></i>
+            <div class="small mt-1">내정보</div>
+          </a>
+          -->
+        </div>
+      </div>
+
+    </div>
+  </div>
 </header>
+
+</th:block>
+</body>
+</html>

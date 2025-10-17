@@ -1,6 +1,6 @@
 package com.jslhrd.yorimichi.domain;
 
-import com.jslhrd.yorimichi.enums.RoleName;
+import com.jslhrd.yorimichi.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +27,7 @@ public class RoleDTO {
 	/**
 	 * 권한/역할 이름
 	 */
-	private RoleName name;
+	private Role name;
 
 	/**
 	 * 생성일시 (DB 자동 생성)
