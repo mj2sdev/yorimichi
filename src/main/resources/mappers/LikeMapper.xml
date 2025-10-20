@@ -5,7 +5,7 @@
 
     <!-- @formatter:off -->
 
-    <select id="selectByUserId" parameterType="Long" resultType="StoreDTO">
+    <select id="selectByUserId" parameterType="long" resultType="StoreDTO">
         SELECT s.*
         FROM store s
         JOIN likes l ON l.root_id = s.id
