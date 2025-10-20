@@ -54,6 +54,10 @@ public class UserDTO extends RootDTO implements Serializable {
 	 */
 	private String description;
 
+	/**
+	 * 유저 프사
+	 */
+	private String image;
 
 	private String gender;
 
@@ -69,7 +73,7 @@ public class UserDTO extends RootDTO implements Serializable {
 
 	private boolean showFollowees;
 
-	private boolean showFolloweers;
+	private boolean showFollowers;
 
 	/**
 	 * 마지막 로그인 일시
@@ -116,7 +120,6 @@ public class UserDTO extends RootDTO implements Serializable {
 	 * 같이먹기 목록
 	 */
 	private List<CoeatDTO> coeats = new ArrayList<>();
-
 
 	public UserDTO() {
 		super(RootType.USER);

@@ -5,11 +5,12 @@
 
     <!-- @formatter:off -->
 
-    <select id="selectByUserId" parameterType="Long" resultType="LikeDTO">
-        SELECT user_id, root_id, created_at, updated_at
-        FROM likes
-        WHERE user_id = #{userId}
-        ORDER BY created_at DESC
+    <select id="selectByUserId" parameterType="Long" resultType="StoreDTO">
+        SELECT s.*
+        FROM store s
+        JOIN likes l ON l.root_id = s.id
+        WHERE l.user_id = #{userId}
+        ORDER BY l.created_at DESC
     </select>
 
     <insert id="insert" parameterType="LikeDTO">

@@ -6,6 +6,14 @@
 
     <!-- @formatter:off -->
 
+    <select id="selectByUserId" parameterType="long" resultType="String">
+        SELECT url
+        FROM image i
+        JOIN root_image ri ON ri.image_id=i.id
+        WHERE ri.root_id = #{userId}
+    </select>
+
+
     <select id="selectByReviewId" parameterType="long" resultType="ImageDTO">
         SELECT i.id, i.url, i.created_at, i.updated_at
         FROM image i

@@ -39,7 +39,9 @@ public class UserController {
 	//마이페이지 이동
 	@GetMapping("/mypage")
 	public String showMypage(Principal principal, Model model) {
-		UserDTO user = userService.findById(null);
+		//임시로 userId는 1001
+		Long userId = (long) 1001;
+		UserDTO user = userService.findById(userId);
 		model.addAttribute("user", user);
 		return "user/mypage";
 	}

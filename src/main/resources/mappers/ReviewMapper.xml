@@ -25,7 +25,7 @@
                 content
         FROM review
         WHERE user_id = #{userId}
-        ORDER BY created_at DESC
+        ORDER BY id DESC
     </select>
 
     <select id="selectAll" resultType="ReviewDTO">
