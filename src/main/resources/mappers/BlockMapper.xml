@@ -11,7 +11,7 @@
         FROM user u
         JOIN block b ON b.blockee_id = u.id 
         WHERE b.blocker_id = #{userId}
-        ORDER BY created_at DESC;
+        ORDER BY b.created_at DESC;
     </select>
 
     <select id="exists" resultType="boolean">
