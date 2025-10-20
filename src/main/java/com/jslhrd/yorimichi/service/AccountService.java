@@ -64,10 +64,12 @@ public interface AccountService {
 	 * </ul>
 	 *
 	 * @param socialAccount provider / providerUserId / email(옵션) / displayName(옵션) 등
+	 * @param gender
+	 * @param year
 	 * @return userId (생성되었거나 이미 링크된 사용자 ID)
 	 * @throws IllegalArgumentException 필수 키 누락 시 (provider, providerUserId)
 	 */
-	Long signupSocial(SocialAccountDTO socialAccount);
+	Long signupSocial(SocialAccountDTO socialAccount, String gender, Integer year);
 
 	/**
 	 * 비밀번호 변경(본인 인증 후).
