@@ -60,7 +60,7 @@ public class SecurityConfig {
 				 */
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(
-								"/", "/login", "/signup","/signup/**", "/oauth2/**", "/error",
+								"/", "/login", "/signup", "/signup/**", "/oauth2/**", "/error",
 								"/favicon.ico",
 								"/assets/**", "/css/**", "/js/**", "/images/**",
 								"/webjars/**",
@@ -122,7 +122,7 @@ public class SecurityConfig {
 						if (oauth2Svc != null) u.userService(oauth2Svc);
 						if (oidcSvc != null) u.oidcUserService(oidcSvc);
 					})
-					.defaultSuccessUrl("/", false)
+					.defaultSuccessUrl("/", true)
 					.failureUrl("/login?oauth2_error")
 			);
 		}
