@@ -237,21 +237,21 @@ CREATE TABLE food (
 
 -- 유저
 CREATE TABLE user (
-    id                BIGINT       NOT NULL,
-    role_id           BIGINT       NOT NULL,
-    email             VARCHAR(100) NOT NULL,
-    password          VARCHAR(256),
-    nickname          VARCHAR(20)  NOT NULL,
-    description       TEXT,
-    gender            ENUM('M', 'F'),
-    year              INT     NOT NULL,
-    email_verified    BOOLEAN      NOT NULL DEFAULT FALSE,
-    show_reviews      BOOLEAN      NOT NULL DEFAULT FALSE,
-    show_likes        BOOLEAN      NOT NULL DEFAULT FALSE,
-    show_bookmarks    BOOLEAN      NOT NULL DEFAULT FALSE,
-    show_following    BOOLEAN      NOT NULL DEFAULT FALSE,
-    show_followers    BOOLEAN      NOT NULL DEFAULT FALSE,
-    last_login_at     DATETIME,
+    id             BIGINT         NOT NULL,
+    role_id        BIGINT         NOT NULL,
+    email          VARCHAR(100)   NOT NULL,
+    password       VARCHAR(256),
+    nickname       VARCHAR(20)    NOT NULL,
+    description    TEXT,
+    gender         ENUM('M', 'F') NOT NULL,
+    year           INT            NOT NULL,
+    email_verified BOOLEAN        NOT NULL DEFAULT FALSE,
+    show_reviews   BOOLEAN        NOT NULL DEFAULT FALSE,
+    show_likes     BOOLEAN        NOT NULL DEFAULT FALSE,
+    show_bookmarks BOOLEAN        NOT NULL DEFAULT FALSE,
+    show_following BOOLEAN        NOT NULL DEFAULT FALSE,
+    show_followers BOOLEAN        NOT NULL DEFAULT FALSE,
+    last_login_at  DATETIME,
 
     CONSTRAINT pk_user          PRIMARY KEY (id),
     CONSTRAINT fk_user_root     FOREIGN KEY (id)      REFERENCES root(id) ON DELETE CASCADE,
@@ -434,7 +434,7 @@ CREATE TABLE api_key (
     name        VARCHAR(255)  NOT NULL,
     owner       VARCHAR(255)  NOT NULL,
     description VARCHAR(255),
-    createdAt   DATETIME      DEFAULT CURRENT_TIMESTAMP,
+    created_at   DATETIME      DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT pk_api_key PRIMARY KEY (id)
 ) COMMENT 'api key 보관용 테이블 입니다.';

@@ -1,6 +1,7 @@
 package com.jslhrd.yorimichi.security;
 
 import com.jslhrd.yorimichi.domain.UserDTO;
+import com.jslhrd.yorimichi.mapper.AccountMapper;
 import com.jslhrd.yorimichi.mapper.UserMapper;
 import com.jslhrd.yorimichi.util.EmailNormalizer;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ public class LocalUserDetailsManager implements UserDetailsService {
 	/**
 	 * 인증 전용 최소 조회를 담당하는 매퍼(이메일 → UserDTO with password/role/state).
 	 */
+	private final AccountMapper accountMapper;
 	private final UserMapper userMapper;
 	private final EmailNormalizer emailNormalizer;
 
@@ -67,9 +69,9 @@ public class LocalUserDetailsManager implements UserDetailsService {
 		final String normEmail = emailNormalizer.normalize(email);
 
 		// 2) 이메일 기준으로 인증 최소 정보 조회
-		//  - userMapper.selectByEmail은 Optional<UserDTO>를 반환(단건 관례)
+		//  - accountMapper.selectByEmail은 Optional<UserDTO>를 반환(단건 관례)
 		//  - 실패 시 외부 메시지는 일반화, 내부 로그(debug)로만 상세 원인 남김
-		UserDTO user = userMapper.selectByEmail(normEmail)
+		UserDTO user = accountMapper.selectByEmail(normEmail)
 				.orElseThrow(() -> {
 					if (log.isDebugEnabled()) {
 						log.debug("No user found for email: {}", normEmail);

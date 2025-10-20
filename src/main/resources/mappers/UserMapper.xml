@@ -109,6 +109,18 @@
         )
     </select>
 
+    <insert id="insert" parameterType="UserDTO">
+        INSERT INTO user (id, role_id, email, password, nickname, description, gender, year)
+        VALUES (#{id},
+                (SELECT id FROM role WHERE name = 'USER'),
+                #{email},
+                #{password},
+                #{nickname},
+                #{description},
+                #{gender},
+                #{year})
+    </insert>
+
     <update id="update">
         UPDATE user u
         JOIN root r ON u.id = r.id
@@ -125,6 +137,15 @@
             u.show_followers = #{user.showFollowers},
             r.updated_at = NOW()
         WHERE u.id = #{userId}
+    </update>
+
+    <update id="deleteById" parameterType="long">
+        UPDATE user u
+        JOIN root r ON u.id = r.id
+            AND r.type = 'USER'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        SET deleted_at = NOW()
+        WHERE id = #{userId}
     </update>
 
     <!-- @formatter:on -->
