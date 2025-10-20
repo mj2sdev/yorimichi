@@ -212,6 +212,6 @@ public class AccountManager implements AccountService {
 
 	@Override
 	public boolean confirmEmailVerification(String email) {
-		return userMapper.selectByEmail(email).isEmpty();
+		return accountMapper.selectByEmail(email).isEmpty();
 	}
 }
