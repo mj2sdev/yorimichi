@@ -23,11 +23,6 @@ public interface UserMapper {
 	List<UserDTO> selectAll(SearchDTO search);
 
 	/**
-	 * 이메일 정규화(소문자/trim)는 호출부에서 보장
-	 */
-	Optional<UserDTO> selectByEmail(@Param("email") String email);
-
-	/**
 	 * 유저 단건 조회.
 	 *
 	 * @param userId 유저 ID
@@ -38,9 +33,16 @@ public interface UserMapper {
 	/**
 	 * 닉네임 존재 여부 (XML에서 SELECT EXISTS(...)로 구현 권장)
 	 */
-	boolean existsNickname(@Param("nickname") String nickname);
+	boolean existsByNickname(@Param("nickname") String nickname);
 
 	boolean existsActive(@Param("userId") Long userId);
+
+	/**
+	 * user INSERT (로컬/소셜 공용).
+	 * 전제: rootMapper.insert(user)로 user.id가 미리 채워져 있어야 함(useGeneratedKeys=true).
+	 * 주의: 소셜 가입 시 password는 NULL 허용.
+	 */
+	int insert(UserDTO user);
 
 	/**
 	 * 유저 수정.
@@ -48,4 +50,11 @@ public interface UserMapper {
 	 * @return 영향 행 수 (수정 1, 대상 없음 0)
 	 */
 	int update(@Param("userId") Long userId, @Param("user") UserDTO user);
+
+	/**
+	 * 사용자 비활성(soft delete) 또는 삭제.
+	 * 실제 구현이 root.deleted_at 업데이트라면 XML/Javadoc에 명시.
+	 * 영향 행수 반환
+	 */
+	int deleteById(@Param("userId") Long userId);
 }

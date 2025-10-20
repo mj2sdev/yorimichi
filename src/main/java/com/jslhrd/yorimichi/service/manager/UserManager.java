@@ -21,6 +21,7 @@ import java.util.List;
 public class UserManager implements UserService {
 
 	private final UserMapper userMapper;
+	private final AccountManager accountManager;
 
 	@Override
 	public List<UserDTO> findAll(SearchDTO search) {
@@ -35,7 +36,7 @@ public class UserManager implements UserService {
 
 	@Override
 	public boolean isNicknameAvailable(String nickname) {
-		return !userMapper.existsNickname(nickname.trim());
+		return !userMapper.existsByNickname(nickname.trim());
 	}
 
 	@Override

@@ -35,7 +35,8 @@
           <label class="form-label" for="password">
             비밀번호
           </label>
-          <input class="form-control" id="password" name="password" minlength="8" placeholder="********" required type="password">
+          <input class="form-control" id="password" minlength="8" name="password" placeholder="********" required
+                 type="password">
           <div class="invalid-feedback">
             비밀번호는 8자 이상이어야 합니다.
           </div>
@@ -58,8 +59,12 @@
         </div>
         <div class="col-12">
           <div class="d-flex justify-content-between">
-            <button class="btn shadow rounded-circle p-0" style="height: 3rem; width: 3rem;" type="button">
-              <img class="w-100 rounded-circle" src="/images/google.png">
+            <button aria-label="Sign in with Google"
+                    class="btn shadow rounded-circle p-0"
+                    onclick="location.href='/oauth2/authorization/google'"
+                    style="height:3rem;width:3rem;"
+                    type="button">
+              <img alt="Google" class="w-100 rounded-circle" src="/images/google.png">
             </button>
             <button class="btn shadow rounded-circle p-0" style="height: 3rem; width: 3rem;" type="button">
               <img class="w-100 rounded-circle" src="/images/naver.png">
