@@ -41,23 +41,23 @@ public class SecurityConfig {
 	) throws Exception {
 
 		http
-				/* =========================
+				/*
 				   CSRF
 				   - Thymeleaf 폼 사용 시 CSRF 유지 권장.
 				   - 지연 토큰 비활성화(핵심 한 줄): 렌더 전에 토큰/세션을 준비해
 					 "response commit 후 세션 생성" 예외를 방지.
-				   ========================= */
+				 */
 				.csrf(csrf -> csrf
 								.csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
 						// (선택) fetch에서 JS로 읽기 쉬우려면 쿠키 기반으로 바꿔도 됨:
 						// .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 				)
 
-				/* =========================
+				/*
 				   인가(Authorization)
 				   - 정적 리소스와 공개 URL 허용
 				   - 나머지는 인증 필요
-				   ========================= */
+				 */
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(
 								"/", "/login", "/signup","/signup/**", "/oauth2/**", "/error",
@@ -69,13 +69,13 @@ public class SecurityConfig {
 						.anyRequest().authenticated()
 				)
 
-				/* =========================
+				/*
 				   폼 로그인(로컬)
 				   - GET /login : 커스텀 로그인 페이지
 				   - POST /login: 인증 처리(필터)
 				   - defaultSuccessUrl("/", false):
 					 SavedRequest 있으면 복귀, 없으면 "/" 이동
-				   ========================= */
+				 */
 				.formLogin(form -> form
 						.loginPage("/login")
 						.loginProcessingUrl("/login")
@@ -86,9 +86,9 @@ public class SecurityConfig {
 						.permitAll()
 				)
 
-				/* =========================
+				/*
 				   로그아웃
-				   ========================= */
+				 */
 				.logout(logout -> logout
 						.logoutUrl("/logout")
 						.logoutSuccessUrl("/")
@@ -97,24 +97,24 @@ public class SecurityConfig {
 						.permitAll()
 				)
 
-				/* =========================
+				/*
 				   세션 관리
 				   - 세션 고정 공격 방지: migrateSession
 				   - 동시 로그인 1개 제한
 				   - 새 로그인 허용(이전 세션 무효화)
-				   ========================= */
+				 */
 				.sessionManagement(sess -> sess
 						.sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::migrateSession)
 						.maximumSessions(1)
 						.maxSessionsPreventsLogin(false)
 				);
 
-    /* =========================
+    /*
        소셜 로그인(OAuth2/OIDC)
        - ClientRegistrationRepository(=등록 정보)가 있을 때만 활성화
        - userInfoEndpoint().userService(...)     : 일반 OAuth2
          userInfoEndpoint().oidcUserService(...) : OIDC
-       ========================= */
+     */
 		if (clients != null) {
 			http.oauth2Login(o -> o
 					.loginPage("/login")
