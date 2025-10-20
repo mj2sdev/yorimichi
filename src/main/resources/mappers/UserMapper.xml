@@ -23,7 +23,7 @@
         ORDER BY r.created_at DESC, u.id
     </select>
 
-    <select id="selectById" parameterType="Long" resultType="UserDTO">
+    <select id="selectById" parameterType="long" resultType="UserDTO">
         SELECT u.id,
                u.role_id,
                u.email,
@@ -40,24 +40,7 @@
         WHERE u.id = #{userId}
     </select>
 
-    <select id="selectByEmail" parameterType="String" resultType="UserDTO">
-        SELECT u.id,
-               u.role_id,
-               u.email,
-               u.password,
-               u.nickname,
-               u.description,
-               u.last_login_at,
-               r.created_at,
-               r.updated_at
-        FROM user u
-        JOIN root r ON u.id = r.id
-            AND r.type = 'USER'
-            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        WHERE u.email = #{email}
-    </select>
-
-    <select id="existsNickname" parameterType="string" resultType="boolean">
+    <select id="existsByNickname" parameterType="string" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
             FROM user u
@@ -79,6 +62,18 @@
         )
     </select>
 
+    <insert id="insert" parameterType="UserDTO">
+        INSERT INTO user (id, role_id, email, password, nickname, description, gender, year)
+        VALUES (#{id},
+                (SELECT id FROM role WHERE name = 'USER'),
+                #{email},
+                #{password},
+                #{nickname},
+                #{description},
+                #{gender},
+                #{year})
+    </insert>
+
     <update id="update">
         UPDATE user u
         JOIN root r ON u.id = r.id
@@ -95,6 +90,15 @@
             u.show_followers = #{user.showFollowers},
             r.updated_at = NOW()
         WHERE u.id = #{userId}
+    </update>
+
+    <update id="deleteById" parameterType="long">
+        UPDATE user u
+        JOIN root r ON u.id = r.id
+            AND r.type = 'USER'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        SET deleted_at = NOW()
+        WHERE id = #{userId}
     </update>
 
     <!-- @formatter:on -->

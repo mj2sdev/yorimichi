@@ -4,29 +4,75 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.SocialAccountMapper">
 
-    <insert id="insert" parameterType="SocialAccountDTO">
-        INSERT INTO social_account (user_id, provider, provider_user_id, provider_email,
-                                    email_verified, display_name, avatar_url)
-        VALUES (#{userId}, #{provider}, #{providerUserId}, #{providerEmail},
-                #{emailVerified}, #{displayName}, #{avatarUrl})
-    </insert>
+    <!-- @formatter:off -->
 
-    <select id="selectByUserIdProvider" parameterType="String" resultType="SocialAccountDTO">
-        SELECT user_id, provider, provider_user_id, provider_email, email_verified,
-               display_name, avatar_url, created_at, updated_at, last_login_at
-        FROM social_account
-        WHERE user_id = #{userId} AND provider = #{provider}
+    <select id="selectByProviderAndProviderUserId" resultType="UserDTO">
+        SELECT u.id,
+               u.email,
+               u.password,
+               ro.name AS role,
+               u.gender,
+               u.year,
+               u.nickname,
+               u.last_login_at
+        FROM social_account sa
+        JOIN user u  ON u.id = sa.user_id
+        JOIN root r  ON r.id = u.id
+            AND r.type = 'USER'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        JOIN role ro ON ro.id = u.role_id
+        WHERE sa.provider = #{provider}
+            AND sa.provider_user_id = #{providerUserId}
     </select>
 
-    <update id="update" parameterType="SocialAccountDTO">
+    <select id="selectByUserIdProvider" resultType="SocialAccountDTO">
+        SELECT user_id,
+               provider,
+               provider_user_id,
+               provider_email,
+               email_verified,
+               display_name,
+               avatar_url,
+               created_at,
+               updated_at,
+               last_login_at
+        FROM social_account
+        WHERE user_id = #{userId}
+            AND provider = #{provider}
+    </select>
+
+    <insert id="insert" parameterType="SocialAccountDTO">
+        INSERT INTO social_account (user_id,
+                                    provider,
+                                    provider_user_id,
+                                    provider_email,
+                                    email_verified,
+                                    display_name,
+                                    avatar_url)
+        VALUES (#{userId},
+                #{provider},
+                #{providerUserId},
+                #{providerEmail},
+                #{emailVerified},
+                #{displayName},
+                #{avatarUrl})
+    </insert>
+
+    <update id="updateLastLoginAt">
         UPDATE social_account
-        SET provider_email = #{providerEmail}, display_name = #{displayName}, avatar_url = #{avatarUrl}
-        WHERE user_id = #{userId} AND provider = #{provider}
+        SET last_login_at = NOW(),
+            updated_at = NOW()
+        WHERE user_id = #{userId}
+            AND provider = #{provider}
     </update>
 
-    <delete id="deleteByUserIdProvider">
-        DELETE FROM social_account
-        WHERE user_id = #{userId} AND provider = #{provider}
+    <delete id="delete">
+        DELETE
+        FROM social_account
+        WHERE user_id = #{userId}
+            AND provider = #{provider}
     </delete>
+
+    <!-- @formatter:on -->
 
 </mapper>

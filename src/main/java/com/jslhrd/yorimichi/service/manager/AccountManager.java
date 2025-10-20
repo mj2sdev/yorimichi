@@ -6,6 +6,7 @@ import com.jslhrd.yorimichi.enums.Provider;
 import com.jslhrd.yorimichi.exception.UserNotFoundException;
 import com.jslhrd.yorimichi.mapper.AccountMapper;
 import com.jslhrd.yorimichi.mapper.RootMapper;
+import com.jslhrd.yorimichi.mapper.SocialAccountMapper;
 import com.jslhrd.yorimichi.mapper.UserMapper;
 import com.jslhrd.yorimichi.service.AccountService;
 import com.jslhrd.yorimichi.util.EmailNormalizer;
@@ -38,6 +39,7 @@ public class AccountManager implements AccountService {
 	private final RootMapper rootMapper;
 	private final UserMapper userMapper;
 	private final AccountMapper accountMapper;
+	private final SocialAccountMapper socialAccountMapper;
 	private final EmailNormalizer emailNormalizer;
 	private final PasswordEncoder passwordEncoder;
 
@@ -52,11 +54,11 @@ public class AccountManager implements AccountService {
 		String normalizedEmail = emailNormalizer.normalize(user.getEmail());
 		String rawPassword = user.getPassword();
 
-		if (userMapper.selectByEmail(normalizedEmail).isPresent()) {
+		if (accountMapper.selectByEmail(normalizedEmail).isPresent()) {
 			throw new IllegalStateException("이미 가입된 이메일입니다.");
 		}
 
-		if (userMapper.existsNickname(user.getNickname())) {
+		if (userMapper.existsByNickname(user.getNickname())) {
 			throw new IllegalStateException("이미 사용 중인 닉네임입니다.");
 		}
 
@@ -69,7 +71,7 @@ public class AccountManager implements AccountService {
 		}
 
 		user.setPassword(passwordEncoder.encode(rawPassword));
-		accountMapper.insertLocalAccount(user);
+		userMapper.insert(user);
 
 		// 정책: 이메일 인증 메일 발송(옵션)
 		// emailVerificationService.issueAndSend(email, rootId);
@@ -87,19 +89,19 @@ public class AccountManager implements AccountService {
 	 * - social_account(provider, provider_user_id) UNIQUE로 보장
 	 */
 	@Override
-	public Long signupSocial(SocialAccountDTO socialAccount) {
+	public Long signupSocial(SocialAccountDTO socialAccount, String gender, Integer year) {
 
 		Provider provider = socialAccount.getProvider();
 		String providerUserId = socialAccount.getProviderUserId();
 
 		// 1) 이미 링크되어 있으면 그 userId 바로 반환
-		Optional<UserDTO> findSocialAccount = accountMapper.selectByProviderAndSub(provider, providerUserId);
-		if (findSocialAccount.isPresent()) {
+		Optional<UserDTO> findUser = socialAccountMapper.selectByProviderAndProviderUserId(provider, providerUserId);
+		if (findUser.isPresent()) {
 
 			// 마지막 로그인 시각을 이 지점에서 갱신할 수 있음(옵션)
-			Long userId = findSocialAccount.get().getId();
+			Long userId = findUser.get().getId();
 			accountMapper.updateLastLoginAt(userId);
-			accountMapper.updateSocialLastLoginAt(userId, provider);
+			socialAccountMapper.updateLastLoginAt(userId, provider);
 
 			return userId;
 		}
@@ -108,18 +110,18 @@ public class AccountManager implements AccountService {
 		// 2) 이메일로 기존 유저 매칭 시도
 		String normalizedEmail = emailNormalizer.normalize(socialAccount.getProviderEmail());
 
-		Optional<UserDTO> findUser = userMapper.selectByEmail(normalizedEmail);
+		findUser = accountMapper.selectByEmail(normalizedEmail);
 		if (findUser.isPresent()) {
 
 			// 2-1) 기존 유저에 소셜 계정 링크
 			Long userId = findUser.get().getId();
 			socialAccount.setUserId(userId);
 
-			accountMapper.insertSocialAccount(socialAccount);
+			socialAccountMapper.insert(socialAccount);
 
 			// (선택) 마지막 로그인 갱신
 			accountMapper.updateLastLoginAt(userId);
-			accountMapper.updateSocialLastLoginAt(userId, provider);
+			socialAccountMapper.updateLastLoginAt(userId, provider);
 
 			return userId;
 		}
@@ -144,15 +146,17 @@ public class AccountManager implements AccountService {
 		newUser.setEmail(normalizedEmail); // 소셜 이메일 제공 시 저장 (nullable)
 		newUser.setPassword(null);         // 소셜 가입이므로 비번 없음
 		newUser.setNickname(nickname);
-		accountMapper.insertLocalAccount(newUser);
+		newUser.setGender(gender);
+		newUser.setYear(year);
+		userMapper.insert(newUser);
 
 		// 3-2) social_account 링크
 		socialAccount.setUserId(userId);
-		accountMapper.insertSocialAccount(socialAccount);
+		socialAccountMapper.insert(socialAccount);
 
 		// (선택) 마지막 로그인 갱신
 		accountMapper.updateLastLoginAt(userId);
-		accountMapper.updateSocialLastLoginAt(userId, provider);
+		socialAccountMapper.updateLastLoginAt(userId, provider);
 		return userId;
 	}
 
@@ -186,7 +190,7 @@ public class AccountManager implements AccountService {
 	@Override
 	public void delete(Long userId) {
 
-		boolean affected = accountMapper.deleteById(userId) > 0;
+		boolean affected = userMapper.deleteById(userId) > 0;
 		if (!affected) {
 			boolean exists = userMapper.existsActive(userId);
 			if (!exists) {
