@@ -23,7 +23,54 @@
         ORDER BY r.created_at DESC, u.id
     </select>
 
-    <select id="selectById" parameterType="long" resultType="UserDTO">
+    <!--오늘은 내가 resultMap 요리사-->
+    <resultMap id="userResultMap" type="UserDTO">
+        <id property="id" column="id"></id>
+        <result property="role" column="role"></result>
+        <result property="email" column="email"></result>
+        <result property="nickname" column="nickname"></result>
+        <result property="description" column="description"></result>
+        <result property="gender" column="gender"></result>
+        <result property="year" column="year"></result>
+        <result property="showReviews" column="show_reveiws"></result>
+        <result property="showLikes" column="show_likes"></result>
+        <result property="showBookmarks" column="show_bookmarks"></result>
+        <result property="showFollowees" column="show_followees"></result>
+        <result property="showFollowers" column="show_followers"></result>
+        <association property="image" javaType="String" select="com.jslhrd.yorimichi.mapper.ImageMapper.selectByUserId" column="id"></association>
+        <collection property="reviews" ofType="ReviewDTO" select="com.jslhrd.yorimichi.mapper.ReviewMapper.selectAllByUserId" column="id"></collection>
+        <collection property="followees" ofType="UserDTO" select="com.jslhrd.yorimichi.mapper.FollowMapper.selectFolloweesByUserId" column="id"></collection>
+        <collection property="followers" ofType="UserDTO" select="com.jslhrd.yorimichi.mapper.FollowMapper.selectFollowersByUserId" column="id"></collection>
+        <collection property="blocks" ofType="UserDTO" select="com.jslhrd.yorimichi.mapper.BlockMapper.selectAllByUserId" column="id"></collection>
+        <collection property="bookmarks" ofType="StoreDTO" select="com.jslhrd.yorimichi.mapper.BookmarkMapper.selectByUserId" column="id"></collection>
+        <collection property="likes" ofType="StoreDTO" select="com.jslhrd.yorimichi.mapper.LikeMapper.selectByUserId" column="id"></collection>
+    </resultMap>
+
+    <select id="selectById" resultMap="userResultMap" parameterType="Long">
+        SELECT u.id,
+               u.role_id,
+               u.email,
+               u.password,
+               u.nickname,
+               u.description,
+               u.last_login_at,
+               r.created_at,
+               r.updated_at,
+               u.show_reviews,
+               u.show_likes,
+               u.show_bookmarks,
+               u.show_following,
+               u.show_followers
+        FROM user u
+        JOIN root r ON u.id = r.id
+            AND r.type = 'USER'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        WHERE u.id = #{userId}
+    </select>
+
+    <!-- 요리 끝-->
+
+    <select id="selectByEmail" parameterType="String" resultType="UserDTO">
         SELECT u.id,
                u.role_id,
                u.email,
@@ -37,10 +84,10 @@
         JOIN root r ON u.id = r.id
             AND r.type = 'USER'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        WHERE u.id = #{userId}
+        WHERE u.email = #{email}
     </select>
 
-    <select id="existsByNickname" parameterType="string" resultType="boolean">
+    <select id="existsNickname" parameterType="string" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
             FROM user u
@@ -86,7 +133,7 @@
             u.show_reviews = #{user.showReviews},
             u.show_likes = #{user.showLikes},
             u.show_bookmarks = #{user.showBookmarks},
-            u.show_following = #{user.showFollowing},
+            u.show_following = #{user.showFollowees},
             u.show_followers = #{user.showFollowers},
             r.updated_at = NOW()
         WHERE u.id = #{userId}

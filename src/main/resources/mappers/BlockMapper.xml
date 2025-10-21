@@ -6,11 +6,12 @@
 
     <!-- @formatter:off -->
 
-    <select id="selectAllByUserId" parameterType="long" resultType="BlockDTO">
-        SELECT *
-        FROM block
-        WHERE blocker_id = #{userId}
-        ORDER BY created_at DESC;
+    <select id="selectAllByUserId" parameterType="long" resultType="UserDTO">
+        SELECT u.*
+        FROM user u
+        JOIN block b ON b.blockee_id = u.id 
+        WHERE b.blocker_id = #{userId}
+        ORDER BY b.created_at DESC;
     </select>
 
     <select id="exists" resultType="boolean">

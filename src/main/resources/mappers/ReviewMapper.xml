@@ -5,6 +5,28 @@
 <mapper namespace="com.jslhrd.yorimichi.mapper.ReviewMapper">
 
     <!-- @formatter:off -->
+    <resultMap id="reviewResultMap" type="ReviewDTO">
+        <id property="id" column="id"></id>
+        <result property="userId" column="user_id"></result>
+        <result property="storeId" column="store_id"></result>
+        <result property="rating" column="rating"></result>
+        <result property="content" column="content"></result>
+        <result property="createdAt" column="created_at"></result>
+        <result property="updatedAt" column="updated_at"></result>
+        <collection property="images" ofType="ImageDTO" column="id" select="com.jslhrd.yorimichi.mapper.ImageMapper.selectByReviewId"></collection>
+    </resultMap>
+    <select id="selectAllByUserId" resultMap="reviewResultMap" parameterType="Long">
+        SELECT  id, 
+                user_id,
+                store_id,
+                receipt_image_id,
+                receipt_status,
+                rating,
+                content
+        FROM review
+        WHERE user_id = #{userId}
+        ORDER BY id DESC
+    </select>
 
     <select id="selectAll" resultType="ReviewDTO">
         SELECT v.id,

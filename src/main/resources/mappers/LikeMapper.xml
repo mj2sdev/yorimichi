@@ -5,6 +5,14 @@
 
     <!-- @formatter:off -->
 
+    <select id="selectByUserId" parameterType="long" resultType="StoreDTO">
+        SELECT s.*
+        FROM store s
+        JOIN likes l ON l.root_id = s.id
+        WHERE l.user_id = #{userId}
+        ORDER BY l.created_at DESC
+    </select>
+
     <insert id="insert" parameterType="LikeDTO">
         INSERT INTO likes (user_id, root_id)
         VALUES (#{userId}, #{rootId})

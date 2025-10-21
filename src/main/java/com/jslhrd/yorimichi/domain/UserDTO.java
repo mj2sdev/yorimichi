@@ -54,6 +54,10 @@ public class UserDTO extends RootDTO implements Serializable {
 	 */
 	private String description;
 
+	/**
+	 * 유저 프사
+	 */
+	private String image;
 
 	private String gender;
 
@@ -67,7 +71,7 @@ public class UserDTO extends RootDTO implements Serializable {
 
 	private boolean showBookmarks;
 
-	private boolean showFollowing;
+	private boolean showFollowees;
 
 	private boolean showFollowers;
 
@@ -90,17 +94,22 @@ public class UserDTO extends RootDTO implements Serializable {
 	/**
 	 * 팔로잉 목록
 	 */
-	private List<UserDTO> following = new ArrayList<>();
+	private List<UserDTO> followees = new ArrayList<>();
 
 	/**
 	 * 팔로우 목록
 	 */
 	private List<UserDTO> followers = new ArrayList<>();
+	
+	/**
+	 * 차단 목록
+	 */
+	private List<BlockDTO> blocks = new ArrayList<>();
 
 	/**
 	 * 즐겨찾기 목록
 	 */
-	private List<StoreDTO> bookmark = new ArrayList<>();
+	private List<StoreDTO> bookmarks = new ArrayList<>();
 
 	/**
 	 * 좋아요 목록
@@ -111,7 +120,6 @@ public class UserDTO extends RootDTO implements Serializable {
 	 * 같이먹기 목록
 	 */
 	private List<CoeatDTO> coeats = new ArrayList<>();
-
 
 	public UserDTO() {
 		super(RootType.USER);
