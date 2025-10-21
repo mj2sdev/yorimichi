@@ -10,6 +10,8 @@ import com.jslhrd.yorimichi.service.ReviewService;
 import com.jslhrd.yorimichi.service.StoreService;
 import com.jslhrd.yorimichi.service.UserService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,9 +40,7 @@ public class UserController {
 
 	//마이페이지 이동
 	@GetMapping("/mypage")
-	public String showMypage(Principal principal, Model model) {
-		//임시로 userId는 1001
-		Long userId = (long) 1001;
+	public String showMypage(@AuthenticationPrincipal(expression = "userId") Long userId, Model model) {
 		UserDTO user = userService.findById(userId);
 		model.addAttribute("user", user);
 		return "user/mypage";
@@ -49,7 +49,7 @@ public class UserController {
 	//자기 정보 수정
 	@ResponseBody
 	@PutMapping("/mypage")
-	public void updateMyDetail(Principal principal, @ModelAttribute UserDTO user) {
-		userService.update(null, user);
+	public void updateMyDetail(@AuthenticationPrincipal(expression = "userId") Long userId, @ModelAttribute UserDTO user) {
+		userService.update(userId, user);
 	}
 }
