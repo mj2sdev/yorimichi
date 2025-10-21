@@ -8,9 +8,6 @@ spring:
     multipart:
       max-file-size: 25MB      # 파일 하나 최대 크기
       max-request-size: 25MB   # 요청 전체(여러 파트) 최대 크기
-  profiles:
-    group:
-      oauth-drive: local-drive-test,oauth-drive-only
 
   # MySQL 데이터베이스 연결 설정
   datasource:

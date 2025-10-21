@@ -4,7 +4,11 @@ import java.io.Console;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+/**
+ * @author mj2sdev
+ * @version 1.1
+ * db password 입력 관련 부분 추가
+ */
 @SpringBootApplication
 public class YorimichiApplication {
 
