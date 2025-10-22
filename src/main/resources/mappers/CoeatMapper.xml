@@ -26,7 +26,7 @@
         ORDER BY r.created_at DESC
     </select>
 
-    <select id="selectAllByStoreId" parameterType="long" resultType="CoeatDTO">
+    <select id="selectAllByStoreId" parameterType="map" resultType="CoeatDTO">
         SELECT c.id,
                c.user_id,
                c.store_id,
