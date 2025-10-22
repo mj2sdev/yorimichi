@@ -1,12 +1,16 @@
 package com.jslhrd.yorimichi.config;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.SessionManagementConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -21,18 +25,58 @@ import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 @EnableMethodSecurity(prePostEnabled = true) // @PreAuthorize, @PostAuthorize 사용
 public class SecurityConfig {
 
-	/**
-	 * 단일 SecurityFilterChain 구성.
-	 * <p>
-	 * 핵심 포인트
-	 * - CSRF: Thymeleaf 폼을 쓰므로 유지. 단, '지연(Deferred) 토큰'을 비활성화하여
-	 * 템플릿 렌더 도중 첫 <form>에서 세션 생성하려다 응답 커밋 오류가 나는 문제를 방지.
-	 * - 인가: 정적 리소스/공개 URL은 permitAll, 나머지는 인증 필요.
-	 * - 폼 로그인 + 로그아웃 + 세션 관리.
-	 * - OAuth2/OIDC: 클라이언트 등록이 있을 때만 동적으로 구성 (로컬 개발 시 무관).
-	 */
 	@Bean
-	public SecurityFilterChain security(
+	@Order(1)
+	SecurityFilterChain wellKnownSecurityChainFilter(HttpSecurity http) throws Exception {
+		http
+				.securityMatcher("/.well-known/**")
+				.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+				.csrf(csrf -> csrf.disable())
+				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+		return http.build();
+	}
+
+	/*
+	 * API 체인
+	 * */
+	@Bean
+	@Order(2)
+	SecurityFilterChain apiSecurityChainFilter(HttpSecurity http) throws Exception {
+		http
+				.securityMatcher("/api/**")
+				.csrf(csrf -> csrf.disable())
+				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
+						// 나머지 API 는 인증 필요
+						.anyRequest().authenticated()
+				)
+				// 실패 시 JSON 401/403 으로
+				.exceptionHandling(e -> e
+						.authenticationEntryPoint((req, res, ex) -> {
+							res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+							res.setContentType("application/json");
+							res.getWriter().write("{\"error\": \"UNAUTHORIZED\"}");
+						})
+						.accessDeniedHandler((req, res, ex) -> {
+							res.setStatus(HttpServletResponse.SC_FORBIDDEN);
+							res.setContentType("application/json");
+							res.getWriter().write("{\"error\": \"FORBIDDEN\"}");
+						})
+				);
+
+		// (선택) JWT 사용시
+		// http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+
+		return http.build();
+	}
+
+	/*
+	 * 웹(SSR) 체인
+	 * */
+	@Bean
+	@Order(3)
+	public SecurityFilterChain webSecurityChainFilter(
 			HttpSecurity http,
 			// 소셜 설정이 없는 환경에서도 컨텍스트가 뜨도록 optional 주입
 			@Autowired(required = false) ClientRegistrationRepository clients,
@@ -103,7 +147,7 @@ public class SecurityConfig {
 				   - 동시 로그인 1개 제한
 				   - 새 로그인 허용(이전 세션 무효화)
 				 */
-				.sessionManagement(sess -> sess
+				.sessionManagement(sm -> sm
 						.sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::migrateSession)
 						.maximumSessions(1)
 						.maxSessionsPreventsLogin(false)
@@ -116,7 +160,7 @@ public class SecurityConfig {
          userInfoEndpoint().oidcUserService(...) : OIDC
      */
 		if (clients != null) {
-			http.oauth2Login(o -> o
+			http.oauth2Login(oauth2 -> oauth2
 					.loginPage("/login")
 					.userInfoEndpoint(u -> {
 						if (oauth2Svc != null) u.userService(oauth2Svc);
