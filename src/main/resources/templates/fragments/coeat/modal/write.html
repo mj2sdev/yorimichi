@@ -1,45 +1,46 @@
-<div class="modal fade" id="coeatwriting" tabindex="-1" aria-labelledby="coeatwritingLabel" aria-hidden="true">
+<div class="modal fade" id="coeatwriting" tabindex="-1">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
+
 			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="coeatwritingLabel">같이먹기 양식</h1>
+				<h1 class="modal-title fs-5" id="coeatwritingLabel">같이먹기 작성</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body">
-				<div class="my-3">
-					<input type="date" class="form-control">
-				</div>
-				<th:block th:each="menu : ${#numbers.sequence(1,5)}">
-					<div class="input-group mb-3">
-						<div class="input-group-text">
-							<input class="btn form-check-input mt-0" type="checkbox" value=""
-								aria-label="Checkbox for following text input">
+
+			<form class="modal-body" th:action="@{/coeat}">
+				<div class="row mb-3 row-gap-2">
+					<div class="col-12 col-lg-6">
+						<div class="input-group">
+							<label class="input-group-text">제목</label>
+							<input name="title" class="form-control" placeholder="제목을 입력하세요">
 						</div>
-						<ul>
-							<div class="row">
-								<div class="col">
-									<span>음식이름</span>
-									<span>3000￦</span>
-									<span>
-										<th:block th:each="rating : ${#numbers.sequence(1,5)}">
-											<i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
-										</th:block>
-									</span>
-								</div>
-							</div>
-						</ul>
 					</div>
-				</th:block>
+					<div class="col-12 col-lg-6">
+						<div class="input-group">
+							<label class="input-group-text">날짜</label>
+							<input type="datetime-local" class="form-control">
+						</div>
+					</div>
+				</div>
+				<div class="mb-3">
+					<h5>메뉴 선택</h5>
+					<ul class="list-group">
+						<li class="list-group-item" th:each="menu, status : ${ {'유니짜장', '삼선짜장', '야끼짬뽕'} }">
+							<input class="form-check-input me-1" type="checkbox" value="" th:id="'coeatItem' + ${ status.index }">
+							<label class="form-check-label" th:for="'coeatItem' + ${ status.index }" th:text="${ menu }"></label>
+						</li>
+					</ul>
+				</div>
 
 				<div class="input-group">
 					<span class="input-group-text">내용</span>
-					<input type="text" class="form-control" placeholder="참가자에게 하고 싶은 말을 입력해주세요" aria-label="content"
-						aria-describedby="addon-wrapping">
+					<textarea class="form-control" placeholder="참가자에게 하고 싶은 말을 입력해주세요" name="content"></textarea>
 				</div>
-			</div>
+
+			</form>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-				<button type="button" class="btn btn-primary">작성완료</button>
+				<button type="button" class="btn btn-ymprimary">작성완료</button>
 			</div>
 		</div>
 	</div>
