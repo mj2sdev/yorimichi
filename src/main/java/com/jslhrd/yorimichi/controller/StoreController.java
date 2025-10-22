@@ -4,19 +4,14 @@ import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-
-import com.jslhrd.yorimichi.domain.StoreDTO;
+import com.jslhrd.yorimichi.service.ApiKeyService;
 import com.jslhrd.yorimichi.service.BookmarkService;
 import com.jslhrd.yorimichi.service.LikeService;
 import com.jslhrd.yorimichi.service.StoreService;
 import org.springframework.ui.Model;
 import com.jslhrd.yorimichi.mapper.SearchMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.ui.Model;
-import com.jslhrd.yorimichi.service.StoreService;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -24,9 +19,15 @@ import com.jslhrd.yorimichi.service.StoreService;
 public class StoreController {
 
 	private final StoreService storeService;
+
 	private final LikeService likeService;
+
 	private final BookmarkService bookmarkService;
+	
 	private final SearchMapper mapper; // ✅ 주입
+
+	private final ApiKeyService apiKeyService;
+
 	//인덱스 페이지에서 가게 맛집 리스트를 보여주기 위함. 인기있는 최신 6개를 보여주면 될 거 같음.
 	//인기의 기준이 뭔지 모르겠음.
 	@ResponseBody
@@ -63,36 +64,48 @@ public class StoreController {
 		//return List<StoreDTO> stores;
 	}
 
-
+	//가게 상세정보로 이동
+	@GetMapping("/detail/{storeId:\\d+}")
+	public String showDetail(
+		@PathVariable("storeId") Long storeId,
+		@AuthenticationPrincipal(expression = "userId") Long userId,
+		Model model) {
+		model.addAttribute("store", storeService.findById(storeId, userId));
+		model.addAttribute("mapKey", apiKeyService.findApiKey("maps", null));
+		return "store/detail";
+	}
 
 
 	//북마크 등록
 	@ResponseBody
-	@PostMapping("/bookmark/{storeId}")
-	public void submitBookmark(@AuthenticationPrincipal(expression = "userId") Long userId, @PathVariable("storeId") Long storeId) {
-		bookmarkService.save(userId, storeId);		
+	@PostMapping("/bookmark/{storeId:\\d+}")
+	public void submitBookmark(
+		@AuthenticationPrincipal(expression = "userId") Long userId,
+		@PathVariable("storeId") Long storeId) {
+		bookmarkService.save(userId, storeId);
 	}
 
 	//북마크 삭제
 	@ResponseBody
-	@DeleteMapping("/bookmark/{storeId}")
-	public void deleteBookmark(@AuthenticationPrincipal(expression = "userId") Long userId, @PathVariable("storeId") Long storeId){
+	@DeleteMapping("/bookmark/{storeId:\\d+}")
+	public void deleteBookmark(
+		@AuthenticationPrincipal(expression = "userId") Long userId,
+		@PathVariable("storeId") Long storeId){
 		bookmarkService.delete(userId, storeId);
 	}
 
-	@GetMapping("/like")
-	public String showLikes() {
-		return "store/list";
-	}
-
 	@ResponseBody
-	@PostMapping("/like/{storeId}")
-	public void submitLike(@AuthenticationPrincipal(expression = "userId") Long userId, @PathVariable("storeId") Long storeId) {
+	@PostMapping("/like/{storeId:\\d+}")
+	public void submitLike(
+		@AuthenticationPrincipal(expression = "userId") Long userId,
+		@PathVariable("storeId") Long storeId) {
 		likeService.save(userId, storeId);
 	}
 	@ResponseBody
-	@DeleteMapping("/like/{storeId}")
-	public void deleteLikes(@AuthenticationPrincipal(expression = "userId") Long userId, @PathVariable("storeId") Long storeId){
+	@DeleteMapping("/like/{storeId:\\d+}")
+	public void deleteLikes(
+		@AuthenticationPrincipal(expression = "userId") Long userId,
+		@PathVariable("storeId") Long storeId) {
 		likeService.delete(userId, storeId);
 	}
 	    // 가게 상세정보 (PathVariable 버전)
