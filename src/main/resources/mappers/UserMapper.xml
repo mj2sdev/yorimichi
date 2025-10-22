@@ -128,8 +128,6 @@
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
         SET u.nickname = #{user.nickname},
             u.description = #{user.description},
-            u.gender = #{user.gender},
-            u.year = #{user.year},
             u.show_reviews = #{user.showReviews},
             u.show_likes = #{user.showLikes},
             u.show_bookmarks = #{user.showBookmarks},

@@ -3,7 +3,7 @@
 	 
 	 submitBtn.addEventListener('click', async function() {
 		const data = formData('myinfo');
-		const response = await request('PUT', '/mypage', {body: data});
+		const response = await request('PUT', '/user/mypage', {body: data});
 		if(response){
 			alert('정보 수정 성공');
 			window.location.reload();
