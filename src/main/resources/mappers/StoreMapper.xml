@@ -78,22 +78,99 @@
         LIMIT #{limit}
     </select>
 
-    <select id="selectById" parameterType="long" resultType="StoreDTO">
-        SELECT
-            s.id,
-            s.address_id,
-            s.name,
-            s.description,
-            s.phone,
-            r.created_at,
-            r.updated_at
+    <resultMap id="StoreMap" type="StoreDTO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="summaredReview" column="summared_review"/>
+        <association property="review" column="{storeId=id}" select="com.jslhrd.yorimichi.mapper.ReviewMapper.selectAvgRatingByStoreId">
+            <result property="totalRating" column="total_rating"/>
+            <result property="ratingCount" column="rating_count"/>
+        </association>
+        <association property="address" column="address">
+            <result property="detail" column="detail"/>
+            <result property="roadAddressText" column="road_address_text"/>
+            <result property="jibunAddressText" column="jibun_address_text"/>
+            <result property="latitude" column="latitude"/>
+            <result property="longitude" column="longitude"/>
+        </association>
+        <association property="like">
+            <result property="userId" column="like_user_id"/>
+        </association>
+        <association property="bookmark">
+            <result property="userId" column="bookmark_user_id"/>
+        </association>
+        <collection
+            property="foods"
+            ofType="FoodDTO"
+            select="com.jslhrd.yorimichi.mapper.FoodMapper.selectAllByStoreId"
+            column="{storeId=id}">
+        </collection>
+        <collection
+            property="images"
+            ofType="ImageDTO"
+            select="com.jslhrd.yorimichi.mapper.ImageMapper.selectAllByRootId"
+            column="{rootId=id}">
+        </collection>
+        <collection
+            property="keywords"
+            ofType="KeywordDTO"
+            select="com.jslhrd.yorimichi.mapper.KeywordMapper.selectAllByStoreId"
+            column="{storeId=id}">
+        </collection>
+        <collection
+            property="reviews"
+            ofType="ReviewDTO"
+            select="com.jslhrd.yorimichi.mapper.ReviewMapper.selectAllByStoreId"
+            column="{storeId=id}">
+        </collection>
+        <collection
+            property="coeats"
+            ofType="CoeatDTO"
+            select="com.jslhrd.yorimichi.mapper.CoeatMapper.selectAllByStoreId"
+            column="{storeId=id}">
+        </collection>
+    </resultMap>
 
+    <select id="selectById" parameterType="long" resultMap="StoreMap">
+        SELECT s.id,
+               s.address_id,
+               s.name,
+               s.description,
+               s.phone,
+               s.summared_review,
+               r.created_at,
+               r.updated_at,
+
+               a.detail,
+               a.road_address_text,
+               a.jibun_address_text,
+               a.latitude,
+               a.longitude,
+
+               l.user_id as like_user_id,
+
+               b.user_id as bookmark_user_id
         FROM store s
-
-        JOIN root r ON s.id = r.id
-            AND r.type = 'STORE'
+        
+        JOIN root r
+            ON s.id = r.id
+            <include refid="com.jslhrd.yorimichi.mapper.common.RootType">
+                <property name="type" value="'STORE'"/>
+            </include>
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
 
+        JOIN address a
+            ON s.address_id = a.id
+
+        LEFT JOIN likes l
+            ON l.root_id = s.id
+            AND l.user_id = #{ userId }
+
+        LEFT JOIN bookmark b
+            ON b.store_id = s.id
+            AND b.user_id = #{ userId }
+        
         WHERE s.id = #{storeId}
     </select>
 

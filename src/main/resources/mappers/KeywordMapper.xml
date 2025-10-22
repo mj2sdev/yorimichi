@@ -15,6 +15,18 @@
         ORDER BY name, id DESC
     </select>
 
+    <select id="selectAllByStoreId" parameterType="map" resultType="KeywordDTO">
+        SELECT k.id,
+               k.name
+
+        FROM root_keyword rk
+        
+        JOIN keyword k
+        ON rk.keyword_id = k.id
+        
+        WHERE rk.root_id = #{ storeId }
+    </select>
+
     <select id="selectById" parameterType="long" resultType="KeywordDTO">
         SELECT id,
                name,

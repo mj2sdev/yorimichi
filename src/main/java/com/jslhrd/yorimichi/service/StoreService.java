@@ -9,7 +9,8 @@ import java.util.List;
  * 가게 정보관련 서비스 입니다.
  *
  * @author mj2sdev
- * @since 1.0
+ * @version 1.0 초안 작성
+ * @version 1.1 findById 함수에 userId 추가 -> 유저 정보를 넘겨야 해당 가게 좋아요 상태가 감지가능
  */
 public interface StoreService {
 
@@ -35,9 +36,11 @@ public interface StoreService {
 	 * 가게 아이디를 이용해 가게정보를 조회합니다.
 	 *
 	 * @param storeId 가게 아이디
+	 * @param userId  유저 아이디
 	 * @return {@code StoreDTO} 가게 정보를 반환합니다.
+	 * @see StoreDTO
 	 */
-	public StoreDTO findById(Long storeId);
+	public StoreDTO findById(Long storeId, Long userId);
 
 	/**
 	 * 가게 정보를 저장하는 함수입니다.

@@ -6,6 +6,10 @@
 
     <!-- @formatter:off -->
 
+    <sql id="RootType">
+        AND r.type = ${type}
+    </sql>
+
     <sql id="RootVisible">
         r.deleted_at IS NULL
         AND r.blinded_at IS NULL
