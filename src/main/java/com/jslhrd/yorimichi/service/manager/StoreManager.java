@@ -92,10 +92,8 @@ public class StoreManager implements StoreService {
 
 
 	@Override
-	public StoreDTO findById(Long storeId) {
-		// TODO: review 목록 무한 스크롤 구현 후 교체
-		// TODO: coeat 목록 무한 스크롤 구현 후 교체
-		return storeMapper.selectById(storeId)
+	public StoreDTO findById(Long storeId, Long userId) {
+		return storeMapper.selectById(storeId, userId)
 				.orElseThrow(() -> new StoreNotFoundException(storeId));
 	}
 
