@@ -1,9 +1,24 @@
 package com.jslhrd.yorimichi.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 import java.math.BigDecimal;
 import lombok.*;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+/**
+ * 주소 DTO.
+ *
+ * <br>주소 정보를 전달합니다.
+ *
+ * @author GeonHoKoo
+ * @author LancerAlert
+ * @since 1.0
+ */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class AddressDTO {
     private Long id;
 
