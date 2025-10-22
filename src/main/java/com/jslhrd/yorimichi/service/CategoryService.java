@@ -1,9 +1,7 @@
 package com.jslhrd.yorimichi.service;
 
 import com.jslhrd.yorimichi.domain.CategoryDTO;
-import com.jslhrd.yorimichi.domain.SearchDTO;
-
-import java.util.List;
+import com.jslhrd.yorimichi.domain.SliceResponse;
 
 /**
  * 카테고리 관련 비즈니스 로직을 처리하는 서비스 인터페이스입니다.
@@ -19,14 +17,7 @@ public interface CategoryService {
 	 *
 	 * @return {@code List<CategoryDTO>} 카테고리 리스트
 	 */
-	public List<CategoryDTO> findAll();
-
-	/**
-	 * 모든 카테고리 목록을 조회합니다.
-	 *
-	 * @return {@code List<CategoryDTO>} 카테고리 리스트
-	 */
-	public List<CategoryDTO> findAllByDTO(SearchDTO category);
+	public SliceResponse<CategoryDTO> findSlice(Long categoryId, int size);
 
 	/**
 	 * 새로운 카테고리를 생성합니다.

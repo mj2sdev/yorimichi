@@ -6,14 +6,20 @@
 
     <!-- @formatter:off -->
 
-    <select id="selectAll" resultType="CategoryDTO">
+    <select id="selectSlice" resultType="CategoryDTO">
         SELECT id,
                parent_id,
                name,
                created_at,
                updated_at
         FROM category
-        ORDER BY name, id DESC
+        <where>
+            <if test="categoryId != null">
+                id > #{categoryId}
+            </if>
+        </where>
+        ORDER BY id
+        LIMIT #{size}
     </select>
 
     <select id="selectById" parameterType="long" resultType="CategoryDTO">
