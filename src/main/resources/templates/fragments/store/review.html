@@ -1,4 +1,4 @@
-<div class="d-flex flex-column shadow p-4 gap-2">
+<div class="d-flex flex-column shadow p-4 gap-4">
 
 	<!-- 제목, 글쓰기 -->
 	<div class="d-flex justify-content-between align-items-center">
@@ -13,7 +13,7 @@
 	<!-- AI 리뷰 -->
 	<h6>
 		<i class="bi bi-compass text-ymprimary"> AI 리뷰 요약</i>
-		<div>
+		<div th:text="${ store != null } ?: '요약된 리뷰 데이터가 없습니다.'">
 			AI가 총 132개의 리뷰를 분석한 결과, 전반적인 평가는 **“집밥 감성 + 가성비 최고”**로 나타남.
 			<br>
 			손님 대부분이 제육볶음과 된장찌개를 극찬했으며, 서비스 친절도와 청결도 역시 높은 점수를 받음.
@@ -21,7 +21,7 @@
 	</h6>
 
 	<!-- 리뷰 리스트 -->
-	<div class="d-flex flex-column gap-2 border-top pt-2">
+	<div class="d-flex flex-column gap-2 border-top pt-2" th:each="item : ${ store.reviews }">
 		<!-- 프로필 -->
 		<div th:replace="~{ fragments/common/profile }"></div>
 		<!-- 리뷰 사진 -->
