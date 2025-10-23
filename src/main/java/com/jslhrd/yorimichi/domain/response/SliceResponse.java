@@ -1,4 +1,4 @@
-package com.jslhrd.yorimichi.domain;
+package com.jslhrd.yorimichi.domain.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

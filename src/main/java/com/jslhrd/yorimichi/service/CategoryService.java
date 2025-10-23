@@ -1,7 +1,7 @@
 package com.jslhrd.yorimichi.service;
 
 import com.jslhrd.yorimichi.domain.CategoryDTO;
-import com.jslhrd.yorimichi.domain.SliceResponse;
+import com.jslhrd.yorimichi.domain.response.SliceResponse;
 
 /**
  * 카테고리 관련 비즈니스 로직을 처리하는 서비스 인터페이스입니다.

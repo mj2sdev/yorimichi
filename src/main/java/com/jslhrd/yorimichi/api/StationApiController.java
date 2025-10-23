@@ -1,8 +1,8 @@
 package com.jslhrd.yorimichi.api;
 
-import com.jslhrd.yorimichi.domain.CategoryDTO;
 import com.jslhrd.yorimichi.domain.response.SliceResponse;
-import com.jslhrd.yorimichi.service.CategoryService;
+import com.jslhrd.yorimichi.domain.response.StationDTO;
+import com.jslhrd.yorimichi.service.StationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,14 +14,14 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping(value = "/api", produces = APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class CategoryApiController {
+public class StationApiController {
 
-	private final CategoryService categoryService;
+	private final StationService stationService;
 
-	@GetMapping("/categories")
-	public SliceResponse<CategoryDTO> moreList(
-			@RequestParam(value = "categoryId", required = false) Long categoryId,
+	@GetMapping("/mini-stations")
+	public SliceResponse<StationDTO> moreList(
+			@RequestParam(value = "rootId", required = false) Long rootId,
 			@RequestParam(value = "size", defaultValue = "5") int size) {
-		return categoryService.findSlice(categoryId, size);
+		return stationService.findSlice(rootId, size);
 	}
 }
