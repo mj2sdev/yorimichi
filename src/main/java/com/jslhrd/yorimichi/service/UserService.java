@@ -42,5 +42,5 @@ public interface UserService {
 	 * @param userId
 	 * @param user   수정할 사용자 정보가 담긴 DTO
 	 */
-	public void update(Long userId, UserDTO user);
+	public boolean update(Long userId, UserDTO user);
 }

@@ -49,7 +49,7 @@ public class UserController {
 	//자기 정보 수정
 	@ResponseBody
 	@PutMapping("/mypage")
-	public void updateMyDetail(@AuthenticationPrincipal(expression = "userId") Long userId, @ModelAttribute UserDTO user) {
-		userService.update(userId, user);
+	public boolean updateMyDetail(@AuthenticationPrincipal(expression = "userId") Long userId, @ModelAttribute UserDTO user) {
+		return userService.update(userId, user);
 	}
 }

@@ -2,13 +2,13 @@
 	 const submitBtn = document.getElementById('myinfosubmit');
 	 
 	 submitBtn.addEventListener('click', async function() {
-		const data = formData('myinfo');
+		const data = formData('myinfo-form');
 		const response = await request('PUT', '/user/mypage', {body: data});
 		if(response){
-			alert('정보 수정 성공');
 			window.location.reload();
 		}else{
 			alert('정보 수정 실패');
+            window.location.reload();
 		}
 	});
 })();

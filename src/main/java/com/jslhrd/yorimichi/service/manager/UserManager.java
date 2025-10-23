@@ -41,7 +41,7 @@ public class UserManager implements UserService {
 
 	@Override
 	@Transactional
-	public void update(Long userId, UserDTO user) {
+	public boolean update(Long userId, UserDTO user) {
 
 		String trimmedNickname = user.getNickname().trim();
 
@@ -56,13 +56,14 @@ public class UserManager implements UserService {
 			if (!affected) {
 				assertActiveUser(userId);
 				log.debug("User: update no-op userId={}", userId);
-				return;
+				return false;
 			}
 		} catch (DuplicateKeyException e) {
 			throw new DuplicateNicknameException(trimmedNickname);
 		}
 
 		log.info("User: update userId={}", userId);
+		return true;
 	}
 
 	private void assertActiveUser(Long userId) {
