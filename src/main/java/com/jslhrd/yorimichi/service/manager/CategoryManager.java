@@ -1,7 +1,7 @@
 package com.jslhrd.yorimichi.service.manager;
 
 import com.jslhrd.yorimichi.domain.CategoryDTO;
-import com.jslhrd.yorimichi.domain.SearchDTO;
+import com.jslhrd.yorimichi.domain.SliceResponse;
 import com.jslhrd.yorimichi.exception.BadRequestException;
 import com.jslhrd.yorimichi.exception.CategoryNotFoundException;
 import com.jslhrd.yorimichi.exception.DuplicateCategoryException;
@@ -16,7 +16,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -30,15 +29,11 @@ public class CategoryManager implements CategoryService {
 	private final StoreMapper storeMapper;
 
 	@Override
-	public List<CategoryDTO> findAll() {
-		return categoryMapper.selectAll();
+	public SliceResponse<CategoryDTO> findSlice(Long categoryId, int size) {
+		List<CategoryDTO> categories = categoryMapper.selectSlice(categoryId, size + 1);
+		return SliceResponse.of(categories, size, CategoryDTO::getId);
 	}
 
-	@Override
-	public List<CategoryDTO> findAllByDTO(SearchDTO category) {
-		// TODO: 어떤 역할인가요?
-		return Collections.emptyList();
-	}
 
 	@Override
 	public void save(CategoryDTO category) {

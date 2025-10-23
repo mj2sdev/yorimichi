@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html
-  xmlns:th="http://www.thymeleaf.org"
-  th:replace="~{layout/main :: params(~{::head/content()},~{::body/content()})}"
+    th:replace="~{layout/main :: params(~{::head/content()},~{::body/content()})}"
+    xmlns:th="http://www.thymeleaf.org"
 >
 <head>
   <title>Yorimichi Project</title>
@@ -12,252 +12,362 @@
 
   <!-- (옵션) 서버가 내려주는 이미지 배열 주입 -->
   <script th:inline="javascript">
-  /*<![CDATA[*/
-  window.__IMAGE_URLS__ = /*[[${imageUrls}]]*/ [];
-  /*]]>*/
+      /*<![CDATA[*/
+      window.__IMAGE_URLS__ = /*[[${imageUrls}]]*/ [];
+      /*]]>*/
   </script>
 </head>
 
 <body>
-  <!-- ===================== Hero ===================== -->
-  <div class="hero-compact hero-spacious mb-4">
-    <div class="container">
-      <div class="hero-stack text-center">
-        <h1 class="hero-title-sm m-0">내 주변 맛집을 빠르게 찾아보세요</h1>
-        <p class="hero-sub-sm mt-2 mb-0">
-          카테고리·리뷰·정류장 피드를 한곳에서. 오늘의 인기 가게도 바로 확인!
-        </p>
+<!-- ===================== Hero ===================== -->
+<div class="hero-compact hero-spacious mb-4">
+  <div class="container">
+    <div class="hero-stack text-center">
+      <h1 class="hero-title-sm m-0">내 주변 맛집을 빠르게 찾아보세요</h1>
+      <p class="hero-sub-sm mt-2 mb-0">
+        카테고리·리뷰·정류장 피드를 한곳에서. 오늘의 인기 가게도 바로 확인!
+      </p>
 
-        <!-- ===== KPIs ===== -->
-        <div class="stats-bento">
-          <!-- 누적 리뷰 -->
-          <div class="stat-card">
-            <div class="stat-head">
-              <span class="stat-icon"><i class="bi bi-star-fill"></i></span>
-              <span>누적 리뷰</span>
-            </div>
-            <div>
+      <!-- ===== KPIs ===== -->
+      <div class="stats-bento">
+        <!-- 누적 리뷰 -->
+        <div class="stat-card">
+          <div class="stat-head">
+            <span class="stat-icon"><i class="bi bi-star-fill"></i></span>
+            <span>누적 리뷰</span>
+          </div>
+          <div>
               <span class="stat-value countup"
                     data-format="comma"
                     th:attr="data-value=${stats != null ? stats.reviewCount : 12843}">0</span>
-              <span class="stat-unit">리뷰</span>
-            </div>
+            <span class="stat-unit">리뷰</span>
           </div>
+        </div>
 
-          <!-- 등록 가게 -->
-          <div class="stat-card">
-            <div class="stat-head">
-              <span class="stat-icon"><i class="bi bi-shop"></i></span>
-              <span>등록 가게</span>
-            </div>
-            <div>
+        <!-- 등록 가게 -->
+        <div class="stat-card">
+          <div class="stat-head">
+            <span class="stat-icon"><i class="bi bi-shop"></i></span>
+            <span>등록 가게</span>
+          </div>
+          <div>
               <span class="stat-value countup"
                     data-format="comma"
                     th:attr="data-value=${stats != null ? stats.storeCount : 8021}">0</span>
-              <span class="stat-unit">곳</span>
-            </div>
+            <span class="stat-unit">곳</span>
           </div>
+        </div>
 
-          <!-- 오늘의 새 글 -->
-          <div class="stat-card">
-            <div class="stat-head">
-              <span class="stat-icon"><i class="bi bi-chat-dots"></i></span>
-              <span>오늘의 새 글</span>
-            </div>
-            <div>
+        <!-- 오늘의 새 글 -->
+        <div class="stat-card">
+          <div class="stat-head">
+            <span class="stat-icon"><i class="bi bi-chat-dots"></i></span>
+            <span>오늘의 새 글</span>
+          </div>
+          <div>
               <span class="stat-value countup"
                     th:attr="data-value=${stats != null ? stats.todayComments : 57}">0</span>
-              <span class="stat-unit">개</span>
-            </div>
+            <span class="stat-unit">개</span>
           </div>
         </div>
-        <!-- /KPIs -->
       </div>
-    </div>
-
-    <!-- Wave Divider -->
-    <div class="hero-wave">
-      <svg viewBox="0 0 1440 60" preserveAspectRatio="none" aria-hidden="true">
-        <path fill="white" d="M0,32 C240,72 480,-8 720,12 C960,32 1200,76 1440,20 L1440,60 L0,60 Z"></path>
-      </svg>
+      <!-- /KPIs -->
     </div>
   </div>
 
-  <!-- ===================== 상단 3열: 카테고리 / 추천 / 미니정류장 ===================== -->
-  <div class="container">
-    <div class="row g-3 align-items-stretch row-tight">
-      <!-- 좌: 카테고리 -->
-      <div class="col-12 col-lg-4">
-        <div class="card cat-card p-3 equal-rail rail-compact">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <h5 class="m-0 fw-bold cat-title">카테고리로 이동</h5>
-            <a href="/category/list" class="small cat-link">전체보기</a>
-          </div>
-
-          <div class="d-grid gap-2 rail-scroll"
-               th:if="${popularCategories != null and !#lists.isEmpty(popularCategories)}">
-            <a th:each="c : ${popularCategories}"
-               th:href="@{/store/list(categoryId=${c.id})}"
-               class="cat-btn">
-              <span>•</span>
-              <span class="fw-normal" th:text="${c.name}">카테고리명</span>
-              <i class="bi bi-chevron-right"></i>
-            </a>
-          </div>
-
-          <div class="text-muted small"
-               th:if="${popularCategories == null or #lists.isEmpty(popularCategories)}">
-            아직 등록된 카테고리가 없어요.
-          </div>
-
-          <hr class="my-3">
-
-          <a href="/store/list" class="btn btn-ymprimary w-100">
-            더 다양한 즐거움을 발견해요
-          </a>
-        </div>
-      </div>
-
-      <!-- 중: 추천(Featured) -->
-      <div class="col-12 col-lg-4">
-        <div class="featured p-3 equal-rail rail-compact">
-          <a th:if="${recommendedStoreList != null and !#lists.isEmpty(recommendedStoreList)}"
-             th:href="@{/store/detail(id=${recommendedStoreList[0].id})}"
-             class="d-block text-decoration-none">
-            <img class="thumb mb-3 skeleton" th:src="${heroImageUrl}" alt="featured"/>
-            <div class="fs-3 fw-bold text-ymprimary"
-                 th:text="${recommendedStoreList[0].name}">가게이름</div>
-            <div class="meta mt-1"
-                 th:text="${recommendedStoreList[0].address != null ? recommendedStoreList[0].address.roadAddressText : '주소 정보 없음'}">
-              주소
-            </div>
-            <div class="meta mt-1"
-                 th:text="${recommendedStoreList[0].phone != null ? recommendedStoreList[0].phone : '전화번호 없음'}">
-              전화
-            </div>
-            <div class="d-flex align-items-center gap-2 mt-2">
-              <span class="badge-ym">추천</span>
-              <span class="star">★ ★ ★ ★ ★</span>
-            </div>
-          </a>
-
-          <div class="text-muted small"
-               th:if="${recommendedStoreList == null or #lists.isEmpty(recommendedStoreList)}">
-            아직 인기 상점 데이터가 없습니다 🥲
-          </div>
-        </div>
-      </div>
-
-      <!-- 우: 미니 정류장 -->
-      <div class="col-12 col-lg-4">
-        <div class="card-ym p-3 mini-station equal-rail rail-compact">
-          <div class="d-flex justify-content-between align-items-center mb-2">
-            <div class="fw-bold">정류장에서 더 많은 사람과 만나요</div>
-            <a href="/station" class="btn btn-sm btn-ymprimary">전체보기</a>
-          </div>
-          <div id="mini-station" class="list-group list-group-flush rail-scroll">
-            <!-- feed.js 가 채움 -->
-          </div>
-        </div>
-      </div>
-    </div>
+  <!-- Wave Divider -->
+  <div class="hero-wave">
+    <svg aria-hidden="true" preserveAspectRatio="none" viewBox="0 0 1440 60">
+      <path d="M0,32 C240,72 480,-8 720,12 C960,32 1200,76 1440,20 L1440,60 L0,60 Z" fill="white"></path>
+    </svg>
   </div>
+</div>
 
-  <!-- ===================== 하단: 인기 맛집 그리드 ===================== -->
-  <div class="container my-3">
-    <div class="text-center mb-3">
-      <h2 class="fw-bold text-ymprimary">인기 맛집</h2>
-      <div class="text-muted">리뷰/별점/조회수를 기반으로 추천해요</div>
+<!-- ===================== 상단 3열: 카테고리 / 추천 / 미니정류장 ===================== -->
+<div class="container">
+  <div class="row g-3 align-items-stretch row-tight">
+
+    <!-- 좌: 카테고리 -->
+    <div class="col-12 col-lg-4">
+      <div class="card cat-card p-3 equal-rail rail-compact">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="m-0 fw-bold cat-title">카테고리로 이동</h5>
+          <a class="small cat-link" href="/category/list">전체보기</a>
+        </div>
+
+        <!-- 목록 (초기 SSR) -->
+        <div class="d-grid gap-2 rail-scroll"
+             id="cat-list"
+             th:data-has-next="${categorySlice.hasNext}"
+             th:data-next-id="${categorySlice.nextId}"
+
+             th:data-size="${categorySlice.size}"
+             th:if="${categorySlice != null and !#lists.isEmpty(categorySlice.items)}">
+
+          <a class="cat-btn"
+             th:each="c : ${categorySlice.items}"
+             th:href="@{/store/list(categoryId=${c.id})}">
+            <span>•</span>
+            <span class="fw-normal" th:text="${c.name}">카테고리명</span>
+            <i class="bi bi-chevron-right"></i>
+          </a>
+
+          <!-- 스크롤 끝 감지용 센티널 -->
+          <div aria-hidden="true" class="infinite-sentinel" id="cat-sentinel"></div>
+        </div>
+
+        <!-- 비어있을 때 -->
+        <div class="text-muted small"
+             th:if="${categorySlice == null or #lists.isEmpty(categorySlice.items)}">
+          아직 등록된 카테고리가 없어요.
+        </div>
+
+        <hr class="my-3"/>
+
+        <a class="btn btn-ymprimary w-100" href="/store/list">
+          더 다양한 즐거움을 발견해요
+        </a>
+      </div>
     </div>
 
-    <div class="store-grid">
-      <th:block th:if="${recommendedStoreList != null and !#lists.isEmpty(recommendedStoreList)}"
-                th:each="store, iter : ${recommendedStoreList}">
-        <a th:href="@{/store/detail(id=${store.id})}" class="text-decoration-none">
-          <div class="store-card">
-            <img class="thumb"
-                 th:if="${imageUrls != null and !#lists.isEmpty(imageUrls)}"
-                 th:src="${imageUrls[iter.index % imageUrls.size()]}" alt="store image"/>
-
-            <img class="thumb lazy"
-                 th:if="${imageUrls == null or #lists.isEmpty(imageUrls)}"
-                 data-src="https://picsum.photos/seed/yorimichi__${iter.index}/600/400"
-                 alt="store image"/>
-
-            <div class="name" th:text="${store.name}">가게이름</div>
-            <div class="addr"
-                 th:text="${store.address != null ? store.address.roadAddressText : '주소 없음'}">주소</div>
-            <div class="desc" th:text="${store.description}">설명</div>
-
-            <div class="d-flex align-items-center gap-2 mt-2">
-              <span class="star">★</span><span class="text-muted small">4.5</span>
-              <span class="text-muted small">·</span><span class="text-muted small">123 리뷰</span>
-            </div>
+    <!-- 중: 추천(Featured) -->
+    <div class="col-12 col-lg-4">
+      <div class="featured p-3 equal-rail rail-compact">
+        <a class="d-block text-decoration-none"
+           th:href="@{/store/detail(id=${recommendedStoreList[0].id})}"
+           th:if="${recommendedStoreList != null and !#lists.isEmpty(recommendedStoreList)}">
+          <img alt="featured" class="thumb mb-3 skeleton" th:src="${heroImageUrl}"/>
+          <div class="fs-3 fw-bold text-ymprimary"
+               th:text="${recommendedStoreList[0].name}">가게이름
+          </div>
+          <div class="meta mt-1"
+               th:text="${recommendedStoreList[0].address != null ? recommendedStoreList[0].address.roadAddressText : '주소 정보 없음'}">
+            주소
+          </div>
+          <div class="meta mt-1"
+               th:text="${recommendedStoreList[0].phone != null ? recommendedStoreList[0].phone : '전화번호 없음'}">
+            전화
+          </div>
+          <div class="d-flex align-items-center gap-2 mt-2">
+            <span class="badge-ym">추천</span>
+            <span class="star">★ ★ ★ ★ ★</span>
           </div>
         </a>
-      </th:block>
+
+        <div class="text-muted small"
+             th:if="${recommendedStoreList == null or #lists.isEmpty(recommendedStoreList)}">
+          아직 인기 상점 데이터가 없습니다 🥲
+        </div>
+      </div>
+    </div>
+
+    <!-- 우: 미니 정류장 -->
+    <div class="col-12 col-lg-4">
+      <div class="card-ym p-3 mini-station equal-rail rail-compact">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <div class="fw-bold">정류장에서 더 많은 사람과 만나요</div>
+          <a class="btn btn-sm btn-ymprimary" href="/station">전체보기</a>
+        </div>
+        <div class="list-group list-group-flush rail-scroll" id="mini-station">
+          <!-- feed.js 가 채움 -->
+        </div>
+      </div>
     </div>
   </div>
+</div>
 
-  <!-- ===== CountUp (히어로 KPI 숫자 애니메이션) ===== -->
-  <script>
-  (() => {
-    const DURATION = 1200;           // 전체 재생시간(ms)
-    const STAGGER  = 120;            // 요소 사이 지연(ms)
-    const EASE = t => 1 - Math.pow(1 - t, 3); // easeOutCubic
+<!-- ===================== 하단: 인기 맛집 그리드 ===================== -->
+<div class="container my-3">
+  <div class="text-center mb-3">
+    <h2 class="fw-bold text-ymprimary">인기 맛집</h2>
+    <div class="text-muted">리뷰/별점/조회수를 기반으로 추천해요</div>
+  </div>
 
-    const format = (n, el) => {
-      if (el?.dataset.format === 'comma') return n.toLocaleString();
-      return String(n);
-    };
+  <div class="store-grid">
+    <th:block th:each="store, iter : ${recommendedStoreList}"
+              th:if="${recommendedStoreList != null and !#lists.isEmpty(recommendedStoreList)}">
+      <a class="text-decoration-none" th:href="@{/store/detail(id=${store.id})}">
+        <div class="store-card">
+          <img alt="store image"
+               class="thumb"
+               th:if="${imageUrls != null and !#lists.isEmpty(imageUrls)}"
+               th:src="${imageUrls[iter.index % imageUrls.size()]}"/>
 
-    function runCount(el, delay = 0) {
-      const target = Number(el.dataset.value || el.textContent || 0);
-      if (!isFinite(target)) return;
+          <img alt="store image"
+               class="thumb lazy"
+               data-src="https://picsum.photos/seed/yorimichi__${iter.index}/600/400"
+               th:if="${imageUrls == null or #lists.isEmpty(imageUrls)}"/>
 
-      const start = performance.now() + delay;
-      const from  = 0;
-      const dec   = Math.pow(10, (el.dataset.decimals|0));
-      const duration = Number(el.dataset.duration || DURATION);
+          <div class="name" th:text="${store.name}">가게이름</div>
+          <div class="addr"
+               th:text="${store.address != null ? store.address.roadAddressText : '주소 없음'}">주소
+          </div>
+          <div class="desc" th:text="${store.description}">설명</div>
 
-      function tick(now) {
-        if (now < start) { requestAnimationFrame(tick); return; }
-        const t = Math.min(1, (now - start) / duration);
-        const eased = EASE(t);
-        const current = Math.round((from + (target - from) * eased) * dec) / dec;
-        el.textContent = format(current, el);
-        if (t < 1) requestAnimationFrame(tick);
-        else el.textContent = format(target, el);
-      }
-      requestAnimationFrame(tick);
-    }
+          <div class="d-flex align-items-center gap-2 mt-2">
+            <span class="star">★</span><span class="text-muted small">4.5</span>
+            <span class="text-muted small">·</span><span class="text-muted small">123 리뷰</span>
+          </div>
+        </div>
+      </a>
+    </th:block>
+  </div>
+</div>
 
-    function boot() {
-      const els = Array.from(document.querySelectorAll('.countup'))
-                        .filter(el => !el.dataset.counted);
-      if (els.length === 0) return;
+<!-- ===== CountUp (히어로 KPI 숫자 애니메이션) ===== -->
+<script>
+    (() => {
+        const DURATION = 1200;           // 전체 재생시간(ms)
+        const STAGGER = 120;            // 요소 사이 지연(ms)
+        const EASE = t => 1 - Math.pow(1 - t, 3); // easeOutCubic
 
-      if ('IntersectionObserver' in window) {
-        const io = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              const idx = els.indexOf(entry.target);
-              runCount(entry.target, idx * STAGGER);
-              entry.target.dataset.counted = '1';
-              io.unobserve(entry.target);
+        const format = (n, el) => {
+            if (el?.dataset.format === 'comma') return n.toLocaleString();
+            return String(n);
+        };
+
+        function runCount(el, delay = 0) {
+            const target = Number(el.dataset.value || el.textContent || 0);
+            if (!isFinite(target)) return;
+
+            const start = performance.now() + delay;
+            const from = 0;
+            const dec = Math.pow(10, (el.dataset.decimals | 0));
+            const duration = Number(el.dataset.duration || DURATION);
+
+            function tick(now) {
+                if (now < start) {
+                    requestAnimationFrame(tick);
+                    return;
+                }
+                const t = Math.min(1, (now - start) / duration);
+                const eased = EASE(t);
+                const current = Math.round((from + (target - from) * eased) * dec) / dec;
+                el.textContent = format(current, el);
+                if (t < 1) requestAnimationFrame(tick);
+                else el.textContent = format(target, el);
             }
-          });
-        }, { threshold: 0.6 });
-        els.forEach(el => io.observe(el));
-      } else {
-        els.forEach((el, i) => runCount(el, i * STAGGER));
-      }
-    }
 
-    document.readyState === 'loading'
-      ? document.addEventListener('DOMContentLoaded', boot)
-      : boot();
-  })();
-  </script>
+            requestAnimationFrame(tick);
+        }
+
+        function boot() {
+            const els = Array.from(document.querySelectorAll('.countup'))
+                .filter(el => !el.dataset.counted);
+            if (els.length === 0) return;
+
+            if ('IntersectionObserver' in window) {
+                const io = new IntersectionObserver(entries => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const idx = els.indexOf(entry.target);
+                            runCount(entry.target, idx * STAGGER);
+                            entry.target.dataset.counted = '1';
+                            io.unobserve(entry.target);
+                        }
+                    });
+                }, {threshold: 0.6});
+                els.forEach(el => io.observe(el));
+            } else {
+                els.forEach((el, i) => runCount(el, i * STAGGER));
+            }
+        }
+
+        document.readyState === 'loading'
+            ? document.addEventListener('DOMContentLoaded', boot)
+            : boot();
+    })();
+</script>
+
+<script>
+    (function () {
+        const listEl = document.getElementById('cat-list');
+        if (!listEl) return; // 초기 목록이 비어 있으면 종료
+
+        let nextId = listEl.dataset.nextId || null; // 다음 요청의 categoryId(커서)
+        let hasNext = (listEl.dataset.hasNext || 'false') === 'true';
+        const size = parseInt(listEl.dataset.size || '10', 10);
+
+        let inFlight = false;
+        const sentinel = document.getElementById('cat-sentinel');
+
+        async function loadMore() {
+            if (inFlight || !hasNext) return;
+            inFlight = true;
+
+            const params = new URLSearchParams();
+            if (nextId) params.set('categoryId', nextId);
+            params.set('size', String(size));
+
+            try {
+                const res = await fetch(`/api/categories?${params.toString()}`, {
+                    headers: {'Accept': 'application/json'}
+                });
+
+                const contentType = res.headers.get('content-type') || '';
+                if (!res.ok || !contentType.includes('application/json')) {
+                    const text = await res.text();
+                    console.error('API error:', res.status, text.slice(0, 300));
+                    return;
+                }
+
+                const json = await res.json();
+                appendCategories(json.items || []);
+
+                // 응답 DTO: nextId, hasNext, size
+                nextId = json.nextId ?? null;
+                hasNext = !!json.hasNext;
+
+                if (!hasNext) {
+                    observer.disconnect();
+                    sentinel?.remove();
+                }
+            } catch (e) {
+                console.error('카테고리 로드 실패:', e);
+            } finally {
+                inFlight = false;
+            }
+        }
+
+        function appendCategories(items) {
+            if (!Array.isArray(items) || items.length === 0) return;
+
+            const frag = document.createDocumentFragment();
+            for (const c of items) {
+                const a = document.createElement('a');
+                a.className = 'cat-btn';
+                a.href = `/store/list?categoryId=${encodeURIComponent(c.id)}`;
+
+                const dot = document.createElement('span');
+                dot.textContent = '•';
+                const name = document.createElement('span');
+                name.className = 'fw-normal';
+                name.textContent = c.name;
+                const ico = document.createElement('i');
+                ico.className = 'bi bi-chevron-right';
+
+                a.append(dot, name, ico);
+                frag.appendChild(a);
+            }
+            // 센티널 앞에 추가
+            listEl.insertBefore(frag, sentinel);
+        }
+
+        // IntersectionObserver로 센티널 관찰
+        const observer = new IntersectionObserver((entries) => {
+            for (const e of entries) {
+                if (e.isIntersecting) loadMore();
+            }
+        }, {
+            // rail-scroll가 내부 스크롤 컨테이너라면 root를 지정
+            root: listEl,
+            rootMargin: '0px 0px 200px 0px', // 살짝 미리 로드
+            threshold: 0.01
+        });
+
+        observer.observe(sentinel);
+    })();
+</script>
+
 </body>
 </html>
