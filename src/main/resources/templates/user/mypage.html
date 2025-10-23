@@ -64,61 +64,61 @@
 				</div>
 				<div class="modal-body">
 					<div class="form-check form-switch">
-						<input type="hidden" name="showReviews" value="false" form="myinfo-form">
 						<input class="form-check-input" type="checkbox" role="switch" 
 							id="show-reviews" 
 							name="showReviews" 
 							value="true" 
 							th:checked="${user.showReviews}"
 							form="myinfo-form">
+						<input type="hidden" name="showReviews" value="false" form="myinfo-form">
 						<label class="form-check-label" for="show-reviews">
 							리뷰 비공개
 						</label>
 					</div>
 					<div class="form-check form-switch">
-						<input type="hidden" name="showLikes" value="false" form="myinfo-form">
 						<input class="form-check-input" type="checkbox" role="switch" 
 							id="show-likes" 
 							name="showLikes" 
 							value="true" 
 							th:checked="${user.showLikes}"
 							form="myinfo-form">
+						<input type="hidden" name="showLikes" value="false" form="myinfo-form">
 						<label class="form-check-label" for="show-likes">
 							좋아요 비공개
 						</label>
 					</div>
 					<div class="form-check form-switch">
-						<input type="hidden" name="showBookmarks" value="false" form="myinfo-form">
 						<input class="form-check-input" type="checkbox" role="switch" 
 							id="show-bookmarks" 
 							name="showBookmarks" 
 							value="true" 
 							th:checked="${user.showBookmarks}"
 							form="myinfo-form">
+						<input type="hidden" name="showBookmarks" value="false" form="myinfo-form">
 						<label class="form-check-label" for="show-bookmarks">
 							즐겨찾기 비공개
 						</label>
 					</div>
 					<div class="form-check form-switch">
-						<input type="hidden" name="showFollowees" value="false" form="myinfo-form">
 						<input class="form-check-input" type="checkbox" role="switch" 
 							id="show-followees" 
 							name="showFollowees" 
 							value="true" 
 							th:checked="${user.showFollowees}"
 							form="myinfo-form">
+						<input type="hidden" name="showFollowees" value="false" form="myinfo-form">
 						<label class="form-check-label" for="show-followees">
 							팔로우 비공개
 						</label>
 					</div>
 					<div class="form-check form-switch">
-						<input type="hidden" name="showFollowers" value="false" form="myinfo-form">
 						<input class="form-check-input" type="checkbox" role="switch" 
 							id="show-followers" 
 							name="showFollowers" 
-							value="true" 
+							value="1" 
 							th:checked="${user.showFollowers}"
 							form="myinfo-form">
+						<input type="hidden" name="showFollowers" value="0" form="myinfo-form">
 						<label class="form-check-label" for="show-followers">
 							팔로워 비공개
 						</label>

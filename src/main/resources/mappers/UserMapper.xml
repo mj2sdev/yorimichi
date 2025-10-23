@@ -32,7 +32,7 @@
         <result property="description" column="description"></result>
         <result property="gender" column="gender"></result>
         <result property="year" column="year"></result>
-        <result property="showReviews" column="show_reveiws"></result>
+        <result property="showReviews" column="show_reviews"></result>
         <result property="showLikes" column="show_likes"></result>
         <result property="showBookmarks" column="show_bookmarks"></result>
         <result property="showFollowees" column="show_followees"></result>
