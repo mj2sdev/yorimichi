@@ -33,10 +33,11 @@ public class ImageManager implements ImageService {
 	}
 
 	@Override
-	public void save(ImageDTO image) {
+	public long save(ImageDTO image) {
 
 		imageMapper.insert(image);
 		log.info("Image: created imageId={}", image.getId());
+		return image.getId();
 	}
 
 	@Override

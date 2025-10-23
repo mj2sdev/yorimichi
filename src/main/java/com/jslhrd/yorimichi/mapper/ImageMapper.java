@@ -31,7 +31,7 @@ public interface ImageMapper {
 	/**
 	 * 이미지 추가.
 	 *
-	 * @return 영향 행 수 (추가 1, 그 외 0)
+	 * @return ImageId
 	 */
 	int insert(ImageDTO image);
 

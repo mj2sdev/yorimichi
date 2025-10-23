@@ -8,7 +8,7 @@ public interface ImageService {
 
 	public List<ImageDTO> findAll(Long rootId);
 
-	public void save(ImageDTO image);
+	public long save(ImageDTO image);
 
 	public void update(Long imageId, ImageDTO image);
 

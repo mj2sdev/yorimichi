@@ -14,12 +14,12 @@
         ORDER BY b.created_at DESC, b.store_id DESC
     </select>
 
-    <insert id="insert">
+    <insert id="insert" parameterType="long">
         INSERT INTO bookmark (user_id, store_id)
         VALUES (#{userId}, #{storeId})
     </insert>
 
-    <delete id="delete">
+    <delete id="delete" parameterType="long">
         DELETE
         FROM bookmark
         WHERE user_id = #{userId}

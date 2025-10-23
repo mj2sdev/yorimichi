@@ -1,23 +1,17 @@
 package com.jslhrd.yorimichi.controller;
 
-import com.jslhrd.yorimichi.domain.BookmarkDTO;
-import com.jslhrd.yorimichi.domain.ReviewDTO;
-import com.jslhrd.yorimichi.domain.StoreDTO;
+import com.jslhrd.yorimichi.domain.ImageDTO;
 import com.jslhrd.yorimichi.domain.UserDTO;
-import com.jslhrd.yorimichi.service.BookmarkService;
-import com.jslhrd.yorimichi.service.RelationshipService;
-import com.jslhrd.yorimichi.service.ReviewService;
-import com.jslhrd.yorimichi.service.StoreService;
+import com.jslhrd.yorimichi.service.GoogleDriveService;
+import com.jslhrd.yorimichi.service.ImageService;
 import com.jslhrd.yorimichi.service.UserService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.security.Principal;
-import java.util.List;
 
 
 @Controller
@@ -26,10 +20,9 @@ import java.util.List;
 public class UserController {
 
 	private final UserService userService;
-	private final StoreService storeService;
-	private final ReviewService reviewService;
-	private final RelationshipService relationshipService;
-	private final BookmarkService bookmarkService;
+	private final ImageService imageService;
+	private final GoogleDriveService googleDriveService;
+
 	//유저 상세페이지 이동
 	@GetMapping("/detail/{id}")
 	public String showUserDetail(@PathVariable("id") Long userId, Model model) {
@@ -49,7 +42,17 @@ public class UserController {
 	//자기 정보 수정
 	@ResponseBody
 	@PutMapping("/mypage")
-	public boolean updateMyDetail(@AuthenticationPrincipal(expression = "userId") Long userId, @ModelAttribute UserDTO user) {
-		return userService.update(userId, user);
+	public boolean updateMyDetail(
+		@AuthenticationPrincipal(expression = "userId") Long userId,
+		@RequestParam(name = "rawImage", required = false) MultipartFile userImageFile,
+		@ModelAttribute UserDTO user
+		) {
+
+			String url = googleDriveService.uploadFile(userImageFile);
+			ImageDTO image = new ImageDTO();
+			image.setUrl(url);
+			long imageId = imageService.save(image);
+			imageService.addImageToRoot(userId, imageId);
+			return userService.update(userId, user);
 	}
 }

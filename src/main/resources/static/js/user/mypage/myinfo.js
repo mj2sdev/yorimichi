@@ -30,15 +30,14 @@
                     result = await request('POST', '/store/like/{storeId}', {params:{'storeId': storeId}});
                 }
 
-                if (result) {
-                    if (isLiked) {
-                        icon.classList.remove('bi-heart-fill');
-                        icon.classList.add('bi-heart');
-                    } else {
-                        icon.classList.remove('bi-heart');
-                        icon.classList.add('bi-heart-fill');
-                    }
+                if (isLiked) {
+                    icon.classList.remove('bi-heart-fill');
+                    icon.classList.add('bi-heart');
+                } else {
+                    icon.classList.remove('bi-heart');
+                    icon.classList.add('bi-heart-fill');
                 }
+
             } catch (error) {
                 console.error("좋아요 처리 실패:", error);
                 alert("요청 처리 중 오류가 발생했습니다.");
@@ -64,14 +63,12 @@
                     result = await request('POST', '/store/bookmark/{storeId}', { params: { 'storeId': storeId } });
                 }
 
-                if (result) {
-                    if (isBookmarked) {
-                        icon.classList.remove('bi-bookmark-fill');
-                        icon.classList.add('bi-bookmark');
-                    } else {
-                        icon.classList.remove('bi-bookmark');
-                        icon.classList.add('bi-bookmark-fill');
-                    }
+                if (isBookmarked) {
+                    icon.classList.remove('bi-bookmark-fill');
+                    icon.classList.add('bi-bookmark');
+                } else {
+                    icon.classList.remove('bi-bookmark');
+                    icon.classList.add('bi-bookmark-fill');
                 }
             } catch (error) {
                 console.error("북마크 처리 실패:", error);
@@ -98,7 +95,7 @@
                     result = await request('POST', '/follow/{userId}', { params: { 'userId': userId } });
                 }
 
-                if (result) {
+   
                     if (isFollowing) {
                         icon.classList.remove('bi-heart-fill');
                         icon.classList.add('bi-heart');
@@ -106,7 +103,7 @@
                         icon.classList.remove('bi-heart');
                         icon.classList.add('bi-heart-fill');
                     }
-                }
+
             } catch (error) {
                 console.error("팔로우 처리 실패:", error);
                 alert("요청 처리 중 오류가 발생했습니다.");
@@ -130,7 +127,7 @@
                 } else {
                     result = await request('POST', '/block/{userId}', { params: { 'userId': userId } });
                 }
-                if (result) {
+
                     if (isBlocked) {
                         icon.classList.remove('bi-toggle-on');
                         icon.classList.add('bi-toggle-off');
@@ -138,7 +135,7 @@
                         icon.classList.remove('bi-toggle-off');
                         icon.classList.add('bi-toggle-on');
                     }
-                }
+                    
             } catch (error) {
                 console.error("차단 처리 실패:", error);
                 alert("요청 처리 중 오류가 발생했습니다.");
