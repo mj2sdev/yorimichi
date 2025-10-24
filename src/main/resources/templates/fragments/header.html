@@ -66,12 +66,11 @@
               <div class="small mt-1">로그인</div>
             </a>
 
-            <!-- 내정보 (로그인 되었을 경우) -->
-            <a class="text-decoration-none text-ymsecondary text-center" href="/mypage"
-               sec:authorize="isAuthenticated()">
-              <i class="bi bi-person-circle fs-3"></i>
-              <div class="small mt-1">내정보</div>
-            </a>
+          <!-- 내정보 (로그인 되었을 경우) -->
+          <a sec:authorize="isAuthenticated()" href="/user/mypage" class="text-decoration-none text-ymsecondary text-center">
+            <i class="bi bi-person-circle fs-3"></i>
+            <div class="small mt-1">내정보</div>
+          </a>
 
             <a class="text-decoration-none text-ymsecondary text-center" href="javascript:logoutForm.submit()"
                sec:authorize="isAuthenticated()">

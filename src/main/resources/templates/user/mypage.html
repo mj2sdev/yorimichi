@@ -2,11 +2,12 @@
 <html th:replace="~{layout/main :: params(~{::head/content()},~{::body/content()})}" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+	<script defer src="/js/user/mypage/myinfo.js"></script>
 	<title> Yorimichi Project </title>
 </head>
 
 <body>
-	<form name="myinfo">
+	<form name="myinfo" id="myinfo-form">
 		<div class="container my-4">
 			<div class="row">
 				<div class="col-9">
@@ -36,84 +37,100 @@
 					<div class="row justify-content-center">
 						<div class="col-8">
 							<div class="input-group mb-3">
-								<input type="file" name="userImage" value="" class="form-control" id="inputGroupFile02">
+								<input type="file" name="rawImage" value="" class="form-control" id="inputGroupFile02">
 								<label class="input-group-text" for="inputGroupFile02">업로드</label>
 							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-		</div>
-		<div class="modal fade" id="privacy" tabindex="-1" aria-labelledby="privacyLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h1 class="modal-title fs-5" id="privacyLabel">개인 정보 보호 설정</h1>
-					</div>
-					<div class="modal-body">
-						<div class="form-check form-switch">
-							<input type="hidden" name="reviewPrivacy" value="false">
-							<input class="form-check-input" type="checkbox" role="switch" 
-								id="review-privacy" 
-								name="reviewPrivacy" 
-								value="true" 
-								th:checked="${user.showReviews}">
-							<label class="form-check-label" for="review-privacy">
-								리뷰 비공개
-							</label>
+					<div class="row justify-content-center">
+						<div class="col-4 text-center fs-1">
+							<ul class="list-unstyled">
+								<li>
+									<textarea name="description" th:text="${user.description}" class="form-control text-center"
+										aria-label="Description" aria-describedby="addon-wrapping"></textarea>
+								</li>
+							</ul>
 						</div>
-						<div class="form-check form-switch">
-							<input type="hidden" name="likePrivacy" value="false">
-							<input class="form-check-input" type="checkbox" role="switch" 
-								id="like-privacy" 
-								name="likePrivacy" 
-								value="true" 
-								th:checked="${user.showLikes}">
-							<label class="form-check-label" for="like-privacy">
-								좋아요 비공개
-							</label>
-						</div>
-						<div class="form-check form-switch">
-							<input type="hidden" name="bookmarkPrivacy" value="false">
-							<input class="form-check-input" type="checkbox" role="switch" 
-								id="bookmark-privacy" 
-								name="bookmarkPrivacy" 
-								value="true" 
-								th:checked="${user.showBookmarks}">
-							<label class="form-check-label" for="bookmark-privacy">
-								즐겨찾기 비공개
-							</label>
-						</div>
-						<div class="form-check form-switch">
-							<input type="hidden" name="followPrivacy" value="false">
-							<input class="form-check-input" type="checkbox" role="switch" 
-								id="follow-privacy" 
-								name="followPrivacy" 
-								value="true" 
-								th:checked="${user.showFollowees}">
-							<label class="form-check-label" for="follow-privacy">
-								팔로우 비공개
-							</label>
-						</div>
-						<div class="form-check form-switch">
-							<input type="hidden" name="followerPrivacy" value="false">
-							<input class="form-check-input" type="checkbox" role="switch" 
-								id="follower-privacy" 
-								name="followerPrivacy" 
-								value="true" 
-								th:checked="${user.showFollowers}">
-							<label class="form-check-label" for="follower-privacy">
-								팔로워 비공개
-							</label>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-primary" data-bs-dismiss="modal">창 닫기</button>
 					</div>
 				</div>
 			</div>
 		</div>
 	</form>
+	<div class="modal fade" id="privacy" tabindex="-1" aria-labelledby="privacyLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="privacyLabel">개인 정보 보호 설정</h1>
+				</div>
+				<div class="modal-body">
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" role="switch" 
+							id="show-reviews" 
+							name="showReviews" 
+							value="true" 
+							th:checked="${user.showReviews}"
+							form="myinfo-form">
+						<input type="hidden" name="showReviews" value="false" form="myinfo-form">
+						<label class="form-check-label" for="show-reviews">
+							리뷰 비공개
+						</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" role="switch" 
+							id="show-likes" 
+							name="showLikes" 
+							value="true" 
+							th:checked="${user.showLikes}"
+							form="myinfo-form">
+						<input type="hidden" name="showLikes" value="false" form="myinfo-form">
+						<label class="form-check-label" for="show-likes">
+							좋아요 비공개
+						</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" role="switch" 
+							id="show-bookmarks" 
+							name="showBookmarks" 
+							value="true" 
+							th:checked="${user.showBookmarks}"
+							form="myinfo-form">
+						<input type="hidden" name="showBookmarks" value="false" form="myinfo-form">
+						<label class="form-check-label" for="show-bookmarks">
+							즐겨찾기 비공개
+						</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" role="switch" 
+							id="show-followees" 
+							name="showFollowees" 
+							value="true" 
+							th:checked="${user.showFollowees}"
+							form="myinfo-form">
+						<input type="hidden" name="showFollowees" value="false" form="myinfo-form">
+						<label class="form-check-label" for="show-followees">
+							팔로우 비공개
+						</label>
+					</div>
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" role="switch" 
+							id="show-followers" 
+							name="showFollowers" 
+							value="1" 
+							th:checked="${user.showFollowers}"
+							form="myinfo-form">
+						<input type="hidden" name="showFollowers" value="0" form="myinfo-form">
+						<label class="form-check-label" for="show-followers">
+							팔로워 비공개
+						</label>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">창 닫기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-8 my-4 border border-3">
