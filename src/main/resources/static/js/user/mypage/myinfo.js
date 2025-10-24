@@ -96,13 +96,13 @@
                 }
 
    
-                    if (isFollowing) {
-                        icon.classList.remove('bi-heart-fill');
-                        icon.classList.add('bi-heart');
-                    } else {
-                        icon.classList.remove('bi-heart');
-                        icon.classList.add('bi-heart-fill');
-                    }
+                if (isFollowing) {
+                    icon.classList.remove('bi-heart-fill');
+                    icon.classList.add('bi-heart');
+                } else {
+                    icon.classList.remove('bi-heart');
+                    icon.classList.add('bi-heart-fill');
+                }
 
             } catch (error) {
                 console.error("팔로우 처리 실패:", error);
@@ -128,13 +128,13 @@
                     result = await request('POST', '/block/{userId}', { params: { 'userId': userId } });
                 }
 
-                    if (isBlocked) {
-                        icon.classList.remove('bi-toggle-on');
-                        icon.classList.add('bi-toggle-off');
-                    } else {
-                        icon.classList.remove('bi-toggle-off');
-                        icon.classList.add('bi-toggle-on');
-                    }
+                if (isBlocked) {
+                    icon.classList.remove('bi-toggle-on');
+                    icon.classList.add('bi-toggle-off');
+                } else {
+                    icon.classList.remove('bi-toggle-off');
+                    icon.classList.add('bi-toggle-on');
+                }
                     
             } catch (error) {
                 console.error("차단 처리 실패:", error);
@@ -143,3 +143,37 @@
         });
     });
 })();
+
+
+(function reviewDeleteToggle() {
+    const deleteBtns = document.querySelectorAll(".delete-review-btn");
+
+    deleteBtns.forEach(button => {
+        button.addEventListener('click', async function() {
+            const reviewId = this.dataset.reviewId;
+            const icon = this.querySelector('i');
+            const isDeleted = icon.classList.contains('bi-arrow-counterclockwise');
+            try {
+                let result;
+                if (isDeleted) {
+                    result = await request('patch', '/review/{reviewId}', {params:{reviewId: reviewId}}); 
+                } else {
+                    result = await request('delete', '/review/{reviewId}', {params:{reviewId: reviewId}}); 
+                }
+
+                if (isDeleted) {
+                    icon.classList.remove('bi-arrow-counterclockwise');
+                    icon.classList.add('bi-trash');
+                } else {
+                    icon.classList.remove('bi-trash');
+                    icon.classList.add('bi-arrow-counterclockwise');
+                }
+
+            } catch (error) {
+                console.error("리뷰삭제 처리 실패:", error);
+                alert("요청 처리 중 오류가 발생했습니다.");
+            }
+        });
+    });
+})();
+

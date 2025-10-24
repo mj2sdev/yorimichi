@@ -69,4 +69,12 @@ public interface ReviewService {
 	 * @param reviewId 삭제할 리뷰 ID
 	 */
 	public void delete(Long userId, Long reviewId);
+
+	/**
+	 * 삭제 처리된 리뷰를 복구합니다.
+	 * 
+	 * @param userId 권한 확인 유저 ID
+	 * @param reviewId 삭제할 리뷰 ID
+	 */
+	public void restore(Long userId, Long reviewId);
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -42,11 +43,9 @@ public class ReviewController {
 
 
 	// 리뷰작성
-	// TODO: CustomUserPrincipal 구현 필요.
 	@PostMapping("/stores/{storeId}/review")
 	public void submitReview(
-			@PathVariable Long storeId,
-			
+			@PathVariable("storeId") Long storeId,
 			@AuthenticationPrincipal(expression = "userId") Long userId,
 			@RequestBody ReviewDTO dto
 	) {
@@ -56,8 +55,7 @@ public class ReviewController {
 	//리뷰수정
 	@PutMapping("/review/{reviewId}")
 	public void updateReview(
-			@PathVariable Long reviewId,
-			// TODO: CustomUserPrincipal 구현 필요.
+			@PathVariable("reviewId") Long reviewId,
 			@AuthenticationPrincipal(expression = "userId") Long userId,
 			@RequestBody ReviewDTO dto
 	) {
@@ -68,11 +66,20 @@ public class ReviewController {
 	//리뷰삭제
 	@DeleteMapping("/review/{reviewId}")
 	public void deleteReview(
-			@PathVariable Long reviewId,
-			// TODO: CustomUserPrincipal 구현 필요.
+			@PathVariable("reviewId") Long reviewId,
 			@AuthenticationPrincipal(expression = "userId") Long userId
 	) {
-		reviewService.delete(reviewId, userId);
+		System.out.println(reviewId);
+		reviewService.delete(userId, reviewId);
+	}
+
+	@PatchMapping("/review/{reviewId}")
+	public void restoreReview(
+		@PathVariable("reviewId") Long reviewId,
+		@AuthenticationPrincipal(expression = "userId") Long userId
+	){
+		System.out.println(reviewId);
+		reviewService.restore(userId, reviewId);
 	}
 
 }
