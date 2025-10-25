@@ -2,18 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
+<!-- @formatter:off -->
+
 <mapper namespace="com.jslhrd.yorimichi.mapper.ReviewMapper">
 
-    <!-- @formatter:off -->
+    <select id="selectAll" resultType="ReviewDTO">
+        SELECT v.id,
+        v.user_id,
+        v.store_id,
+        v.rating,
+        v.content,
+        r.type,
+        r.created_at,
+        r.updated_at
+        FROM review v
+        JOIN root r ON v.id = r.id
+        AND r.type = 'REVIEW'
+        AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        ORDER BY r.created_at DESC
+    </select>
+
     <resultMap id="reviewResultMap" type="ReviewDTO">
-        <id property="id" column="id"></id>
-        <result property="userId" column="user_id"></result>
-        <result property="storeId" column="store_id"></result>
-        <result property="rating" column="rating"></result>
-        <result property="content" column="content"></result>
-        <result property="createdAt" column="created_at"></result>
-        <result property="updatedAt" column="updated_at"></result>
-        <collection property="images" ofType="ImageDTO" column="id" select="com.jslhrd.yorimichi.mapper.ImageMapper.selectByReviewId"></collection>
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="storeId" column="store_id"/>
+        <result property="rating" column="rating"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <collection property="images" ofType="ImageDTO" column="id" select="com.jslhrd.yorimichi.mapper.ImageMapper.selectByReviewId"/>
     </resultMap>
     <select id="selectAllByUserId" resultMap="reviewResultMap" parameterType="Long">
         SELECT  id, 
@@ -28,27 +45,22 @@
         ORDER BY id DESC
     </select>
 
-    <select id="selectAll" resultType="ReviewDTO">
-        SELECT v.id,
-               v.user_id,
-               v.store_id,
-               v.rating,
-               v.content,
-               r.type,
-               r.created_at,
-               r.updated_at
+    <select id="selectStatsByStoreId" resultType="ReviewDTO">
+        SELECT
+            ROUND(COALESCE(AVG(v.rating), 0), 1) AS avgRating,
+            COUNT(*) AS reviewCount,
+            COALESCE(SUM(r.created_at >= NOW() - INTERVAL #{lookbackDays} DAY), 0) AS recentCount
         FROM review v
-        JOIN root r ON v.id = r.id
-            AND r.type = 'REVIEW'
-            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        ORDER BY r.created_at DESC
+                 JOIN root r ON r.id = v.id
+        WHERE v.store_id = #{storeId}
     </select>
 
     <select id="selectAvgRatingByStoreId" parameterType="map" resultType="ReviewDTO">
-        SELECT AVG(r.rating) AS totalRating,
-               COUNT(r.rating) AS ratingCount
+        SELECT
+            AVG(r.rating) AS avgRating,
+            COUNT(r.rating) AS reviewCount
         FROM review r
-        WHERE r.store_id = #{ storeId }
+        WHERE r.store_id = #{storeId}
         GROUP BY r.rating
     </select>
 

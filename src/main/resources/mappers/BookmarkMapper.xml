@@ -14,6 +14,12 @@
         ORDER BY b.created_at DESC, b.store_id DESC
     </select>
 
+    <select id="countByStoreId" resultType="BookmarkDTO">
+        SELECT COUNT(*) AS count
+        FROM bookmark
+        WHERE store_id = #{storeId}
+    </select>
+
     <insert id="insert">
         INSERT INTO bookmark (user_id, store_id)
         VALUES (#{userId}, #{storeId})

@@ -33,7 +33,6 @@
         ORDER BY i.created_at
     </select>
 
-
     <select id="selectById" parameterType="long" resultType="ImageDTO">
         SELECT id,
                url,
@@ -41,6 +40,18 @@
                updated_at
         FROM image
         WHERE id = #{imageId}
+    </select>
+
+    <select id="selectPrimaryByStoreId" resultType="ImageDTO">
+        SELECT
+            (
+                SELECT i.url
+                FROM root_image ri
+                JOIN image i ON i.id = ri.image_id
+                WHERE ri.root_id = #{storeId}
+                ORDER BY ri.created_at DESC, ri.image_id DESC
+                LIMIT 1
+            ) AS url
     </select>
 
     <select id="existsById" parameterType="long" resultType="boolean">

@@ -28,6 +28,8 @@ public class BookmarkDTO {
 	 */
 	private Long storeId;
 
+	private Integer count;
+
 	/**
 	 * 생성일시 (DB 자동 생성)
 	 */

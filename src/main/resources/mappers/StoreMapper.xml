@@ -16,9 +16,67 @@
                r.updated_at
         FROM store s
         JOIN root r ON s.id = r.id
-            AND r.type = 'STORE'
+            <include refid="com.jslhrd.yorimichi.mapper.common.RootType">
+                <property name="type" value="'STORE'"/>
+            </include>
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
         ORDER BY r.created_at DESC
+    </select>
+
+    <resultMap id="RecommendStoreMap" type="StoreDTO">
+        <id     column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+
+        <association property="address"
+                     javaType="AddressDTO"
+                     column="{addressId=address_id}"
+                     select="com.jslhrd.yorimichi.mapper.AddressMapper.selectRoadAddressTextById"/>
+
+        <association property="review"
+                     javaType="ReviewDTO"
+                     column="{storeId=id, lookbackDays=lookback_days}"
+                     select="com.jslhrd.yorimichi.mapper.ReviewMapper.selectStatsByStoreId"/>
+
+        <association property="like"
+                     javaType="LikeDTO"
+                     column="{storeId=id}"
+                     select="com.jslhrd.yorimichi.mapper.LikeMapper.countByRootId"/>
+
+        <association property="bookmark"
+                     javaType="BookmarkDTO"
+                     column="{storeId=id}"
+                     select="com.jslhrd.yorimichi.mapper.BookmarkMapper.countByStoreId"/>
+
+        <association property="coeat"
+                     javaType="CoeatDTO"
+                     column="{storeId=id}"
+                     select="com.jslhrd.yorimichi.mapper.CoeatMapper.selectOpenCountByStoreId"/>
+
+        <association property="image"
+                     javaType="ImageDTO"
+                     column="{storeId=id}"
+                     select="com.jslhrd.yorimichi.mapper.ImageMapper.selectPrimaryByStoreId"/>
+    </resultMap>
+    <select id="selectRecommend"  resultMap="RecommendStoreMap">
+        SELECT
+            s.id,
+            s.address_id,
+            s.name,
+            s.description,
+            #{lookbackDays} AS lookback_days
+
+        FROM store s
+
+        JOIN root r ON r.id = s.id
+            <include refid="com.jslhrd.yorimichi.mapper.common.RootType">
+                <property name="type" value="'STORE'"/>
+            </include>
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
+        ORDER BY s.id DESC
+
+        LIMIT #{limit}
     </select>
 
     <resultMap id="StoreMap" type="StoreDTO">

@@ -22,6 +22,9 @@ public interface StoreMapper {
 
 	List<StoreDTO> selectAll(@Param("search") SearchDTO search);
 
+	List<StoreDTO> selectRecommend(@Param("limit") int limit,
+	                               @Param("lookbackDays") int lookbackDays);
+
 	/**
 	 * 상점 단건 조회.
 	 *

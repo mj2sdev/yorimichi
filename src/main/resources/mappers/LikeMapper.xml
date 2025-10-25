@@ -5,6 +5,12 @@
 
     <!-- @formatter:off -->
 
+    <select id="countByRootId" resultType="LikeDTO">
+        SELECT COUNT(*) AS count
+        FROM likes
+        WHERE root_id = #{storeId}
+    </select>
+
     <select id="selectByUserId" parameterType="long" resultType="StoreDTO">
         SELECT s.*
         FROM store s

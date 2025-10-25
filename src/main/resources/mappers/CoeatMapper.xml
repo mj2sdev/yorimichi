@@ -47,6 +47,14 @@
         ORDER BY r.created_at DESC
     </select>
 
+    <select id="selectOpenCountByStoreId" resultType="CoeatDTO">
+        SELECT COUNT(*) AS openCount
+        FROM coeat
+        WHERE status = 'OPEN'
+            AND meeting_at >= NOW()
+            AND store_id = #{storeId}
+    </select>
+
     <select id="selectById" parameterType="long" resultType="CoeatDTO">
         SELECT c.id,
                c.user_id,
