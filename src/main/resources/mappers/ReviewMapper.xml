@@ -165,6 +165,17 @@
             AND v.user_id = #{userId}
     </update>
 
+    <update id="restoreById">
+        UPDATE review v
+        JOIN root r ON v.id = r.id
+            AND r.type = 'REVIEW'
+        SET r.deleted_at = null
+        WHERE v.id = #{reviewId}
+            AND v.user_id = #{userId}
+    </update>
+
     <!-- @formatter:on -->
+
+
 
 </mapper>
