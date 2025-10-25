@@ -53,22 +53,13 @@
     </select>
 
     <select id="selectAvgRatingByStoreId" parameterType="map" resultType="ReviewDTO">
-        SELECT AVG(r.rating) AS totalRating,
-               COUNT(r.rating) AS ratingCount
+        SELECT
+            AVG(r.rating) AS avgRating,
+            COUNT(r.rating) AS reviewCount
         FROM review r
         WHERE r.store_id = #{ storeId }
-        GROUP BY r.rating
+        GROUP BY r.store_id
     </select>
-
-    <select id="selectAllByStoreId" parameterType="map" resultType="ReviewDTO">
-        SELECT v.id,
-               v.user_id,
-               v.store_id,
-               v.rating,
-               v.content,
-               r.type,
-               r.created_at,
-               r.updated_at
     <select id="selectAllByStoreId" parameterType="long" resultType="ReviewDTO">
         SELECT
             v.id,

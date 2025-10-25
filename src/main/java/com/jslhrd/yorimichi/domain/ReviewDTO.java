@@ -15,13 +15,17 @@ import java.util.List;
  *
  * @author GeonHoKoo
  * @author LancerAlert
- * @since 1.0
- * 
  * @author mj2sdev
+ * 
+ * @version 1.0 초안 작성
  * @version 1.1
  * <ol>
  * <li> 주석 정리 제안
  * <li> store에서 필요한 리뷰관련 데이터 변수 추가
+ * @version 1.2
+ * <ol>
+ * <li> 리뷰 평균, 리뷰 갯수 등 필드 추가
+ * <li> 변수명 충돌 해결
  */
 @Getter
 @Setter
@@ -45,20 +49,12 @@ public class ReviewDTO extends RootDTO implements FeedDTO {
 	private List<ImageDTO> images;
 	/** front에서 등록하려고 하는 multipartFile 형식의 이미지 리스트 */
 	private List<MultipartFile> uploadImages;
-
-	/**
-	 * 리뷰 평균
-	 */
+	/** 리뷰 평균 */
 	private Double avgRating;
-	
-	/**
-	 * 리뷰 갯수
-	 */
+	/** 리뷰 갯수 */
 	private Integer reviewCount;
-
+	/** 최근 갯수 */
 	private Integer recentCount;
 
-	public ReviewDTO() {
-		super(RootType.REVIEW);
-	}
+	public ReviewDTO() { super(RootType.REVIEW); }
 }
