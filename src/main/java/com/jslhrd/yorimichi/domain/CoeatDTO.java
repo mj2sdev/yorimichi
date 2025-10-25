@@ -76,6 +76,7 @@ public class CoeatDTO extends RootDTO implements FeedDTO {
 	 */
 	private List<CommentDTO> comments;
 
+	private Integer count;
 
 	public CoeatDTO() {
 		super(RootType.COEAT);

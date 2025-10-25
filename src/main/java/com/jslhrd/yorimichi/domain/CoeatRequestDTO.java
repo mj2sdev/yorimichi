@@ -59,4 +59,6 @@ public class CoeatRequestDTO {
 	 * 신청한 유저
 	 */
 	private UserDTO userDTO;
+
+	private Integer count;
 }

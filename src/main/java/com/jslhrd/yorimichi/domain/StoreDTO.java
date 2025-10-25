@@ -74,6 +74,22 @@ public class StoreDTO extends RootDTO {
 	 */
 	private List<ImageDTO> images;
 
+	private ReviewDTO review;
+	
+	/**
+	 * 좋아요
+	 */
+	private LikeDTO like;
+
+	/**
+	 * 북마크
+	 */
+	private BookmarkDTO bookmark;
+
+	private CoeatDTO coeat;
+
+	private ImageDTO image;
+
 
 	public StoreDTO() {
 		super(RootType.STORE);

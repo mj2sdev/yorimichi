@@ -7,23 +7,43 @@
     <!-- @formatter:off -->
 
     <select id="selectByUserId" parameterType="long" resultType="StoreDTO">
-        SELECT s.*
+        SELECT
+            s.*
+
         FROM store s
+
         JOIN bookmark b ON s.id = b.store_id
+
         WHERE b.user_id = #{userId}
-        ORDER BY b.created_at DESC, b.store_id DESC
+
+        ORDER BY
+            b.created_at DESC,
+            b.store_id DESC
     </select>
 
-    <insert id="insert" parameterType="long">
-        INSERT INTO bookmark (user_id, store_id)
-        VALUES (#{userId}, #{storeId})
+    <select id="countByStoreId" resultType="BookmarkDTO">
+        SELECT
+            COUNT(*) AS count
+
+        FROM bookmark
+
+        WHERE store_id = #{storeId}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO bookmark (user_id,
+                              store_id)
+        VALUES (#{userId},
+                #{storeId})
     </insert>
 
-    <delete id="delete" parameterType="long">
+    <delete id="delete">
         DELETE
+
         FROM bookmark
+
         WHERE user_id = #{userId}
-          AND store_id = #{storeId}
+            AND store_id = #{storeId}
     </delete>
 
     <!-- @formatter:off -->

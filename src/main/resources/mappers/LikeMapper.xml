@@ -6,21 +6,39 @@
     <!-- @formatter:off -->
 
     <select id="selectByUserId" parameterType="long" resultType="StoreDTO">
-        SELECT s.*
+        SELECT
+            s.*
+
         FROM store s
+
         JOIN likes l ON l.root_id = s.id
+
         WHERE l.user_id = #{userId}
+
         ORDER BY l.created_at DESC
     </select>
 
+    <select id="countByRootId" resultType="LikeDTO">
+        SELECT
+            COUNT(*) AS count
+
+        FROM likes
+
+        WHERE root_id = #{storeId}
+    </select>
+
     <insert id="insert" parameterType="LikeDTO">
-        INSERT INTO likes (user_id, root_id)
-        VALUES (#{userId}, #{rootId})
+        INSERT INTO likes (user_id,
+                           root_id)
+        VALUES (#{userId},
+                #{rootId})
     </insert>
 
     <delete id="delete">
         DELETE
+
         FROM likes
+
         WHERE user_id = #{userId}
             AND root_id = #{rootId}
     </delete>

@@ -6,36 +6,69 @@
 
     <!-- @formatter:off -->
 
+    <select id="selectPrimaryByStoreId" resultType="ImageDTO">
+        SELECT (
+                SELECT i.url
+
+                FROM root_image ri
+
+                JOIN image i ON i.id = ri.image_id
+
+                WHERE ri.root_id = #{storeId}
+
+                ORDER BY ri.created_at DESC, ri.image_id DESC
+
+                LIMIT 1
+            ) AS url
+    </select>
+
     <select id="selectByUserId" parameterType="long" resultType="String">
-        SELECT url
+        SELECT
+            url
+
         FROM image i
+
         JOIN root_image ri ON ri.image_id=i.id
+
         WHERE ri.root_id = #{userId}
     </select>
 
 
     <select id="selectByReviewId" parameterType="long" resultType="ImageDTO">
-        SELECT i.id, i.url, i.created_at, i.updated_at
+        SELECT
+            i.id,
+            i.url,
+            i.created_at,
+            i.updated_at
+
         FROM image i
+
         JOIN root_image ri ON ri.image_id = i.id
+
         WHERE ri.root_id = #{reviewId}
+
         ORDER BY i.created_at
     </select>
 
 
     <select id="selectById" parameterType="long" resultType="ImageDTO">
-        SELECT id,
-               url,
-               created_at,
-               updated_at
+        SELECT
+            id,
+            url,
+            created_at,
+            updated_at
+
         FROM image
+
         WHERE id = #{imageId}
     </select>
 
     <select id="existsById" parameterType="long" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
+
             FROM image
+
             WHERE id = #{imageId}
         )
     </select>
@@ -51,13 +84,17 @@
 
     <update id="update">
         UPDATE image
+
         SET url = #{image.url}
+
         WHERE id = #{imageId}
     </update>
 
     <delete id="deleteById" parameterType="long">
         DELETE
+
         FROM image
+
         WHERE id = #{imageId}
     </delete>
 

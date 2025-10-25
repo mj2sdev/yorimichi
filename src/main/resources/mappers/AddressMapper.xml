@@ -4,30 +4,55 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.AddressMapper">
 
-    <insert id="insert" parameterType="AddressDTO">
-        INSERT INTO address (
-            road_id, postal_id, detail,
-            road_address_text, jibun_address_text,
-            latitude, longitude)
-        VALUES (
-            #{roadId}, #{postalId}, #{detail},
-            #{roadAddressText},#{jibunAddressText},
-            #{latitude}, #{longitude}
-        )
-    </insert>
+    <!-- @formatter:off -->
 
-    <select id="selectById" parameterType="Long" resultType="AddressDTO">
+    <select id="selectRoadAddressTextById" resultType="AddressDTO">
         SELECT
-            id, road_id, postal_id, detail,
-            road_address_text, jibun_address_text,
-            latitude, longitude,
-            created_at, updated_at
+            road_address_text
+
         FROM address
-        WHERE id = #{id}
+
+        WHERE id = #{addressId}
     </select>
+
+    <select id="selectById" parameterType="long" resultType="AddressDTO">
+        SELECT
+            id,
+            road_id,
+            postal_id,
+            detail,
+            road_address_text,
+            jibun_address_text,
+            latitude,
+            longitude,
+            created_at,
+            updated_at
+
+        FROM address
+
+        WHERE id = #{addressId}
+    </select>
+
+    <insert id="insert" parameterType="AddressDTO">
+        INSERT INTO address (road_id,
+                             postal_id,
+                             detail,
+                             road_address_text,
+                             jibun_address_text,
+                             latitude,
+                             longitude)
+        VALUES (#{roadId},
+                #{postalId},
+                #{detail},
+                #{roadAddressText},
+                #{jibunAddressText},
+                #{latitude},
+                #{longitude})
+    </insert>
 
     <update id="update" parameterType="AddressDTO">
         UPDATE address
+
         SET
             road_id = #{roadId},
             postal_id = #{postalId},
@@ -36,11 +61,18 @@
             jibun_address_text = #{jibunAddressText},
             latitude = #{latitude},
             longitude = #{longitude}
-        WHERE id = #{id}
+
+        WHERE id = #{addressId}
     </update>
 
-    <delete id="deleteById" parameterType="Long">
-        DELETE FROM address WHERE id = #{id}
+    <delete id="deleteById" parameterType="long">
+        DELETE
+
+        FROM address
+
+        WHERE id = #{addressId}
     </delete>
+
+    <!-- @formatter:on -->
 
 </mapper>

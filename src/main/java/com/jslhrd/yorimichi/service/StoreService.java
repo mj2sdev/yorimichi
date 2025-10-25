@@ -29,14 +29,7 @@ public interface StoreService {
 	 */
 	public List<StoreDTO> findAllByUserLike(Long userId);
 
-	/**
-	 * 사용자의 아이디를 받아서 사용자의 정보를 토대로 추천하는 가게 리스트를 반환합니다.
-	 * userId 값이 null 일 경우에는 일반적인 추천 게시물(예를들어 인기, 최근 평점 등) 을 대신 반환합니다.
-	 *
-	 * @param userId 사용자의 아이디 입니다. 필수 아님
-	 * @return {@code List<StoreDTO>} 추천 가게 리스트를 반환합니다.
-	 */
-	public List<StoreDTO> findAllByRecommend(Long userId);
+	public List<StoreDTO> findAllByRecommend(int limit);
 
 	/**
 	 * 가게 아이디를 이용해 가게정보를 조회합니다.

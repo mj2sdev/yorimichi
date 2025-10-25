@@ -3,10 +3,9 @@ package com.jslhrd.yorimichi.domain;
 import com.jslhrd.yorimichi.enums.RootType;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 리뷰 DTO.
@@ -30,7 +29,7 @@ public class ReviewDTO extends RootDTO implements FeedDTO {
 	 * FK: 상점 ID
 	 */
 	private Long storeId;
-	
+
 	/**
 	 * 리뷰 평점
 	 */
@@ -67,6 +66,17 @@ public class ReviewDTO extends RootDTO implements FeedDTO {
 	 */
 	private List<MultipartFile> uploadImages;
 
+	/**
+	 * 리뷰 평균
+	 */
+	private Double avgRating;
+	
+	/**
+	 * 리뷰 갯수
+	 */
+	private Integer reviewCount;
+
+	private Integer recentCount;
 
 	public ReviewDTO() {
 		super(RootType.REVIEW);

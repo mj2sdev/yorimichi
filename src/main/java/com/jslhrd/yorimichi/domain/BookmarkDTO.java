@@ -37,4 +37,6 @@ public class BookmarkDTO {
 	 * 수정일시 (DB 자동 갱신)
 	 */
 	private LocalDateTime updatedAt;
+
+	private Integer count;
 }
