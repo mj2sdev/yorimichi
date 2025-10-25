@@ -24,7 +24,7 @@
         VALUES (#{userId}, #{rootId})
     </insert>
 
-    <delete id="delete" parameterType="LikeDTO">
+    <delete id="delete">
         DELETE
         FROM likes
         WHERE user_id = #{userId}

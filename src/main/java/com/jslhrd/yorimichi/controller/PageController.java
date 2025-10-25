@@ -4,11 +4,15 @@ package com.jslhrd.yorimichi.controller;
 import com.jslhrd.yorimichi.domain.CategoryDTO;
 import com.jslhrd.yorimichi.service.CategoryService;
 import com.jslhrd.yorimichi.service.manager.StoreManager;
+import com.jslhrd.yorimichi.domain.AddressDTO;
+import com.jslhrd.yorimichi.domain.StoreDTO;
+import com.jslhrd.yorimichi.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller

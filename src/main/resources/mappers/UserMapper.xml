@@ -32,7 +32,7 @@
         <result property="description" column="description"></result>
         <result property="gender" column="gender"></result>
         <result property="year" column="year"></result>
-        <result property="showReviews" column="show_reveiws"></result>
+        <result property="showReviews" column="show_reviews"></result>
         <result property="showLikes" column="show_likes"></result>
         <result property="showBookmarks" column="show_bookmarks"></result>
         <result property="showFollowees" column="show_followees"></result>
@@ -59,7 +59,7 @@
                u.show_reviews,
                u.show_likes,
                u.show_bookmarks,
-               u.show_following,
+               u.show_followees,
                u.show_followers
         FROM user u
         JOIN root r ON u.id = r.id
@@ -128,12 +128,10 @@
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
         SET u.nickname = #{user.nickname},
             u.description = #{user.description},
-            u.gender = #{user.gender},
-            u.year = #{user.year},
             u.show_reviews = #{user.showReviews},
             u.show_likes = #{user.showLikes},
             u.show_bookmarks = #{user.showBookmarks},
-            u.show_following = #{user.showFollowees},
+            u.show_followees = #{user.showFollowees},
             u.show_followers = #{user.showFollowers},
             r.updated_at = NOW()
         WHERE u.id = #{userId}
