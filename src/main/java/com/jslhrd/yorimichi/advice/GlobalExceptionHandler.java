@@ -13,13 +13,13 @@ public class GlobalExceptionHandler {
 	public String handleNotFound(NoHandlerFoundException e, Model model) {
 		model.addAttribute("path", e.getRequestURL());
 		model.addAttribute("message", "요청하신 페이지를 찾을 수 없습니다.");
-		return "error/notFound";
+		return "error/general";
 	}
 
 	@ExceptionHandler(NoResourceFoundException.class)
 	public String handleNoResource(NoResourceFoundException e, Model model) {
 		model.addAttribute("message", "요청하신 페이지를 찾을 수 없습니다.");
-		return "error/notFound";
+		return "error/general";
 	}
 
 	@ExceptionHandler(Exception.class)
