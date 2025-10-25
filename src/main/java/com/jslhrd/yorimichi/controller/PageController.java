@@ -4,6 +4,7 @@ package com.jslhrd.yorimichi.controller;
 import com.jslhrd.yorimichi.domain.AddressDTO;
 import com.jslhrd.yorimichi.domain.StoreDTO;
 import com.jslhrd.yorimichi.service.CategoryService;
+import com.jslhrd.yorimichi.service.StationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import java.util.List;
 public class PageController {
 
 	private final CategoryService categoryService;   // ✅ 주입
+	private final StationService stationService;
 
 	@GetMapping({"/", "/index"})
 	public String showIndex(Model model) {
@@ -37,6 +39,9 @@ public class PageController {
 		// ✅ 카테고리 목록 실데이터 (상위 5개만 노출 예시)
 		model.addAttribute("categorySlice", categoryService.findSlice(null, 10));
 
+		// ✅ 미니 정류장 목록 (상위 5개만 노출 예시)
+		model.addAttribute("stationSlice", stationService.findSlice(null, 10));
+
 		// ✅ 중앙/3x3 더미 이미지 (picsum)
 		var imageUrls = List.of(
 				"https://picsum.photos/seed/yorimichi1/600/400",
@@ -44,8 +49,7 @@ public class PageController {
 				"https://picsum.photos/seed/yorimichi3/600/400"
 		);
 		model.addAttribute("imageUrls", imageUrls);
-		model.addAttribute("heroImageUrl",
-				imageUrls.get((int) (System.currentTimeMillis() / 1000) % imageUrls.size()));
+		model.addAttribute("heroImageUrl", imageUrls.get((int) (System.currentTimeMillis() / 1000) % imageUrls.size()));
 
 		return "index";
 	}

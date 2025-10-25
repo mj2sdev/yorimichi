@@ -1,92 +1,83 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.StationMapper">
 
-  <!--
-    ⚙️ 전제
-    - MyBatis 설정에서 map-underscore-to-camel-case: true 사용 가정.
-    - review / coeat 테이블에 created_at, deleted_at 컬럼 존재 가정.
-    - DTO 필드:
-      ReviewDTO: id, userId, storeId, rating, content, createdAt
-      CoeatDTO : id, userId, storeId, title, content, meetingAt, createdAt
-    - 공용 프래그먼트(include) 의존을 피하기 위해 WHERE 절을 직접 명시.
-  -->
+    <!-- @formatter:off -->
 
-  <!-- 최신 리뷰 N건 -->
-  <select id="selectLatestReviews"
-          parameterType="int"
-          resultType="com.jslhrd.yorimichi.domain.ReviewDTO">
-    SELECT
-      r.id,
-      r.user_id,
-      r.store_id,
-      r.rating,
-      r.content,
-      r.created_at
-    FROM review r
-    WHERE r.deleted_at IS NULL
-    ORDER BY r.created_at DESC
-    LIMIT #{count}
-  </select>
+    <select id="selectSlice" resultType="StationDTO">
+        SELECT
+            r.id,
+            r.type,
+            r.created_at,
+            r.updated_at,
 
-  <!-- 최신 같이먹기 N건 -->
-  <select id="selectLatestCoeats"
-          parameterType="int"
-          resultType="com.jslhrd.yorimichi.domain.CoeatDTO">
-    SELECT
-      c.id,
-      c.user_id,
-      c.store_id,
-      c.title,
-      c.content,
-      c.meeting_at,
-      c.created_at
-    FROM coeat c
-    WHERE c.deleted_at IS NULL
-    ORDER BY c.created_at DESC
-    LIMIT #{count}
-  </select>
+            v.store_id,
+            s.name,
+            v.rating,
+            v.content,
 
-  <!--
-    🔁 확장 예시 (나중에 필요하면 주석 해제/수정):
-    - 작성자 닉네임, 상점명까지 같이 내려받기
-    - 아래처럼 JOIN + 별칭으로 DTO의 중첩 객체까지 맵핑하려면 resultMap 작성 필요
-    - 우선은 단순 버전으로 안정 적용 후, 요구시 도입 권장
+            c.title,
+            c.meeting_at,
+            c.status,
+            c.capacity
 
-    <resultMap id="ReviewWithJoins" type="com.jslhrd.yorimichi.domain.ReviewDTO">
-      <id     property="id"       column="id"/>
-      <result property="userId"   column="user_id"/>
-      <result property="storeId"  column="store_id"/>
-      <result property="rating"   column="rating"/>
-      <result property="content"  column="content"/>
-      <result property="createdAt" column="created_at"/>
+        FROM root r
+        LEFT JOIN review v ON v.id = r.id AND r.type = 'REVIEW'
+        LEFT JOIN coeat  c ON c.id = r.id AND r.type = 'COEAT'
+        LEFT JOIN store  s ON s.id = COALESCE(v.store_id, c.store_id)
 
-      <association property="user" javaType="com.jslhrd.yorimichi.domain.UserDTO">
-        <id     property="id"       column="u_id"/>
-        <result property="nickname" column="u_nickname"/>
-      </association>
+        WHERE r.type IN ('REVIEW', 'COEAT')
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+            <if test="rootId != null">
+                AND r.id &lt; #{rootId}
+            </if>
 
-      <association property="store" javaType="com.jslhrd.yorimichi.domain.StoreDTO">
-        <id     property="id"   column="s_id"/>
-        <result property="name" column="s_name"/>
-      </association>
-    </resultMap>
-
-    <select id="selectLatestReviews" parameterType="int" resultMap="ReviewWithJoins">
-      SELECT
-        r.id, r.user_id, r.store_id, r.rating, r.content, r.created_at,
-        u.id   AS u_id, u.nickname AS u_nickname,
-        s.id   AS s_id, s.name     AS s_name
-      FROM review r
-      JOIN user  u ON u.id = r.user_id
-      JOIN store s ON s.id = r.store_id
-      WHERE r.deleted_at IS NULL
-      ORDER BY r.created_at DESC
-      LIMIT #{count}
+        ORDER BY r.id DESC
+        LIMIT #{size}
     </select>
-  -->
+
+    <!--
+      🔁 확장 예시 (나중에 필요하면 주석 해제/수정):
+      - 작성자 닉네임, 상점명까지 같이 내려받기
+      - 아래처럼 JOIN + 별칭으로 DTO의 중첩 객체까지 맵핑하려면 resultMap 작성 필요
+      - 우선은 단순 버전으로 안정 적용 후, 요구시 도입 권장
+
+      <resultMap id="ReviewWithJoins" type="com.jslhrd.yorimichi.domain.ReviewDTO">
+        <id     property="id"       column="id"/>
+        <result property="userId"   column="user_id"/>
+        <result property="storeId"  column="store_id"/>
+        <result property="rating"   column="rating"/>
+        <result property="content"  column="content"/>
+        <result property="createdAt" column="created_at"/>
+
+        <association property="user" javaType="com.jslhrd.yorimichi.domain.UserDTO">
+          <id     property="id"       column="u_id"/>
+          <result property="nickname" column="u_nickname"/>
+        </association>
+
+        <association property="store" javaType="com.jslhrd.yorimichi.domain.StoreDTO">
+          <id     property="id"   column="s_id"/>
+          <result property="name" column="s_name"/>
+        </association>
+      </resultMap>
+
+      <select id="selectLatestReviews" parameterType="int" resultMap="ReviewWithJoins">
+        SELECT
+          r.id, r.user_id, r.store_id, r.rating, r.content, r.created_at,
+          u.id   AS u_id, u.nickname AS u_nickname,
+          s.id   AS s_id, s.name     AS s_name
+        FROM review r
+        JOIN user  u ON u.id = r.user_id
+        JOIN store s ON s.id = r.store_id
+        WHERE r.deleted_at IS NULL
+        ORDER BY r.created_at DESC
+        LIMIT #{count}
+      </select>
+    -->
+
+    <!-- @formatter:on -->
 
 </mapper>

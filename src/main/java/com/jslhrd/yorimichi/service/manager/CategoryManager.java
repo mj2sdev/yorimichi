@@ -1,7 +1,7 @@
 package com.jslhrd.yorimichi.service.manager;
 
 import com.jslhrd.yorimichi.domain.CategoryDTO;
-import com.jslhrd.yorimichi.domain.SliceResponse;
+import com.jslhrd.yorimichi.domain.response.SliceResponse;
 import com.jslhrd.yorimichi.exception.BadRequestException;
 import com.jslhrd.yorimichi.exception.CategoryNotFoundException;
 import com.jslhrd.yorimichi.exception.DuplicateCategoryException;
