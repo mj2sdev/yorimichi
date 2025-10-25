@@ -6,112 +6,161 @@
 
     <!-- @formatter:off -->
     <resultMap id="reviewResultMap" type="ReviewDTO">
-        <id property="id" column="id"></id>
-        <result property="userId" column="user_id"></result>
-        <result property="storeId" column="store_id"></result>
-        <result property="rating" column="rating"></result>
-        <result property="content" column="content"></result>
-        <result property="createdAt" column="created_at"></result>
-        <result property="updatedAt" column="updated_at"></result>
-        <collection property="images" ofType="ImageDTO" column="id" select="com.jslhrd.yorimichi.mapper.ImageMapper.selectByReviewId"></collection>
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="storeId" column="store_id"/>
+        <result property="rating" column="rating"/>
+        <result property="content" column="content"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <collection property="images" ofType="ImageDTO" column="id" select="com.jslhrd.yorimichi.mapper.ImageMapper.selectByReviewId"/>
     </resultMap>
     <select id="selectAllByUserId" resultMap="reviewResultMap" parameterType="Long">
-        SELECT  id, 
-                user_id,
-                store_id,
-                receipt_image_id,
-                receipt_status,
-                rating,
-                content
+        SELECT
+            id,
+            user_id,
+            store_id,
+            receipt_image_id,
+            receipt_status,
+            rating,
+            content
+
         FROM review
+
         WHERE user_id = #{userId}
+
         ORDER BY id DESC
     </select>
 
     <select id="selectAll" resultType="ReviewDTO">
-        SELECT v.id,
-               v.user_id,
-               v.store_id,
-               v.rating,
-               v.content,
-               r.type,
-               r.created_at,
-               r.updated_at
+        SELECT
+            v.id,
+            v.user_id,
+            v.store_id,
+            v.rating,
+            v.content,
+            r.type,
+            r.created_at,
+            r.updated_at
+
         FROM review v
+
         JOIN root r ON v.id = r.id
             AND r.type = 'REVIEW'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
         ORDER BY r.created_at DESC
     </select>
 
     <select id="selectAllByStoreId" parameterType="long" resultType="ReviewDTO">
-        SELECT v.id,
-               v.user_id,
-               v.store_id,
-               v.rating,
-               v.content,
-               r.type,
-               r.created_at,
-               r.updated_at
+        SELECT
+            v.id,
+            v.user_id,
+            v.store_id,
+            v.rating,
+            v.content,
+            r.type,
+            r.created_at,
+            r.updated_at
+
         FROM review v
+
         JOIN root r ON v.id = r.id
             AND r.type = 'REVIEW'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        WHERE
-        v.store_id = #{storeId}
+
+        WHERE v.store_id = #{storeId}
+
         ORDER BY r.created_at DESC
     </select>
 
-    <select id="selectById" parameterType="long" resultType="ReviewDTO">
-        SELECT v.id,
-               v.user_id,
-               v.store_id,
-               v.rating,
-               v.content,
-               r.type,
-               r.created_at,
-               r.updated_at
+    <select id="selectStatsByStoreId" resultType="ReviewDTO">
+        SELECT
+            ROUND(COALESCE(AVG(v.rating), 0), 1) AS avgRating,
+            COUNT(*) AS reviewCount,
+            COALESCE(SUM(r.created_at >= NOW() - INTERVAL #{lookbackDays} DAY), 0) AS recentCount
+
         FROM review v
+
+        JOIN root r ON r.id = v.id
+
+        WHERE v.store_id = #{storeId}
+    </select>
+
+    <select id="selectById" parameterType="long" resultType="ReviewDTO">
+        SELECT
+            v.id,
+            v.user_id,
+            v.store_id,
+            v.rating,
+            v.content,
+            r.type,
+            r.created_at,
+            r.updated_at
+
+        FROM review v
+
         JOIN root r ON v.id = r.id
             AND r.type = 'REVIEW'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
         WHERE v.id = #{reviewId}
     </select>
 
     <select id="existsActive" parameterType="long" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
+
             FROM review v
+
             JOIN root r ON v.id = r.id
                 AND r.type = 'REVIEW'
                 AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
             WHERE v.id = #{reviewId}
         )
     </select>
 
     <insert id="insert" parameterType="ReviewDTO">
-        INSERT INTO review (id, user_id, store_id, rating, content)
-        VALUES (#{id}, #{userId}, #{storeId}, #{rating}, #{content})
+        INSERT INTO review (
+                            id,
+                            user_id,
+                            store_id,
+                            rating,
+                            content)
+        VALUES (#{id},
+                #{userId},
+                #{storeId},
+                #{rating},
+                #{content})
     </insert>
 
     <update id="update">
         UPDATE review v
+
         JOIN root r ON v.id = r.id
             AND r.type = 'REVIEW'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        SET v.rating = #{review.rating},
+
+        SET
+            v.rating = #{review.rating},
             v.content = #{review.content},
             r.updated_at = NOW()
+
         WHERE v.id = #{reviewId}
             AND v.user_id = #{userId}
     </update>
 
     <update id="deleteById">
         UPDATE review v
+
         JOIN root r ON v.id = r.id
             AND r.type = 'REVIEW'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        SET r.deleted_at = NOW()
+
+        SET
+            r.deleted_at = NOW()
+
         WHERE v.id = #{reviewId}
             AND v.user_id = #{userId}
     </update>

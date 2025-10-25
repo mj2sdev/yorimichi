@@ -7,91 +7,125 @@
     <!-- @formatter:off -->
 
     <select id="selectAll" resultType="CoeatDTO">
-        SELECT c.id,
-               c.user_id,
-               c.store_id,
-               c.title,
-               c.content,
-               c.capacity,
-               c.view_count,
-               c.meeting_at,
-               c.status,
-               c.auto_accept,
-               r.created_at,
-               r.updated_at
+        SELECT
+            c.id,
+            c.user_id,
+            c.store_id,
+            c.title,
+            c.content,
+            c.capacity,
+            c.view_count,
+            c.meeting_at,
+            c.status,
+            c.auto_accept,
+            r.created_at,
+            r.updated_at
+
         FROM coeat c
+
         JOIN root r ON c.id = r.id
             AND r.type = 'COEAT'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
         ORDER BY r.created_at DESC
     </select>
 
     <select id="selectAllByStoreId" parameterType="long" resultType="CoeatDTO">
-        SELECT c.id,
-               c.user_id,
-               c.store_id,
-               c.title,
-               c.content,
-               c.capacity,
-               c.view_count,
-               c.meeting_at,
-               c.status,
-               c.auto_accept,
-               r.created_at,
-               r.updated_at
+        SELECT
+            c.id,
+            c.user_id,
+            c.store_id,
+            c.title,
+            c.content,
+            c.capacity,
+            c.view_count,
+            c.meeting_at,
+            c.status,
+            c.auto_accept,
+            r.created_at,
+            r.updated_at
+
         FROM coeat c
+
         JOIN root r ON c.id = r.id
             AND r.type = 'COEAT'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
         WHERE c.store_id = #{storeId}
+
         ORDER BY r.created_at DESC
     </select>
 
     <select id="selectById" parameterType="long" resultType="CoeatDTO">
-        SELECT c.id,
-               c.user_id,
-               c.store_id,
-               c.title,
-               c.content,
-               c.capacity,
-               c.view_count,
-               c.meeting_at,
-               c.status,
-               c.auto_accept,
-               r.created_at,
-               r.updated_at
+        SELECT
+            c.id,
+            c.user_id,
+            c.store_id,
+            c.title,
+            c.content,
+            c.capacity,
+            c.view_count,
+            c.meeting_at,
+            c.status,
+            c.auto_accept,
+            r.created_at,
+            r.updated_at
+
         FROM coeat c
+
         JOIN root r ON c.id = r.id
             AND r.type = 'COEAT'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
         WHERE c.id = #{coeatId}
+    </select>
+
+    <select id="selectOpenCountByStoreId" resultType="CoeatDTO">
+        SELECT
+            COUNT(*) AS openCount
+
+        FROM coeat
+
+        WHERE
+            status = 'OPEN'
+            AND meeting_at >= NOW()
+            AND store_id = #{storeId}
     </select>
 
     <select id="selectCapacityById" parameterType="long" resultType="int">
         SELECT capacity
+
         FROM coeat
+
         WHERE id = #{coeatId}
+
         FOR UPDATE
     </select>
 
     <select id="existsActive" parameterType="long" resultType="boolean">
         SELECT EXISTS (
-        SELECT 1
-        FROM coeat c
-        JOIN root r ON c.id = r.id
-        AND r.type = 'COEAT'
-        AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        WHERE c.id = #{coeatId}
+            SELECT 1
+
+            FROM coeat c
+
+            JOIN root r ON c.id = r.id
+                AND r.type = 'COEAT'
+                AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
+            WHERE c.id = #{coeatId}
         )
     </select>
 
     <select id="isOwner" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
+
             FROM coeat c
+
             JOIN root r ON c.id = r.id
                 AND r.type = 'COEAT'
                 AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
             WHERE c.id = #{coeatId}
                 AND c.user_id = #{userId}
         )
@@ -100,44 +134,66 @@
     <select id="isOpen" parameterType="long" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
+
             FROM coeat c
+
             JOIN root r ON c.id = r.id
                 AND r.type = 'COEAT'
                 AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
             WHERE c.id = #{coeatId}
                 AND c.status = 'OPEN'
         )
     </select>
 
     <insert id="insert" parameterType="CoeatDTO">
-        INSERT INTO coeat (id, user_id, store_id, title, content,
-                           capacity, meeting_at, auto_accept)
-        VALUES (#{id}, #{userId}, #{storeId}, #{title}, #{content},
-                #{capacity}, #{meetingAt}, #{autoAccept})
+        INSERT INTO coeat (id,
+                           user_id,
+                           store_id,
+                           title,
+                           content,
+                           capacity,
+                           meeting_at,
+                           auto_accept)
+        VALUES (#{id},
+                #{userId},
+                #{storeId},
+                #{title},
+                #{content},
+                #{capacity},
+                #{meetingAt},
+                #{autoAccept})
     </insert>
 
     <update id="update">
         UPDATE coeat c
+
         JOIN root r ON c.id = r.id
             AND r.type = 'COEAT'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-        SET c.store_id = #{coeat.storeId},
+
+        SET
+            c.store_id = #{coeat.storeId},
             c.title = #{coeat.title},
             c.content = #{coeat.content},
             c.capacity = #{coeat.capacity},
             c.meeting_at = #{coeat.meetingAt},
             c.auto_accept = #{coeat.autoAccept},
             r.updated_at = NOW()
+
         WHERE c.id = #{coeatId}
             AND c.user_id = #{userId}
     </update>
 
     <update id="deleteById">
         UPDATE coeat c
+
         JOIN root r ON c.id = r.id
             AND r.type = 'COEAT'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
         SET r.deleted_at = NOW()
+
         WHERE c.id = #{coeatId}
             AND c.user_id = #{userId}
     </update>
