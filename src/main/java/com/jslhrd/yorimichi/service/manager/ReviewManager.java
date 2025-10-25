@@ -102,6 +102,18 @@ public class ReviewManager implements ReviewService {
 		log.info("Review: soft deleted reviewId={}", reviewId);
 	}
 
+	@Override
+	@Transactional
+	public void restore(Long userId, Long reviewId){
+		boolean affected = reviewMapper.restoreById(userId, reviewId) > 0;
+		if (!affected) {
+			assertActiveReview(reviewId);
+			throw new ForbiddenException("리뷰 복구 권한이 없습니다.");
+		}
+
+		log.info("Review: soft deleted review be restored reviewId={}", reviewId);
+	}
+
 	private void assertActiveUser(Long userId) {
 		boolean exists = userMapper.existsActive(userId);
 		if (!exists) {

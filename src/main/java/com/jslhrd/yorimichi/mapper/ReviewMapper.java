@@ -61,4 +61,14 @@ public interface ReviewMapper {
 	 */
 	int deleteById(@Param("userId") Long userId,
 	               @Param("reviewId") Long reviewId);
+
+	/**
+	 * 리뷰 복구.
+	 * 
+	 * @param userId   유저 ID
+	 * @param reviewId 리뷰 ID
+	 * @return 영향 행 수 (복구 1, 대상 없음 0)
+	 */
+	int restoreById(@Param("userId") Long userId,
+	               @Param("reviewId") Long reviewId);
 }

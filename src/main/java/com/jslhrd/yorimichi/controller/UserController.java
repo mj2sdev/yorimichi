@@ -25,7 +25,13 @@ public class UserController {
 
 	//유저 상세페이지 이동
 	@GetMapping("/detail/{id}")
-	public String showUserDetail(@PathVariable("id") Long userId, Model model) {
+	public String showUserDetail(
+	@AuthenticationPrincipal(expression = "userId") Long currentUserId,	
+	@PathVariable("id") Long userId, Model model) {
+		if(currentUserId.equals(userId)){
+			return "redirect:/user/mypage";
+		}
+
 		UserDTO user = userService.findById(userId);
 		model.addAttribute("user", user);
 		return "user/detail";
@@ -49,9 +55,11 @@ public class UserController {
 		) {
 
 			String url = googleDriveService.uploadFile(userImageFile);
+			System.out.println(url);
 			ImageDTO image = new ImageDTO();
 			image.setUrl(url);
 			long imageId = imageService.save(image);
+			System.out.println(imageId);
 			imageService.addImageToRoot(userId, imageId);
 			return userService.update(userId, user);
 	}
