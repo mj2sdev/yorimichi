@@ -37,3 +37,27 @@ function previewReviewImages(event) {
 		preview.appendChild(copiedTemplate);
 	})
 }
+
+/// <reference path="../request.js" />
+/**
+ * 리뷰 작성 submit 이벤트를 비동기로 진행하는 함수입니다.
+ * 
+ * 
+ * @param {Event} event 
+ * @author mj2sdev
+ * @version 1.0
+ */
+async function writeReview(event) {
+	event.preventDefault();
+	const { target } = event;
+	const storeId = target.storeId.value;
+	const body = new FormData(target);
+	const result = await request("POST", `/store/${storeId}/review`, { body });
+	
+	if (result === true) {
+		alert("리뷰가 작성되었습니다.");
+	} else {
+		alert("리뷰 작성 중 오류가 발생하였습니다.")
+	}
+	// location.reload();
+} 
