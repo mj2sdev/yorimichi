@@ -19,3 +19,26 @@ function bsNeedValidation() {
 	})
 }
 bsNeedValidation();
+
+/**
+ * 
+ */
+function timeAgo() {
+	const timeElements = document.querySelectorAll("[data-time-ago]");
+	timeElements.forEach(element => {
+		const { timeAgo } = element.dataset;
+		let message = "";
+		try {
+			const time = new Date(timeAgo).getTime();
+			const nokori = (Date.now() - time) / 1000;
+			if (nokori < 60) message = "방금";
+			else if (nokori < 3600) message = Math.floor(nokori / 60) + "분 전";
+			else if (nokori < 86400) message = Math.floor(nokori / 3600) + "시간 전";
+			else message = Math.floor(nokori / 86400) + "일 전";
+		} catch {
+			message = timeAgo;
+		}
+		element.innerHTML = message;
+	});
+}
+timeAgo();
