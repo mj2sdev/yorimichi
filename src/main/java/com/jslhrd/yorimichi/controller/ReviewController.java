@@ -6,6 +6,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,12 +44,11 @@ public class ReviewController {
 
 
 	// 리뷰작성
-	@PostMapping("/stores/{storeId}/review")
+	@PostMapping("/store/{storeId}/review")
 	public void submitReview(
 			@PathVariable("storeId") Long storeId,
 			@AuthenticationPrincipal(expression = "userId") Long userId,
-			@RequestBody ReviewDTO dto
-	) {
+			@ModelAttribute ReviewDTO dto) {
 		reviewService.save(userId, storeId, dto);
 	}
 
