@@ -38,6 +38,7 @@
 
         <association property="coeat" javaType="CoeatDTO">
             <result column="co_title" property="title"/>
+            <result column="co_content" property="content"/>
             <result column="co_meeting_at" property="meetingAt"/>
             <result column="co_status" property="status" javaType="com.jslhrd.yorimichi.enums.CoeatStatus"/>
             <result column="co_capacity" property="capacity"/>

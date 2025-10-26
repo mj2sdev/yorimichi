@@ -8,6 +8,7 @@ import com.jslhrd.yorimichi.domain.response.SliceResponse;
 import com.jslhrd.yorimichi.domain.response.StationDTO;
 import com.jslhrd.yorimichi.enums.RootType;
 import com.jslhrd.yorimichi.mapper.CoeatRequestMapper;
+import com.jslhrd.yorimichi.mapper.CommentMapper;
 import com.jslhrd.yorimichi.mapper.ReviewFoodMapper;
 import com.jslhrd.yorimichi.mapper.StationMapper;
 import com.jslhrd.yorimichi.service.StationService;
@@ -30,6 +31,7 @@ public class StationManager implements StationService {
 	private final StationMapper stationMapper;
 	private final ReviewFoodMapper reviewFoodMapper;
 	private final CoeatRequestMapper coeatRequestMapper;
+	private final CommentMapper commentMapper;
 
 	private static FoodDTO toFoodDTO(ReviewFoodDTO reviewFood) {
 		FoodDTO f = new FoodDTO();
@@ -73,6 +75,13 @@ public class StationManager implements StationService {
 					.collect(Collectors.toMap(CoeatDTO::getId, c -> c, (a, b) -> a));
 		}
 
+		Map<Long, CoeatDTO> commentsByCoeatId = Collections.emptyMap();
+		if (!coeatIds.isEmpty()) {
+			commentsByCoeatId = commentMapper.selectCountsByIds(coeatIds).stream()
+					.filter(Objects::nonNull)
+					.collect(Collectors.toMap(CoeatDTO::getId, c -> c, (a, b) -> a));
+		}
+
 		for (StationDTO station : stations) {
 
 			if (station.getType() == RootType.REVIEW) {
@@ -86,6 +95,10 @@ public class StationManager implements StationService {
 				int applied = cnt != null && cnt.getAppliedCount() != null ? cnt.getAppliedCount() : 0;
 				station.getCoeat().setApprovedCount(approved);
 				station.getCoeat().setAppliedCount(applied);
+
+				CoeatDTO cc = commentsByCoeatId.get(station.getId());
+				int comments = cc != null && cc.getCommentCount() != null ? cc.getCommentCount() : 0;
+				station.getCoeat().setCommentCount(comments);
 			}
 		}
 

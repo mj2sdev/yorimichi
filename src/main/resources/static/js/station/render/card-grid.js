@@ -1,27 +1,31 @@
+// /js/station/render/card-grid.js
 import {esc, hrefOf} from '../core/dom.js';
 import {timeAgo} from '../core/time.js';
 
 export function renderCardItem(item) {
     const isReview = item?.type === 'REVIEW';
+    const status = item?.coeat?.status ?? null; // ✅ coeat.status
 
     const a = document.createElement('a');
-    a.className = 'text-decoration-none';
+    a.className = 'text-decoration-none grid-item';
     a.setAttribute('list-id', item?.id);
     a.dataset.type = item?.type ?? '';
     a.href = hrefOf(item);
 
     const card = document.createElement('div');
-    card.className = 'card mb-3 shadow-sm border-0';
+    card.className = 'card shadow-sm border-0 hover-shadow';
 
     const body = document.createElement('div');
-    body.className = 'card-body p-3';
+    body.className = 'card-body p-3 d-flex flex-column';
 
-    // 헤더: 타입/뱃지 + 시간 (조회수 제거)
+    // 헤더: 타입/배지 + (같이먹기 상태) + 시간
     const head = document.createElement('div');
     head.className = 'd-flex align-items-start justify-content-between mb-2';
 
     const left = document.createElement('div');
     left.className = 'd-flex align-items-center gap-2';
+
+    // 타입 배지
     left.innerHTML = `
     <i class="bi fs-5 ${isReview ? 'bi-chat-square-text-fill text-primary' : 'bi-people-fill text-warning'}"></i>
     <span class="badge rounded-pill small ${isReview ? 'bg-primary bg-opacity-10 text-primary' : 'bg-warning bg-opacity-10 text-warning'}">
@@ -29,28 +33,43 @@ export function renderCardItem(item) {
     </span>
   `;
 
-    const right = document.createElement('div');
-    right.className = 'd-flex align-items-center gap-2';
+    // ✅ 같이먹기 상태 배지
+    if (!isReview && status) {
+        const st = document.createElement('span');
+        st.className = 'badge rounded-pill small';
+        // 색상 매핑
+        if (status === 'OPEN') {
+            st.classList.add('bg-success', 'bg-opacity-10', 'text-success');
+        } else if (status === 'CLOSED') {
+            st.classList.add('bg-secondary', 'bg-opacity-10', 'text-secondary');
+        } else {
+            // CANCELLED 등
+            st.classList.add('bg-danger', 'bg-opacity-10', 'text-danger');
+        }
+        st.textContent = status;
+        left.appendChild(st);
+    }
 
     const time = document.createElement('small');
     time.className = 'text-muted rel-time';
     time.dataset.iso = item?.createdAt ?? '';
     time.textContent = timeAgo(item?.createdAt);
-    right.appendChild(time);
 
     head.appendChild(left);
-    head.appendChild(right);
+    head.appendChild(time);
 
     // 대표 이미지
     const imgUrl = item?.image?.url;
     if (imgUrl) {
-        const imgEl = document.createElement('img');
-        imgEl.className = 'img-fluid rounded mb-2';
-        imgEl.src = imgUrl;
-        imgEl.alt = '';
-        imgEl.loading = 'lazy';
+        const wrap = document.createElement('div');
+        wrap.className = 'ratio-box mb-2';
+        const img = document.createElement('img');
+        img.src = imgUrl;
+        img.alt = '';
+        img.loading = 'lazy';
+        wrap.appendChild(img);
         body.appendChild(head);
-        body.appendChild(imgEl);
+        body.appendChild(wrap);
     } else {
         body.appendChild(head);
     }
@@ -61,36 +80,24 @@ export function renderCardItem(item) {
     user.innerHTML = `<span class="fw-semibold text-dark small"><i class="bi bi-person-circle me-1"></i>${esc(item?.user?.nickname ?? '익명')}</span>`;
     body.appendChild(user);
 
-    // 제목/본문
+    // 제목/본문: 리뷰=content, 같이먹기=title
     const preview = document.createElement('div');
-    preview.className = 'text-ymsecondary small mb-2 lh-base';
-    Object.assign(preview.style, {
-        display: '-webkit-box',
-        WebkitLineClamp: '2',
-        WebkitBoxOrient: 'vertical',
-        overflow: 'hidden'
-    });
+    preview.className = 'text-ymsecondary small mb-2 lh-base clamp-2';
     preview.textContent = isReview ? (item?.review?.content ?? '') : (item?.coeat?.title ?? '');
     body.appendChild(preview);
 
-    // 같이먹기 본문(coeat.content)
+    // ✅ 같이먹기 내용(content)
     if (!isReview) {
         const coContent = item?.coeat?.content ?? '';
         if (coContent) {
-            const coContentEl = document.createElement('div');
-            coContentEl.className = 'text-muted small mb-2';
-            Object.assign(coContentEl.style, {
-                display: '-webkit-box',
-                WebkitLineClamp: '3',
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden'
-            });
-            coContentEl.textContent = coContent;
-            body.appendChild(coContentEl);
+            const cc = document.createElement('div');
+            cc.className = 'text-muted small mb-2 clamp-3';
+            cc.textContent = coContent;
+            body.appendChild(cc);
         }
     }
 
-    // 리뷰: 음식 배지
+    // 리뷰: 음식 뱃지
     if (isReview && Array.isArray(item?.review?.foods) && item.review.foods.length > 0) {
         const foodsWrap = document.createElement('div');
         foodsWrap.className = 'mb-2';
@@ -108,15 +115,15 @@ export function renderCardItem(item) {
         body.appendChild(foodsWrap);
     }
 
-    // 같이먹기: 정원/승인/신청 (상점/주소 위)
+    // 같이먹기: 정원/승인/신청
     if (!isReview) {
         const cap = item?.coeat?.capacity;
         const approved = item?.coeat?.approvedCount;
         const applied = item?.coeat?.appliedCount;
         const parts = [];
-        if (cap != null) parts.push(`정원 ${esc(String(cap))}`);
-        if (approved != null) parts.push(`승인 ${esc(String(approved))}`);
-        if (applied != null) parts.push(`신청 ${esc(String(applied))}`);
+        if (cap != null) parts.push(`정원 ${String(cap)}`);
+        if (approved != null) parts.push(`승인 ${String(approved)}`);
+        if (applied != null) parts.push(`신청 ${String(applied)}`);
         if (parts.length) {
             const countsEl = document.createElement('div');
             countsEl.className = 'small text-muted mb-1';
@@ -125,37 +132,38 @@ export function renderCardItem(item) {
         }
     }
 
-    // ...중략...
-
-    // 하단 메타: 좌(가게·주소·평점) · 우(조회수)
+    // 하단 메타
     const metaRow = document.createElement('div');
-    metaRow.className = 'd-flex justify-content-between align-items-center small text-muted';
+    metaRow.className = 'mt-auto d-flex justify-content-between align-items-center small text-muted';
 
-    const metaLeft = document.createElement('div');
+    const leftMeta = document.createElement('div');
     const storeName =
         (item?.store?.name)
         ?? (item?.store?.id != null ? `store #${item.store.id}`
             : (item?.coeat?.storeId != null ? `store #${item.coeat.storeId}` : ''));
-
     const bits = [];
     if (storeName) bits.push(esc(storeName));
-
     const addr = item?.address?.roadAddressText;
     if (addr) bits.push(esc(addr));
-
     if (isReview && item?.review?.rating != null) {
         bits.push(`<span class="text-warning">★ ${esc(String(item.review.rating))}</span>`);
     }
+    leftMeta.innerHTML = bits.filter(Boolean).join(' · ');
 
-    metaLeft.innerHTML = bits.filter(Boolean).join(' · ');
+    const rightMeta = document.createElement('div');
+    if (!isReview) {
+        const parts = [];
+        const cmt = item?.coeat?.commentCount;
+        const views = item?.coeat?.viewCount;
 
-    const metaRight = document.createElement('div');
-    if (!isReview && item?.coeat?.viewCount != null) {
-        metaRight.innerHTML = `<i class="bi bi-eye me-1"></i>${esc(String(item.coeat.viewCount))}`;
+        if (cmt != null) parts.push(`<i class="bi bi-chat-dots me-1"></i>${String(cmt)}`);
+        if (views != null) parts.push(`<i class="bi bi-eye me-1"></i>${String(views)}`);
+
+        rightMeta.innerHTML = parts.join(' · ');
     }
 
-    metaRow.appendChild(metaLeft);
-    metaRow.appendChild(metaRight);
+    metaRow.appendChild(leftMeta);
+    metaRow.appendChild(rightMeta);
     body.appendChild(metaRow);
 
     card.appendChild(body);
