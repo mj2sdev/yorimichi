@@ -7,76 +7,172 @@
 
     <!-- @formatter:off -->
 
-    <select id="selectSlice" resultType="StationDTO">
+    <resultMap id="StationMap" type="StationDTO">
+        <id     column="id" property="id"/>
+        <result column="type" property="type" javaType="com.jslhrd.yorimichi.enums.RootType"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+
+        <association property="user" javaType="UserDTO">
+            <id     column="u_id" property="id"/>
+            <result column="u_nickname" property="nickname"/>
+        </association>
+
+        <association property="store" javaType="StoreDTO">
+            <id     column="s_id" property="id"/>
+            <result column="s_name" property="name"/>
+        </association>
+
+        <association property="address" javaType="AddressDTO">
+            <result column="a_road_address_text" property="roadAddressText"/>
+        </association>
+
+        <association property="review" javaType="ReviewDTO">
+            <result column="rv_rating" property="rating"/>
+            <result column="rv_content" property="content"/>
+        </association>
+
+        <association property="image" javaType="ImageDTO">
+            <result column="im_url" property="url"/>
+        </association>
+
+        <association property="coeat" javaType="CoeatDTO">
+            <result column="co_title" property="title"/>
+            <result column="co_meeting_at" property="meetingAt"/>
+            <result column="co_status" property="status" javaType="com.jslhrd.yorimichi.enums.CoeatStatus"/>
+            <result column="co_capacity" property="capacity"/>
+            <result column="co_view_count" property="viewCount"/>
+        </association>
+    </resultMap>
+    <select id="selectSlice" resultMap="StationMap">
         SELECT
-            r.id,
-            r.type,
-            r.created_at,
-            r.updated_at,
+            t.id,
+            t.type,
+            t.created_at,
+            t.updated_at,
 
-            v.store_id,
-            s.name,
-            v.rating,
-            v.content,
+            t.u_id,
+            t.u_nickname,
 
-            c.title,
-            c.meeting_at,
-            c.status,
-            c.capacity
+            t.s_id,
+            t.s_name,
 
-        FROM root r
-        LEFT JOIN review v ON v.id = r.id AND r.type = 'REVIEW'
-        LEFT JOIN coeat  c ON c.id = r.id AND r.type = 'COEAT'
-        LEFT JOIN store  s ON s.id = COALESCE(v.store_id, c.store_id)
+            t.a_road_address_text,
 
-        WHERE r.type IN ('REVIEW', 'COEAT')
-            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-            <if test="rootId != null">
-                AND r.id &lt; #{rootId}
+            t.rv_rating,
+            t.rv_content,
+
+            t.im_url,
+
+            t.co_title,
+            t.co_content,
+            t.co_meeting_at,
+            t.co_status,
+            t.co_capacity,
+            t.co_view_count
+
+        FROM (
+
+            SELECT
+                v.id,
+                r.type,
+                r.created_at,
+                r.updated_at,
+
+                v.user_id AS u_id,
+                u.nickname AS u_nickname,
+
+                v.store_id AS s_id,
+                s.name AS s_name,
+
+                a.road_address_text AS a_road_address_text,
+
+                v.rating AS rv_rating,
+                v.content AS rv_content,
+
+                (
+                    SELECT i.url
+                    FROM root_image ri
+                    JOIN image i ON i.id = ri.image_id
+                    WHERE ri.root_id = v.id
+                    ORDER BY
+                        ri.created_at DESC,
+                        ri.image_id DESC
+                    LIMIT 1
+                ) AS im_url,
+
+                NULL AS co_title,
+                NULL AS co_content,
+                NULL AS co_meeting_at,
+                NULL AS co_status,
+                NULL AS co_capacity,
+                NULL AS co_view_count
+
+            FROM review v
+
+            JOIN root r ON r.id = v.id
+                AND r.type = 'REVIEW'
+                AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
+            JOIN user u ON u.id  = v.user_id
+
+            JOIN store s ON s.id  = v.store_id
+
+            JOIN address a ON a.id  = s.address_id
+
+            <if test="nextId != null">
+                WHERE r.id &lt; #{nextId}
             </if>
 
-        ORDER BY r.id DESC
+            UNION ALL
+
+            SELECT
+                c.id,
+                r.type,
+                r.created_at,
+                r.updated_at,
+
+                c.user_id AS u_id,
+                u.nickname AS u_nickname,
+
+                c.store_id AS s_id,
+                s.name AS s_name,
+
+                a.road_address_text AS a_road_address_text,
+
+                NULL AS rv_rating,
+                NULL AS rv_content,
+
+                NULL AS im_url,
+
+                c.title AS co_title,
+                c.content AS co_content,
+                c.meeting_at AS co_meeting_at,
+                c.status AS co_status,
+                c.capacity AS co_capacity,
+                c.view_count AS co_view_count
+
+            FROM coeat c
+
+            JOIN root r ON r.id = c.id
+                AND r.type = 'COEAT'
+                AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
+            LEFT JOIN store s ON s.id = c.store_id
+
+            LEFT JOIN address a ON a.id = s.address_id
+
+            JOIN user u ON u.id = c.user_id
+
+            <if test="nextId != null">
+                WHERE r.id &lt; #{nextId}
+            </if>
+        ) t
+
+        ORDER BY t.id DESC
+
         LIMIT #{size}
     </select>
-
-    <!--
-      🔁 확장 예시 (나중에 필요하면 주석 해제/수정):
-      - 작성자 닉네임, 상점명까지 같이 내려받기
-      - 아래처럼 JOIN + 별칭으로 DTO의 중첩 객체까지 맵핑하려면 resultMap 작성 필요
-      - 우선은 단순 버전으로 안정 적용 후, 요구시 도입 권장
-
-      <resultMap id="ReviewWithJoins" type="com.jslhrd.yorimichi.domain.ReviewDTO">
-        <id     property="id"       column="id"/>
-        <result property="userId"   column="user_id"/>
-        <result property="storeId"  column="store_id"/>
-        <result property="rating"   column="rating"/>
-        <result property="content"  column="content"/>
-        <result property="createdAt" column="created_at"/>
-
-        <association property="user" javaType="com.jslhrd.yorimichi.domain.UserDTO">
-          <id     property="id"       column="u_id"/>
-          <result property="nickname" column="u_nickname"/>
-        </association>
-
-        <association property="store" javaType="com.jslhrd.yorimichi.domain.StoreDTO">
-          <id     property="id"   column="s_id"/>
-          <result property="name" column="s_name"/>
-        </association>
-      </resultMap>
-
-      <select id="selectLatestReviews" parameterType="int" resultMap="ReviewWithJoins">
-        SELECT
-          r.id, r.user_id, r.store_id, r.rating, r.content, r.created_at,
-          u.id   AS u_id, u.nickname AS u_nickname,
-          s.id   AS s_id, s.name     AS s_name
-        FROM review r
-        JOIN user  u ON u.id = r.user_id
-        JOIN store s ON s.id = r.store_id
-        WHERE r.deleted_at IS NULL
-        ORDER BY r.created_at DESC
-        LIMIT #{count}
-      </select>
-    -->
 
     <!-- @formatter:on -->
 

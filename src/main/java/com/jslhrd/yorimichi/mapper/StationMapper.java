@@ -10,7 +10,7 @@ import java.util.List;
 public interface StationMapper {
 
 	List<StationDTO> selectSlice(
-			@Param("rootId") Long rootId,
+			@Param("nextId") Long nextId,
 			@Param("size") int size
 	);
 }

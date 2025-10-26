@@ -4,6 +4,25 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.ReviewFoodMapper">
 
+    <!-- @formatter:off -->
+
+    <select id="selectFoodNameByReviewIds" resultType="ReviewFoodDTO">
+        SELECT
+            rf.review_id,
+            f.name AS foodName
+
+        FROM review_food rf
+
+        JOIN food f ON f.id = rf.food_id
+
+        WHERE rf.review_id IN
+            <foreach collection="reviewIds" item="reviewId" open="(" close=")" separator=",">
+              #{reviewId}
+            </foreach>
+
+        ORDER BY f.name
+    </select>
+
     <insert id="insert" parameterType="ReviewFoodDTO">
         INSERT INTO review_food (review_id, food_id)
         VALUES (#{reviewId}, #{foodId})
@@ -15,5 +34,7 @@
         WHERE review_id = #{reviewId}
           AND food_id = #{foodId}
     </delete>
+
+    <!-- @formatter:on -->
 
 </mapper>

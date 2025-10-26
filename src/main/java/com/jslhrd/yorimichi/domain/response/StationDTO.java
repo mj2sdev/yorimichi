@@ -1,27 +1,22 @@
 package com.jslhrd.yorimichi.domain.response;
 
-import com.jslhrd.yorimichi.enums.CoeatStatus;
-import com.jslhrd.yorimichi.enums.RootType;
+import com.jslhrd.yorimichi.domain.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
-public class StationDTO {
+public class StationDTO extends RootDTO {
 
-	private Long id;
-	private RootType type;
-	private LocalDateTime createdAt;
+	private UserDTO user;
 
-	private Long storeId;
-	private String name;
-	private Integer rating;
-	private String content;
+	private StoreDTO store;
 
-	private String title;
-	private String meetingAt;
-	private CoeatStatus status;
-	private Integer capacity;
+	private AddressDTO address;
+
+	private ReviewDTO review;
+
+	private ImageDTO image;
+
+	private CoeatDTO coeat;
 }
