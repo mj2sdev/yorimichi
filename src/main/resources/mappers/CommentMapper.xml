@@ -54,6 +54,21 @@
         ORDER BY r.created_at DESC;
     </select>
 
+    <select id="selectCountsByIds" resultType="CoeatDTO">
+        SELECT
+            coeat_id        AS id,
+            COUNT(*)        AS commentCount
+
+        FROM comment
+
+        WHERE coeat_id IN
+            <foreach collection="coeatIds" item="coeatId" open="(" close=")" separator=",">
+                #{coeatId}
+            </foreach>
+
+        GROUP BY coeat_id
+    </select>
+
     <select id="existsActive" resultType="boolean">
         SELECT EXISTS (
             SELECT 1

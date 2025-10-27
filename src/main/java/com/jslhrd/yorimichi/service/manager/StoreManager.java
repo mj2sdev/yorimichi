@@ -180,7 +180,7 @@ public class StoreManager implements StoreService {
 		int recent = (store.getReview() != null) && (store.getReview().getRecentCount() != null) ? store.getReview().getRecentCount() : 0;
 		int likeCnt = (store.getLike() != null) && (store.getLike().getCount() != null) ? store.getLike().getCount() : 0;
 		int bmCnt = (store.getBookmark() != null) && (store.getBookmark().getCount() != null) ? store.getBookmark().getCount() : 0;
-		int openCnt = (store.getCoeat() != null) && (store.getCoeat().getCount() != null) ? store.getCoeat().getCount() : 0;
+		int openCnt = (store.getCoeat() != null) && (store.getCoeat().getCommentCount() != null) ? store.getCoeat().getCommentCount() : 0;
 
 		return
 				WEIGHT_AVG_RATING * (avg / 5.0)

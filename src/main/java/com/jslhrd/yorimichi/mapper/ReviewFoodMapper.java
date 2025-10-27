@@ -2,6 +2,9 @@ package com.jslhrd.yorimichi.mapper;
 
 import com.jslhrd.yorimichi.domain.ReviewFoodDTO;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 리뷰 - 음식 매핑 Mapper.
@@ -13,6 +16,8 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ReviewFoodMapper {
+
+	List<ReviewFoodDTO> selectFoodNameByReviewIds(@Param("reviewIds") List<Long> reviewIds);
 
 	/**
 	 * 리뷰 - 음식 매핑 추가.

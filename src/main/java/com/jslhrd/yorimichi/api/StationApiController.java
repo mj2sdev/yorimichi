@@ -18,10 +18,11 @@ public class StationApiController {
 
 	private final StationService stationService;
 
-	@GetMapping("/mini-stations")
+	@GetMapping("/stations")
 	public SliceResponse<StationDTO> moreList(
-			@RequestParam(value = "rootId", required = false) Long rootId,
+			@RequestParam(value = "nextId", required = false) Long nextId,
 			@RequestParam(value = "size", defaultValue = "5") int size) {
-		return stationService.findSlice(rootId, size);
+		return stationService.findSlice(nextId, size);
 	}
+
 }
