@@ -30,9 +30,12 @@ public class SecurityConfig {
 	SecurityFilterChain wellKnownSecurityChainFilter(HttpSecurity http) throws Exception {
 		http
 				.securityMatcher("/.well-known/**")
-				.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+				.authorizeHttpRequests(a -> a.anyRequest().permitAll())
 				.csrf(csrf -> csrf.disable())
-				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.httpBasic(b -> b.disable())
+				.formLogin(f -> f.disable())
+				.logout(l -> l.disable());
 		return http.build();
 	}
 
