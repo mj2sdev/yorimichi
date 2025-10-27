@@ -5,7 +5,6 @@
 >
 <head>
   <title>Yorimichi Project</title>
-
   <script defer src="/js/index/countup.js"></script>
   <script defer src="/js/index/category-infinite.js"></script>
   <script src="/js/station/page/index-mini.js" type="module"></script>
@@ -185,7 +184,20 @@
 
             <div class="flex-grow-1">
               <div class="d-flex justify-content-between">
-                <div class="fw-semibold" th:text="${isReview} ? '리뷰' : '같이먹기'">타입</div>
+                <div class="fw-semibold">
+                  <span th:text="${isReview} ? '리뷰' : '같이먹기'">타입</span>
+
+                  <!-- ✅ 같이먹기 상태 배지 -->
+                  <span class="badge rounded-pill ms-2 small"
+                        th:classappend="${item?.coeat?.status?.name() == 'OPEN'   ? ' bg-success bg-opacity-10 text-success' :
+                                         (item?.coeat?.status?.name() == 'CLOSED' ? ' bg-secondary bg-opacity-10 text-secondary'
+                                                                                  : ' bg-danger bg-opacity-10 text-danger')}"
+                        th:if="${!isReview and item?.coeat?.status != null}"
+                        th:text="${item?.coeat?.status?.name()}">
+                    OPEN
+                  </span>
+                </div>
+
                 <div class="text-muted small rel-time"
                      th:attr="data-iso=${#temporals.format(item?.createdAt, 'yyyy-MM-dd''T''HH:mm:ss')}"
                      th:text="${#temporals.format(item?.createdAt, 'MM/dd HH:mm')}">
@@ -194,47 +206,68 @@
               </div>
 
               <!-- 본문/제목 -->
-              <div class="text-ymsecondary small"
+              <div class="text-ymsecondary small mb-2 lh-base clamp-2"
+                   th:attr="title=${isReview} ? (${item?.review?.content} ?: '') : (${item?.coeat?.title} ?: '')"
                    th:text="${isReview} ? (${item?.review?.content} ?: '') : (${item?.coeat?.title} ?: '')">
-                본문/제목
               </div>
+
+              <!-- 본문/제목 아래에 모임 시간(같이먹기 전용) -->
+              <div class="small text-muted"
+                   th:if="${!isReview and item?.coeat?.meetingAt != null}">
+                <i class="bi bi-calendar-event me-1"></i>
+                <span th:text="${#temporals.format(item?.coeat?.meetingAt, 'MM/dd HH:mm')}">10/23 19:00</span>
+              </div>
+
 
               <!-- 리뷰: 음식 태그 (FoodDTO.name 기준, 최대 3개 + 나머지 개수) -->
               <div class="small"
                    th:if="${isReview and !#lists.isEmpty(item?.review?.foods)}">
-            <span class="badge bg-light text-dark me-1"
-                  th:each="food, iter : ${item?.review?.foods}"
-                  th:if="${iter.index < 3}"
-                  th:text="${food?.name ?: ''}">음식1</span>
+                <span class="badge bg-light text-dark me-1"
+                      th:each="food, iter : ${item?.review?.foods}"
+                      th:if="${iter.index < 3}"
+                      th:text="${food?.name ?: ''}">음식1</span>
                 <span class="text-muted"
                       th:if="${#lists.size(item?.review?.foods) > 3}"
                       th:text="${'+' + (#lists.size(item?.review?.foods) - 3)}">+2</span>
               </div>
 
-              <!-- 하단 메타: 가게명 / 평점 or (정원/승인/신청) -->
+              <!-- 하단 메타 1: 가게명 / 평점(리뷰) 또는 정원·승인·신청(코잇 요약) -->
               <div class="small text-muted">
-                <!-- 가게명: store.name 우선, 없으면 store.id/ coeat.storeId 대체 -->
-                <span th:text="${
-              item?.store?.name
-              ?: (item?.store?.id != null ? 'store #' + item?.store?.id
-                 : (item?.coeat?.storeId != null ? 'store #' + item?.coeat?.storeId : ''))
-            }">store #123</span>
+                <!-- 가게명 그대로 -->
+                <span th:text="${item?.store?.name ?: (item?.store?.id != null ? 'store #' + item?.store?.id
+                               : (item?.coeat?.storeId != null ? 'store #' + item?.coeat?.storeId : ''))
+                          }">store #123</span>
 
-                <!-- 리뷰: 평점 -->
+                <!-- 리뷰: 평점 (항상 노란색) -->
                 <span th:if="${isReview and item?.review?.rating != null}"> · </span>
-                <span th:if="${isReview and item?.review?.rating != null}"
+                <span class="text-warning"
+                      th:if="${isReview and item?.review?.rating != null}"
                       th:text="${'★ ' + item?.review?.rating}">★ 5</span>
 
-                <!-- 코잇: 정원/승인/신청 -->
-                <span
-                    th:if="${!isReview and (item?.coeat?.capacity != null or item?.coeat?.approvedCount != null or item?.coeat?.appliedCount != null)}"> · </span>
+                <!-- 코잇: 정원/승인/신청 (✅ 신청 포함) -->
+                <span th:if="${!isReview and (item?.coeat?.capacity != null
+                               or item?.coeat?.approvedCount != null
+                               or item?.coeat?.appliedCount != null)}"> · </span>
                 <span th:if="${!isReview}"
                       th:text="${(item?.coeat?.capacity != null ? ('정원 ' + item?.coeat?.capacity) : '')
-                           + (item?.coeat?.approvedCount != null ? ( (item?.coeat?.capacity != null ? ' / ' : '') + '승인 ' + item?.coeat?.approvedCount) : '')
-                           + (item?.coeat?.appliedCount  != null ? ( ((item?.coeat?.capacity != null or item?.coeat?.approvedCount != null) ? ' / ' : '') + '신청 ' + item?.coeat?.appliedCount) : '')}">
-              정원 4 / 승인 2 / 신청 3
-            </span>
+                           + (item?.coeat?.approvedCount != null ? ((item?.coeat?.capacity != null ? ' / ' : '') + '승인 ' + item?.coeat?.approvedCount) : '')
+                           + (item?.coeat?.appliedCount  != null ? (((item?.coeat?.capacity != null or item?.coeat?.approvedCount != null) ? ' / ' : '') + '신청 ' + item?.coeat?.appliedCount) : '')}">
+                  정원 4 / 승인 2 / 신청 3
+                </span>
               </div>
+
+              <!-- 하단 메타 2: 코잇 전용 — 조회/댓글만 (신청 제거) -->
+              <div class="small text-muted"
+                   th:if="${!isReview and (item?.coeat?.viewCount != null or item?.coeat?.commentCount != null)}">
+                <span th:if="${item?.coeat?.viewCount != null}">
+                  <i class="bi bi-eye me-1"></i><span th:text="${item?.coeat?.viewCount}">0</span>
+                </span>
+                <span th:if="${item?.coeat?.viewCount != null and item?.coeat?.commentCount != null}"> · </span>
+                <span th:if="${item?.coeat?.commentCount != null}">
+                  <i class="bi bi-chat-dots me-1"></i><span th:text="${item?.coeat?.commentCount}">0</span>
+                </span>
+              </div>
+
             </div>
           </a>
 
@@ -249,7 +282,6 @@
         </div>
       </div>
     </div>
-
 
   </div>
 </div>
