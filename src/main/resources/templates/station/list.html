@@ -126,8 +126,16 @@
               내용/제목 요약
             </div>
 
+            <!-- (4) 제목/본문 아래: 같이먹기 모임 시간 -->
+            <div class="small text-muted mb-2"
+                 th:if="${!isReview and item?.coeat?.meetingAt != null}">
+              <i class="bi bi-calendar-event me-1"></i>
+              <span th:text="${#temporals.format(item?.coeat?.meetingAt, 'MM/dd HH:mm')}">10/23 19:00</span>
+            </div>
+
+
             <!-- (4-1) 같이먹기 내용 -->
-            <div class="text-muted small mb-2 clamp-3"
+            <div class="text-muted small mb-2 clamp-2"
                  th:if="${!isReview and item?.coeat?.content != null}"
                  th:text="${item?.coeat?.content}">
               같이먹기 내용
