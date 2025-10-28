@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jslhrd.yorimichi.mapper.RegionMapper">
+
+    <select id="selectAllSido" resultType="RegionSidoDTO">
+        SELECT id, code, name
+        FROM region_sido
+        ORDER BY id
+    </select>
+
+    <select id="selectBySidoId" parameterType="long" resultType="RegionSidoDTO">
+        SELECT id, code, name
+        FROM region_sido
+        WHERE id = #{sidoId}
+    </select>
+
+    <select id="selectAllSigungu" resultType="RegionSigunguDTO">
+        SELECT id, sido_id, code, name
+        FROM region_sigungu
+        ORDER BY id
+    </select>
+
+    <select id="selectBySigunguId" parameterType="long" resultType="RegionSigunguDTO">
+        SELECT id, sido_id, code, name
+        FROM region_sigungu
+        WHERE id = #{sigunguId}
+    </select>
+
+    <select id="selectAllEmd" resultType="RegionEmdDTO">
+        SELECT id, sigungu_id, code, name
+        FROM region_emd
+        ORDER BY id
+    </select>
+
+    <select id="selectByEmdId" parameterType="long" resultType="RegionEmdDTO">
+        SELECT id, sigungu_id, code, name
+        FROM region_emd
+        WHERE id = #{emdId}
+    </select>
+
+</mapper>
