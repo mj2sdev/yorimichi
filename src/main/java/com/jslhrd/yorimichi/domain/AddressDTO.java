@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.math.BigDecimal;
-import lombok.*;
+import java.time.LocalDateTime;
 
 /**
  * 주소 DTO.
@@ -26,13 +26,68 @@ public class AddressDTO {
     private Long roadId;
     private Long postalId;
 
-    // 주소 텍스트
-    private String detail;
-    private String roadAddressText;
-    private String jibunAddressText;
+	private Long emdId;
 
-    // 좌표
-    private BigDecimal latitude;
-    private BigDecimal longitude;
+	/**
+	 * FK: 도로 ID
+	 */
+//	private Long roadId;
 
+	/**
+	 * FK: 우편번호 ID
+	 */
+//	private Long postalId;
+
+	/**
+	 * 상세주소(동/호수 등)
+	 */
+	private String detail;
+
+	/**
+	 * 도로명 전체 주소
+	 */
+	private String roadAddressText;
+
+	/**
+	 * 지번 전체 주소
+	 */
+	private String jibunAddressText;
+
+	/**
+	 * 위도 (-90.0 ~ +90.0)
+	 */
+	private BigDecimal latitude;
+
+	/**
+	 * 경도 (-180.0 ~ +180.0)
+	 */
+	private BigDecimal longitude;
+
+	/**
+	 * 생성일시 (DB 자동 생성)
+	 */
+	private LocalDateTime createdAt;
+
+	/**
+	 * 수정일시 (DB 자동 갱신)
+	 */
+	private LocalDateTime updatedAt;
+
+
+	/**
+	 * 주소의 상점
+	 */
+	private StoreDTO store;
+
+	private RegionEmdDTO emd;
+
+	/**
+	 * 주소의 우편번호
+	 */
+//	private PostalDTO postal;
+
+	/**
+	 * 주소의 도로명
+	 */
+//	private RoadDTO road;
 }
