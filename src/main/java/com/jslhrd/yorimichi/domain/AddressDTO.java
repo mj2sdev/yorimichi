@@ -24,15 +24,17 @@ public class AddressDTO {
 	 */
 	private Long id;
 
+	private Long emdId;
+
 	/**
 	 * FK: 도로 ID
 	 */
-	private Long roadId;
+//	private Long roadId;
 
 	/**
 	 * FK: 우편번호 ID
 	 */
-	private Long postalId;
+//	private Long postalId;
 
 	/**
 	 * 상세주소(동/호수 등)
@@ -75,13 +77,15 @@ public class AddressDTO {
 	 */
 	private StoreDTO store;
 
+	private RegionEmdDTO emd;
+
 	/**
 	 * 주소의 우편번호
 	 */
-	private PostalDTO postal;
+//	private PostalDTO postal;
 
 	/**
 	 * 주소의 도로명
 	 */
-	private RoadDTO road;
+//	private RoadDTO road;
 }
