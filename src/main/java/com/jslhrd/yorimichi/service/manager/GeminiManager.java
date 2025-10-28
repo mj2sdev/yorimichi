@@ -1,35 +1,55 @@
 package com.jslhrd.yorimichi.service.manager;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.jslhrd.yorimichi.domain.ReviewDTO;
+import com.jslhrd.yorimichi.gemini.GeminiHelper;
+import com.jslhrd.yorimichi.gemini.request.StoreIngestRequest;
+import com.jslhrd.yorimichi.gemini.request.StoreNameRegionResponse;
+import com.jslhrd.yorimichi.service.GeminiService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import com.jslhrd.yorimichi.config.GeminiHelper;
-import com.jslhrd.yorimichi.domain.ReviewDTO;
-import com.jslhrd.yorimichi.domain.StoreDTO;
-import com.jslhrd.yorimichi.service.GeminiService;
-
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class GeminiManager implements GeminiService {
 
 	private final GeminiHelper geminiHelper;
+	private final RegionManager regionManager;
 
-	private String promptWithReviewContents(
-			String prompt,
-			List<ReviewDTO> reviews,
-			Integer count) {
-		count = Optional.ofNullable(count).orElseGet(() -> geminiHelper.MAX_LENGTH);
-		count = Math.min(count, geminiHelper.MAX_LENGTH);
-		reviews = reviews.subList(0, Math.min(reviews.size(), count));
+	@Override
+	public List<StoreNameRegionResponse> findStoreNamesByRegion(Long sidoId, Long sigunguId, Long emdId, int count) {
 
-		return prompt + "\n\n" + String.join("\n", reviews.stream()
-			.map(review -> review.getContent())
-			.toList()
-		);
+		String region = regionManager.findBySidoId(sidoId).getName();
+
+		if (sigunguId != null) {
+			region += regionManager.findBySigunguId(sigunguId).getName();
+		}
+
+		String emdName = null;
+		if (emdId != null) {
+			emdName = regionManager.findByEmdId(emdId).getName();
+		}
+
+		String emdHint = (emdName == null || emdName.isBlank()) ? "" :
+				"(가능하면 읍면동 " + emdName + " 중심으로 추천하세요)\n";
+
+		String prompt = """
+				한국어로만 답하세요.
+				대상 지역: %s
+				반드시 위 지역(행정구역) 내의 맛집 %d개를 알려주세요.
+				출력은 JSON 배열이며, 각 원소는 { "name": string, "region": string, "emd": string } 형식입니다.
+				"region" 값은 정확히 "%s" 이어야 합니다.
+				%s추가 텍스트 금지, 모호/중복/타지역 제외.
+				""".formatted(region, count, region, emdHint);
+
+		return geminiHelper.listNameRegionPairs(prompt, count);
+	}
+
+	@Override
+	public StoreIngestRequest findStoreInfoByName(String region, String name) {
+		return null;
 	}
 
 	/**
@@ -43,32 +63,26 @@ public class GeminiManager implements GeminiService {
 	}
 
 	@Override
-	public List<String> findStoreNamesByRegion(String region, Integer count) {
-		String prompt = String.format(
-			"(%s)지역의 맛집을 %d개 찾아줘, 예를들어 [가게명, 그가게위치동] 이런식으로 형식을 맞춰서",
-			region,
-			count
-		);
-		
-		return geminiHelper.listStringPrompt(prompt);
-	}
-
-	@Override
-	public StoreDTO findStoreInfoByName(String name) {
-		String prompt = String.format(
-			"(%s)가게의 정보를 찾아줄래?",
-			name
-		);
-
-		return geminiHelper.storePrompt(prompt);
-	}
-
-	@Override
 	public List<String> findKeywordByReviews(List<ReviewDTO> reviews) {
 		String prompt = "여러 가게의 리뷰인데 핵심 키워드 뽑아줘\n";
 		String promptWithReviews = promptWithReviewContents(prompt, reviews, null);
-		
+
 		return geminiHelper.listStringPrompt(promptWithReviews);
 	}
-	
+
+	private String promptWithReviewContents(
+			String prompt,
+			List<ReviewDTO> reviews,
+			Integer count
+	) {
+		count = Optional.ofNullable(count).orElseGet(() -> geminiHelper.MAX_LENGTH);
+		count = Math.min(count, geminiHelper.MAX_LENGTH);
+		reviews = reviews.subList(0, Math.min(reviews.size(), count));
+
+		return prompt + "\n\n" + String.join("\n", reviews.stream()
+				.map(review -> review.getContent())
+				.toList()
+		);
+	}
+
 }

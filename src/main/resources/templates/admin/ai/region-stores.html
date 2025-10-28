@@ -1,0 +1,269 @@
+<!-- templates/admin/ai/region-stores.html -->
+<!doctype html>
+<html data-bs-theme="auto" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <title>AI · 지역별 맛집 수집</title>
+
+  <!-- CSRF meta for Spring Security (Thymeleaf supplies these) -->
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-body-tertiary">
+<div class="container py-4">
+  <h4 class="mb-4">지역 선택</h4>
+
+  <div class="row g-3">
+    <!-- 시도 -->
+    <div class="col-12 col-md-4">
+      <label class="form-label" for="sidoSelect">시도 (필수)</label>
+      <select class="form-select" id="sidoSelect" required>
+        <option value="">시도를 선택하세요</option>
+        <option th:each="sido : ${sidos}"
+                th:text="${sido.name}"
+                th:value="${sido.id}">서울특별시
+        </option>
+      </select>
+    </div>
+
+    <!-- 시군구 -->
+    <div class="col-12 col-md-4">
+      <label class="form-label" for="sigunguSelect">시군구 (선택)</label>
+      <select class="form-select" disabled id="sigunguSelect">
+        <option value="">시군구를 선택하세요</option>
+      </select>
+
+      <!-- 모든 시군구 옵션 템플릿(필터링 소스) -->
+      <template id="sigunguOptions">
+        <option th:attr="data-sido-id=${sigungu.sidoId}"
+                th:each="sigungu : ${sigungus}"
+                th:text="${sigungu.name}"
+                th:value="${sigungu.id}">유성구
+        </option>
+      </template>
+    </div>
+
+    <!-- 읍면동 -->
+    <div class="col-12 col-md-4">
+      <label class="form-label" for="emdSelect">읍면동 (선택)</label>
+      <select class="form-select" disabled id="emdSelect">
+        <option value="">읍면동을 선택하세요</option>
+      </select>
+
+      <!-- 모든 읍면동 옵션 템플릿(필터링 소스) -->
+      <template id="emdOptions">
+        <option th:attr="data-sigungu-id=${emd.sigunguId}"
+                th:each="emd : ${emds}"
+                th:text="${emd.name}"
+                th:value="${emd.id}">봉명동
+        </option>
+      </template>
+    </div>
+  </div>
+
+  <div class="row g-3 align-items-end mt-1">
+    <div class="col-6 col-md-3">
+      <label class="form-label" for="countInput">개수 (1~20)</label>
+      <input class="form-control" id="countInput" max="20" min="1" type="number" value="10">
+    </div>
+    <div class="col-6 col-md-3 d-grid">
+      <button class="btn btn-primary" id="queryButton">조회</button>
+    </div>
+  </div>
+
+  <hr class="my-4">
+
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <span>결과</span>
+      <span class="badge text-bg-secondary" id="resultCountBadge">0</span>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+        <tr>
+          <th style="width:72px">#</th>
+          <th>가게명</th>
+          <th>지역</th>
+          <th>읍면동</th>
+        </tr>
+        </thead>
+        <tbody id="resultTableBody">
+        <tr class="text-center text-secondary" id="emptyResultRow">
+          <td class="py-5" colspan="4">조회 결과가 없습니다.</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+    // --- Element references ---
+    const sidoSelectElement = document.getElementById('sidoSelect');
+    const sigunguSelectElement = document.getElementById('sigunguSelect');
+    const emdSelectElement = document.getElementById('emdSelect');
+
+    const sigunguOptionsTemplate = document.getElementById('sigunguOptions');
+    const emdOptionsTemplate = document.getElementById('emdOptions');
+
+    const countInputElement = document.getElementById('countInput');
+    const queryButtonElement = document.getElementById('queryButton');
+
+    const resultTableBodyElement = document.getElementById('resultTableBody');
+    const emptyResultRowElement = document.getElementById('emptyResultRow');
+    const resultCountBadgeElement = document.getElementById('resultCountBadge');
+
+    // --- CSRF meta extraction (Spring Security) ---
+    const csrfHeaderMetaElement = document.querySelector('meta[name="_csrf_header"]');
+    const csrfTokenMetaElement = document.querySelector('meta[name="_csrf"]');
+    const csrfHeaderName = csrfHeaderMetaElement ? csrfHeaderMetaElement.content.trim() : null;
+    const csrfTokenValue = csrfTokenMetaElement ? csrfTokenMetaElement.content.trim() : null;
+
+    // --- Utility functions ---
+    function setSelectOptions(selectElement, optionElements, placeholderText) {
+        selectElement.innerHTML = '';
+        const placeholderOption = document.createElement('option');
+        placeholderOption.value = '';
+        placeholderOption.textContent = placeholderText || '';
+        selectElement.appendChild(placeholderOption);
+        optionElements.forEach(opt => selectElement.appendChild(opt.cloneNode(true)));
+        selectElement.selectedIndex = 0;
+    }
+
+    function escapeHtml(text) {
+        return String(text ?? '').replace(/[&<>"']/g, ch => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[ch]));
+    }
+
+    async function postJson(url, payload) {
+        const headers = {'Content-Type': 'application/json', 'Accept': 'application/json'};
+        if (csrfHeaderName && csrfTokenValue) {
+            headers[csrfHeaderName] = csrfTokenValue;
+        }
+        const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(payload)
+        });
+
+        if (response.status === 204) return true;
+
+        if (!response.ok) {
+            let errorMessage = response.statusText || '요청 실패';
+            try {
+                const errorBody = await response.json();
+                errorMessage = errorBody?.message || errorBody?.error || errorMessage;
+            } catch (_) {
+                try {
+                    errorMessage = await response.text();
+                } catch (__) {
+                }
+            }
+            throw new Error(`${response.status} ${errorMessage}`);
+        }
+
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+            return await response.json();
+        }
+        return await response.text();
+    }
+
+    // --- Cascading selects ---
+    sidoSelectElement.addEventListener('change', () => {
+        const selectedSidoId = sidoSelectElement.value;
+
+        // reset child selects
+        setSelectOptions(sigunguSelectElement, [], '시군구를 선택하세요');
+        setSelectOptions(emdSelectElement, [], '읍면동을 선택하세요');
+        sigunguSelectElement.disabled = !selectedSidoId;
+        emdSelectElement.disabled = true;
+
+        if (!selectedSidoId) return;
+
+        const allSigunguOptionElements = [...sigunguOptionsTemplate.content.querySelectorAll('option')];
+        const filteredSigunguOptionElements = allSigunguOptionElements
+            .filter(option => String(option.dataset.sidoId) === String(selectedSidoId));
+
+        setSelectOptions(sigunguSelectElement, filteredSigunguOptionElements, '시군구를 선택하세요');
+    });
+
+    sigunguSelectElement.addEventListener('change', () => {
+        const selectedSigunguId = sigunguSelectElement.value;
+
+        setSelectOptions(emdSelectElement, [], '읍면동을 선택하세요');
+        emdSelectElement.disabled = !selectedSigunguId;
+        if (!selectedSigunguId) return;
+
+        const allEmdOptionElements = [...emdOptionsTemplate.content.querySelectorAll('option')];
+        const filteredEmdOptionElements = allEmdOptionElements
+            .filter(option => String(option.dataset.sigunguId) === String(selectedSigunguId));
+
+        setSelectOptions(emdSelectElement, filteredEmdOptionElements, '읍면동을 선택하세요');
+    });
+
+    // --- Query button handler ---
+    queryButtonElement.addEventListener('click', async () => {
+        const selectedSidoId = sidoSelectElement.value;
+        const selectedSigunguId = sigunguSelectElement.value || null;
+        const selectedEmdId = emdSelectElement.value || null;
+
+        if (!selectedSidoId) {
+            alert('시도를 선택하세요.');
+            return;
+        }
+
+        let requestedCount = Number(countInputElement.value || 10);
+        requestedCount = Math.min(Math.max(requestedCount, 1), 20);
+
+        const requestBody = {
+            sidoId: Number(selectedSidoId),
+            sigunguId: selectedSigunguId ? Number(selectedSigunguId) : null,
+            emdId: selectedEmdId ? Number(selectedEmdId) : null,
+            count: requestedCount
+        };
+
+        try {
+            const responseRows = await postJson('/admin/ai/region-stores', requestBody);
+            renderResultRows(responseRows);
+        } catch (error) {
+            if (String(error.message || '').startsWith('401')) {
+                alert('인증이 필요합니다 (401). 로그인 후 다시 시도하세요.');
+            } else if (String(error.message || '').startsWith('403')) {
+                alert('접근이 거부되었습니다 (403).');
+            } else {
+                alert('요청 실패: ' + (error.message || '알 수 없는 오류'));
+            }
+        }
+    });
+
+    // --- Render results ---
+    function renderResultRows(rows) {
+        resultTableBodyElement.innerHTML = '';
+        if (!rows || !rows.length) {
+            resultTableBodyElement.appendChild(emptyResultRowElement);
+            resultCountBadgeElement.textContent = '0';
+            return;
+        }
+
+        rows.forEach((row, index) => {
+            const tableRowElement = document.createElement('tr');
+            tableRowElement.innerHTML = `
+        <td class="text-secondary">${index + 1}</td>
+        <td><strong>${escapeHtml(row.name)}</strong></td>
+        <td>${escapeHtml(row.region)}</td>
+        <td>${escapeHtml(row.emd)}</td>
+      `;
+            resultTableBodyElement.appendChild(tableRowElement);
+        });
+
+        resultCountBadgeElement.textContent = String(rows.length);
+    }
+</script>
+</body>
+</html>
