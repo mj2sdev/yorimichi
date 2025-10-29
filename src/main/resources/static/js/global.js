@@ -21,7 +21,7 @@ function bsNeedValidation() {
 bsNeedValidation();
 
 /**
- * 
+ * 시간 포멧 함수
  */
 function timeAgo() {
 	const timeElements = document.querySelectorAll("[data-time-ago]");
@@ -42,3 +42,21 @@ function timeAgo() {
 	});
 }
 timeAgo();
+
+/**
+ * 시간입력 제한 함수
+ */
+
+function limitStartTime() {
+	const inputElements = document.querySelectorAll("[data-max-date]");
+	inputElements.forEach(input => {
+		const plusDay = input.dataset.maxDate;
+		const now = new Date();
+		const limitTime = new Date(now);
+		limitTime.setSeconds(0);
+		const timeString = limitTime.toISOString();
+		input.min = timeString.slice(0, timeString.lastIndexOf("."));
+	})
+}
+
+limitStartTime();
