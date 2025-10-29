@@ -34,6 +34,7 @@ public class GoogleDriveManager implements GoogleDriveService {
 		List<String> urls = new ArrayList<>();
 		files.stream()
 			.forEach(file -> {
+				if (file.getOriginalFilename().isEmpty()) return;
 				try {
 					File fileMetadata = new File();
 					fileMetadata.setName(file.getOriginalFilename());
