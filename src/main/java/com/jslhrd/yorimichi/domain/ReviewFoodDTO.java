@@ -12,6 +12,10 @@ import java.time.LocalDateTime;
  *
  * @author LancerAlert
  * @since 1.0
+ * 
+ * @authow mj2sdev
+ * @version 1.1
+ * 미춰버리겠네 ^^
  */
 @Getter
 @Setter

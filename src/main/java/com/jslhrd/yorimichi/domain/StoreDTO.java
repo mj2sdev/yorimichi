@@ -57,11 +57,12 @@ public class StoreDTO extends RootDTO {
 	private List<CoeatDTO> coeats;
 	/** 상점 이미지 목록 */
 	private List<ImageDTO> images;
+	/** 키워드 목록 */
+	private List<KeywordDTO> keywords;
 
 	private CoeatDTO coeat;
 
 	private ImageDTO image;
-
 
 	public StoreDTO() {
 		super(RootType.STORE);

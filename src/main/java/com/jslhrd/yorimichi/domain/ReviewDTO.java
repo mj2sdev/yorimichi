@@ -39,6 +39,10 @@ public class ReviewDTO extends RootDTO implements FeedDTO {
 	private Integer rating;
 	/** 리뷰 내용 */
 	private String content;
+
+	private Long receiptImageId;
+
+	private Boolean receiptStatus;
 	/** 리뷰를 작성한 유저 */
 	private UserDTO user;
 	/** 리뷰가 작성된 상점 */
@@ -49,6 +53,12 @@ public class ReviewDTO extends RootDTO implements FeedDTO {
 	private List<ImageDTO> images;
 	/** front에서 등록하려고 하는 multipartFile 형식의 이미지 리스트 */
 	private List<MultipartFile> uploadImages;
+
+	private MultipartFile uploadReceipt;
+
+	private ImageDTO receipt;
+
+	/// store detail 에서 사용됨
 	/** 리뷰 평균 */
 	private Double avgRating;
 	/** 리뷰 갯수 */
