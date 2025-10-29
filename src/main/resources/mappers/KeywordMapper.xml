@@ -15,7 +15,7 @@
         ORDER BY name, id DESC
     </select>
 
-    <select id="selectAllByStoreId" parameterType="map" resultType="KeywordDTO">
+    <select id="selectAllByRootId" parameterType="map" resultType="KeywordDTO">
         SELECT k.id,
                k.name
 
@@ -24,7 +24,7 @@
         JOIN keyword k
         ON rk.keyword_id = k.id
         
-        WHERE rk.root_id = #{ storeId }
+        WHERE rk.root_id = #{ rootId }
     </select>
 
     <select id="selectById" parameterType="long" resultType="KeywordDTO">

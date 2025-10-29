@@ -6,6 +6,12 @@
 
     <!-- @formatter:off -->
 
+    <sql id="Auditing">
+        AND r.type = ${type}
+        AND r.deleted_at IS NULL
+        AND r.blinded_at IS NULL
+    </sql>
+    
     <sql id="RootType">
         AND r.type = ${type}
     </sql>
