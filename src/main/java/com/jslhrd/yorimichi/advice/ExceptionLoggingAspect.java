@@ -16,6 +16,7 @@ public class ExceptionLoggingAspect {
 	public void logException(JoinPoint joinPoint, Exception ex) {
 		String className = joinPoint.getTarget().getClass().getSimpleName();
 		String methodName = joinPoint.getSignature().getName();
-		log.error("‼️ 예외 발생 - {}.{}() : {}", className, methodName, ex.getMessage());
+		ex.printStackTrace();
+		log.error("‼️ 예외 발생 - {}.{}() : {}", className, methodName, ex.getLocalizedMessage());
 	}
 }

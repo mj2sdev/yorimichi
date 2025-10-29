@@ -4,6 +4,12 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.ReviewFoodMapper">
 
+    <select id="selectAllByReviewId" parameterType="map" resultType="FoodDTO">
+        SELECT f.id, f.name
+        FROM review_food rf
+        JOIN food f ON f.id = rf.food_id
+        WHERE rf.review_id = #{ reviewId }
+    </select>
     <!-- @formatter:off -->
 
     <select id="selectFoodNameByReviewIds" resultType="ReviewFoodDTO">

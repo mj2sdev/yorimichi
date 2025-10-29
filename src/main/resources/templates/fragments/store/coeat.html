@@ -18,21 +18,23 @@
 				class="btn btn-sm btn-ymprimary"
 				data-bs-target="#coeatwriting"
 				data-bs-toggle="modal">
-				모임 만들기 ➕
+				같이먹기 작성
 			</button>
 		</div>
 	</div>
 
 	<div
 		class="d-flex shadow-sm p-2 justify-content-between align-items-center"
-		th:each="item : ${ #numbers.sequence(1, 5) }">
-		<th:block th:replace="~{ fragments/common/profile }"></th:block>
+		th:each="item : ${ store.coeats }">
+		<th:block th:replace="~{ fragments/common/profile :: userData(${ item.user }) }" />
 		<button
 			data-bs-toggle="modal"
 			data-bs-target="#coeatmodal"
 			type="button"
-			class="btn btn-sm btn-outline-ymprimary">
-			같이먹기
+			class="btn btn-sm btn-outline-ymprimary"
+			th:data-id="${ item.id }"
+			onclick="coeatDetailModal.findOne(event)">
+			자세히
 		</button>
 	</div>
 

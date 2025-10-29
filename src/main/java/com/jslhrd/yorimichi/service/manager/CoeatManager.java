@@ -65,6 +65,10 @@ public class CoeatManager implements CoeatService {
 			throw new IllegalStateException("Root: insert failed or no generated coeatId");
 		}
 
+		if (coeat.getAutoAccept() == null) {
+			coeat.setAutoAccept(false);
+		}
+
 		coeatMapper.insert(coeat);
 		log.info("Coeat: created coeatId={}", coeat.getId());
 	}

@@ -75,6 +75,8 @@ public class UserDTO extends RootDTO implements Serializable {
 
 	private boolean showFollowers;
 
+	private Integer followerCount;
+
 	/**
 	 * 마지막 로그인 일시
 	 */
