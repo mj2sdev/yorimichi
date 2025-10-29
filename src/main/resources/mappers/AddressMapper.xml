@@ -18,8 +18,7 @@
     <select id="selectById" parameterType="long" resultType="AddressDTO">
         SELECT
             id,
-            road_id,
-            postal_id,
+            emd_id,
             detail,
             road_address_text,
             jibun_address_text,
@@ -34,15 +33,13 @@
     </select>
 
     <insert id="insert" parameterType="AddressDTO">
-        INSERT INTO address (road_id,
-                             postal_id,
+        INSERT INTO address (emd_id,
                              detail,
                              road_address_text,
                              jibun_address_text,
                              latitude,
                              longitude)
-        VALUES (#{roadId},
-                #{postalId},
+        VALUES (#{emdId},
                 #{detail},
                 #{roadAddressText},
                 #{jibunAddressText},
@@ -54,8 +51,7 @@
         UPDATE address
 
         SET
-            road_id = #{roadId},
-            postal_id = #{postalId},
+            emd_id = #{emdId},
             detail = #{detail},
             road_address_text = #{roadAddressText},
             jibun_address_text = #{jibunAddressText},

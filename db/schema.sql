@@ -41,7 +41,7 @@ CREATE TABLE region_emd (
     CONSTRAINT uk_region_emd_sigungu_name UNIQUE      (sigungu_id, name)
 );
 
-CREATE TABLE road (
+/*CREATE TABLE road (
     id         BIGINT      NOT NULL AUTO_INCREMENT,
     emd_id     BIGINT      NOT NULL,
     code       VARCHAR(10) NOT NULL,
@@ -74,12 +74,13 @@ CREATE TABLE road_postal (
     CONSTRAINT pk_road_postal        PRIMARY KEY (road_id, postal_id),
     CONSTRAINT fk_road_postal_road   FOREIGN KEY (road_id)   REFERENCES road(id)   ON DELETE CASCADE,
     CONSTRAINT fk_road_postal_postal FOREIGN KEY (postal_id) REFERENCES postal(id) ON DELETE CASCADE
-);
+);*/
 
 CREATE TABLE address (
     id                 BIGINT         NOT NULL AUTO_INCREMENT,
-    road_id            BIGINT         NOT NULL,
-    postal_id          BIGINT         NOT NULL,
+    emd_id             BIGINT         NOT NULL,
+--     road_id            BIGINT         NOT NULL,
+--     postal_id          BIGINT         NOT NULL,
     detail             TEXT           NOT NULL,
     road_address_text  TEXT           NOT NULL,
     jibun_address_text TEXT           NOT NULL,
@@ -89,9 +90,10 @@ CREATE TABLE address (
     updated_at         DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     CONSTRAINT pk_address             PRIMARY KEY (id),
-    CONSTRAINT fk_address_road        FOREIGN KEY (road_id)            REFERENCES road(id),
-    CONSTRAINT fk_address_postal      FOREIGN KEY (postal_id)          REFERENCES postal(id),
-    CONSTRAINT fk_address_road_postal FOREIGN KEY (road_id, postal_id) REFERENCES road_postal(road_id, postal_id),
+    CONSTRAINT fk_address_emd         FOREIGN KEY (emd_id) REFERENCES region_emd(id),
+--     CONSTRAINT fk_address_road        FOREIGN KEY (road_id)            REFERENCES road(id),
+--     CONSTRAINT fk_address_postal      FOREIGN KEY (postal_id)          REFERENCES postal(id),
+--     CONSTRAINT fk_address_road_postal FOREIGN KEY (road_id, postal_id) REFERENCES road_postal(road_id, postal_id),
 
     -- 범위 검증
     CONSTRAINT ck_address_lat CHECK (latitude BETWEEN -90 AND 90),
@@ -444,14 +446,17 @@ CREATE TABLE api_key (
    주소 / 지역
    ========================= */
 
+-- 읍면동 단위 주소 조회/집계
+CREATE INDEX idx_address_emd_id ON address (emd_id);
+
 -- 주소를 도로+우편번호로 정확히 조회(=,= 조건 최적화)
-CREATE INDEX idx_address_road_postal ON address (road_id, postal_id);
+-- CREATE INDEX idx_address_road_postal ON address (road_id, postal_id);
 
 -- 우편번호 단일 필터/집계 최적화
-CREATE INDEX idx_address_postal_id ON address (postal_id);
+-- CREATE INDEX idx_address_postal_id ON address (postal_id);
 
 -- 우편번호에서 연결 도로 역방향 탐색 최적화
-CREATE INDEX idx_road_postal_postal_id ON road_postal (postal_id, road_id);
+-- CREATE INDEX idx_road_postal_postal_id ON road_postal (postal_id, road_id);
 
 
 /* =========================
