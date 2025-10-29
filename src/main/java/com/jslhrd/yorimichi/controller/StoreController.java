@@ -1,6 +1,5 @@
 package com.jslhrd.yorimichi.controller;
 
-import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.jslhrd.yorimichi.domain.CoeatDTO;
 import com.jslhrd.yorimichi.service.ApiKeyService;
 import com.jslhrd.yorimichi.service.BookmarkService;
 import com.jslhrd.yorimichi.service.LikeService;
@@ -34,10 +34,9 @@ public class StoreController {
 
 	//인덱스 페이지에서 가게 맛집 리스트를 보여주기 위함. 인기있는 최신 6개를 보여주면 될 거 같음.
 	//인기의 기준이 뭔지 모르겠음.
-	@ResponseBody
 	@GetMapping("/search")
-	public void showStores() {
-
+	public String showStores() {
+		return "store/list";
 	}
 
 
@@ -74,6 +73,7 @@ public class StoreController {
 		@PathVariable("storeId") Long storeId,
 		@AuthenticationPrincipal(expression = "userId") Long userId,
 		Model model) {
+		model.addAttribute("coeatDto", new CoeatDTO());
 		model.addAttribute("store", storeService.findById(storeId, userId));
 		model.addAttribute("mapKey", apiKeyService.findApiKey("maps", null));
 		return "store/detail";

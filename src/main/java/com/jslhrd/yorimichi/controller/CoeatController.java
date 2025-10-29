@@ -4,6 +4,8 @@ import com.jslhrd.yorimichi.domain.CoeatDTO;
 import com.jslhrd.yorimichi.domain.CoeatRequestDTO;
 import com.jslhrd.yorimichi.service.CoeatService;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -36,10 +38,10 @@ public class CoeatController {
 
 	//같이먹기 작성
 	@PostMapping("/coeat")
-	public void postCoeat(@RequestBody CoeatDTO coeat, Principal principal) {
-		//TODO: 유저id 찾아오는 커스텀 USER
-		long userId = 0;
-		long storeId = 0;
+	public void postCoeat(
+		@RequestBody CoeatDTO coeat,
+		@AuthenticationPrincipal(expression = "userId") Long userId) {
+		Long storeId = coeat.getStoreId();
 		coeatService.save(userId, storeId, coeat);
 	}
 
@@ -64,8 +66,7 @@ public class CoeatController {
 	public void participateCoeat(
 			@PathVariable("coeatId") Long coeatId,
 			@RequestBody CoeatRequestDTO coeatRequest,
-			Principal principal) {
-		long userId = 0;
+			@AuthenticationPrincipal(expression = "userId") Long userId) {
 		coeatService.saveCoeatRequest(userId, coeatId, coeatRequest);
 	}
 
@@ -75,8 +76,7 @@ public class CoeatController {
 	public void acceptParticipant(
 			@PathVariable("coeatId") Long coeatId,
 			@PathVariable("participantId") Long participantId,
-			Principal principal) {
-		long userId = 0;
+			@AuthenticationPrincipal(expression = "userId") Long userId) {
 		CoeatRequestDTO coeatRequest = new CoeatRequestDTO();
 		coeatService.updateCoeatRequestStatus(userId, coeatId, coeatRequest);
 	}
@@ -86,8 +86,7 @@ public class CoeatController {
 	public void deleteParticipant(
 			@PathVariable("coeatId") Long coeatId,
 			@PathVariable("participantId") Long participantId,
-			Principal principal) {
-		long userId = 0;
+			@AuthenticationPrincipal(expression = "userId") Long userId) {
 		coeatService.cancelCoeatRequest(userId, coeatId);
 	}
 }
