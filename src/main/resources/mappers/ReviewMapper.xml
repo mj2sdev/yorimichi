@@ -30,6 +30,40 @@
         WHERE user_id = #{userId}
 
         ORDER BY id DESC
+        LIMIT 10
+    </select>
+    
+    <resultMap id="storeReviewMap" type="ReviewDTO">
+        <id property="id" column="id"/>
+        <association property="user" column="{userId=user_id}" select="com.jslhrd.yorimichi.mapper.UserMapper.selectProfileByUserId">
+            <id property="id" column="id"/>
+            <result property="nickname" column="nickname"/>
+            <result property="image" column="url"/>
+            <result property="followerCount" column="followerCount"/>
+        </association>
+        <collection property="foods" column="{reviewId=id}" select="com.jslhrd.yorimichi.mapper.FoodMapper.selectAllByReviewId" />
+    </resultMap>
+
+    <select id="selectAllByStoreId" parameterType="map" resultMap="storeReviewMap">
+        SELECT
+            v.id,
+            v.user_id,
+            v.store_id,
+            v.rating,
+            v.content,
+            r.type,
+            r.created_at,
+            r.updated_at
+
+        FROM review v
+
+        JOIN root r ON v.id = r.id
+            AND r.type = 'REVIEW'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
+        WHERE v.store_id = #{storeId}
+
+        ORDER BY r.created_at DESC
     </select>
 
     <select id="selectAll" resultType="ReviewDTO">
@@ -54,32 +88,18 @@
 
     <select id="selectAvgRatingByStoreId" parameterType="map" resultType="ReviewDTO">
         SELECT
-            AVG(r.rating) AS avgRating,
-            COUNT(r.rating) AS reviewCount
-        FROM review r
-        WHERE r.store_id = #{ storeId }
-        GROUP BY r.store_id
-    </select>
-    <select id="selectAllByStoreId" parameterType="long" resultType="ReviewDTO">
-        SELECT
-            v.id,
-            v.user_id,
-            v.store_id,
-            v.rating,
-            v.content,
-            r.type,
-            r.created_at,
-            r.updated_at
+            rv.store_id,
+            AVG(rv.rating) AS avgRating,
+            COUNT(rv.rating) AS reviewCount
+        FROM review rv
 
-        FROM review v
-
-        JOIN root r ON v.id = r.id
-            AND r.type = 'REVIEW'
-            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
-
-        WHERE v.store_id = #{storeId}
-
-        ORDER BY r.created_at DESC
+        JOIN root r
+        ON rv.id = r.id
+        <include refid="com.jslhrd.yorimichi.mapper.common.Auditing">
+            <property name="type" value="'REVIEW'"/>
+        </include>
+        WHERE rv.store_id = #{ storeId }
+        GROUP BY rv.store_id
     </select>
 
     <select id="selectStatsByStoreId" resultType="ReviewDTO">
@@ -131,16 +151,21 @@
 
     <insert id="insert" parameterType="ReviewDTO">
         INSERT INTO review (
-                            id,
-                            user_id,
-                            store_id,
-                            rating,
-                            content)
-        VALUES (#{id},
-                #{userId},
-                #{storeId},
-                #{rating},
-                #{content})
+            id,
+            user_id,
+            store_id,
+            rating,
+            content,
+            receipt_image_id
+        )
+        VALUES (
+            #{id},
+            #{userId},
+            #{storeId},
+            #{rating},
+            #{content},
+            #{receiptImageId}
+        )
     </insert>
 
     <update id="update">
@@ -159,7 +184,7 @@
             AND v.user_id = #{userId}
     </update>
 
-    <update id="deleteById">
+    <delete id="deleteById">
         UPDATE review v
 
         JOIN root r ON v.id = r.id
@@ -171,7 +196,7 @@
 
         WHERE v.id = #{reviewId}
             AND v.user_id = #{userId}
-    </update>
+    </delete>
 
     <update id="restoreById">
         UPDATE review v
