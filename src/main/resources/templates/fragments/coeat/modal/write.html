@@ -1,4 +1,5 @@
-<div class="modal fade" id="coeatwriting" tabindex="-1">
+<form class="modal fade" id="coeatwriting" tabindex="-1" onsubmit="writeCoeat(event)">
+	<input type="hidden" name="storeId" th:value="${ store?.id }">
 	<div class="modal-dialog modal-lg modal-dialog-centered">
 		<div class="modal-content">
 
@@ -7,41 +8,46 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 
-			<form class="modal-body" th:action="@{/coeat}">
+			<div class="modal-body">
+				<div class="mb-3">
+					<div class="input-group">
+						<label class="input-group-text" for="coeatTitle">제목</label>
+						<input name="title" id="coeatTitle" class="form-control" placeholder="제목을 입력하세요" required>
+					</div>
+				</div>
 				<div class="row mb-3 row-gap-2">
 					<div class="col-12 col-lg-6">
 						<div class="input-group">
-							<label class="input-group-text">제목</label>
-							<input name="title" class="form-control" placeholder="제목을 입력하세요">
+							<label class="input-group-text" for="coeatCapacity">인원</label>
+							<input type="number" min="2" max="10" name="capacity" id="coeatCapacity" class="form-control" placeholder="(본인 포함 2명 이상)" title="본인을 포함한 2명 이상 이어야 합니다." required>
 						</div>
 					</div>
 					<div class="col-12 col-lg-6">
 						<div class="input-group">
-							<label class="input-group-text">날짜</label>
-							<input type="datetime-local" class="form-control">
+							<label class="input-group-text" for="coeatMeetingAt">날짜</label>
+							<input type="datetime-local" name="meetingAt" id="coeatMeetingAt" class="form-control" required data-max-date="1">
 						</div>
 					</div>
 				</div>
-				<div class="mb-3">
-					<h5>메뉴 선택</h5>
-					<ul class="list-group">
-						<li class="list-group-item" th:each="menu, status : ${ {'유니짜장', '삼선짜장', '야끼짬뽕'} }">
-							<input class="form-check-input me-1" type="checkbox" value="" th:id="'coeatItem' + ${ status.index }">
-							<label class="form-check-label" th:for="'coeatItem' + ${ status.index }" th:text="${ menu }"></label>
-						</li>
-					</ul>
-				</div>
 
-				<div class="input-group">
+				<div class="input-group mb-3">
 					<span class="input-group-text">내용</span>
-					<textarea class="form-control" placeholder="참가자에게 하고 싶은 말을 입력해주세요" name="content"></textarea>
+					<textarea class="form-control" placeholder="참가자에게 하고 싶은 말을 입력해주세요" name="content" rows="5" required></textarea>
 				</div>
 
-			</form>
+			</div>
 			<div class="modal-footer">
+				<div class="flex-grow-1">
+					<label>
+						<input type="checkbox" class="form-check-input" name="autoAccept" value="true">
+						<span class="ms-2">		
+							참가 요청을 자동으로 승인합니다.
+						</span>
+					</label>
+				</div>
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-				<button type="button" class="btn btn-ymprimary">작성완료</button>
+				<button type="submit" class="btn btn-ymprimary">작성완료</button>
 			</div>
 		</div>
 	</div>
-</div>
+</form>

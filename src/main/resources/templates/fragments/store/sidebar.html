@@ -5,9 +5,7 @@
 			class="w-100 h-100"
 			allowfullscreen
 			loading="lazy" 
-			src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2272.926378741515!2d127.40430498927147!3d36.32677405031281!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x356549343c3c3cf1%3A0x9d6af658336f953a!2z7KCc7J207JeQ7Iqk7JeY7J247J6s6rCc67Cc7JuQKOyjvCk!5e0!3m2!1sko!2skr!4v1757573926145!5m2!1sko!2skr"
-			th:src="'https://www.google.com/maps/embed/v1/place?key=' + ${ mapKey } + '&q=' + ${ store.address.latitude } + ',' + ${ store.address.longitude }"
-			<!--/* th:src="'https://www.google.com/maps/embed/v1/place?key=' + #{ mapKey } + '&q=' + ${ store.name }" */-->
+			th:src="'https://www.google.com/maps/embed/v1/place?key=' + ${ mapKey } + '&q=place_id:ChIJK9qSvbZJZTURNW2s9iM491I'"
 			referrerpolicy="no-referrer-when-downgrade">
 		</iframe>
 	</div>

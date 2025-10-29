@@ -6,10 +6,12 @@
 	<title>가게 상세</title>
 	<script defer src="/js/store/review.js"></script>
 	<script defer src="/js/store/detail.js"></script>
+	<script defer src="/js/store/coeat.js"></script>
+	<script defer src="/js/store/coeatVue.js"></script>
 </head>
 
 <body>
-	<div class="container my-4">
+	<div class="container my-4 py-4">
 		<div class="row flex-row-reverse row-gap-4">
 
 			<div class="col-12 col-lg-8">
@@ -30,6 +32,9 @@
 			
 		</div>
 	</div>
+	<th:block th:replace="~{ fragments/review/modal/write }"/>
+	<th:block th:replace="~{ fragments/coeat/modal/write }"/>
+	<th:block th:replace="~{ fragments/coeat/modal/detail }"/>
 </body>
 
 </html>
