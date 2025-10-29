@@ -1,5 +1,6 @@
 package com.jslhrd.yorimichi.mapper;
 
+import com.jslhrd.yorimichi.domain.CoeatDTO;
 import com.jslhrd.yorimichi.domain.CommentDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -24,6 +25,8 @@ public interface CommentMapper {
 
 	List<CommentDTO> selectAllByParentId(@Param("coeatId") Long coeatId,
 	                                     @Param("parentId") Long parentId);
+
+	List<CoeatDTO> selectCountsByIds(@Param("coeatIds") List<Long> coeatIds);
 
 	boolean existsActive(@Param("coeatId") Long coeatId,
 	                     @Param("commentId") Long commentId);

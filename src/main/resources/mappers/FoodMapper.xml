@@ -46,6 +46,24 @@
 
         WHERE rf.review_id = #{ reviewId }
     </select>
+    <select id="selectByReviewIds" resultType="FoodDTO">
+        SELECT
+            rf.review_id,
+            f.id,
+            f.name,
+            f.price,
+
+        FROM review_food rf
+
+        JOIN food f ON f.id = rf.food_id
+
+        WHERE rf.review_id IN
+            <foreach collection="reviewIds" item="reviewId" open="(" close=")" separator=",">
+                #{reviewId}
+            </foreach>
+
+        ORDER BY f.name
+    </select>
 
     <select id="selectById" parameterType="long" resultType="FoodDTO">
         SELECT f.id,

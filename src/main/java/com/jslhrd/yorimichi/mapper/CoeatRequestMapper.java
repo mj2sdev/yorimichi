@@ -1,10 +1,12 @@
 package com.jslhrd.yorimichi.mapper;
 
+import com.jslhrd.yorimichi.domain.CoeatDTO;
 import com.jslhrd.yorimichi.domain.CoeatRequestDTO;
 import com.jslhrd.yorimichi.enums.CoeatRequestStatus;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,6 +20,8 @@ import java.util.Optional;
  */
 @Mapper
 public interface CoeatRequestMapper {
+
+	List<CoeatDTO> selectCoeatCountsByIds(@Param("coeatIds") List<Long> coeatIds);
 
 	Optional<CoeatRequestStatus> selectStatus(@Param("userId") Long userId,
 	                                          @Param("coeatId") Long coeatId);

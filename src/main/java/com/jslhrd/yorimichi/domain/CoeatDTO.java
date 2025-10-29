@@ -43,6 +43,10 @@ public class CoeatDTO extends RootDTO implements FeedDTO {
 	 * 같이먹기 정원
 	 */
 	private Integer capacity;
+
+	private Integer approvedCount;
+	private Integer appliedCount;
+
 	/**
 	 * 같이먹기 조회수
 	 */
@@ -59,6 +63,8 @@ public class CoeatDTO extends RootDTO implements FeedDTO {
 	 * 자동 수락 여부
 	 */
 	private Boolean autoAccept;
+
+	private Integer commentCount;
 
 
 	/**

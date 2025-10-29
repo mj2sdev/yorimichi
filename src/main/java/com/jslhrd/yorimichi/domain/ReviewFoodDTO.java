@@ -1,5 +1,8 @@
 package com.jslhrd.yorimichi.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 import lombok.Getter;
@@ -31,6 +34,7 @@ public class ReviewFoodDTO {
 	 */
 	private Long foodId;
 
+	private String foodName;
 
 	/**
 	 * 생성일시 (DB 자동 생성)

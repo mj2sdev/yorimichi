@@ -25,6 +25,22 @@
         WHERE cr.coeat_id = #{ coeatId }
     </select>
 
+    <select id="selectCoeatCountsByIds" resultType="CoeatDTO">
+        SELECT
+            coeat_id AS id,
+            SUM(CASE WHEN status='APPROVED' THEN 1 ELSE 0 END) AS approvedCount,
+            SUM(CASE WHEN status IN ('PENDING','APPROVED') THEN 1 ELSE 0 END) AS appliedCount
+
+        FROM coeat_request
+
+        WHERE coeat_id IN
+            <foreach collection="coeatIds" item="coeatId" open="(" close=")" separator=",">
+                #{coeatId}
+            </foreach>
+
+        GROUP BY coeat_id
+    </select>
+
     <select id="selectStatus" resultType="com.jslhrd.yorimichi.enums.CoeatRequestStatus">
         SELECT status
         FROM coeat_request

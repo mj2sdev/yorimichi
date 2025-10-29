@@ -30,9 +30,12 @@ public class SecurityConfig {
 	SecurityFilterChain wellKnownSecurityChainFilter(HttpSecurity http) throws Exception {
 		http
 				.securityMatcher("/.well-known/**")
-				.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+				.authorizeHttpRequests(a -> a.anyRequest().permitAll())
 				.csrf(csrf -> csrf.disable())
-				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.httpBasic(b -> b.disable())
+				.formLogin(f -> f.disable())
+				.logout(l -> l.disable());
 		return http.build();
 	}
 
@@ -48,7 +51,7 @@ public class SecurityConfig {
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
-						.requestMatchers(HttpMethod.GET, "/api/mini-stations").permitAll()
+						.requestMatchers(HttpMethod.GET, "/api/stations").permitAll()
 						// 나머지 API 는 인증 필요
 						.anyRequest().authenticated()
 				)
@@ -168,7 +171,7 @@ public class SecurityConfig {
 						if (oauth2Svc != null) u.userService(oauth2Svc);
 						if (oidcSvc != null) u.oidcUserService(oidcSvc);
 					})
-					.defaultSuccessUrl("/", true)
+					.defaultSuccessUrl("/", false)
 					.failureUrl("/login?oauth2_error")
 			);
 		}
