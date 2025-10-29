@@ -4,6 +4,7 @@ import com.jslhrd.yorimichi.enums.CoeatStatus;
 import com.jslhrd.yorimichi.enums.RootType;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.List;
  */
 @Getter
 @Setter
+@ToString
 public class CoeatDTO extends RootDTO implements FeedDTO {
 
 	/**

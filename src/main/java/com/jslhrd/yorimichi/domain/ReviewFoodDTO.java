@@ -2,6 +2,9 @@ package com.jslhrd.yorimichi.domain;
 
 import java.time.LocalDateTime;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 리뷰 - 음식 매핑 DTO.
  *
@@ -9,7 +12,13 @@ import java.time.LocalDateTime;
  *
  * @author LancerAlert
  * @since 1.0
+ * 
+ * @authow mj2sdev
+ * @version 1.1
+ * 미춰버리겠네 ^^
  */
+@Setter
+@Getter
 public class ReviewFoodDTO {
 
 	/**
