@@ -1,18 +1,25 @@
 package com.jslhrd.yorimichi.service.manager;
 
+import com.jslhrd.yorimichi.domain.ImageDTO;
 import com.jslhrd.yorimichi.domain.ReviewDTO;
+import com.jslhrd.yorimichi.domain.ReviewFoodDTO;
 import com.jslhrd.yorimichi.exception.*;
+import com.jslhrd.yorimichi.mapper.ReviewFoodMapper;
 import com.jslhrd.yorimichi.mapper.ReviewMapper;
+import com.jslhrd.yorimichi.mapper.RootImageMapper;
 import com.jslhrd.yorimichi.mapper.RootMapper;
 import com.jslhrd.yorimichi.mapper.StoreMapper;
 import com.jslhrd.yorimichi.mapper.UserMapper;
+import com.jslhrd.yorimichi.service.GoogleDriveService;
 import com.jslhrd.yorimichi.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -24,6 +31,10 @@ public class ReviewManager implements ReviewService {
 	private final StoreMapper storeMapper;
 	private final UserMapper userMapper;
 	private final ReviewMapper reviewMapper;
+	private final ImageManager imageManager;
+	private final RootImageMapper rootImageMapper;
+	private final ReviewFoodMapper reviewFoodMapper;
+	private final GoogleDriveService googleDriveService;
 
 	@Override
 	public List<ReviewDTO> findAll() {
@@ -63,8 +74,37 @@ public class ReviewManager implements ReviewService {
 		if (review.getId() == null) {
 			throw new IllegalStateException("Root: insert failed or no generated reviewId");
 		}
-
 		reviewMapper.insert(review);
+
+		// 이미지 처리
+		List<String> imageUrls = googleDriveService.uploadFiles(review.getUploadImages());
+		for (String url : imageUrls) {
+			ImageDTO image = new ImageDTO();
+			image.setUrl(url);
+			imageManager.save(image);
+			rootImageMapper.insert(review.getId(), image.getId());
+		}
+
+		// 영수증 처리 (파일이 존재할 경우)
+		MultipartFile receipt = review.getUploadReceipt();
+		if (!receipt.isEmpty()) {
+			String url = googleDriveService.uploadFile(receipt);
+			ImageDTO image = new ImageDTO();
+			image.setUrl(url);
+			imageManager.save(image);
+			review.setReceipt(image);
+		}
+
+		// 메뉴추가
+		Optional.ofNullable(review.getFoods()).ifPresent(foods -> {
+			foods.stream().forEach(food -> {
+				ReviewFoodDTO dto = new ReviewFoodDTO();
+				dto.setFoodId(food.getId());
+				dto.setReviewId(review.getId());
+				reviewFoodMapper.insert(dto);
+			});
+		});
+
 		log.info("Review: created reviewId={}", review.getId());
 	}
 
