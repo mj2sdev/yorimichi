@@ -7,16 +7,22 @@
     <!-- @formatter:off -->
 
     <select id="selectByUserId" parameterType="long" resultType="NotificationDTO">
-        SELECT id,
-               actor_user_id,
-               root_id,
-               target_user_id,
-               message,
-               created_at,
-               updated_at,
-               read_at
-        FROM notification
+        SELECT 
+            n.id,
+            n.actor_user_id,
+            n.root_id,
+            n.target_user_id,
+            n.message,
+            n.created_at,
+            n.updated_at,
+            n.read_at,
+
+            r.type
+        FROM notification n
+
+        JOIN root r on r.id = n.root_id
         WHERE target_user_id = #{userId}
+        AND n.read_at IS NULL
     </select>
 
     <select id="selectById" parameterType="long" resultType="NotificationDTO">
