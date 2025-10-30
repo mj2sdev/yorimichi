@@ -15,8 +15,8 @@
 <div class="hero-compact hero-spacious mb-4">
   <div class="container">
     <div class="hero-stack text-center">
-      <h1 class="hero-title-sm m-0">내 주변 맛집을 빠르게 찾아보세요</h1>
-      <p class="hero-sub-sm mt-2 mb-0">
+      <h1 class="hero-title-sm m-0" th:text="#{index.hero.title}">내 주변 맛집을 빠르게 찾아보세요</h1>
+      <p class="hero-sub-sm mt-2 mb-0" th:text="#{index.hero.subtitle}">
         카테고리·리뷰·정류장 피드를 한곳에서. 오늘의 인기 가게도 바로 확인!
       </p>
 
@@ -26,12 +26,12 @@
         <div class="stat-card">
           <div class="stat-head">
             <span class="stat-icon"><i class="bi bi-star-fill"></i></span>
-            <span>누적 리뷰</span>
+            <span th:text="#{index.stats.reviews}">누적 리뷰</span>
           </div>
           <div>
               <span class="stat-value countup" data-format="comma"
                     th:attr="data-value=${stats?.reviewCount ?: 12843}">0</span>
-            <span class="stat-unit">리뷰</span>
+            <span class="stat-unit" th:text="#{index.stats.reviews.unit}">리뷰</span>
           </div>
         </div>
 
@@ -39,12 +39,12 @@
         <div class="stat-card">
           <div class="stat-head">
             <span class="stat-icon"><i class="bi bi-shop"></i></span>
-            <span>등록 가게</span>
+            <span th:text="#{index.stats.stores}">등록 가게</span>
           </div>
           <div>
               <span class="stat-value countup" data-format="comma"
                     th:attr="data-value=${stats?.storeCount ?: 8021}">0</span>
-            <span class="stat-unit">곳</span>
+            <span class="stat-unit" th:text="#{index.stats.stores.unit}">곳</span>
           </div>
         </div>
 
@@ -52,12 +52,12 @@
         <div class="stat-card">
           <div class="stat-head">
             <span class="stat-icon"><i class="bi bi-chat-dots"></i></span>
-            <span>오늘의 새 글</span>
+            <span th:text="#{index.stats.new_posts}">오늘의 새 글</span>
           </div>
           <div>
               <span class="stat-value countup"
                     th:attr="data-value=${stats?.todayComments ?: 57}">0</span>
-            <span class="stat-unit">개</span>
+            <span class="stat-unit" th:text="#{index.stats.new_posts.unit}">개</span>
           </div>
         </div>
       </div>
@@ -81,8 +81,8 @@
     <div class="col-12 col-lg-4">
       <div class="card cat-card p-3 equal-rail rail-compact">
         <div class="d-flex justify-content-between align-items-center mb-2">
-          <h5 class="m-0 fw-bold cat-title">카테고리로 이동</h5>
-          <a class="small cat-link" href="/category/list">전체보기</a>
+          <h5 class="m-0 fw-bold cat-title" th:text="#{index.category.title}">카테고리로 이동</h5>
+          <a class="small cat-link" href="/category/list" th:text="#{index.category.show_all}">전체보기</a>
         </div>
 
         <!-- 목록 (초기 SSR) -->
@@ -106,13 +106,13 @@
 
         <!-- 비어있을 때 -->
         <div class="text-muted small"
-             th:unless="${categorySlice != null and !#lists.isEmpty(categorySlice.items)}">
+             th:unless="${categorySlice != null and !#lists.isEmpty(categorySlice.items)}" th:text="#{index.category.empty}">
           아직 등록된 카테고리가 없어요.
         </div>
 
         <hr class="my-3"/>
 
-        <a class="btn btn-ymprimary w-100" href="/store/list">
+        <a class="btn btn-ymprimary w-100" href="/store/list" th:text="#{index.category.discover_more}">
           더 다양한 즐거움을 발견해요
         </a>
       </div>
@@ -138,7 +138,7 @@
           </div>
           <div class="desc" th:text="${recommendedStoreList[0].description}">설명</div>
           <div class="d-flex align-items-center gap-2 mt-2">
-            <span class="badge-ym">추천</span>
+            <span class="badge-ym" th:text="#{index.featured.store.recommended}">추천</span>
             <span class="star">★</span>
             <span class="text-muted small" th:text="${recommendedStoreList[0].review.avgRating ?: '-'}">4.5</span>
             <span class="text-muted small">·</span>
@@ -148,7 +148,7 @@
       </div>
 
       <div class="text-muted small"
-           th:unless="${recommendedStoreList != null and !#lists.isEmpty(recommendedStoreList)}">
+           th:unless="${recommendedStoreList != null and !#lists.isEmpty(recommendedStoreList)}" th:text="#{index.featured.store.empty}">
         아직 인기 상점 데이터가 없습니다 🥲
       </div>
     </div>
