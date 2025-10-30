@@ -16,12 +16,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-public class NotificationDTO {
-
-	/**
-	 * PK: 알림 ID
-	 */
-	private Long id;
+public class NotificationDTO extends RootDTO {
 
 	/**
 	 * FK: 행위자 ID
@@ -42,16 +37,6 @@ public class NotificationDTO {
 	 * 알림 내용
 	 */
 	private String message;
-
-	/**
-	 * 생성일시 (DB 자동 생성)
-	 */
-	private LocalDateTime createdAt;
-
-	/**
-	 * 수정일시 (DB 자동 갱신)
-	 */
-	private LocalDateTime updatedAt;
 
 	/**
 	 * 읽음일시
