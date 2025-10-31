@@ -3,13 +3,13 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h1 class="modal-title fs-5" id="exampleModalLabel">
-					<div class="title-service">
+					<div class="title-service" th:text="#{user.signup.agreement.service}">
 						서비스 이용약관
 					</div>
-					<div class="title-service">
+					<div class="title-service" th:text="#{user.signup.agreement.privacy}">
 						개인정보 처리방침
 					</div>
-					<div class="title-service">
+					<div class="title-service" th:text="#{user.signup.agreement.location}">
 						위치정보 이용
 					</div>
 				</h1>
@@ -103,7 +103,7 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-ymprimary" data-bs-dismiss="modal">알겠습니다</button>
+				<button type="button" class="btn btn-ymprimary" data-bs-dismiss="modal" th:text="#{common.acknowledge}">알겠습니다</button>
 			</div>
 		</div>
 	</div>

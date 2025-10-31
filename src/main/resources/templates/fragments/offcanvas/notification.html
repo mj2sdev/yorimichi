@@ -2,9 +2,9 @@
 	<div class="offcanvas-header">
 		<h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
 			<i class="bi bi-lightbulb"></i>
-			<span>알림</span>
+			<span th:text="#{header.notifications}">알림</span>
 		</h5>
-		<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 	</div>
 	<div class="offcanvas-body">
 		<ul class="list-group">
@@ -13,14 +13,19 @@
 				v-for="(item, index) in notifications" :key="index"
 				class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
 				<div class="ms-2 me-auto">
-					<div class="fw-bold" v-text="typeString(item.type) + ' 알림'">같이먹기 알림</div>
+					<div class="fw-bold" 
+                         th:data-suffix="' ' + #{notification.suffix}" 
+                         v-text="typeString(item.type) + $el.dataset.suffix">같이먹기 알림</div>
 					<span v-text="item.message">팔로우 한 '킹건호'님이 같이먹기를 작성하였습니다.</span>
 				</div>
-				<span class="badge rounded-pill" :class="{ 'text-bg-danger': (item.readAt == null), 'text-bg-success': (item.readAt != null) }" v-text="item.readAt == null ? '안읽음' : '읽음'">안읽음</span>
+				<span class="badge rounded-pill" 
+                      th:data-unread="#{notification.status.unread}"
+                      th:data-read="#{notification.status.read}"
+                      :class="{ 'text-bg-danger': (item.readAt == null), 'text-bg-success': (item.readAt != null) }" 
+                      v-text="item.readAt == null ? $el.dataset.unread : $el.dataset.read">안읽음</span>
 			</li>
 
-			<!-- 알림이 없을 경우 -->
-			<li class="list-group-item text-center fs-5" th:if="${ false }">
+			<li class="list-group-item text-center fs-5" th:if="${ false }" th:text="#{notification.empty}">
 				알림이 없습니다.
 			</li>
 		</ul>

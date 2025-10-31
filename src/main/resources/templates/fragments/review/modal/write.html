@@ -2,7 +2,7 @@
 	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="reviewwritingLabel">리뷰 남기기</h1>
+				<h1 class="modal-title fs-5" id="reviewwritingLabel" th:text="#{review.modal.write.title}">리뷰 남기기</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 			</div>
 			<div class="modal-body">
@@ -10,9 +10,9 @@
 					<input type="hidden" name="storeId" th:value="${ store?.id }">
 
 					<div class="input-group">
-						<label for="rating" class="input-group-text">별점</label>
+						<label for="rating" class="input-group-text" th:text="#{review.modal.write.label.rating}">별점</label>
 						<select name="rating" class="form-select" required>
-							<option value="">선택</option>
+							<option value="" th:text="#{review.modal.write.select.default}">선택</option>
 							<option th:value="${ star }" th:each="star : ${#numbers.sequence(1, 5)}">
 								<i class="bi bi-star text-warning" th:each="item : ${#numbers.sequence(1, star)}">⭐️</i>
 							</option>
@@ -20,9 +20,8 @@
 					</div>
 
 					<div class="input-group">
-						<label class="input-group-text" for="reviewContent">내용</label>
-						<textarea class="form-control" name="content" rows="5" placeholder="맛, 분위기, 서비스 등...
-자유롭게 작성해주세요 : " required></textarea>
+						<label class="input-group-text" for="reviewContent" th:text="#{review.modal.write.label.content}">내용</label>
+						<textarea class="form-control" name="content" rows="5" th:placeholder="#{review.modal.write.placeholder.content}" required></textarea>
 					</div>
 
 					<div class="input-group input-group-sm">
@@ -34,12 +33,11 @@
 							multiple
 							accept="image/*"
 							onchange="previewReviewImages(event)">
-						<label class="input-group-text" for="reviewImages">사진 업로드</label>
+						<label class="input-group-text" for="reviewImages" th:text="#{review.modal.write.label.upload_photo}">사진 업로드</label>
 						<input type="hidden" name="changedReviewImages" value="false">
 					</div>
 
 					<div class="d-flex gap-2 overflow-x-scroll scroll-smooth previewReviewImages">
-						<!-- 자바스크립트에서 복사 후 사용될 엘리먼트 -->
 						<div class="flex-shrink-0 template fs-0" style="width: 10rem;" hidden>
 							<div class="ratio ratio-1x1">
 								<img src="https://picsum.photos/200" class="w-100 rounded border border-secondary">
@@ -50,13 +48,13 @@
 					<div>
 						<div class="input-group input-group-sm">
 							<input class="form-control" type="file" accept="image/*" name="uploadReceipt" id="uploadReceipt">
-							<label class="input-group-text" for="uploadReceipt">영수증 인증</label>
+							<label class="input-group-text" for="uploadReceipt" th:text="#{review.modal.write.label.receipt_verification}">영수증 인증</label>
 						</div>
-						<p class="text-end m-0" style="font-size: .75rem;">영수증은 선택사항 입니다.</p>
+						<p class="text-end m-0" style="font-size: .75rem;" th:text="#{review.modal.write.receipt.optional}">영수증은 선택사항 입니다.</p>
 					</div>
 
 					<div>
-						<button type="button" data-bs-toggle="collapse" data-bs-target="#reviewMenus" class="btn btn-outline-ymprimary btn-sm mb-2">메뉴 선택하기</button>
+						<button type="button" data-bs-toggle="collapse" data-bs-target="#reviewMenus" class="btn btn-outline-ymprimary btn-sm mb-2" th:text="#{review.modal.write.button.select_menu}">메뉴 선택하기</button>
 						<div class="collapse" id="reviewMenus">
 							<ul class="list-group">
 								<li class="list-group-item" th:each="menu, stat : ${ store?.foods }">
@@ -71,8 +69,8 @@
 			</div>
 
 			<div class="modal-footer">
-				<button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
-				<button type="submit" class="btn btn-ymprimary">작성완료</button>
+				<button type="button" class="btn btn-danger" data-bs-dismiss="modal" th:text="#{review.modal.write.button.cancel}">취소</button>
+				<button type="submit" class="btn btn-ymprimary" th:text="#{review.modal.write.button.submit}">작성완료</button>
 			</div>
 		</div>
 	</div>
