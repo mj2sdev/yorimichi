@@ -7,10 +7,10 @@
 	<div class="btn-toolbar justify-content-between">
 		<div class="btn-group">
 			<input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
-  		<label class="btn btn-outline-secondary btn-sm" for="btncheck1" th:text="#{store.coeat.button.follow_only}">팔로우만</label>
+			<label class="btn btn-outline-secondary btn-sm" for="btncheck1" th:text="#{store.coeat.button.follow_only}">팔로우만</label>
 
 			<input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
-  		<label class="btn btn-outline-secondary btn-sm" for="btncheck2" th:text="#{store.coeat.button.follower_only}">팔로워만</label>
+			<label class="btn btn-outline-secondary btn-sm" for="btncheck2" th:text="#{store.coeat.button.follower_only}">팔로워만</label>
 		</div>
 		<div class="btn-group">
 			<button
@@ -35,8 +35,7 @@
 			class="btn btn-sm btn-outline-ymprimary"
 			th:data-id="${ item.id }"
 			onclick="coeatDetailModal.findOne(event)"
-			th:text="#{user.signup.agreement.detail}">
-			자세히
+			th:text="#{common.view_detail}"> 상세보기
 		</button>
 	</div>
 

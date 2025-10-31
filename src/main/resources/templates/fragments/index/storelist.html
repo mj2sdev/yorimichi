@@ -5,19 +5,19 @@
 		<div class="bg-ymwhite p-4 my-3 border rounded-5 border-1">
 			<a href="#" class="text-start text-decoration-none text-ymsecondary">
 				<div class="row">
-					<div class="store-name col fs-3 fw-bold my-3 text-ymprimary">가게이름</div>
+					<div class="store-name col fs-3 fw-bold my-3 text-ymprimary" th:text="#{store.list.item.name}">가게이름</div>
 				</div>
 				<div class="row">
-					<div class="store-category fs-6 my-3">카테고리</div>
+					<div class="store-category fs-6 my-3" th:text="#{store.list.item.category}">카테고리</div>
 				</div>
 				<div class="row">
-					<div class="store-address fs-6 my-3">위치</div>
+					<div class="store-address fs-6 my-3" th:text="#{common.location}">위치</div>
 				</div>
 				<div class="row my-3 justify-content-start">
-					<div class="store-rating-number col-2">0.0점점</div>
+					<div class="store-rating-number col-2">0.0<span th:text="#{store.info.rating.unit}">점</span></div>
 					<div class="store-rating-star col-4">
 					</div>
-					<div class="col-3">리뷰수</div>
+					<div class="col-3" th:text="#{index.popular_stores.store.review}">리뷰수</div>
 					<div class="store-reviews-count col-3">0000</div>
 				</div>
 			</a>

@@ -3,7 +3,7 @@
 
 <head>
 	<script defer src="/js/user/mypage/myinfo.js"></script>
-	<title> Yorimichi Project </title>
+	<title th:text="#{header.my_info}"> Yorimichi Project </title>
 </head>
 
 <body>
@@ -15,14 +15,14 @@
 						<ul class="list-unstyled">
 							<li>
 								<h1 th:text="${user.nickname}" class="text-center"
-									aria-label="Username" aria-describedby="addon-wrapping"></h1> 
+									th:aria-label="#{user.mypage.label.username}" aria-describedby="addon-wrapping"></h1> 
 							</li>
 						</ul>
 					</div>
 				</div>
 				<div class="row my-4 justify-content-center">
 					<div class="col-8 text-center">
-						<img th:src="${user.image != null ? user.image : '/images/default-profile.png'}" class="mx-auto border rounded-circle">
+						<img th:src="${user.image != null ? user.image : '/images/default-profile.png'}" class="mx-auto border rounded-circle" th:alt="#{user.mypage.label.profile_image}">
 					</div>
 				</div>
 				<div class="row justify-content-center">
@@ -30,7 +30,7 @@
 						<ul class="list-unstyled">
 							<li>
 								<p th:text="${user.description}" class="form-control text-center"
-									aria-label="Description" aria-describedby="addon-wrapping"></p>
+									th:aria-label="#{user.mypage.label.description}" aria-describedby="addon-wrapping"></p>
 							</li>
 						</ul>
 					</div>
@@ -68,7 +68,7 @@
 						<th:block th:each="review : ${user.reviews}">
 							<div class="row bg-ymwhite mb-3">
 								<div class="col-3 border">
-									<img th:if="${!#lists.isEmpty(review.images)}" th:src="${review.images[0]?.url}" style="height:100%; width:100%;">
+									<img th:if="${!#lists.isEmpty(review.images)}" th:src="${review.images[0]?.url}" style="height:100%; width:100%;" th:alt="#{store.list.item.image}">
 								</div>
 								<div class="col-9 border">
 									<div class="row justify-content-between align-items-center">
