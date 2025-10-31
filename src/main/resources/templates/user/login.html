@@ -1,82 +1,84 @@
 <!DOCTYPE html>
 <html
-    th:replace="~{layout/clean :: params(~{::head/content()},~{::body/content()})}" xmlns:th="http://www.thymeleaf.org">
+	th:replace="~{layout/clean :: params(~{::head/content()},~{::body/content()})}" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title th:text="#{user.login.title}">
-    로그인
-  </title>
+	<title th:text="#{user.login.title}">
+		로그인
+	</title>
 </head>
 <body>
 <div class="bg-wallpaper">
-  <div class="d-flex justify-content-center align-items-center dvh">
-    <form class="shadow-lg p-3 bg-ymwhite rounded needs-validation"
-          method="post"
-          novalidate
-          th:action="@{/login}">
-      <div class="row gap-4" style="max-width: 20rem;">
-        <div class="col-12">
-          <h1 class="fw-bold my-4 text-ymprimary text-center">
-            Yorimichi
-          </h1>
-          <div class="fs-4 text-center" style="color: gray;" th:text="#{user.login.header}">
-            Yorimichi에 로그인 하세요.
-          </div>
-        </div>
-        <div class="col-12">
-          <label class="form-label" for="email" th:text="#{user.login.email}">
-            이메일
-          </label>
-          <input class="form-control" id="email" name="email" placeholder="name@example.com" required type="email">
-          <div class="invalid-feedback">
-            정확한 이메일을 입력해주세요
-          </div>
-        </div>
-        <div class="col-12">
-          <label class="form-label" for="password" th:text="#{user.login.password}">
-            비밀번호
-          </label>
-          <input class="form-control" id="password" minlength="8" name="password" placeholder="********" required
-                 type="password">
-          <div class="invalid-feedback">
-            비밀번호는 8자 이상이어야 합니다.
-          </div>
-          <div class="d-flex justify-content-between text-ymprimary">
-            <a th:href="@{/user/find}" th:text="#{user.login.forgot_password}">
-              비밀번호를 잊어버리셨나요?
-            </a>
-            <a th:href="@{/signup}" th:text="#{user.login.signup}">
-              회원가입
-            </a>
-          </div>
-        </div>
-        <div class="col-12">
-          <button class="btn btn-ymprimary bg-ymprimary-gradient w-100" th:text="#{user.login.button.login}">로그인</button>
-        </div>
-        <div class="col-12">
-          <div class="divider" th:text="#{user.login.social_login}">
-            소셜로그인
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="d-flex justify-content-between">
-            <button aria-label="Sign in with Google"
-                    class="btn shadow rounded-circle p-0"
-                    onclick="location.href='/oauth2/authorization/google'"
-                    style="height:3rem;width:3rem;"
-                    type="button">
-              <img alt="Google" class="w-100 rounded-circle" src="/images/google.png">
-            </button>
-            <button class="btn shadow rounded-circle p-0" style="height: 3rem; width: 3rem;" type="button">
-              <img class="w-100 rounded-circle" src="/images/naver.png">
-            </button>
-            <button class="btn shadow rounded-circle p-0" style="height: 3rem; width: 3rem;" type="button">
-              <img class="w-100 rounded-circle" src="/images/kakao.svg">
-            </button>
-          </div>
-        </div>
-      </div>
-    </form>
-  </div>
+	<div class="d-flex justify-content-center align-items-center dvh">
+		<form class="shadow-lg p-3 bg-ymwhite rounded needs-validation"
+			  method="post"
+			  novalidate
+			  th:action="@{/login}">
+			<div class="row gap-4" style="max-width: 20rem;">
+				<div class="col-12">
+					<h1 class="fw-bold my-4 text-ymprimary text-center">
+						Yorimichi
+					</h1>
+					<div class="fs-4 text-center" style="color: gray;" th:text="#{user.login.header}">
+						Yorimichi에 로그인 하세요.
+					</div>
+				</div>
+				<div class="col-12">
+					<label class="form-label" for="email" th:text="#{user.login.email}">
+						이메일
+					</label>
+					<input class="form-control" id="email" name="email" th:placeholder="#{user.login.email.placeholder}" required type="email">
+					<div class="invalid-feedback" th:text="#{user.login.email.validation}">
+						정확한 이메일을 입력해주세요
+					</div>
+				</div>
+				<div class="col-12">
+					<label class="form-label" for="password" th:text="#{user.login.password}">
+						비밀번호
+					</label>
+					<input class="form-control" id="password" minlength="8" name="password" placeholder="********" required
+						   type="password">
+					<div class="invalid-feedback" th:text="#{user.login.password.validation}">
+						비밀번호는 8자 이상이어야 합니다.
+					</div>
+					<div class="d-flex justify-content-between text-ymprimary">
+						<a th:href="@{/user/find}" th:text="#{user.login.forgot_password}">
+							비밀번호를 잊어버리셨나요?
+						</a>
+						<a th:href="@{/signup}" th:text="#{user.login.signup}">
+							회원가입
+						</a>
+					</div>
+				</div>
+				<div class="col-12">
+					<button class="btn btn-ymprimary bg-ymprimary-gradient w-100" th:text="#{user.login.button.login}">로그인</button>
+				</div>
+				<div class="col-12">
+					<div class="divider" th:text="#{user.login.social_login}">
+						소셜로그인
+					</div>
+				</div>
+				<div class="col-12">
+					<div class="d-flex justify-content-between">
+						<button th:aria-label="#{user.login.social.google.label}"
+								class="btn shadow rounded-circle p-0"
+								onclick="location.href='/oauth2/authorization/google'"
+								style="height:3rem;width:3rem;"
+								type="button">
+							<img th:alt="#{user.login.social.google.alt}" class="w-100 rounded-circle" src="/images/google.png">
+						</button>
+						<button th:aria-label="#{user.login.social.naver.label}"
+								class="btn shadow rounded-circle p-0" style="height: 3rem; width: 3rem;" type="button">
+							<img th:alt="#{user.login.social.naver.alt}" class="w-100 rounded-circle" src="/images/naver.png">
+						</button>
+						<button th:aria-label="#{user.login.social.kakao.label}"
+								class="btn shadow rounded-circle p-0" style="height: 3rem; width: 3rem;" type="button">
+							<img th:alt="#{user.login.social.kakao.alt}" class="w-100 rounded-circle" src="/images/kakao.svg">
+						</button>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
 </div>
 </body>
 

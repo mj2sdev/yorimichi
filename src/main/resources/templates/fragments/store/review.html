@@ -28,7 +28,7 @@
 		</div>
 		<div class="d-flex gap-2 overflow-x-auto">
 			<div class="ratio ratio-1x1 flex-shrink-0" style="width: 10rem;" th:each="image : ${ item.images }">
-				<img src="https://picsum.photos/150" th:src="${ image.url }">
+				<img src="https://picsum.photos/150" th:src="${ image.url }" th:alt="#{store.list.item.image}">
 			</div>
 		</div>
 		<div class="d-flex justify-content-between">
@@ -41,19 +41,8 @@
 					data-bs-toggle="tooltip"
 					data-bs-placement="top"
 					data-bs-custom-class="custom-tooltip"
-					data-bs-title="영수증이 인증된 리뷰입니다"
+					th:data-bs-title="#{review.item.receipt.verified}"
 					th:if="${ item.receiptStatus == true and item.receiptImageId != null }"></i>
 			</div>
 			<div th:data-time-ago="${ item.createdAt }"></div>
 		</div>
-		
-		<div th:utext="${ item.content }"></div>
-
-		<div class="d-flex gap-2">
-			<div class="text-primary" th:each="menu : ${ item.foods }">
-				<span class="badge bg-secondary" th:text="${ menu?.name }"></span>
-			</div>
-		</div>
-	</div>
-
-</div>

@@ -36,7 +36,8 @@
 							th:field="*{userDTO.nickname}"
 							onblur="nicknameDeduplication(event)"
 							class="form-control"
-							th:placeholder="#{user.signup.nickname}"
+							<!-- [수정됨] placeholder에 유효성 검사 메시지 키(placeholder)를 사용 -->
+							th:placeholder="#{user.signup.nickname.placeholder}"
 							minlength="3"
 							maxlength="20"
 							required
@@ -61,7 +62,8 @@
 								th:field="*{userDTO.email}"
 								autocomplete="email"
 								class="form-control"
-								placeholder="email@example.com" 
+								<!-- [수정됨] placeholder에 i18n 키 적용 -->
+								th:placeholder="#{user.signup.email.placeholder}" 
 								required 
 								pattern="">
 							<button
@@ -86,7 +88,8 @@
 							th:field="*{userDTO.password}"
 							minlength="4"
 							class="form-control"
-							placeholder="●●●●●●●●"
+							<!-- [수정됨] placeholder에 i18n 키 적용 -->
+							th:placeholder="#{user.signup.password.placeholder}"
 							onkeyup="changePassword(event)"
 							required>
 						<div class="d-flex align-items-center justify-content-between gap-2">
@@ -106,7 +109,8 @@
 						<label for="repassword" class="form-label" th:text="#{user.signup.password.confirm}">
 							비밀번호 확인
 						</label>
-						<input type="password" class="form-control" id="repassword" placeholder="●●●●●●●●" required>
+						<!-- [수정됨] placeholder에 i18n 키 적용 -->
+						<input type="password" class="form-control" id="repassword" th:placeholder="#{user.signup.password.placeholder}" required>
 						<div class="invalid-feedback" th:text="#{user.signup.password.mismatch}">
 							비밀번호가 맞지 않습니다
 						</div>

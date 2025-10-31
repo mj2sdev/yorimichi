@@ -1,27 +1,28 @@
 <div class="shadow p-4">
-    <div class="ratio ratio-4x3">
+	<div class="ratio ratio-4x3">
 
-        <iframe
-            class="w-100 h-100"
-            allowfullscreen
-            loading="lazy" 
-            th:src="'https://www.google.com/maps/embed/v1/place?key=' + ${ mapKey } + '&q=place_id:ChIJK9qSvbZJZTURNW2s9iM491I'"
-            referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
-    </div>
-    <div class="d-flex flex-column gap-1">
-        <h4 class="text-center my-4">
-            <i class="bi bi-text-paragraph"></i>
-            <span th:text="#{store.sidebar.menu}">
-                메뉴
-            </span>
-        </h4>
-        <div class="d-flex justify-content-between" th:each="item: ${ store?.foods }">
-            <div th:text="${ item?.name } ?: #{store.sidebar.menu.name}"></div>
-            <div>
-                <span th:text="${#numbers.formatDecimal(item.price, '0', 'COMMA', 0, 'POINT')}"></span>
-                <span th:text="#{common.currency.unit}">원</span>
-            </div>
-        </div>
-    </div>
+		<iframe
+			class="w-100 h-100"
+			allowfullscreen
+			loading="lazy"
+			th:title="#{store.sidebar.map.title}"
+			th:src="'http://googleusercontent.com/maps/google.com/0' + ${ mapKey } + '&q=place_id:ChIJK9qSvbZJZTURNW2s9iM491I'"
+			referrerpolicy="no-referrer-when-downgrade">
+		</iframe>
+	</div>
+	<div class="d-flex flex-column gap-1">
+		<h4 class="text-center my-4">
+			<i class="bi bi-text-paragraph"></i>
+			<span th:text="#{store.sidebar.menu}">
+				메뉴
+			</span>
+		</h4>
+		<div class="d-flex justify-content-between" th:each="item: ${ store?.foods }">
+			<div th:text="${ item?.name } ?: #{store.sidebar.menu.name}"></div>
+			<div>
+				<span th:text="${#numbers.formatDecimal(item.price, '0', 'COMMA', 0, 'POINT')}"></span>
+				<span th:text="#{common.currency.unit}">원</span>
+			</div>
+		</div>
+	</div>
 </div>
