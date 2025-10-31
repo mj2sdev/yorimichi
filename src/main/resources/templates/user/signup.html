@@ -2,7 +2,7 @@
 <html th:replace="~{layout/clean :: params(~{::head/content()},~{::body/content()})}" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title>
+	<title th:text="#{user.signup.title}">
 		회원가입
 	</title>
 	<script defer src="/js/user/signup.js"></script>
@@ -19,40 +19,40 @@
 				style="max-width: 20rem;"
 				novalidate>
 				<div class="p-4 bg-ymprimary-gradient rounded-top text-ymwhitesmoke">
-					<h1 class="fw-bold py-2 text-center">
+					<h1 class="fw-bold py-2 text-center" th:text="#{user.signup.title}">
 						회원가입
 					</h1>
-					<div class="fs-5 text-center">
+					<div class="fs-5 text-center" th:text="#{user.signup.header}">
 						Yorimichi와 함께 즐거운 시간을 보내세요
 					</div>
 				</div>
 				<div class="row gap-4 p-3">
 
 					<div class="col-12">
-						<label for="nickname" class="form-label">
+						<label for="nickname" class="form-label" th:text="#{user.signup.nickname}">
 							닉네임
 						</label>
 						<input
 							th:field="*{userDTO.nickname}"
 							onblur="nicknameDeduplication(event)"
 							class="form-control"
-							placeholder="닉네임"
+							th:placeholder="#{user.signup.nickname}"
 							minlength="3"
 							maxlength="20"
 							required
 							pattern="">
 						<div class="invalid-feedback nickname">
-							<span class="condition">
+							<span class="condition" th:text="#{user.signup.nickname.placeholder}">
 								최소 3자 이상 20자 이하로 입력해주세요
 							</span>
-							<span class="duplicate" hidden>
+							<span class="duplicate" hidden th:text="#{user.signup.nickname.duplicate}">
 								이미 사용중인 닉네임 입니다.
 							</span>
 						</div>
 					</div>
 
 					<div class="col-12">
-						<label for="email" class="form-label">
+						<label for="email" class="form-label" th:text="#{user.signup.email}">
 							이메일
 						</label>
 						<div class="input-group">
@@ -67,17 +67,18 @@
 							<button
 								type="button"
 								onclick="emailDeduplication(event)"
-								class="btn btn-ymprimary bg-ymprimary-gradient rounded-end">
+								class="btn btn-ymprimary bg-ymprimary-gradient rounded-end"
+								th:text="#{user.signup.email.duplicate_check}">
 								중복검사
 							</button>
-							<div class="invalid-feedback">
+							<div class="invalid-feedback" th:text="#{user.signup.email.invalid}">
 								정확한 이메일을 입력 후 중복검사를 진행하세요
 							</div>
 						</div>
 					</div>
 
 					<div class="col-12">
-						<label for="password" class="form-label">
+						<label for="password" class="form-label" th:text="#{user.signup.password}">
 							비밀번호
 						</label>
 						<input
@@ -90,8 +91,8 @@
 							required>
 						<div class="d-flex align-items-center justify-content-between gap-2">
 							<div style="font-size: .75rem; color: gray;">
-								<span>보안: </span>
-								<span id="password-level-description">없음</span>
+								<span th:text="#{user.signup.password.security_level}">보안: </span>
+								<span id="password-level-description" th:text="#{user.signup.password.level.none}">없음</span>
 							</div>
 							<div class="d-flex w-75 rounded border overflow-auto" id="password-level" style="height: .75rem">
 								<span class="flex-grow-1 border-end"></span>
@@ -102,11 +103,11 @@
 					</div>
 
 					<div class="col-12">
-						<label for="repassword" class="form-label">
+						<label for="repassword" class="form-label" th:text="#{user.signup.password.confirm}">
 							비밀번호 확인
 						</label>
 						<input type="password" class="form-control" id="repassword" placeholder="●●●●●●●●" required>
-						<div class="invalid-feedback">
+						<div class="invalid-feedback" th:text="#{user.signup.password.mismatch}">
 							비밀번호가 맞지 않습니다
 						</div>
 					</div>
@@ -114,22 +115,22 @@
 					<div class="col-12">
 						<div class="d-flex gap-2">
 							<div class="flex-grow-1">
-								<label for="year" class="form-label">
+								<label for="year" class="form-label" th:text="#{user.signup.birth_year}">
 									출생년도
 								</label>
 								<select class="form-select" id="year" name="year" required>
-									<option value="">선택</option>
+									<option value="" th:text="#{review.modal.write.select.default}">선택</option>
 									<option th:each="year : ${#numbers.sequence(2025, 1900)}" th:text="${ year }"></option>
 								</select>
 							</div>
 							<div class="flex-grow-1">
-								<label for="gender" class="form-label">
+								<label for="gender" class="form-label" th:text="#{user.signup.gender}">
 									성별
 								</label>
 								<select class="form-select" id="gender" name="gender" required>
-									<option value="" selected>선택</option>
-									<option th:text="남자" value="M"></option>
-									<option th:text="여자" value="F"></option>
+									<option value="" selected th:text="#{review.modal.write.select.default}">선택</option>
+									<option th:text="#{user.signup.gender.male}" value="M"></option>
+									<option th:text="#{user.signup.gender.female}" value="F"></option>
 								</select>
 							</div>
 						</div>
@@ -139,21 +140,55 @@
 							<li class="list-group-item">
 								<div class="form-check">
 									<input id="all-agree" type="checkbox" class="form-check-input" required>
-									<label for="all-agree">전체 약관에 동의합니다</label>
+									<label for="all-agree" th:text="#{user.signup.agreement.all}">전체 약관에 동의합니다</label>
 								</div>
 							</li>
-							<li class="list-group-item"
-								th:each="item, stat : ${ {'[필수] 서비스 이용 약관', '[필수] 개인정보 처리방침', '[필수] 위치정보 이용'} }">
+							<li class="list-group-item">
 								<div class="form-check m-0">
-									<input th:id="'agree-service-' + ${ stat.index }" type="checkbox" class="form-check-input" required>
+									<input id="agree-service-0" type="checkbox" class="form-check-input" required>
 									<div class="d-flex gap-2 align-items-center justify-content-between">
-										<label th:for="'agree-service-' + ${ stat.index }" style="font-size: .9rem;" th:text="${ item }">
+										<label for="agree-service-0" style="font-size: .9rem;" th:text="#{user.signup.agreement.service}">
 										</label>
 										<button
 											type="button"
 											class="btn btn-link p-0 border-0"
 											data-bs-toggle="modal"
-											data-bs-target="#agreement" style="font-size: .9rem;" th:onclick="'agreement(' + ${ stat.index } + ')'">
+											data-bs-target="#agreement" style="font-size: .9rem;" th:onclick="'agreement(' + 0 + ')'"
+											th:text="#{user.signup.agreement.detail}">
+											자세히
+										</button>
+									</div>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<div class="form-check m-0">
+									<input id="agree-service-1" type="checkbox" class="form-check-input" required>
+									<div class="d-flex gap-2 align-items-center justify-content-between">
+										<label for="agree-service-1" style="font-size: .9rem;" th:text="#{user.signup.agreement.privacy}">
+										</label>
+										<button
+											type="button"
+											class="btn btn-link p-0 border-0"
+											data-bs-toggle="modal"
+											data-bs-target="#agreement" style="font-size: .9rem;" th:onclick="'agreement(' + 1 + ')'"
+											th:text="#{user.signup.agreement.detail}">
+											자세히
+										</button>
+									</div>
+								</div>
+							</li>
+							<li class="list-group-item">
+								<div class="form-check m-0">
+									<input id="agree-service-2" type="checkbox" class="form-check-input" required>
+									<div class="d-flex gap-2 align-items-center justify-content-between">
+										<label for="agree-service-2" style="font-size: .9rem;" th:text="#{user.signup.agreement.location}">
+										</label>
+										<button
+											type="button"
+											class="btn btn-link p-0 border-0"
+											data-bs-toggle="modal"
+											data-bs-target="#agreement" style="font-size: .9rem;" th:onclick="'agreement(' + 2 + ')'"
+											th:text="#{user.signup.agreement.detail}">
 											자세히
 										</button>
 									</div>
@@ -163,7 +198,7 @@
 					</div>
 
 					<div class="col-12">
-						<button class="btn btn-ymprimary bg-ymprimary-gradient w-100">회원가입</button>
+						<button class="btn btn-ymprimary bg-ymprimary-gradient w-100" th:text="#{user.signup.button.signup}">회원가입</button>
 					</div>
 
 				</div>

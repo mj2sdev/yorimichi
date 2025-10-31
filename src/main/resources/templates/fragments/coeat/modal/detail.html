@@ -2,31 +2,25 @@
   <div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
     <div class="modal-content">
 
-      <!-- 헤더 -->
       <div class="modal-header">
-				<h1 class="modal-title fs-5" id="coeatwritingLabel">같이먹기</h1>
+				<h1 class="modal-title fs-5" id="coeatwritingLabel" th:text="#{store.coeat.title}">같이먹기</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 
-      <!-- 본문 -->
       <div class="modal-body">
         <div class="container-fluid">
           <div class="row row-gap-4">
 
-            <!-- 게시물 본문 -->
             <div class="col-12 mt-4">
               <div class="card border-0 shadow-sm overflow-hidden">
-                <!-- 헤더 배경 -->
                 <div class="bg-ymprimary-gradient text-white p-4">
                   <h4 class="fw-bold mb-1">
-                    <i class="bi bi-people text-warning me-2"></i>모임 소개
+                    <i class="bi bi-people text-warning me-2"></i><span th:text="#{coeat.modal.detail.section.intro}">모임 소개</span>
                   </h4>
-                  <p class="mb-0 small">이 모임이 어떤 분위기인지 미리 느껴보세요</p>
+                  <p class="mb-0 small" th:text="#{coeat.modal.detail.section.intro.sub}">이 모임이 어떤 분위기인지 미리 느껴보세요</p>
                 </div>
 
-                <!-- 본문 내용 -->
                 <div class="card-body bg-light">
-                  <!-- 소개 문구 -->
                   <blockquote class="blockquote border-start border-4 border-primary ps-3 mb-4">
                     <div>
                       <span class="mb-1 fw-semibold text-dark" style="font-size: 1.05rem;" v-text="coeat?.title">
@@ -35,39 +29,37 @@
                       <span class="bs-2 float-end badge bg-success" v-text="coeat?.status">CLOSE</span>
                     </div>
                     <footer class="blockquote-footer mt-1 text-muted">
-                      <i class="bi bi-person-heart"></i> 개최자 <cite title="Organizer">{{ coeat?.user?.nickname }}</cite>
+                      <i class="bi bi-person-heart"></i> <span th:text="#{coeat.modal.detail.organizer}">개최자</span> <cite title="Organizer">{{ coeat?.user?.nickname }}</cite>
                     </footer>
                   </blockquote>
 
-                  <!-- 주요 정보 -->
                   <div class="row text-center mb-4 g-2">
                     <div class="col-md-4">
                       <div class="bg-white rounded shadow-sm py-3 h-100">
                         <i class="bi bi-calendar2-week text-primary fs-4"></i>
                         <div class="fw-semibold mt-2" v-text="new Date(coeat.createdAt).toLocaleString()">2025년 11월 12일 (토)</div>
-                        <small class="text-muted">모임 날짜</small>
+                        <small class="text-muted" th:text="#{coeat.modal.detail.label.date}">모임 날짜</small>
                       </div>
                     </div>
                     <div class="col-md-4">
                       <div class="bg-white rounded shadow-sm py-3 h-100">
                         <i class="bi bi-geo-alt text-danger fs-4"></i>
                         <div class="fw-semibold mt-2" v-text="coeat?.store?.address?.roadAddressText">대전 중구 중앙로 101</div>
-                        <small class="text-muted">모임 장소</small>
+                        <small class="text-muted" th:text="#{coeat.modal.detail.label.location}">모임 장소</small>
                       </div>
                     </div>
                     <div class="col-md-4">
                       <div class="bg-white rounded shadow-sm py-3 h-100">
                         <i class="bi bi-cash-stack text-success fs-4"></i>
                         <div class="fw-semibold mt-2" v-text="`인당 ${calculateAveragePrice(coeat?.store?.foods).toLocaleString()} ₩`">인당 ₩15,000</div>
-                        <small class="text-muted">예상 비용</small>
+                        <small class="text-muted" th:text="#{coeat.modal.detail.label.cost}">예상 비용</small>
                       </div>
                     </div>
                   </div>
 
-                  <!-- 진행 상황 -->
                   <div class="mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-1">
-                      <span class="fw-semibold text-ymprimary">현재 모집 현황</span>
+                      <span class="fw-semibold text-ymprimary" th:text="#{coeat.modal.detail.label.status}">현재 모집 현황</span>
                       <small class="text-muted" v-text="`${coeat?.coeatRequests?.length} / ${coeat?.capacity}명`">3 / 5명</small>
                     </div>
                     <div class="progress" style="height: 0.8rem;">
@@ -75,10 +67,9 @@
                     </div>
                   </div>
 
-                  <!-- 상세 설명 -->
                   <div class="bg-white p-4 rounded shadow-sm mb-3">
                     <h6 class="fw-bold mb-3 text-ymprimary">
-                      <i class="bi bi-info-circle me-2"></i>모임 세부 내용
+                      <i class="bi bi-info-circle me-2"></i><span th:text="#{coeat.modal.detail.section.content}">모임 세부 내용</span>
                     </h6>
                     <p class="text-body-secondary mb-0" style="white-space: pre-line;" v-text="coeat?.content">
                       🍜 안녕하세요! 같이 먹기 좋아하는 사람들 모여요!
@@ -92,7 +83,6 @@
                     </p>
                   </div>
 
-                  <!-- 태그 -->
                   <div class="mt-3">
                     <span class="badge bg-ymprimary-subtle text-ymprimary me-1"><i class="bi bi-hash"></i> 맛집탐방</span>
                     <span class="badge bg-ymprimary-subtle text-ymprimary me-1"><i class="bi bi-hash"></i> 혼밥탈출</span>
@@ -102,10 +92,8 @@
               </div>
             </div>
 
-            <!-- 왼쪽 영역 -->
             <div class="col-12 col-lg-6">
               <div class="card shadow-sm border-0 overflow-hidden">
-                <!-- 지도 -->
                 <div class="ratio ratio-16x9">
                   <iframe class="w-100 h-100" allowfullscreen loading="lazy"
                     th:src="'https://www.google.com/maps/embed/v1/place?key=' + ${mapKey} + '&q=' + ${store.address.latitude} + ',' + ${store.address.longitude}"
@@ -113,11 +101,10 @@
                   </iframe>
                 </div>
 
-                <!-- 가게 메뉴 -->
                 <div class="card-body bg-light">
                   <h5 class="card-title fw-bold mb-3">
                     <i class="bi bi-clipboard-check text-ymprimary me-2"></i>
-                    <span>가게 메뉴</span>
+                    <span th:text="#{coeat.modal.detail.section.menu}">가게 메뉴</span>
                   </h5>
 
                   <ul class="list-group list-group-flush" id="coeatMenus">
@@ -135,15 +122,13 @@
               </div>
             </div>
 
-            <!-- 오른쪽 영역 -->
             <div class="col-12 col-lg-6">
               <div class="card h-100 shadow-sm border-0">
                 <div class="card-body">
 
-                  <!-- 개최자 -->
                   <div class="mb-4">
                     <h5 class="fw-bold mb-3">
-                      <i class="bi bi-star-fill text-warning me-2"></i>개최자
+                      <i class="bi bi-star-fill text-warning me-2"></i><span th:text="#{coeat.modal.detail.organizer}">개최자</span>
                     </h5>
                     <div class="d-flex align-items-center p-2 bg-light rounded">
                       <div class="flex-shrink-0">
@@ -162,9 +147,8 @@
                     </div>
                   </div>
 
-                  <!-- 참여자 -->
                   <h5 class="fw-bold mb-3">
-                    <i class="bi bi-people-fill text-ymprimary me-2"></i>참여자 목록
+                    <i class="bi bi-people-fill text-ymprimary me-2"></i><span th:text="#{coeat.modal.detail.section.participants}">참여자 목록</span>
                     <span class="badge bg-ymprimary-subtle text-ymprimary ms-1" v-text="`${coeat?.coeatRequests?.length}명`">5명</span>
                   </h5>
 
@@ -182,8 +166,8 @@
                       <button class="btn btn-sm btn-outline-secondary dropdown-toggle"
                         data-bs-toggle="dropdown"></button>
                       <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-heart text-danger"></i> 팔로우</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-search"></i> 상세보기</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-heart text-danger"></i> <span th:text="#{common.follow}">팔로우</span></a></li>
+                        <li><a class="dropdown-item" href="#"><i class="bi bi-search"></i> <span th:text="#{common.view_detail}">상세보기</span></a></li>
                       </ul>
                     </li>
                   </ul>
@@ -191,18 +175,16 @@
               </div>
             </div>
 
-            <!-- 참가자 대화 -->
             <div class="col-12 mt-4">
               <h5 class="text-center fw-bold mb-4">
                 <i class="bi bi-chat-dots text-ymprimary me-2"></i>
-                <span>참가자 대화</span>
+                <span th:text="#{coeat.modal.detail.section.chat}">참가자 대화</span>
               </h5>
 
               <div class="card shadow-sm border-0">
                 <ul class="list-group list-group-flush">
                   <li class="list-group-item px-4 py-3 border-top" v-for="(item, index) in coeat?.comments">
                     <div class="d-flex align-items-start">
-                      <!-- 아바타 -->
                       <div class="flex-shrink-0 me-3">
                         <div class="rounded-circle bg-secondary-subtle d-flex justify-content-center align-items-center"
                           style="width: 40px; height: 40px;">
@@ -210,7 +192,6 @@
                         </div>
                       </div>
 
-                      <!-- 본문 -->
                       <div class="flex-grow-1">
                         <div class="d-flex justify-content-between align-items-center mb-1">
                           <span class="fw-bold text-ymprimary" v-text="item?.user?.nickname">닉네임</span>
@@ -229,8 +210,8 @@
             <div class="col-12">
               <form class="input-group" @submit="writeComment">
                 <input type="hidden" name="coeatId" :value="coeat?.id">
-                <textarea class="form-control" placeholder="내용을 입력해주세요" v-model="content"></textarea>
-                <button class="btn btn-ymprimary">작성</button>
+                <textarea class="form-control" th:placeholder="#{coeat.modal.write.placeholder.content}" v-model="content"></textarea>
+                <button class="btn btn-ymprimary" th:text="#{common.write}">작성</button>
               </form>
             </div>
 
@@ -238,10 +219,9 @@
         </div>
       </div>
 
-      <!-- 푸터 -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
-        <button type="button" class="btn btn-ymprimary" @click="requestCoeat(event)">참가신청</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" th:text="#{common.cancel}">취소</button>
+        <button type="button" class="btn btn-ymprimary" @click="requestCoeat(event)" th:text="#{coeat.modal.detail.button.join}">참가신청</button>
       </div>
 
     </div>
