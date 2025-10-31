@@ -35,7 +35,7 @@
 					<label class="form-label" for="password" th:text="#{user.login.password}">
 						비밀번호
 					</label>
-					<input class="form-control" id="password" minlength="8" name="password" placeholder="********" required
+					<input class="form-control" id="password" minlength="8" name="password" th:placeholder="#{user.login.password.placeholder}" required
 						   type="password">
 					<div class="invalid-feedback" th:text="#{user.login.password.validation}">
 						비밀번호는 8자 이상이어야 합니다.

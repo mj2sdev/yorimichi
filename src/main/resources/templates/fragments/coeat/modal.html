@@ -3,7 +3,7 @@
 		<div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="coeatmodalLabel">가게이름 같이 먹기 일정: 25.09.11</h1>
+					<h1 class="modal-title fs-5" id="coeatmodalLabel" th:text="#{coeat.modal.temp.title}">가게이름 같이 먹기 일정: 25.09.11</h1>
 					<button class="btn">
 						<i class="bi bi-flag-fill" style="font-size: 1em; color: red;"></i>
 					</button>
@@ -20,7 +20,7 @@
 								<div class="row border-bottom border-2" style="height:300px;">
 									<div class="col">
 										<img src="">
-										지도나 이미지 자리.
+										<span th:text="#{coeat.modal.temp.map_placeholder}">지도나 이미지 자리.</span>
 									</div>
 								</div>
 								<div class="row py-3">
@@ -28,8 +28,8 @@
 										<ul>
 											<th:block th:each="item : ${#numbers.sequence(1,5)}">
 												<div class="row">
-													<div class="col">음식이름</div>
-													<div class="col">가격</div>
+													<div class="col" th:text="#{coeat.modal.temp.food_name}">음식이름</div>
+													<div class="col" th:text="#{coeat.modal.temp.food_price}">가격</div>
 													<div class="col">
 														<th:block th:each="item : ${#numbers.sequence(1,5)}">
 															<i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
@@ -56,8 +56,8 @@
 														<span class="ms-1" th:text="#{common.view_detail}">상세보기</span></a></li>
 											</ul>
 										</div>
-										<div class="col" th:text="${'간단 자기소개'}">
-											사람에 대한 설명
+										<div class="col" th:text="#{coeat.modal.temp.user_intro}">
+											<span th:text="#{coeat.modal.temp.user_desc}">사람에 대한 설명</span>
 										</div>
 									</div>
 									<th:block th:each="item : ${#numbers.sequence(1,5)}">
@@ -75,14 +75,14 @@
 															<span class="ms-1" th:text="#{common.view_detail}">상세보기</span></a></li>
 												</ul>
 											</div>
-											<div class="col" th:text="${'간단 자기소개'}">
-												사람에 대한 설명
+											<div class="col" th:text="#{coeat.modal.temp.user_intro}">
+												<span th:text="#{coeat.modal.temp.user_desc}">사람에 대한 설명</span>
 											</div>
 										</div>
 									</th:block>
 								</div>
 								<div class="row border-top border-3 mt-3">
-									<div class="col mt-3">
+									<div class="col mt-3" th:utext="#{coeat.modal.temp.organizer_note}">
 										만든 사람이 할 말.<br>
 										전 어쩌구 저쩌구 하고 싶구요<br>
 										뭐 먹으려고 합니다.<br>
@@ -98,11 +98,11 @@
 									<th:block th:each="i : ${#numbers.sequence(1,5)}">
 										<li class="my-4 text-start">
 											<div class="row justify-content-between">
-												<div class="col-4">닉네임</div>
+												<div class="col-4" th:text="#{coeat.modal.temp.chat.nickname}">닉네임</div>
 												<div class="col">2025-09-11</div>
 											</div>
 											<div class="row">
-												<div class="col">
+												<div class="col" th:text="#{coeat.modal.temp.chat.content}">
 													댓글내용
 												</div>
 											</div>
