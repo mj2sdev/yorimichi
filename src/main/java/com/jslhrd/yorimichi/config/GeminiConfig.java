@@ -1,65 +1,46 @@
 package com.jslhrd.yorimichi.config;
 
-import java.lang.reflect.Type;
-import java.time.LocalDateTime;
-
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.core5.util.Timeout;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-
-import com.google.genai.Client;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.jslhrd.yorimichi.service.ApiKeyService;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.web.client.RestClient;
 
 @Configuration
-@Slf4j
-@DependsOn("dataSource")
-@RequiredArgsConstructor
 public class GeminiConfig {
 
-	private final ApiKeyService apiKeyService;
-
 	@Bean
-	public Client geminiClient() {
-		try {
-			String geminiKey = apiKeyService.findApiKey("gemini", "mj2sdev");
-
-			return Client.builder()
-				.apiKey(geminiKey)
+	RestClient geminiRestClient(
+			@Value("${gemini.base-url}") String baseUrl,
+			@Value("${gemini.mime-type}") String mimeType
+	) {
+		PoolingHttpClientConnectionManager cm = PoolingHttpClientConnectionManagerBuilder.create()
+				.setMaxConnTotal(200)
+				.setMaxConnPerRoute(50)
 				.build();
-		} catch (Exception e) {
-			log.error("gemini api key를 확인해야 합니다.");
-			return null;
-		}
-	}
 
-	@Bean
-	public Gson gson() {
-		return new GsonBuilder()
-			.registerTypeAdapter(LocalDateTime.class, new JsonSerializer<LocalDateTime>() {
-				@Override
-				public JsonElement serialize(LocalDateTime src, Type typeOfSrc, JsonSerializationContext context) {
-					return new JsonPrimitive(src.toString());
-				}
-			})
-			.registerTypeAdapter(LocalDateTime.class, new JsonDeserializer<LocalDateTime>() {
-				@Override
-				public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-					return LocalDateTime.parse(json.getAsString());
-				}
-			})
-			.create();
+		RequestConfig reqCfg = RequestConfig.custom()
+				.setConnectTimeout(Timeout.ofSeconds(10))
+				.setResponseTimeout(Timeout.ofSeconds(90))
+				.build();
+
+		HttpClient http = HttpClients.custom()
+				.setConnectionManager(cm)
+				.setDefaultRequestConfig(reqCfg)
+				.build();
+
+		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory(http);
+
+		return RestClient.builder()
+				.requestFactory(factory)
+				.baseUrl(baseUrl)
+				.defaultHeader("Content-Type", mimeType)
+				.build();
 	}
-	
 }

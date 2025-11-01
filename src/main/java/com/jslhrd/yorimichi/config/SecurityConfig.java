@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -50,6 +51,14 @@ public class SecurityConfig {
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
+
+						// CORS preflight 허용
+						.requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
+
+						// 공개 엔드포인트 (수집 확인용)
+						.requestMatchers(HttpMethod.GET, "/api/ai/stores/names").permitAll()
+						.requestMatchers(HttpMethod.GET, "/api/ai/stores/info").permitAll()
+
 						.requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/stations").permitAll()
 						// 나머지 API 는 인증 필요
@@ -68,6 +77,9 @@ public class SecurityConfig {
 							res.getWriter().write("{\"error\": \"FORBIDDEN\"}");
 						})
 				);
+
+		// 브라우저 호출 시 CORS 필요
+		http.cors(Customizer.withDefaults());
 
 		// (선택) JWT 사용시
 		// http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
@@ -112,8 +124,7 @@ public class SecurityConfig {
 								"/favicon.ico",
 								"/assets/**", "/css/**", "/js/**", "/images/**",
 								"/webjars/**",
-								"/actuator/health",
-								"/api/**"
+								"/actuator/health"
 						).permitAll()
 						.anyRequest().authenticated()
 				)
