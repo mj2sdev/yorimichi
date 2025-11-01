@@ -40,10 +40,6 @@ google:
     image-path-prefix: https://lh3.googleusercontent.com/d/
 
 gemini:
+  base-url: https://generativelanguage.googleapis.com/v1beta
   mime-type: application/json
   model: gemini-2.5-flash
-  
-
-
-
-
