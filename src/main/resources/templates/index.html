@@ -120,7 +120,8 @@
 						 th:text="${recommendedStoreList[0].name}">가게이름
 					</div>
 					<div class="meta mt-1"
-						 th:text="${recommendedStoreList[0].address?.roadAddressText ?: #{index.featured.store.address}}">
+						 th:text="${recommendedStoreList[0].address?.roadAddressText ?: ''}">
+						 <!-- #{index.featured.store.address} -->
 						주소
 					</div>
 					<div class="desc" th:text="${recommendedStoreList[0].description}">설명</div>
@@ -170,10 +171,11 @@
 						<div class="flex-grow-1">
 							<div class="d-flex justify-content-between">
 								<div class="fw-semibold">
-									<span th:text="${isReview} ? #{index.popular_stores.store.review} : #{store.coeat.title}">타입</span>
+									<span th:text="${isReview} ? '' : #{store.coeat.title}">타입</span>
+									<!-- #{index.popular_stores.store.review} -->
 
 									<span class="badge rounded-pill ms-2 small"
-										  th:classappend="${item?.coeat?.status?.name() == 'OPEN'   ? ' bg-success bg-opacity-10 text-success' :
+										  th:classappend="${item?.coeat?.status?.name() == 'OPEN' ? ' bg-success bg-opacity-10 text-success' :
 																		   (item?.coeat?.status?.name() == 'CLOSED' ? ' bg-secondary bg-opacity-10 text-secondary'
 																											 : ' bg-danger bg-opacity-10 text-danger')}"
 										  th:if="${!isReview and item?.coeat?.status != null}"
@@ -213,7 +215,8 @@
 							</div>
 
 							<div class="small text-muted">
-								<span th:text="${item?.store?.name ?: #{index.featured.store.name}}">store #123</span>
+								<span th:text="${item?.store?.name ?: '' }">store #123</span>
+								<!-- #{index.featured.store.name} -->
 
 								<span th:if="${isReview and item?.review?.rating != null}"> · </span>
 								<span class="text-warning"
@@ -287,7 +290,8 @@
 						 width="600"/>
 					<div class="name" th:text="${store.name}">가게이름</div>
 					<div class="addr"
-						 th:text="${store.address != null ? store.address.roadAddressText : #{index.popular_stores.store.address}}">주소
+						 th:text="${store.address != null ? store.address.roadAddressText : '' }">주소
+						 <!-- #{index.popular_stores.store.address} -->
 					</div>
 					<div class="desc" th:text="${store.description}">설명</div>
 					<div class="d-flex align-items-center gap-2 mt-2">
