@@ -89,8 +89,8 @@
     <select id="selectAvgRatingByStoreId" parameterType="map" resultType="ReviewDTO">
         SELECT
             rv.store_id,
-            AVG(rv.rating) AS avgRating,
-            COUNT(rv.rating) AS reviewCount
+            IFNULL(AVG(rv.rating), 0) AS avgRating,
+            IFNULL(COUNT(rv.rating), 0) AS reviewCount
         FROM review rv
 
         JOIN root r

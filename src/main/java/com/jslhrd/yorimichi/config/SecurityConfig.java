@@ -111,7 +111,7 @@ public class SecurityConfig {
 								"/", "/login", "/signup", "/signup/**", "/oauth2/**", "/error",
 								"/favicon.ico",
 								"/assets/**", "/css/**", "/js/**", "/images/**","/feed/**" , "/api/**",
-								"/webjars/**",  "/search/**", "/store/**",
+								"/webjars/**",  "/search/**",
 								"/actuator/health"
 						).permitAll()
 						.anyRequest().authenticated()
