@@ -1,0 +1,139 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jslhrd.yorimichi.mapper.SearchMapper">
+
+    <!-- ========= ResultMaps ========= -->
+
+    <!-- AddressDTO 중첩 매핑(컬럼 접두사: addr_) -->
+    <resultMap id="AddressMap" type="com.jslhrd.yorimichi.domain.AddressDTO">
+        <id     property="id"               column="addr_id"/>
+        <result property="roadId"           column="addr_road_id"/>
+        <result property="postalId"         column="addr_postal_id"/>
+        <result property="detail"           column="addr_detail"/>
+        <result property="roadAddressText"  column="addr_road_address_text"/>
+        <result property="jibunAddressText" column="addr_jibun_address_text"/>
+        <result property="latitude"         column="addr_latitude"/>
+        <result property="longitude"        column="addr_longitude"/>
+    </resultMap>
+
+    <!-- StoreDTO + AddressDTO(association) -->
+    <resultMap id="StoreMap" type="com.jslhrd.yorimichi.domain.StoreDTO">
+        <id     property="id"          column="id"/>
+        <result property="name"        column="name"/>
+        <result property="description" column="description"/>
+        <result property="phone"       column="phone"/>
+        <result property="addressId"   column="address_id"/>
+
+        <!-- 화면용 보조 필드(있으면 매핑, 없으면 null) -->
+        <result property="thumbnailUrl" column="thumbnail_url"/>
+        <result property="reviewCount"  column="review_count"/>
+
+        <association property="address"
+                     javaType="com.jslhrd.yorimichi.domain.AddressDTO"
+                     resultMap="AddressMap"/>
+    </resultMap>
+
+    <!-- CategoryDTO -->
+    <resultMap id="CategoryMap" type="com.jslhrd.yorimichi.domain.CategoryDTO">
+        <id     property="id"   column="id"/>
+        <result property="name" column="name"/>
+    </resultMap>
+
+    <!-- ========= 자동완성 ========= -->
+
+    <select id="selectStoreSuggest" resultType="com.jslhrd.yorimichi.domain.SuggestDTO">
+        SELECT
+            'STORE' AS type,
+            s.id     AS id,
+            s.name   AS label,
+            TRIM(COALESCE(a.road_address_text, a.jibun_address_text, '')) AS sublabel,
+            CONCAT('/stores/', s.id) AS path
+        FROM store s
+        LEFT JOIN address a ON a.id = s.address_id
+        WHERE s.name LIKE CONCAT('%', #{q}, '%')
+        ORDER BY s.id
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectRegionSuggest" resultType="com.jslhrd.yorimichi.domain.SuggestDTO">
+        SELECT * FROM (
+            SELECT 'REGION' AS type,
+                   emd.id   AS id,
+                   emd.name AS label,
+                   CONCAT(sido.name, ' ', sgg.name) AS sublabel,
+                   CONCAT('/region/emd/', emd.id)   AS path
+            FROM region_emd emd
+            JOIN region_sigungu sgg ON sgg.id = emd.sigungu_id
+            JOIN region_sido   sido ON sido.id = sgg.sido_id
+            WHERE emd.name LIKE CONCAT('%', #{q}, '%')
+
+            UNION ALL
+
+            SELECT 'REGION' AS type,
+                   sgg.id    AS id,
+                   sgg.name  AS label,
+                   sido.name AS sublabel,
+                   CONCAT('/region/sgg/', sgg.id) AS path
+            FROM region_sigungu sgg
+            JOIN region_sido sido ON sido.id = sgg.sido_id
+            WHERE sgg.name LIKE CONCAT('%', #{q}, '%')
+        ) t
+        ORDER BY label
+        LIMIT #{limit}
+    </select>
+
+    <!-- ========= 검색 페이지 ========= -->
+
+    <select id="countStoresByKeyword" resultType="long">
+        SELECT COUNT(*)
+        FROM store s
+        WHERE (#{q} IS NULL OR #{q} = '' OR s.name LIKE CONCAT('%', #{q}, '%'))
+    </select>
+
+    <sql id="StoreSelectColumns">
+        s.id,
+        s.name,
+        s.description,
+        s.phone,
+        s.address_id,
+        
+        NULL AS thumbnail_url,
+        NULL AS review_count,
+
+        
+        a.id                  AS addr_id,
+        a.detail              AS addr_detail,
+        a.road_address_text   AS addr_road_address_text,
+        a.jibun_address_text  AS addr_jibun_address_text
+
+    </sql>
+
+    <select id="findStoresByKeyword" resultMap="StoreMap">
+        SELECT
+        <include refid="StoreSelectColumns"/>
+        FROM store s
+        LEFT JOIN address a ON a.id = s.address_id
+        WHERE (#{q} IS NULL OR #{q} = '' OR s.name LIKE CONCAT('%', #{q}, '%'))
+        ORDER BY s.id
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="selectStoreById" parameterType="long" resultMap="StoreMap">
+        SELECT
+        <include refid="StoreSelectColumns"/>
+        FROM store s
+        LEFT JOIN address a ON a.id = s.address_id
+        WHERE s.id = #{id}
+    </select>
+
+    <!-- 가게-카테고리 매핑 (테이블명은 프로젝트에 맞게) -->
+    <select id="selectCategoriesByStoreId" parameterType="long" resultMap="CategoryMap">
+        SELECT c.id, c.name
+        FROM store_category sc
+        JOIN category c ON c.id = sc.category_id
+        WHERE sc.store_id = #{storeId}
+        ORDER BY c.name
+    </select>
+
+</mapper>

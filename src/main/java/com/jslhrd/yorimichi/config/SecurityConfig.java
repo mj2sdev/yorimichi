@@ -50,7 +50,7 @@ public class SecurityConfig {
 				.csrf(csrf -> csrf.disable())
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth -> auth
-						.requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
+						.requestMatchers(HttpMethod.GET, "/api/categories", "/api/search/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/stations").permitAll()
 						// 나머지 API 는 인증 필요
 						.anyRequest().authenticated()
@@ -110,10 +110,9 @@ public class SecurityConfig {
 						.requestMatchers(
 								"/", "/login", "/signup", "/signup/**", "/oauth2/**", "/error",
 								"/favicon.ico",
-								"/assets/**", "/css/**", "/js/**", "/images/**",
-								"/webjars/**",
-								"/actuator/health",
-								"/api/**"
+								"/assets/**", "/css/**", "/js/**", "/images/**","/feed/**" , "/api/**",
+								"/webjars/**",  "/search/**", "/store/**",
+								"/actuator/health"
 						).permitAll()
 						.anyRequest().authenticated()
 				)
@@ -157,7 +156,7 @@ public class SecurityConfig {
 						.maximumSessions(1)
 						.maxSessionsPreventsLogin(false)
 				);
-
+		http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")); 
     /*
        소셜 로그인(OAuth2/OIDC)
        - ClientRegistrationRepository(=등록 정보)가 있을 때만 활성화

@@ -2,20 +2,14 @@ package com.jslhrd.yorimichi.controller;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.jslhrd.yorimichi.domain.CoeatDTO;
 import com.jslhrd.yorimichi.service.ApiKeyService;
 import com.jslhrd.yorimichi.service.BookmarkService;
 import com.jslhrd.yorimichi.service.LikeService;
 import com.jslhrd.yorimichi.service.StoreService;
-
+import org.springframework.ui.Model;
+import com.jslhrd.yorimichi.mapper.SearchMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +23,8 @@ public class StoreController {
 	private final LikeService likeService;
 
 	private final BookmarkService bookmarkService;
+	
+	private final SearchMapper mapper; // ✅ 주입
 
 	private final ApiKeyService apiKeyService;
 
@@ -105,7 +101,6 @@ public class StoreController {
 		@PathVariable("storeId") Long storeId) {
 		likeService.save(userId, storeId);
 	}
-
 	@ResponseBody
 	@DeleteMapping("/like/{storeId:\\d+}")
 	public void deleteLikes(
@@ -113,5 +108,20 @@ public class StoreController {
 		@PathVariable("storeId") Long storeId) {
 		likeService.delete(userId, storeId);
 	}
+	    // 가게 상세정보 (PathVariable 버전)
+    @GetMapping("/detail/{storeId}")
+    public String showDetail(@PathVariable Long storeId, Model model) {
+        var store = mapper.selectStoreById(storeId);
+        var categories = mapper.selectCategoriesByStoreId(storeId);
 
+        model.addAttribute("store", store);
+        model.addAttribute("categories", categories);
+        return "store/detail"; // templates/store/detail.html
+    }
+
+    // (선택) 쿼리스트링 버전도 허용하고 싶으면 함께 추가
+    @GetMapping("/detail")
+    public String showDetailByParam(@RequestParam("id") Long id, Model model) {
+        return showDetail(id, model); // 위 메서드 재사용
+    }
 }
