@@ -135,17 +135,61 @@
         WHERE v.id = #{reviewId}
     </select>
 
+    <select id="selectStoreIdsByDays" resultType="long">
+        SELECT  rv.store_id
+
+        FROM    review rv
+
+        JOIN    root r ON r.id = rv.id
+            AND r.type = 'REVIEW'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
+        WHERE   r.updated_at >= DATE_SUB(NOW(), INTERVAL #{days} DAY)
+
+        GROUP BY rv.store_id
+
+        ORDER BY MAX(rv.id) DESC
+
+        LIMIT   #{limit}
+    </select>
+
+    <select id="selectBacklogStoreIdsByBucket" resultType="long">
+        SELECT s.id
+        FROM   store s
+        WHERE  MOD(s.id, #{buckets}) = #{bucketOfToday}
+        ORDER BY s.id ASC
+        LIMIT #{limit}
+    </select>
+
+    <select id="selectRecentContentsByStoreId" resultType="string">
+        SELECT rv.content
+
+        FROM review rv
+
+        JOIN root r ON r.id = rv.id
+            AND r.type = 'REVIEW'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
+        WHERE rv.store_id = #{storeId}
+            AND rv.content IS NOT NULL
+            AND LENGTH(TRIM(rv.content)) > 0
+
+        ORDER BY rv.id DESC
+
+        LIMIT #{limit}
+    </select>
+
     <select id="existsActive" parameterType="long" resultType="boolean">
         SELECT EXISTS (
-            SELECT 1
+        SELECT 1
 
-            FROM review v
+        FROM review v
 
-            JOIN root r ON v.id = r.id
-                AND r.type = 'REVIEW'
-                AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        JOIN root r ON v.id = r.id
+        AND r.type = 'REVIEW'
+        AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
 
-            WHERE v.id = #{reviewId}
+        WHERE v.id = #{reviewId}
         )
     </select>
 
@@ -208,7 +252,6 @@
     </update>
 
     <!-- @formatter:on -->
-
 
 
 </mapper>

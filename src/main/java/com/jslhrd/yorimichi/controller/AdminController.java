@@ -1,6 +1,5 @@
 package com.jslhrd.yorimichi.controller;
 
-import com.jslhrd.yorimichi.places.PlacesService;
 import com.jslhrd.yorimichi.service.ApiKeyService;
 import com.jslhrd.yorimichi.service.RegionService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,11 @@ public class AdminController {
 
 	private final RegionService regionService;
 	private final ApiKeyService apiKeyService;
-	private final PlacesService placesService;
+
+	@GetMapping("/index")
+	public String showIndexPage() {
+		return "admin/index";
+	}
 
 	@GetMapping("/places/search")
 	public String showRegionStorePage(Model model) {
@@ -25,5 +28,15 @@ public class AdminController {
 		model.addAttribute("emds", regionService.findAllEmd());
 		model.addAttribute("mapsEmbedKey", apiKeyService.findApiKey("maps"));
 		return "admin/gemini/search";
+	}
+
+	@GetMapping("/reviews/summary")
+	public String adminReviewSummary() {
+		return "admin/reviews/summary";
+	}
+
+	@GetMapping("/reviews/keywords")
+	public String adminReviewKeywords() {
+		return "admin/reviews/keywords";
 	}
 }

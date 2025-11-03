@@ -1,6 +1,8 @@
 package com.jslhrd.yorimichi.controller;
 
 import com.jslhrd.yorimichi.gemini.AdminService;
+import com.jslhrd.yorimichi.gemini.review.ReviewSummaryRefreshRequest;
+import com.jslhrd.yorimichi.gemini.review.ReviewSummaryRefreshResponse;
 import com.jslhrd.yorimichi.gemini.store.GeminiStoreService;
 import com.jslhrd.yorimichi.gemini.store.dto.request.RegionStoreRequest;
 import com.jslhrd.yorimichi.gemini.store.dto.request.SaveStoresRequest;
@@ -8,6 +10,7 @@ import com.jslhrd.yorimichi.gemini.store.dto.request.StoreDetailRequest;
 import com.jslhrd.yorimichi.gemini.store.dto.response.SaveStoresResponse;
 import com.jslhrd.yorimichi.gemini.store.dto.response.StoreDetailResponse;
 import com.jslhrd.yorimichi.gemini.store.dto.response.StoreNameRegionResponse;
+import com.jslhrd.yorimichi.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +27,7 @@ import java.util.List;
 public class AdminApiController {
 
 	private final AdminService adminService;
+	private final ReviewService reviewService;
 	private final GeminiStoreService geminiStoreService;
 
 	/*@PostMapping(
@@ -80,5 +84,21 @@ public class AdminApiController {
 	public SaveStoresResponse save(@RequestBody SaveStoresRequest request) {
 		return geminiStoreService.saveAll(request);
 	}
+
+	@PostMapping("/reviews/summary/refresh")
+	public ResponseEntity<ReviewSummaryRefreshResponse> refresh(
+			@RequestBody(required = false) ReviewSummaryRefreshRequest body
+	) {
+		// 기본값(원하면 설정으로 뺄 수 있음)
+		int defaultHot = 50;
+		int defaultBacklog = 100;
+
+		int hotSize = (body == null) ? defaultHot : body.hotOrDefault(defaultHot);
+		int backlogSize = (body == null) ? defaultBacklog : body.backlogOrDefault(defaultBacklog);
+
+		ReviewSummaryRefreshResponse out = reviewService.refreshOnce(hotSize, backlogSize);
+		return ResponseEntity.ok(out);
+	}
+
 
 }

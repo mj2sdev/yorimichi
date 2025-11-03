@@ -8,7 +8,7 @@ import java.util.Map;
 public class RegionNotFoundException extends DomainException {
 
 	private RegionNotFoundException(String message, Map<String, Object> meta) {
-		super("REGION NOT FOUND", message, meta);
+		super("REGION_NOT_FOUND", message, meta);
 	}
 
 	public static RegionNotFoundException byId(RegionLevel level, Long id) {

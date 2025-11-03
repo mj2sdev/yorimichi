@@ -263,6 +263,12 @@
         WHERE s.id = #{storeId}
     </update>
 
+    <update id="updateSummaryReview">
+        UPDATE store
+        SET summared_review = #{summary}
+        WHERE id = #{storeId}
+    </update>
+
     <update id="deleteById" parameterType="long">
         UPDATE store s
 

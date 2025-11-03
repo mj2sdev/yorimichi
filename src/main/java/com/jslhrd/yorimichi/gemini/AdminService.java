@@ -12,6 +12,7 @@ import com.jslhrd.yorimichi.gemini.store.dto.request.StoreDetailRequest;
 import com.jslhrd.yorimichi.gemini.store.dto.response.StoreDetailResponse;
 import com.jslhrd.yorimichi.gemini.store.dto.response.StoreNameRegionResponse;
 import com.jslhrd.yorimichi.service.RegionService;
+import com.jslhrd.yorimichi.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,15 +27,17 @@ public class AdminService {
 	private static final String JAPANESE_RULES = """
 			日本語のみを使用してください。英語やその他の言語は禁止です。
 			次のいずれかを満たせない場合は空配列([])を返してください。
-			- 説明・カテゴリ・設備・住所は日本語表記（固有名詞は原文可）
-			- 英語原文がある場合は日本語に意訳し、原文は省略
+			- 説明・カテゴリ・設備などの自由記述は日本語で記載（固有名詞は原文可）
+			- 住所系の値は必ず韓国語（大韓民国の公的表記）で記載し、日本語に翻訳しないこと
+			  ※ 対象キー: sidoName, sigunguName, emdName, detail, roadAddressText, jibunAddressText
 			- 出力は JSON 配列リテラルのみ（前後のテキスト／コードフェンス／コメント禁止）
-			- 日本語表記のみを使用（店名などの固有名詞は原文可）
+			- 店名などの固有名詞は原文可
 			""";
 
 
 	private final RegionService regionService;
 	private final GeminiService geminiService;
+	private final ReviewService reviewService;
 	private final ObjectMapper objectMapper;
 
 	private static String joinSkippingBlank(String separator, String... parts) {
@@ -56,6 +59,26 @@ public class AdminService {
 			if (lastFenceIndex >= 0) trimmed = trimmed.substring(0, lastFenceIndex);
 		}
 		return trimmed.trim();
+	}
+
+	private static String toJsonArrayLiteral(List<String> items) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[");
+		boolean first = true;
+		for (String s : items) {
+			if (!first) sb.append(",");
+			first = false;
+			sb.append("\""
+			).append(escapeJsonString(s)).append("\"");
+		}
+		sb.append("]");
+		return sb.toString();
+	}
+
+	private static String escapeJsonString(String s) {
+		if (s == null) return "";
+		// 아주 단순한 이스케이프(필요시 ObjectMapper 사용해도 됨)
+		return s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\r", " ").replace("\n", " ");
 	}
 
 	private RegionNames resolveRegionNames(RegionStoreRequest request) {
@@ -113,13 +136,14 @@ public class AdminService {
 				    "placeId": "string"
 				  }
 				- placeId は必ず Google Place ID のみを使用（形式: "places/ChIJ..."）。
-				- 行政名称は大韓民国の公的表記（市/道、市/郡/区、邑/面/洞）に従うこと。
+				- 行政名称（sidoName, sigunguName, emdName）は大韓民国の公的表記で**韓国語**記載（日本語訳禁止）。
 				- 要求地域の内部にある店舗のみを選定し、placeId の重複は禁止。
 				- 条件を満たせない場合は空配列([])を返すこと。
 				
 				要求地域:
 				- %s
 				""".formatted(count, count, regionLabel);
+
 
 		String raw = geminiService.generateWithBoth(prompt);
 
@@ -194,6 +218,8 @@ public class AdminService {
 				- 出力は JSON 配列リテラルのみ。前後の空白・文章・コメント・コードフェンス(```)は禁止。
 				- 配列の長さは正確に 1。不確実な場合は空配列([])。
 				- キー／順序／綴りは厳守。null は最小限（不明な場合のみ空文字・空配列を使用）。
+				- 住所系の値は**必ず韓国語**（大韓民国の公的表記）で記載し、日本語に翻訳しないこと。
+				  対象キー: "sidoName", "sigunguName", "emdName", "detail", "roadAddressText", "jibunAddressText"
 				- 可能であれば実際の販売メニュー名を 3〜8 件収集して "menus" に格納。価格・説明が不確実なら省略し、名前のみを入れてよい。
 				[
 				  {
@@ -204,13 +230,13 @@ public class AdminService {
 				    "facilities": ["string"],
 				    "menus": [ { "name": "string", "price": 12345, "description": "string" } ],
 				    "images": ["string"],
-				    "sidoName": "string",
-				    "sigunguName": "string",
-				    "emdName": "string",
-				    "detail": "string",             // 詳細住所
-				    "placeId": "string",            // 必ず %s と完全一致
-				    "roadAddressText": "string",
-				    "jibunAddressText": "string"
+				    "sidoName": "string",          // 韓国語
+				    "sigunguName": "string",       // 韓国語
+				    "emdName": "string",           // 韓国語
+				    "detail": "string",            // 韓国語（詳細住所）
+				    "placeId": "string",           // 必ず %s と完全一致
+				    "roadAddressText": "string",   // 韓国語（道路名住所）
+				    "jibunAddressText": "string"   // 韓国語（地番住所）
 				  }
 				]
 				
@@ -222,6 +248,7 @@ public class AdminService {
 				- 不明なフィールドは空文字("") または空配列([])を使用。
 				""".formatted(regionLabelClean, storeNameHint, requiredPlaceId, requiredPlaceId, requiredPlaceId);
 
+
 		String relaxedPrompt = JAPANESE_RULES + """
 				
 				次の placeId に該当する店舗 1 件の詳細情報を JSON 配列で返してください。
@@ -232,6 +259,8 @@ public class AdminService {
 				出力ルール:
 				- 出力は JSON 配列リテラル 1 つ、長さは 1（不確実なら空配列 []）。
 				- 各オブジェクトは以下のフラットなキーのみを使用:
+				- 住所系の値は**必ず韓国語**（大韓民国の公的表記）で記載し、日本語に翻訳しないこと。
+				  対象キー: "sidoName", "sigunguName", "emdName", "detail", "roadAddressText", "jibunAddressText"
 				- 可能であれば実際の販売メニュー名を 3〜8 件収集して "menus" に格納。価格・説明が不確実なら省略し、名前のみで可。
 				[
 				  {
@@ -242,13 +271,13 @@ public class AdminService {
 				    "facilities": ["string"],
 				    "menus": [ { "name": "string", "price": 12345, "description": "string" } ],
 				    "images": ["string"],
-				    "sidoName": "string",
-				    "sigunguName": "string",
-				    "emdName": "string",
-				    "detail": "string",
-				    "placeId": "string",        // 必ず %s と同一
-				    "roadAddressText": "string",
-				    "jibunAddressText": "string"
+				    "sidoName": "string",          // 韓国語
+				    "sigunguName": "string",       // 韓国語
+				    "emdName": "string",           // 韓国語
+				    "detail": "string",            // 韓国語
+				    "placeId": "string",           // 必ず %s と同一
+				    "roadAddressText": "string",   // 韓国語
+				    "jibunAddressText": "string"   // 韓国語
 				  }
 				]
 				
@@ -259,6 +288,7 @@ public class AdminService {
 				- price / description は不明なら省略または null。
 				- 不明なフィールドは空文字("") または空配列([])を使用。
 				""".formatted(requiredPlaceId, regionLabelClean, storeNameHint, requiredPlaceId, requiredPlaceId);
+
 
 		Optional<StoreDetailResponse> strict = tryDetailOnce(strictPrompt, requiredPlaceId);
 		if (strict.isPresent()) return strict;
@@ -272,7 +302,6 @@ public class AdminService {
 		}
 		return fallback;
 	}
-
 
 	private Optional<StoreDetailResponse> tryDetailOnce(String prompt, String requiredPlaceId) {
 		String raw = geminiService.generateWithBoth(prompt);
@@ -343,4 +372,53 @@ public class AdminService {
 		}
 		return Optional.empty();
 	}
+
+	public List<String> summarizeRecentReviews(Long storeId, int fetchLimit, int bulletCount) {
+		if (storeId == null) throw new IllegalArgumentException("storeId は必須です。");
+		int limit = Math.max(1, Math.min(fetchLimit, 50));   // DB에서 읽어올 리뷰 개수
+		int safeBulletCount = Math.max(1, Math.min(bulletCount, 8));  // 요약 문장 수(불릿 수)
+
+		// 1) 최신 리뷰 텍스트 가져오기
+		List<String> recentContents = reviewService.findContentByStoreId(storeId, limit);
+		if (recentContents == null || recentContents.isEmpty()) return List.of();
+
+		// 2) 프롬프트 구성 (JSON 배열 그대로 넣어 LLM이 안정적으로 파싱)
+		String reviewsJsonArray = toJsonArrayLiteral(recentContents);
+
+		String prompt = JAPANESE_RULES + "\n\n" + """
+				以下は同一店舗の最近のレビュー本文です（最大 %d 件）。
+				レビュー本文の要点を %d 個の短い箇条書き(1文ずつ)で要約してください。
+				- 評価の傾向（味・価格・接客・雰囲気・混雑など）をバランス良く含めてください
+				- 重複表現は避け、具体的で簡潔に
+				- 結果は JSON 配列（各要素は 1 文の文字列）のみを出力
+				
+				### レビュー本文(JSON 配列)
+				%s
+				""".formatted(recentContents.size(), safeBulletCount, reviewsJsonArray);
+
+		// 3) Gemini 호출 (검색 툴 활성화: generateWithSearch)
+		String raw = geminiService.generateWithSearch(prompt);
+
+		// 4) candidates -> text 꺼내서 코드펜스 제거 후 JSON 파싱
+		try {
+			JsonNode root = objectMapper.readTree(raw);
+			String text = removeCodeFence(root.at("/candidates/0/content/parts/0/text").asText("")).trim();
+			if (text.isBlank() || "[]".equals(text)) return List.of();
+
+			// 결과는 ["...", "..."] 형식의 JSON 배열이어야 함
+			List<String> bullets = objectMapper.readValue(text, objectMapper.getTypeFactory().constructCollectionType(List.class, String.class));
+			// 후처리: 공백 제거 + 빈 항목 제거 + bulletCount 제한
+			List<String> cleaned = new ArrayList<>();
+			for (String s : bullets) {
+				String t = (s == null) ? "" : s.trim();
+				if (!t.isEmpty()) cleaned.add(t);
+				if (cleaned.size() >= safeBulletCount) break;
+			}
+			return cleaned;
+		} catch (Exception e) {
+			log.warn("summarizeRecentReviews: parse failed, return empty. cause={}", e.toString());
+			return List.of();
+		}
+	}
+
 }

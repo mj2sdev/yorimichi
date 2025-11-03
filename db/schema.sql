@@ -478,7 +478,7 @@ CREATE INDEX idx_address_emd_id ON address (emd_id);
    ========================= */
 
 -- 사각 범위(BBOX) 검색용 후보군 축소 인덱스
-CREATE INDEX idx_address_lat_lon ON address (latitude, longitude);
+-- CREATE INDEX idx_address_lat_lon ON address (latitude, longitude);
 
 
 /* =========================
