@@ -6,7 +6,7 @@
 
     <!-- @formatter:off -->
 
-    <select id="selectAll" parameterType="SearchDTO" resultType="UserDTO">
+    <select id="selectAll" parameterType="SearchDTO" resultType="UserDTO" >
         SELECT u.id,
                u.role_id,
                u.email,
@@ -19,9 +19,11 @@
         FROM user u
         JOIN root r ON u.id = r.id
             AND r.type = 'USER'
-            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible" />
         ORDER BY r.created_at DESC, u.id
     </select>
+
+    
 
     <!--오늘은 내가 resultMap 요리사-->
     <resultMap id="userResultMap" type="UserDTO">
@@ -66,6 +68,34 @@
             AND r.type = 'USER'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
         WHERE u.id = #{userId}
+    </select>
+
+    <select id="selectProfileByUserId" parameterType="map" resultType="UserDTO">
+        SELECT
+            u.id,
+            u.nickname,
+            u.description,
+            i.url as image,
+            COUNT(f.followee_id) AS followerCount
+               
+        FROM user u
+
+        JOIN root r
+        ON r.id = u.id
+        <include refid="com.jslhrd.yorimichi.mapper.common.Auditing">
+            <property name="type" value="'USER'"/>
+        </include>
+
+        LEFT JOIN root_image ri
+        ON ri.root_id = u.id
+
+        LEFT JOIN image i
+        ON i.id = ri.image_id
+
+        LEFT JOIN follow f
+        ON u.id = f.followee_id
+
+        WHERE u.id = #{ userId }
     </select>
 
     <!-- 요리 끝-->

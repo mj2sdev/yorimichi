@@ -21,6 +21,8 @@ public interface FoodMapper {
 
 	List<FoodDTO> selectAll();
 
+	List<FoodDTO> selectAllByStoreId(@Param("storeId") Long storeId);
+
 	/**
 	 * 음식 단건 조회.
 	 *

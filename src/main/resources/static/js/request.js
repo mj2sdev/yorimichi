@@ -1,9 +1,20 @@
 const httpMethods = new Set(['GET', 'POST', 'PUT', 'PATCH', 'DELETE']);
-async function request(method, endpoint, {params, query, body}={}){
+/**
+ * @author 3ll3702
+ * @version 1.0
+ * 
+ * TODO: we need description!
+ * @param {string} method 
+ * @param {string} requestUrl 
+ * @param {Object} object 
+ * @returns we can't prediction
+ */
+async function request(method, requestUrl, {params, query, body} = {}){
     
     if(!method || !httpMethods.has(method.toUpperCase())){
-        console.error("유효하지 않거나 지원하지 않는 method입니다.");
-        throw new Error("유효하지 않거나 지원하지 않는 method입니다.");
+        const errorMessage = "유효하지 않거나 지원하지 않는 method입니다.";
+        console.error(errorMessage);
+        throw new Error(errorMessage);
     }
     const fetchOption = {
         method: method.toUpperCase(),
@@ -16,9 +27,6 @@ async function request(method, endpoint, {params, query, body}={}){
     if(csrfKey && csrfVal){
         fetchOption.headers[csrfKey] = csrfVal;
     }
-
-
-    let requestUrl = endpoint;
 
     if(params && typeof params === 'object' && !Array.isArray(params)){
         for(const key in params){
@@ -44,21 +52,20 @@ async function request(method, endpoint, {params, query, body}={}){
     
     try {
         const response = await fetch(requestUrl, fetchOption)
+        const contentType = response.headers.get("Content-Type");
+        const { status } = response;
+
         if(!response.ok){
-            throw new Error(response.status);
+            throw new Error(status);
         }
-        if(response.status === 204){
-            return true;
-        }
-        
-        const contentType = response.headers.get("content-type");
         if (contentType && contentType.includes("application/json")) {
             return await response.json();
         } else {
-            return await response.text();
+            const text = (await response.text()).trim();
+            return text || true;
         }
     } catch (error) {
-        console.error('데이터 fetch 실패',error);
+        console.error('데이터 fetch 실패', error);
         return null;
     }
 }

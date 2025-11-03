@@ -19,8 +19,7 @@ import java.util.Optional;
 @Mapper
 public interface CategoryMapper {
 
-	List<CategoryDTO> selectSlice(@Param("categoryId") Long categoryId,
-	                              @Param("size") int size);
+	List<CategoryDTO> selectSlice(@Param("categoryId") Long categoryId, @Param("size") int size);
 
 	/**
 	 * 카테고리 단건 조회.

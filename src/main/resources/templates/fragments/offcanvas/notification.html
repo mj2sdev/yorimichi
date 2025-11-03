@@ -9,13 +9,14 @@
 	<div class="offcanvas-body">
 		<ul class="list-group">
 			<li
-				th:each="item : ${#numbers.sequence(1, 4)}"
+				@click="readNotification(item.id)"
+				v-for="(item, index) in notifications" :key="index"
 				class="list-group-item list-group-item-action d-flex justify-content-between align-items-start">
 				<div class="ms-2 me-auto">
-					<div class="fw-bold">같이먹기 알림</div>
-					팔로우 한 '킹건호'님이 같이먹기를 작성하였습니다.
+					<div class="fw-bold" v-text="typeString(item.type) + ' 알림'">같이먹기 알림</div>
+					<span v-text="item.message">팔로우 한 '킹건호'님이 같이먹기를 작성하였습니다.</span>
 				</div>
-				<span class="badge text-bg-primary rounded-pill">안읽음</span>
+				<span class="badge rounded-pill" :class="{ 'text-bg-danger': (item.readAt == null), 'text-bg-success': (item.readAt != null) }" v-text="item.readAt == null ? '안읽음' : '읽음'">안읽음</span>
 			</li>
 
 			<!-- 알림이 없을 경우 -->
@@ -26,3 +27,4 @@
 
 	</div>
 </div>
+<script defer src="/js/notificationVue.js"></script>

@@ -1,4 +1,4 @@
-<div class="d-flex flex-column shadow p-4 gap-2">
+<div class="d-flex flex-column shadow p-4 gap-4">
 
 	<!-- 제목, 글쓰기 -->
 	<div class="d-flex justify-content-between align-items-center">
@@ -13,45 +13,52 @@
 	<!-- AI 리뷰 -->
 	<h6>
 		<i class="bi bi-compass text-ymprimary"> AI 리뷰 요약</i>
-		<div>
-			AI가 총 132개의 리뷰를 분석한 결과, 전반적인 평가는 **“집밥 감성 + 가성비 최고”**로 나타남.
-			<br>
-			손님 대부분이 제육볶음과 된장찌개를 극찬했으며, 서비스 친절도와 청결도 역시 높은 점수를 받음.
+		<div th:text="${ store.summaredReview } ?: '요약된 리뷰 데이터가 없습니다.'">
 		</div>
 	</h6>
 
 	<!-- 리뷰 리스트 -->
-	<div class="d-flex flex-column gap-2 border-top pt-2">
+	<div class="d-flex flex-column gap-2 border-top pt-2" th:each="item : ${ store.reviews }">
 		<!-- 프로필 -->
-		<div th:replace="~{ fragments/common/profile }"></div>
+		<div class="d-flex justify-content-between align-items-center">
+			<div th:replace="~{ fragments/common/profile :: userData(${ item.user }) }"></div>
+			<button
+				class="btn btn-sm btn-danger"
+				type="button"
+				onclick="deleteReview(event)"
+				th:data-review-id="${ item.id }"
+				sec:authorize="principal.userId == #vars.item.userId" hidden>삭제</button>
+		</div>
 		<!-- 리뷰 사진 -->
-		<div class="d-flex gap-2 overflow-x-scroll">
-			<img src="https://picsum.photos/150" th:each="image : ${#numbers.sequence(1,5)}" alt="">
+		<div class="d-flex gap-2 overflow-x-auto">
+			<div class="ratio ratio-1x1 flex-shrink-0" style="width: 10rem;" th:each="image : ${ item.images }">
+				<img src="https://picsum.photos/150" th:src="${ image.url }">
+			</div>
 		</div>
 		<!-- 점수, 작성일 -->
 		<div class="d-flex justify-content-between">
 			<div class="d-flex gap-2">
 				<div>
-					<i class="bi bi-star-fill text-warning" th:each="star : ${#numbers.sequence(1, 5)}"></i>
+					<i class="bi bi-star-fill text-warning" th:each="star : ${#numbers.sequence(1, item.rating) }"></i>
 				</div>
-				<span th:text="'5' + '점'"></span>
+				<span th:text="${ item.rating } + '점'"></span>
+				<i class="bi bi-check-circle text-success"
+					data-bs-toggle="tooltip"
+					data-bs-placement="top"
+					data-bs-custom-class="custom-tooltip"
+					data-bs-title="영수증이 인증된 리뷰입니다"
+					th:if="${ item.receiptStatus == true and item.receiptImageId != null }"></i>
 			</div>
-			<div>
-				2일 전
-			</div>
+			<div th:data-time-ago="${ item.createdAt }"></div>
 		</div>
 		
 		<!-- 내용 -->
-		<div>
-			1.	“제육이 불맛 나고 밥이랑 찰떡궁합임”<br>
-			2.	“사장님이 진짜 친절함, 덤도 챙겨주심”<br>
-			3.	“가격 대비 양 많고, 반찬 리필 가능해서 굳👍”
-		</div>
+		<div th:utext="${ item.content }"></div>
 
 		<!-- 메뉴 리스트 -->
 		<div class="d-flex gap-2">
-			<div class="text-primary" th:each="menu : ${ {'유니짜장', '야끼짬뽕', '간짜장' } }">
-				<span class="badge bg-secondary" th:text="${ menu }"></span>
+			<div class="text-primary" th:each="menu : ${ item.foods }">
+				<span class="badge bg-secondary" th:text="${ menu?.name }"></span>
 			</div>
 		</div>
 	</div>

@@ -239,6 +239,18 @@ CREATE TABLE food (
     CONSTRAINT ck_food_price      CHECK       (price >= 0)
 );
 
+CREATE TABLE store_time (
+    store_id BIGINT NOT NULL,
+    day_of_week TINYINT NOT NULL CHECK (day_of_week BETWEEN 0 AND 6),
+    open_time TIME NOT NULL,
+    close_time TIME NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    
+    CONSTRAINT pk_store_time PRIMARY KEY (store_id),
+    CONSTRAINT fk_store_time_store FOREIGN KEY (store_id) REFERENCES store(id) ON DELETE CASCADE
+)
+
 -- 유저
 CREATE TABLE user (
     id             BIGINT         NOT NULL,

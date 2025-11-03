@@ -1,53 +1,33 @@
 <div class="row gap-2 shadow p-4 gx-0">
 
 	<div class="col-12">
-		<div id="shop-image-carousel" class="carousel slide">
-			<div class="carousel-inner">
-				<div
-					class="carousel-item"
-					th:classappend="${ stat.index == 0 ? 'active' : '' }"
-					th:each="item, stat : ${#numbers.sequence(1, 3)}">
-					<div class="row gx-0">
-						<div class="col-4">
-							<img class="w-100" src="https://picsum.photos/280">
-						</div>
-						<div class="col-4">
-							<img class="w-100" src="https://picsum.photos/281">
-						</div>
-						<div class="col-4">
-							<img class="w-100" src="https://picsum.photos/282">
-						</div>
-					</div>
-				</div>
+		<div class="d-flex">
+			<div class="ratio ratio-1x1" style="width: 10rem;">
+				<img src="https://picsum.photos/280" alt="">
 			</div>
-			<button class="carousel-control-prev" type="button" data-bs-target="#shop-image-carousel" data-bs-slide="prev">
-				<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-				<span class="visually-hidden">Previous</span>
-			</button>
-			<button class="carousel-control-next" type="button" data-bs-target="#shop-image-carousel" data-bs-slide="next">
-				<span class="carousel-control-next-icon" aria-hidden="true"></span>
-				<span class="visually-hidden">Next</span>
-			</button>
 		</div>
 	</div>
 
 	<div class="col-12">
 		<div class="d-flex justify-content-between">
-			<h3>가게이름 본점</h3>
+			<h3 th:text="${ store?.name } ?: '가게명 없음' "></h3>
 			<div>
-				<button class="btn btn-outline-secondary">
-					<i class="bi bi-heart text-danger"></i>
+				<button type="button" class="btn btn-outline-secondary" th:data-liked="${ store.like != null }"
+					onclick="toggleLike(event)">
+					<i class="bi text-danger" th:classappend="${ store.like } ? 'bi-heart-fill' : 'bi-heart'"></i>
 					<span>
-						저장
+						좋아요
 					</span>
 				</button>
-				<button class="btn btn-outline-secondary">
-					<i class="bi bi-bookmark text-warning"></i>
+				<button type="button" class="btn btn-outline-secondary"
+					th:data-marked="${ store.bookmark != null }"
+					onclick="toggleBookmark(event)">
+					<i class="bi text-warning" th:classappend="${ store.bookmark } ? 'bi-bookmark-fill' : 'bi-bookmark'"></i>
 					<span>
 						즐겨찾기
 					</span>
 				</button>
-				<button class="btn btn-outline-secondary">
+				<button type="button" class="btn btn-outline-secondary" onclick="shareStore()">
 					<i class="bi bi-share text-info"></i>
 					<span>
 						공유
@@ -60,15 +40,11 @@
 	<div class="col-12">
 		<div>
 			<i class="bi bi-pin"></i>
-			<span>
-				대전 광역시 중구 용두동 어쩌구6길 14
-			</span>
+			<span th:text="${ store?.address?.roadAddressText } ?: '가게 주소 데이터'"></span>
 		</div>
 		<div>
 			<i class="bi bi-telephone"></i>
-			<span>
-				010-1234-5678
-			</span>
+			<span th:text="${ store?.phone } ?: '가게 전화번호 데이터'"></span>
 		</div>
 		<div>
 			<i class="bi bi-watch"></i>
@@ -88,9 +64,9 @@
 		<div class="d-flex gap-1">
 			<span>평점 : </span>
 			<i class="bi bi-star-fill text-warning"
-				th:each="item : ${#numbers.sequence(1, 5)}">
+				th:each="item : ${#numbers.sequence(1, store?.review?.avgRating)}">
 			</i>
-			<span th:text="${ 5 } + '점 (' + ${ 142 } + '명의 평가)'">
+			<span th:text="${ store?.review?.avgRating } + '점 (' + ${ store?.review?.reviewCount } + '명의 평가)'">
 			</span>
 		</div>
 	</div>
@@ -100,9 +76,9 @@
 			<i class="bi bi-tag"></i>
 			<a
 				class="text-decoration-none"
-				href=""
-				th:each="item : ${ {'짜장', '노키즈존', '노짐승존', '흡연쌉가능'} }"
-				th:text="${ '#' + item }"></a>
+				th:href="@{'/search?keyword=' + ${ item?.name } }"
+				th:each="item : ${ store.keywords }"
+				th:text="${ '#' + item?.name }"></a>
 		</div>
 	</div>
 

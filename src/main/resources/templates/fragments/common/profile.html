@@ -1,11 +1,15 @@
-<div class="d-flex align-items-center">
-	<img class="rounded-circle" th:src="${ user?.image ?: 'https://picsum.photos/50' }">
+<div
+	th:fragment="userData(user)"
+	class="d-flex align-items-center">
+	<div class="ratio ratio-1x1" style="width: 3rem;">
+		<img class="rounded-circle" th:src="${ user?.image ?: 'https://picsum.photos/50' }">
+	</div>
 	<div>
 		<div class="dropdown">
 			<button type="button" data-bs-toggle="dropdown" class="btn btn-link text-decoration-none btn-sm" th:text="${ user?.nickname ?: '홍길동' }">
 			</button>
 			<ul class="dropdown-menu">
-				<button type="button" class="dropdown-item">
+				<button type="button" class="dropdown-item" onclick="followByUserId(event)" th:data-userId="${ user?.id }">
 					<i class="bi bi-heart-fill text-danger"></i>
 					<span>팔로우</span>
 				</button>
@@ -17,7 +21,7 @@
 		</div>
 		<div class="px-2" style="font-size: .75rem;">
 			<span>팔로워</span>
-			<span>5</span>
+			<span th:text="${ user?.followerCount }"></span>
 		</div>
 	</div>
 </div>

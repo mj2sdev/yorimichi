@@ -21,7 +21,14 @@
         ORDER BY r.created_at DESC;
     </select>
 
-    <select id="selectAllByCoeatId" parameterType="long" resultType="CommentDTO">
+    <resultMap id="commentMap" type="CommentDTO">
+        <association
+            property="user"
+            column="{userId=user_id}"
+            select="com.jslhrd.yorimichi.mapper.UserMapper.selectProfileByUserId" />
+    </resultMap>
+
+    <select id="selectAllByCoeatId" resultMap="commentMap">
         SELECT c.id,
                 c.coeat_id,
                 c.parent_id,
@@ -31,8 +38,8 @@
                 r.updated_at
         FROM comment c
         JOIN root r ON c.id = r.id
-            AND r.type = 'COMMENT'
-            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        AND r.type = 'COMMENT'
+        AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
         WHERE c.coeat_id = #{coeatId}
         ORDER BY r.created_at DESC;
     </select>

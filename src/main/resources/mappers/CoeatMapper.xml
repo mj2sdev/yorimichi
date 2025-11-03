@@ -30,33 +30,67 @@
         ORDER BY r.created_at DESC
     </select>
 
-    <select id="selectAllByStoreId" parameterType="long" resultType="CoeatDTO">
-        SELECT
-            c.id,
-            c.user_id,
-            c.store_id,
-            c.title,
-            c.content,
-            c.capacity,
-            c.view_count,
-            c.meeting_at,
-            c.status,
-            c.auto_accept,
-            r.created_at,
-            r.updated_at
+    <resultMap id="coeatResultMap" type="CoeatDTO">
+        <id property="id" column="id"/>
+        <association property="user" column="{userId=user_id}" select="com.jslhrd.yorimichi.mapper.UserMapper.selectProfileByUserId"/>
+    </resultMap>
 
+    <select id="selectAllByStoreId" parameterType="map" resultMap="coeatResultMap">
+        SELECT c.id,
+               c.user_id,
+               c.store_id,
+               c.title,
+               c.content,
+               c.capacity,
+               c.view_count,
+               c.meeting_at,
+               c.status,
+               c.auto_accept,
+               r.created_at,
+               r.updated_at,
+
+               u.nickname,
+               i.url
         FROM coeat c
 
         JOIN root r ON c.id = r.id
             AND r.type = 'COEAT'
             AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
+        JOIN user u
+        ON u.id = c.user_id
+
+        LEFT JOIN root_image ri
+        ON ri.root_id = c.user_id
+
+        LEFT JOIN image i
+        ON i.id = ri.image_id
 
         WHERE c.store_id = #{storeId}
 
         ORDER BY r.created_at DESC
     </select>
 
-    <select id="selectById" parameterType="long" resultType="CoeatDTO">
+    <resultMap id="coeatDetailMap" type="CoeatDTO">
+        <association
+            property="user"
+            column="{userId=user_id}"
+            select="com.jslhrd.yorimichi.mapper.UserMapper.selectProfileByUserId" />
+        <association
+            property="store"
+            column="{storeId=store_id}"
+            select="com.jslhrd.yorimichi.mapper.StoreMapper.selectByStoreIdForCoeat" />
+        <collection
+            property="coeatRequests"
+            column="{coeatId=id}"
+            select="com.jslhrd.yorimichi.mapper.CoeatRequestMapper.selectAllByCoeatId" />
+        <collection
+            property="comments"
+            column="{coeatId=id}"
+            select="com.jslhrd.yorimichi.mapper.CommentMapper.selectAllByCoeatId" />
+    </resultMap>
+
+    <select id="selectById" parameterType="long" resultMap="coeatDetailMap">
         SELECT
             c.id,
             c.user_id,
@@ -74,8 +108,8 @@
         FROM coeat c
 
         JOIN root r ON c.id = r.id
-            AND r.type = 'COEAT'
-            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+        AND r.type = 'COEAT'
+        AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
 
         WHERE c.id = #{coeatId}
     </select>

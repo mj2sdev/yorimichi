@@ -19,3 +19,44 @@ function bsNeedValidation() {
 	})
 }
 bsNeedValidation();
+
+/**
+ * 시간 포멧 함수
+ */
+function timeAgo() {
+	const timeElements = document.querySelectorAll("[data-time-ago]");
+	timeElements.forEach(element => {
+		const { timeAgo } = element.dataset;
+		let message = "";
+		try {
+			const time = new Date(timeAgo).getTime();
+			const nokori = (Date.now() - time) / 1000;
+			if (nokori < 60) message = "방금";
+			else if (nokori < 3600) message = Math.floor(nokori / 60) + "분 전";
+			else if (nokori < 86400) message = Math.floor(nokori / 3600) + "시간 전";
+			else message = Math.floor(nokori / 86400) + "일 전";
+		} catch {
+			message = timeAgo;
+		}
+		element.innerHTML = message;
+	});
+}
+timeAgo();
+
+/**
+ * 시간입력 제한 함수
+ */
+
+function limitStartTime() {
+	const inputElements = document.querySelectorAll("[data-max-date]");
+	inputElements.forEach(input => {
+		const plusDay = input.dataset.maxDate;
+		const now = new Date();
+		const limitTime = new Date(now);
+		limitTime.setSeconds(0);
+		const timeString = limitTime.toISOString();
+		input.min = timeString.slice(0, timeString.lastIndexOf("."));
+	})
+}
+
+limitStartTime();

@@ -31,7 +31,7 @@ public interface StoreMapper {
 	 * @param storeId 상점 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
-	Optional<StoreDTO> selectById(@Param("storeId") Long storeId);
+	Optional<StoreDTO> selectById(@Param("storeId") Long storeId, @Param("userId") long userId);
 
 	Long selectIdByAddressIdAndName(@Param("addressId") Long addressId,
 	                                @Param("name") String name);

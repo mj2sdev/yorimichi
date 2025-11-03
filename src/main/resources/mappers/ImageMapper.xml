@@ -6,6 +6,17 @@
 
     <!-- @formatter:off -->
 
+    <select id="selectAllByRootId" parameterType="map" resultType="ImageDTO">
+        SELECT i.id,
+               i.url,
+               i.created_at,
+               i.updated_at
+        FROM root_image ri
+        JOIN image i
+        ON i.id = ri.image_id
+        WHERE ri.root_id = #{ rootId }
+    </select>
+
     <select id="selectPrimaryByStoreId" resultType="ImageDTO">
         SELECT (
                 SELECT i.url
