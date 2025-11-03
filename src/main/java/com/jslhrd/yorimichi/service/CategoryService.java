@@ -19,6 +19,8 @@ public interface CategoryService {
 	 */
 	public SliceResponse<CategoryDTO> findSlice(Long categoryId, int size);
 
+	public Long getOrCreateByName(CategoryDTO category);
+
 	/**
 	 * 새로운 카테고리를 생성합니다.
 	 *

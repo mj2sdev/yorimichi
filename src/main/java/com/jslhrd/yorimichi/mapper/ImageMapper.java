@@ -26,6 +26,8 @@ public interface ImageMapper {
 	 */
 	Optional<ImageDTO> selectById(@Param("imageId") Long imageId);
 
+	Long selectIdByUrl(@Param("url") String url);
+
 	boolean existsById(@Param("imageId") Long imageId);
 
 	/**

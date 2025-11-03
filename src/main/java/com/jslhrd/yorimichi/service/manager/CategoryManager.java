@@ -20,8 +20,8 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class CategoryManager implements CategoryService {
 
 	private final CategoryMapper categoryMapper;
@@ -29,11 +29,34 @@ public class CategoryManager implements CategoryService {
 	private final StoreMapper storeMapper;
 
 	@Override
+	@Transactional(readOnly = true)
 	public SliceResponse<CategoryDTO> findSlice(Long categoryId, int size) {
 		List<CategoryDTO> categories = categoryMapper.selectSlice(categoryId, size + 1);
 		return SliceResponse.of(categories, size, CategoryDTO::getId);
 	}
 
+	public Long getOrCreateByName(CategoryDTO category) {
+
+		Long parentId = category.getParentId();
+		String name = category.getName();
+
+		Long findCategoryId = categoryMapper.selectIdByParentAndName(parentId, name);
+		if (findCategoryId != null) {
+			return findCategoryId;
+		}
+
+		try {
+			save(category);
+			return category.getId();
+		} catch (DuplicateKeyException e) {
+			findCategoryId = categoryMapper.selectIdByParentAndName(parentId, name);
+			if (findCategoryId != null) {
+				return findCategoryId;
+			}
+
+			throw e;
+		}
+	}
 
 	@Override
 	public void save(CategoryDTO category) {

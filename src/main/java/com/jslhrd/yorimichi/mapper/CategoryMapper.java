@@ -29,6 +29,9 @@ public interface CategoryMapper {
 	 */
 	Optional<CategoryDTO> selectById(@Param("categoryId") Long categoryId);
 
+	Long selectIdByParentAndName(@Param("parentId") Long parentId,
+	                             @Param("name") String name);
+
 	boolean existsById(@Param("categoryId") Long categoryId);
 
 	/**

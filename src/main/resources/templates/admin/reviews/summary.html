@@ -1,0 +1,203 @@
+<!-- templates/admin/reviews/summary.html -->
+<!doctype html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <title>レビュー要約</title>
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-body-tertiary">
+<div class="container py-4">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a th:href="@{/admin/index}">管理</a></li>
+      <li aria-current="page" class="breadcrumb-item active">レビュー要約</li>
+    </ol>
+  </nav>
+
+  <h4 class="mb-3">レビュー要約を実行</h4>
+  <form class="row gy-2 gx-2" id="summaryForm">
+    <div class="col-6 col-md-2">
+      <label class="form-label">D日(ホット)</label>
+      <input class="form-control" disabled id="hotDays" min="1" type="number" value="7">
+    </div>
+    <div class="col-6 col-md-2">
+      <label class="form-label">ホット件数</label>
+      <input class="form-control" id="hotSize" min="0" type="number" value="20">
+    </div>
+    <div class="col-6 col-md-2">
+      <label class="form-label">バックログ件数</label>
+      <input class="form-control" id="backlogSize" min="0" type="number" value="50">
+    </div>
+    <div class="col-6 col-md-2">
+      <label class="form-label">レビュー件/店</label>
+      <input class="form-control" disabled id="perStoreReviews" max="50" min="1" type="number" value="20">
+    </div>
+    <div class="col-6 col-md-2">
+      <label class="form-label">バケット数</label>
+      <input class="form-control" disabled id="buckets" min="2" type="number" value="30">
+    </div>
+    <div class="col-12 d-flex gap-2 mt-2">
+      <button class="btn btn-primary" id="buttonRunSummary" type="button">今すぐ要約</button>
+      <button class="btn btn-outline-primary" id="buttonRunHotOnly" type="button">ホットのみ</button>
+      <button class="btn btn-outline-primary" id="buttonRunBacklogOnly" type="button">バックログのみ</button>
+    </div>
+  </form>
+
+  <div class="small text-muted mt-3" id="summaryStatus"></div>
+
+  <hr class="my-4">
+
+  <div class="card">
+    <div class="card-header">結果サマリー</div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0">
+          <thead class="table-light">
+          <tr>
+            <th>hotRequested</th>
+            <th>backlogRequested</th>
+            <th>hotCandidates</th>
+            <th>backlogCandidates</th>
+            <th>updated</th>
+            <th>skipped</th>
+            <th>errors</th>
+          </tr>
+          </thead>
+          <tbody id="resultSummaryBody">
+          <tr class="text-secondary">
+            <td class="text-center py-3" colspan="7">実行結果はここに表示されます。</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-3">
+        <h6 class="mb-2">更新された Store IDs</h6>
+        <div class="small text-muted" id="updatedIdsBox">（なし）</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    const csrfHeaderName = document.querySelector('meta[name="_csrf_header"]')?.content?.trim() || null;
+    const csrfTokenValue = document.querySelector('meta[name="_csrf"]')?.content?.trim() || null;
+
+    const statusEl = document.getElementById('summaryStatus');
+    const resultSummaryBody = document.getElementById('resultSummaryBody');
+    const updatedIdsBox = document.getElementById('updatedIdsBox');
+
+    function escapeHtml(s) {
+        return String(s ?? '').replace(/[&<>"']/g, c => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            '\'': '&#39;'
+        }[c]));
+    }
+
+    async function postJson(url, payload) {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        };
+        if (csrfHeaderName && csrfTokenValue) headers[csrfHeaderName] = csrfTokenValue;
+
+        const res = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(payload ?? {}),
+            credentials: 'same-origin'
+        });
+        const ct = res.headers.get('content-type') || '';
+        if (!res.ok) {
+            const text = await res.text().catch(() => res.statusText);
+            throw new Error(`${res.status} ${text}`);
+        }
+        if (!ct.includes('application/json')) {
+            throw new Error('Unexpected non-JSON');
+        }
+        return res.json();
+    }
+
+    function setRunning(running, label = '実行中…') {
+        statusEl.textContent = running ? label : '';
+        document.getElementById('buttonRunSummary').disabled = running;
+        document.getElementById('buttonRunHotOnly').disabled = running;
+        document.getElementById('buttonRunBacklogOnly').disabled = running;
+    }
+
+    function renderResponse(res) {
+        const {
+            hotRequested = 0,
+            backlogRequested = 0,
+            hotCandidates = 0,
+            backlogCandidates = 0,
+            updated = 0,
+            skipped = 0,
+            errors = 0,
+            updatedStoreIds = []
+        } = res || {};
+
+        resultSummaryBody.innerHTML = `
+      <tr>
+        <td>${hotRequested}</td>
+        <td>${backlogRequested}</td>
+        <td>${hotCandidates}</td>
+        <td>${backlogCandidates}</td>
+        <td><span class="badge text-bg-success">${updated}</span></td>
+        <td><span class="badge text-bg-secondary">${skipped}</span></td>
+        <td><span class="badge text-bg-danger">${errors}</span></td>
+      </tr>
+    `;
+
+        if (Array.isArray(updatedStoreIds) && updatedStoreIds.length > 0) {
+            updatedIdsBox.textContent = updatedStoreIds.join(', ');
+        } else {
+            updatedIdsBox.textContent = '（なし）';
+        }
+    }
+
+    async function runSummary(hotSize, backlogSize) {
+        setRunning(true);
+        statusEl.textContent = '実行中…';
+
+        try {
+            const payload = {};
+            if (Number.isFinite(hotSize)) payload.hotSize = hotSize;
+            if (Number.isFinite(backlogSize)) payload.backlogSize = backlogSize;
+
+            const res = await postJson('/api/admin/reviews/summary/refresh', payload);
+            renderResponse(res);
+            statusEl.textContent = '完了しました。';
+        } catch (e) {
+            statusEl.textContent = `失敗: ${e.message}`;
+            alert('要約に失敗しました: ' + e.message);
+        } finally {
+            setRunning(false, '');
+        }
+    }
+
+    document.getElementById('buttonRunSummary').addEventListener('click', () => {
+        const hotSize = Number(document.getElementById('hotSize').value || 0);
+        const backlogSize = Number(document.getElementById('backlogSize').value || 0);
+        runSummary(hotSize, backlogSize);
+    });
+
+    document.getElementById('buttonRunHotOnly').addEventListener('click', () => {
+        const hotSize = Number(document.getElementById('hotSize').value || 0);
+        runSummary(hotSize, 0);
+    });
+
+    document.getElementById('buttonRunBacklogOnly').addEventListener('click', () => {
+        const backlogSize = Number(document.getElementById('backlogSize').value || 0);
+        runSummary(0, backlogSize);
+    });
+</script>
+</body>
+</html>

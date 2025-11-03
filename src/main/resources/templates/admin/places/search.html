@@ -1,0 +1,527 @@
+<!-- templates/admin/places/search.html -->
+<!doctype html>
+<html data-bs-theme="auto" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <title>지역별 맛집 수집</title>
+
+  <!-- CSRF (웹 체인 페이지용: API 체인은 CSRF off지만 있어도 무해) -->
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
+  <!-- Google Maps Embed key (뷰에서 지도 미리보기용) -->
+  <meta name="gmaps-embed-key" th:content="${mapsEmbedKey}" th:if="${mapsEmbedKey}">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+      .map-embed, .map-fallback {
+          width: 320px;
+          height: 200px;
+          border-radius: .5rem
+      }
+
+      .map-embed {
+          border: 0;
+          background: #f2f2f2
+      }
+
+      .map-fallback {
+          background: #f8f9fa;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #6c757d;
+          font-size: .9rem;
+          border: 1px dashed #dee2e6
+      }
+
+      @media (max-width: 992px) {
+          .map-embed, .map-fallback {
+              width: 240px;
+              height: 160px
+          }
+      }
+  </style>
+</head>
+<body class="bg-body-tertiary">
+<div class="container py-4">
+  <h4 class="mb-4">지역 선택</h4>
+
+  <div class="row g-3">
+    <!-- 시도 -->
+    <div class="col-12 col-md-4">
+      <label class="form-label" for="sidoSelect">시도 (필수)</label>
+      <select class="form-select" id="sidoSelect" required>
+        <option value="">시도를 선택하세요</option>
+        <option th:each="sido : ${sidos}" th:text="${sido.name}" th:value="${sido.id}">서울특별시</option>
+      </select>
+    </div>
+
+    <!-- 시군구 -->
+    <div class="col-12 col-md-4">
+      <label class="form-label" for="sigunguSelect">시군구 (선택)</label>
+      <select class="form-select" id="sigunguSelect">
+        <option value="">시군구를 선택하세요</option>
+      </select>
+
+      <template id="sigunguOptions">
+        <option th:attr="data-sido-id=${sigungu.sidoId}"
+                th:each="sigungu : ${sigungus}"
+                th:text="${sigungu.name}"
+                th:value="${sigungu.id}">유성구
+        </option>
+      </template>
+    </div>
+
+    <!-- 읍면동 -->
+    <div class="col-12 col-md-4">
+      <label class="form-label" for="emdSelect">읍면동 (선택)</label>
+      <select class="form-select" id="emdSelect">
+        <option value="">읍면동을 선택하세요</option>
+      </select>
+
+      <template id="emdOptions">
+        <option th:attr="data-sigungu-id=${emd.sigunguId}"
+                th:each="emd : ${emds}"
+                th:text="${emd.name}"
+                th:value="${emd.id}">봉명동
+        </option>
+      </template>
+    </div>
+  </div>
+
+  <div class="row g-3 align-items-end mt-1">
+    <div class="col-6 col-md-3">
+      <label class="form-label" for="countInput">개수 (1~20)</label>
+      <input class="form-control" id="countInput" max="20" min="1" type="number" value="10">
+    </div>
+    <div class="col-6 col-md-3 d-grid">
+      <button class="btn btn-primary" id="queryButton">조회</button>
+    </div>
+  </div>
+
+  <hr class="my-4">
+
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <span>결과</span>
+        <span class="badge text-bg-secondary" id="resultCountBadge">0</span>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary btn-sm" disabled id="buttonOpenSelectedDetails">선택 상세보기</button>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+        <tr>
+          <th style="width:48px"><input disabled id="checkboxSelectAll" type="checkbox"></th>
+          <th style="width:56px">#</th>
+          <th>가게명</th>
+          <th>시도</th>
+          <th>시군구</th>
+          <th>읍면동</th>
+          <th class="text-center" style="width:340px">지도</th>
+        </tr>
+        </thead>
+        <tbody aria-live="polite" id="resultTableBody">
+        <tr class="text-center text-secondary" id="emptyResultRow">
+          <td class="py-5" colspan="7">조회 결과가 없습니다.</td>
+        </tr>
+        <tr class="text-center" id="loadingResultRow" style="display:none;">
+          <td class="py-5" colspan="7">
+            <div class="d-flex align-items-center justify-content-center gap-2">
+              <div aria-hidden="true" class="spinner-border" role="status"></div>
+              <strong>로딩중…</strong>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 상세 모달 -->
+<div aria-hidden="true" class="modal fade" id="storeDetailsModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">가게 상세</h5>
+        <button aria-label="닫기" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+      </div>
+      <div class="modal-body" id="storeDetailsBody"><!-- JS가 채움 --></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // ---- DOM
+    const sidoSelectElement = document.getElementById('sidoSelect');
+    const sigunguSelectElement = document.getElementById('sigunguSelect');
+    const emdSelectElement = document.getElementById('emdSelect');
+    const sigunguOptionsTemplate = document.getElementById('sigunguOptions');
+    const emdOptionsTemplate = document.getElementById('emdOptions');
+    const countInputElement = document.getElementById('countInput');
+    const queryButtonElement = document.getElementById('queryButton');
+    const resultTableBodyElement = document.getElementById('resultTableBody');
+    const emptyResultRowElement = document.getElementById('emptyResultRow');
+    const loadingResultRowElement = document.getElementById('loadingResultRow');
+    const resultCountBadgeElement = document.getElementById('resultCountBadge');
+    const checkboxSelectAllElement = document.getElementById('checkboxSelectAll');
+    const buttonOpenSelectedDetailsElement = document.getElementById('buttonOpenSelectedDetails');
+    const storeDetailsModalElement = document.getElementById('storeDetailsModal');
+    const storeDetailsModal = storeDetailsModalElement ? new bootstrap.Modal(storeDetailsModalElement) : null;
+    const storeDetailsBodyElement = document.getElementById('storeDetailsBody');
+
+    // CSRF (웹 체인 페이지용)
+    const csrfHeaderMetaElement = document.querySelector('meta[name="_csrf_header"]');
+    const csrfTokenMetaElement = document.querySelector('meta[name="_csrf"]');
+    const csrfHeaderName = csrfHeaderMetaElement ? csrfHeaderMetaElement.content.trim() : null;
+    const csrfTokenValue = csrfTokenMetaElement ? csrfTokenMetaElement.content.trim() : null;
+
+    // Maps Embed key
+    const gmapsKeyMetaElement = document.querySelector('meta[name="gmaps-embed-key"]');
+    const googleMapsEmbedApiKey = gmapsKeyMetaElement ? gmapsKeyMetaElement.content.trim() : null;
+
+    // ---- Utils
+    function setSelectOptions(selectElement, optionElements, placeholderText) {
+        selectElement.innerHTML = '';
+        const placeholderOption = document.createElement('option');
+        placeholderOption.value = '';
+        placeholderOption.textContent = placeholderText || '';
+        selectElement.appendChild(placeholderOption);
+        optionElements.forEach(opt => selectElement.appendChild(opt.cloneNode(true)));
+        selectElement.selectedIndex = 0;
+    }
+
+    function escapeHtml(s) {
+        return String(s ?? '').replace(/[&<>"']/g, ch => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[ch]))
+    }
+
+    async function postJson(url, payload) {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        };
+        // API 체인은 CSRF off라 불필요하지만, 있으면 그대로 보냄(무해)
+        if (csrfHeaderName && csrfTokenValue) headers[csrfHeaderName] = csrfTokenValue;
+
+        const res = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(payload),
+            credentials: 'same-origin'
+        });
+        const ct = res.headers.get('content-type') || '';
+        if (!res.ok) {
+            const t = await res.text().catch(() => '');
+            throw new Error(`${res.status} ${t || res.statusText}`);
+        }
+        if (!ct.includes('application/json')) {
+            const t = await res.text().catch(() => '');
+            throw new Error(`Unexpected non-JSON: ${t.slice(0, 80)}`);
+        }
+        return res.json();
+    }
+
+    function setResultsLoading(loading) {
+        queryButtonElement.dataset.originalText ??= queryButtonElement.textContent;
+        queryButtonElement.textContent = loading ? '조회중…' : queryButtonElement.dataset.originalText;
+        queryButtonElement.disabled = loading;
+        checkboxSelectAllElement.disabled = true;
+        if (loading) {
+            resultTableBodyElement.innerHTML = '';
+            loadingResultRowElement.style.display = '';
+            resultTableBodyElement.appendChild(loadingResultRowElement);
+            resultCountBadgeElement.textContent = '0';
+        } else {
+            loadingResultRowElement.style.display = 'none';
+        }
+    }
+
+    function setDetailsLoading(loading, label = '불러오는 중…') {
+        if (!storeDetailsBodyElement) return;
+        if (loading) {
+            storeDetailsBodyElement.innerHTML =
+                `<div class="py-4 d-flex align-items-center justify-content-center gap-2">
+           <div class="spinner-border" role="status" aria-hidden="true"></div>
+           <strong>${escapeHtml(label)}</strong>
+         </div>`;
+        }
+    }
+
+    // ---- Selects
+    const allSigunguOptionElements = [...sigunguOptionsTemplate.content.querySelectorAll('option')];
+    const allEmdOptionElements = [...emdOptionsTemplate.content.querySelectorAll('option')];
+
+    function initAllSelects() {
+        setSelectOptions(sigunguSelectElement, allSigunguOptionElements, '시군구를 선택하세요');
+        setSelectOptions(emdSelectElement, allEmdOptionElements, '읍면동을 선택하세요');
+    }
+
+    initAllSelects();
+
+    sidoSelectElement.addEventListener('change', () => {
+        const sid = sidoSelectElement.value;
+        const sigs = sid ? allSigunguOptionElements.filter(o => String(o.dataset.sidoId) === String(sid)) : allSigunguOptionElements;
+        setSelectOptions(sigunguSelectElement, sigs, '시군구를 선택하세요');
+
+        const emds = sid
+            ? allEmdOptionElements.filter(o => {
+                const sigOpt = allSigunguOptionElements.find(s => s.value === o.dataset.sigunguId);
+                return sigOpt && String(sigOpt.dataset.sidoId) === String(sid);
+            })
+            : allEmdOptionElements;
+        setSelectOptions(emdSelectElement, emds, '읍면동을 선택하세요');
+    });
+
+    sigunguSelectElement.addEventListener('change', () => {
+        const gid = sigunguSelectElement.value;
+        const emds = gid
+            ? allEmdOptionElements.filter(o => String(o.dataset.sigunguId) === String(gid))
+            : (sidoSelectElement.value
+                ? allEmdOptionElements.filter(o => {
+                    const sigOpt = allSigunguOptionElements.find(s => s.value === o.dataset.sigunguId);
+                    return sigOpt && String(sigOpt.dataset.sidoId) === String(sidoSelectElement.value);
+                })
+                : allEmdOptionElements);
+        setSelectOptions(emdSelectElement, emds, '읍면동을 선택하세요');
+    });
+
+    // ---- Maps Embed
+    const PLACE_ID_CORE_REGEX = /^Ch[Ii][A-Za-z0-9_-]{8,}$/;
+
+    function buildEmbedSrcFromPlaceIdOrSearch({placeId, storeName, sidoName, sigunguName, emdName}) {
+        if (!googleMapsEmbedApiKey) return null;
+        let core = (placeId || '').trim();
+        if (core.startsWith('places/')) core = core.slice(7);
+        if (PLACE_ID_CORE_REGEX.test(core)) {
+            return `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(googleMapsEmbedApiKey)}&q=place_id:${encodeURIComponent(core)}&zoom=16&language=ko`;
+        }
+        const q = [storeName, sidoName, sigunguName, emdName].filter(Boolean).join(' ').trim();
+        if (q) {
+            return `https://www.google.com/maps/embed/v1/search?key=${encodeURIComponent(googleMapsEmbedApiKey)}&q=${encodeURIComponent(q)}&zoom=16&language=ko`;
+        }
+        return null;
+    }
+
+    // ---- API 호출 (API 체인)
+    async function apiSearchStores(payload) {
+        return await postJson('/api/admin/places/search', payload);
+    }
+
+    async function apiDetail(placeId) {
+        return await postJson('/api/admin/places/detail', {placeId});
+    }
+
+    async function apiDetails(placeIds) {
+        return await postJson('/api/admin/places/details', {placeIds});
+    }
+
+    // ---- 상세 렌더
+    function renderStoreDetails(detailsOrOne) {
+        const details = Array.isArray(detailsOrOne) ? detailsOrOne : [detailsOrOne];
+        if (!storeDetailsBodyElement) return;
+        if (!details.length) {
+            storeDetailsBodyElement.innerHTML = `<div class="text-secondary py-2">상세정보가 없습니다.</div>`;
+            return;
+        }
+        storeDetailsBodyElement.innerHTML = details.map(d => {
+            const imgs = (d.images || []).slice(0, 6).map(u => `<img src="${escapeHtml(u)}" class="img-thumbnail me-2 mb-2" style="max-height:96px" alt="">`).join('');
+            const cats = (d.categories || []).map(c => `<span class="badge text-bg-light me-1">${escapeHtml(c)}</span>`).join('');
+            const facs = (d.facilities || []).map(f => `<span class="badge text-bg-light me-1">${escapeHtml(f)}</span>`).join('');
+            const foods = (d.foods || []).map(f => `
+        <tr><td>${escapeHtml(f.name ?? '')}</td>
+            <td class="text-end">${f.price != null ? f.price.toLocaleString() : ''}</td>
+            <td>${escapeHtml(f.description ?? '')}</td></tr>`).join('');
+            const region = [d.sidoName, d.sigunguName, d.emdName].filter(Boolean).join(' ');
+            const addr = d.roadAddressText || d.jubunAddressText || '';
+            return `
+        <div class="mb-4">
+          <h6 class="mb-1">${escapeHtml(d.name || '')}</h6>
+          <div class="text-muted small mb-2">${escapeHtml(region)}${addr ? ' · ' + escapeHtml(addr) : ''}</div>
+          ${d.phone ? `<div class="mb-2"><span class="badge text-bg-secondary">전화</span> <code>${escapeHtml(d.phone)}</code></div>` : ''}
+          ${cats ? `<div class="mb-2">카테고리: ${cats}</div>` : ''}
+          ${facs ? `<div class="mb-2">시설: ${facs}</div>` : ''}
+          ${imgs ? `<div class="mb-2 d-flex flex-wrap">${imgs}</div>` : ''}
+          ${(d.foods && d.foods.length) ? `
+            <div class="table-responsive">
+              <table class="table table-sm">
+                <thead class="table-light"><tr><th>메뉴</th><th class="text-end" style="width:120px">가격</th><th>설명</th></tr></thead>
+                <tbody>${foods}</tbody>
+              </table>
+            </div>` : ''}
+          <hr>
+        </div>`;
+        }).join('');
+    }
+
+    // ---- 결과 테이블
+    function refreshSelectedDetailsButtonState() {
+        buttonOpenSelectedDetailsElement.disabled = !document.querySelector('.row-select-checkbox:checked');
+    }
+
+    function bindPerRowDetailButtons() {
+        document.querySelectorAll('#resultTableBody tr .buttonRowDetail').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const tr = e.target.closest('tr');
+                if (!tr) return;
+                const placeId = tr.dataset.placeId || '';
+                setDetailsLoading(true, '상세 불러오는 중…');
+                const original = btn.textContent;
+                btn.disabled = true;
+                btn.textContent = '불러오는 중…';
+                try {
+                    const detail = await apiDetail(placeId);
+                    renderStoreDetails(detail);
+                    storeDetailsModal?.show();
+                } catch (err) {
+                    storeDetailsBodyElement.innerHTML = `<div class="text-danger">상세 조회 실패: ${escapeHtml(err.message || '알 수 없는 오류')}</div>`;
+                    storeDetailsModal?.show();
+                } finally {
+                    btn.textContent = original;
+                    btn.disabled = false;
+                }
+            });
+        });
+    }
+
+    function renderResultRows(rows) {
+        resultTableBodyElement.innerHTML = '';
+        if (!Array.isArray(rows) || rows.length === 0) {
+            resultTableBodyElement.appendChild(emptyResultRowElement);
+            resultCountBadgeElement.textContent = '0';
+            checkboxSelectAllElement.checked = false;
+            checkboxSelectAllElement.disabled = true;
+            buttonOpenSelectedDetailsElement.disabled = true;
+            return;
+        }
+        rows.forEach((r, i) => {
+            const storeName = r.storeName ?? '', sidoName = r.sidoName ?? '', sigunguName = r.sigunguName ?? '',
+                emdName = r.emdName ?? '', placeId = r.placeId ?? '';
+            const embedSrc = buildEmbedSrcFromPlaceIdOrSearch({placeId, storeName, sidoName, sigunguName, emdName});
+            const tr = document.createElement('tr');
+            tr.dataset.placeId = placeId;
+            tr.innerHTML = `
+        <td><input type="checkbox" class="row-select-checkbox"></td>
+        <td class="text-secondary">${i + 1}</td>
+        <td class="cell-name"><strong>${escapeHtml(storeName)}</strong>
+          <button type="button" class="btn btn-link btn-sm px-1 py-0 ms-1 text-decoration-none buttonRowDetail">상세</button>
+        </td>
+        <td>${escapeHtml(sidoName)}</td>
+        <td>${escapeHtml(sigunguName)}</td>
+        <td>${escapeHtml(emdName)}</td>
+        <td class="text-center">
+          ${embedSrc
+                ? `<iframe class="map-embed" title="지도 미리보기" loading="eager" referrerpolicy="no-referrer-when-downgrade" src="${embedSrc}"></iframe>`
+                : `<div class="map-fallback">임베드 불가 (키/검색어 확인)</div>`
+            }
+        </td>`;
+            resultTableBodyElement.appendChild(tr);
+        });
+        resultCountBadgeElement.textContent = String(rows.length);
+        checkboxSelectAllElement.checked = false;
+        checkboxSelectAllElement.disabled = false;
+        refreshSelectedDetailsButtonState();
+        bindPerRowDetailButtons();
+    }
+
+    // ---- 선택 상세보기(벌크)
+    function collectCheckedRows() {
+        const rows = [];
+        document.querySelectorAll('#resultTableBody tr').forEach(tr => {
+            const cb = tr.querySelector('.row-select-checkbox');
+            if (cb && cb.checked) rows.push(tr);
+        });
+        return rows;
+    }
+
+    buttonOpenSelectedDetailsElement.addEventListener('click', async () => {
+        const checked = collectCheckedRows();
+        if (!checked.length) {
+            alert('상세를 볼 항목을 선택하세요.');
+            return;
+        }
+        const original = buttonOpenSelectedDetailsElement.textContent;
+        buttonOpenSelectedDetailsElement.disabled = true;
+        buttonOpenSelectedDetailsElement.textContent = '불러오는 중…';
+        setDetailsLoading(true, '선택 항목 상세 불러오는 중…');
+        storeDetailsModal?.show();
+        try {
+            const placeIds = checked.map(tr => tr.dataset.placeId || '');
+            const details = await apiDetails(placeIds);
+            renderStoreDetails(details);
+        } catch (err) {
+            storeDetailsBodyElement.innerHTML = `<div class="text-danger">상세 조회 실패: ${escapeHtml(err.message || '알 수 없는 오류')}</div>`;
+        } finally {
+            buttonOpenSelectedDetailsElement.textContent = original;
+            buttonOpenSelectedDetailsElement.disabled = false;
+            refreshSelectedDetailsButtonState();
+        }
+    });
+
+    document.addEventListener('change', (e) => {
+        if (e.target.classList?.contains('row-select-checkbox')) refreshSelectedDetailsButtonState();
+    });
+    checkboxSelectAllElement.addEventListener('change', () => {
+        const checked = checkboxSelectAllElement.checked;
+        document.querySelectorAll('.row-select-checkbox').forEach(cb => cb.checked = checked);
+        refreshSelectedDetailsButtonState();
+    });
+
+    // ---- 조회 버튼 → API 체인 호출
+    async function requestRegionStores(payload) {
+        return await apiSearchStores(payload);
+    }
+
+    queryButtonElement.addEventListener('click', async () => {
+        const sidoId = sidoSelectElement.value;
+        const sigunguId = sigunguSelectElement.value || null;
+        const emdId = emdSelectElement.value || null;
+        if (!sidoId) {
+            alert('시도를 선택하세요.');
+            return;
+        }
+
+        let count = Number(countInputElement.value || 10);
+        count = Math.min(Math.max(count, 1), 20);
+
+        const payload = {
+            sidoId: Number(sidoId),
+            sigunguId: sigunguId ? Number(sigunguId) : null,
+            emdId: emdId ? Number(emdId) : null,
+            count
+        };
+        try {
+            setResultsLoading(true);
+            const rows = await requestRegionStores(payload); // POST /api/admin/places/search
+            renderResultRows(rows);
+        } catch (err) {
+            if (String(err.message || '').startsWith('401')) alert('인증이 필요합니다 (401).');
+            else if (String(err.message || '').startsWith('403')) alert('접근이 거부되었습니다 (403).');
+            else alert('요청 실패: ' + (err.message || '알 수 없는 오류'));
+        } finally {
+            setResultsLoading(false);
+        }
+    });
+</script>
+</body>
+</html>

@@ -4,40 +4,126 @@
 
 <mapper namespace="com.jslhrd.yorimichi.mapper.RegionMapper">
 
+    <!-- @formatter:off -->
+
     <select id="selectAllSido" resultType="RegionSidoDTO">
-        SELECT id, code, name
+        SELECT
+            id,
+            code,
+            name
+
         FROM region_sido
+
         ORDER BY id
     </select>
 
     <select id="selectBySidoId" parameterType="long" resultType="RegionSidoDTO">
-        SELECT id, code, name
+        SELECT
+            id,
+            code,
+            name
+
         FROM region_sido
+
         WHERE id = #{sidoId}
     </select>
 
+    <select id="selectBySidoName" parameterType="string" resultType="RegionSidoDTO">
+        SELECT
+            id,
+            code,
+            name
+
+        FROM region_sido
+
+        WHERE name = #{sidoName}
+    </select>
+
     <select id="selectAllSigungu" resultType="RegionSigunguDTO">
-        SELECT id, sido_id, code, name
+        SELECT
+            id,
+            sido_id,
+            code,
+            name
+
         FROM region_sigungu
+
         ORDER BY id
     </select>
 
     <select id="selectBySigunguId" parameterType="long" resultType="RegionSigunguDTO">
-        SELECT id, sido_id, code, name
+        SELECT
+            id,
+            sido_id,
+            code,
+            name
+
         FROM region_sigungu
+
         WHERE id = #{sigunguId}
     </select>
 
+    <select id="selectBySigunguName" resultType="RegionSigunguDTO">
+        SELECT
+            id,
+            sido_id,
+            code,
+            name
+
+        FROM region_sigungu
+
+        WHERE
+            sido_id = #{sidoId}
+            AND name = #{sigunguName}
+    </select>
+
     <select id="selectAllEmd" resultType="RegionEmdDTO">
-        SELECT id, sigungu_id, code, name
+        SELECT
+            id,
+            sigungu_id,
+            code,
+            name
+
         FROM region_emd
+
         ORDER BY id
     </select>
 
     <select id="selectByEmdId" parameterType="long" resultType="RegionEmdDTO">
-        SELECT id, sigungu_id, code, name
+        SELECT
+            id,
+            sigungu_id,
+            code,
+            name
+
         FROM region_emd
+
         WHERE id = #{emdId}
     </select>
+
+    <select id="selectByEmdName" resultType="RegionEmdDTO">
+        SELECT
+            id,
+            sigungu_id,
+            code,
+            name
+
+        FROM region_emd
+
+        WHERE sigungu_id = #{sigunguId}
+            AND name = #{emdName}
+    </select>
+
+    <select id="existsByEmdId" parameterType="long" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+
+            FROM region_emd
+
+            WHERE id = #{emdId}
+        )
+    </select>
+
+    <!-- @formatter:on -->
 
 </mapper>

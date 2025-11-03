@@ -19,8 +19,8 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class FacilityCategoryManager implements FacilityCategoryService {
 
 	private final FacilityCategoryMapper facilityCategoryMapper;
@@ -31,6 +31,29 @@ public class FacilityCategoryManager implements FacilityCategoryService {
 	@Transactional(readOnly = true)
 	public List<FacilityCategoryDTO> findAll() {
 		return facilityCategoryMapper.selectAll();
+	}
+
+	@Override
+	public Long getOrCreateByName(FacilityCategoryDTO facility) {
+
+		String name = facility.getName();
+
+		Long findFacilityId = facilityCategoryMapper.selectIdByName(name);
+		if (findFacilityId != null) {
+			return findFacilityId;
+		}
+
+		try {
+			save(facility);
+			return facility.getId();
+		} catch (DuplicateKeyException e) {
+			findFacilityId = facilityCategoryMapper.selectIdByName(name);
+			if (findFacilityId != null) {
+				return findFacilityId;
+			}
+
+			throw e;
+		}
 	}
 
 	@Override

@@ -80,6 +80,17 @@
         WHERE f.id = #{foodId}
     </select>
 
+    <select id="selectFoodIdByStoreAndName" resultType="long">
+        SELECT
+            id
+
+        FROM food
+
+        WHERE
+            store_id = #{storeId}
+            AND name = #{name}
+    </select>
+
     <select id="existsActive" parameterType="long" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
@@ -92,8 +103,16 @@
     </select>
 
     <insert id="insert" parameterType="FoodDTO">
-        INSERT INTO food (id, store_id, name, price, description)
-        VALUES (#{id}, #{storeId}, #{name}, #{price}, #{description})
+        INSERT INTO food (id,
+                          store_id,
+                          name,
+                          price,
+                          description)
+        VALUES (#{id},
+                #{storeId},
+                #{name},
+                #{price},
+                #{description})
     </insert>
 
     <update id="update">

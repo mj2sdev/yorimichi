@@ -32,6 +32,18 @@
         WHERE id = #{categoryId}
     </select>
 
+    <select id="selectIdByParentAndName" resultType="long">
+        SELECT
+            id
+
+        FROM category
+
+        WHERE
+            <if test="parentId == null"> parent_id IS NULL </if>
+            <if test="parentId != null"> parent_id = #{parentId} </if>
+            AND name = #{name}
+    </select>
+
     <select id="existsById" parameterType="long" resultType="boolean">
         SELECT EXISTS (
             SELECT 1

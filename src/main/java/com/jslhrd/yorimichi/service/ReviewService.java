@@ -1,6 +1,7 @@
 package com.jslhrd.yorimichi.service;
 
 import com.jslhrd.yorimichi.domain.ReviewDTO;
+import com.jslhrd.yorimichi.gemini.review.ReviewSummaryRefreshResponse;
 
 import java.util.List;
 
@@ -20,6 +21,8 @@ public interface ReviewService {
 	 */
 	public List<ReviewDTO> findAll();
 
+	public List<String> findContentByStoreId(Long storeId, int limit);
+
 	/**
 	 * 가게 ID를 기반으로 리뷰를 여러 개 찾습니다.
 	 *
@@ -30,6 +33,7 @@ public interface ReviewService {
 
 	/**
 	 * 작성자(userId)를 기준으로 리뷰 리스트를 조회
+	 *
 	 * @param userId
 	 * @return
 	 */
@@ -61,6 +65,8 @@ public interface ReviewService {
 	 */
 	public void update(Long userId, Long reviewId, ReviewDTO review);
 
+	ReviewSummaryRefreshResponse refreshOnce(Integer overrideHot, Integer overrideBacklog);
+
 
 	/**
 	 * 리뷰아이디 (reviewId) 를 이용해 리뷰를 삭제합니다.
@@ -72,8 +78,8 @@ public interface ReviewService {
 
 	/**
 	 * 삭제 처리된 리뷰를 복구합니다.
-	 * 
-	 * @param userId 권한 확인 유저 ID
+	 *
+	 * @param userId   권한 확인 유저 ID
 	 * @param reviewId 삭제할 리뷰 ID
 	 */
 	public void restore(Long userId, Long reviewId);

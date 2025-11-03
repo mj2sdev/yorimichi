@@ -1,23 +1,26 @@
 package com.jslhrd.yorimichi.service.manager;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jslhrd.yorimichi.domain.ImageDTO;
 import com.jslhrd.yorimichi.domain.ReviewDTO;
 import com.jslhrd.yorimichi.domain.ReviewFoodDTO;
 import com.jslhrd.yorimichi.exception.*;
-import com.jslhrd.yorimichi.mapper.ReviewFoodMapper;
-import com.jslhrd.yorimichi.mapper.ReviewMapper;
-import com.jslhrd.yorimichi.mapper.RootImageMapper;
-import com.jslhrd.yorimichi.mapper.RootMapper;
-import com.jslhrd.yorimichi.mapper.StoreMapper;
-import com.jslhrd.yorimichi.mapper.UserMapper;
+import com.jslhrd.yorimichi.gemini.GeminiService;
+import com.jslhrd.yorimichi.gemini.review.ReviewSummaryRefreshResponse;
+import com.jslhrd.yorimichi.mapper.*;
 import com.jslhrd.yorimichi.service.GoogleDriveService;
 import com.jslhrd.yorimichi.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,11 +38,157 @@ public class ReviewManager implements ReviewService {
 	private final RootImageMapper rootImageMapper;
 	private final ReviewFoodMapper reviewFoodMapper;
 	private final GoogleDriveService googleDriveService;
+	private final GeminiService geminiService;
+	private final ObjectMapper objectMapper;
+
+	// 기본 파라미터
+	private int hotWindowDays = 14;   // 최근 N일
+	private int perStoreReviews = 20;  // 가게당 읽을 리뷰 수
+	private int hotBatchSize = 20;  // 매일 핫처리 개수
+	private int backlogBatchSize = 50;  // 매일 백로그 처리 개수
+	private int buckets = 30;  // 백로그 버킷 수
+
+	/**
+	 * 매일 04:10 (예시)
+	 */
+	@Scheduled(cron = "0 10 4 * * *")
+	@Transactional
+	public void refreshDaily() {
+		int hotDone = processHot();
+		int backDone = processBacklog();
+		log.info("ReviewSummary done hot={}, backlog={}", hotDone, backDone);
+	}
+
+	/**
+	 * 수동 실행 (요청 크기만 덮어씀)
+	 */
+	@Transactional
+	public ReviewSummaryRefreshResponse refreshOnce(Integer hotSize, Integer backlogSize) {
+		final int hotLimit = (hotSize != null ? Math.max(hotSize, 0) : 0);
+		final int backLimit = (backlogSize != null ? Math.max(backlogSize, 0) : 0);
+
+		// 1) 후보 리스트를 "한 번만" 조회
+		List<Long> hotIds = hotLimit > 0
+				? reviewMapper.selectStoreIdsByDays(hotWindowDays, hotLimit)
+				: List.of();
+
+		int bucketOfToday = LocalDate.now().getDayOfYear() % buckets;
+		List<Long> backlogIds = backLimit > 0
+				? reviewMapper.selectBacklogStoreIdsByBucket(buckets, bucketOfToday, backLimit)
+				: List.of();
+
+		int hotCandidates = hotIds.size();
+		int backlogCandidates = backlogIds.size();
+
+		// 2) 실제 처리 (중복 제거: 핫 우선)
+		LinkedHashSet<Long> union = new LinkedHashSet<>(hotIds);
+		for (Long id : backlogIds) union.add(id);
+		List<Long> runIds = List.copyOf(union);
+
+		ProcessStats stats = summarizeStores(runIds);
+
+		return new ReviewSummaryRefreshResponse(
+				hotLimit,
+				backLimit,
+				hotCandidates,
+				backlogCandidates,
+				stats.updated,
+				stats.skipped,
+				stats.errors,
+				stats.updatedStoreIds
+		);
+	}
+
+	private int processHot() {
+		if (hotBatchSize <= 0) return 0;
+		List<Long> storeIds = reviewMapper.selectStoreIdsByDays(hotWindowDays, hotBatchSize);
+		return summarizeStores(storeIds).updated; // "성공적으로 업데이트된 개수" 리턴
+	}
+
+	private int processBacklog() {
+		if (backlogBatchSize <= 0) return 0;
+		int bucketOfToday = LocalDate.now().getDayOfYear() % buckets;
+		List<Long> storeIds = reviewMapper.selectBacklogStoreIdsByBucket(buckets, bucketOfToday, backlogBatchSize);
+		return summarizeStores(storeIds).updated;
+	}
+
+	/**
+	 * 요약 처리 본체
+	 */
+	private ProcessStats summarizeStores(List<Long> storeIds) {
+		int updated = 0, skipped = 0, errors = 0;
+		List<Long> updatedStoreIds = new ArrayList<>();
+
+		for (Long storeId : storeIds) {
+			try {
+				List<String> contents = reviewMapper.selectRecentContentsByStoreId(storeId, perStoreReviews);
+
+				if (contents.isEmpty()) {
+					// 리뷰가 없다면 요약 공백으로 초기화(혹은 스킵 처리)
+					storeMapper.updateSummaryReview(storeId, "");
+					skipped++;
+					continue;
+				}
+
+				String prompt = buildJaSummaryPrompt(contents);
+				String raw = geminiService.generateWithSearch(prompt);
+				String summary = extractPlainText(raw);
+				if (summary == null || summary.isBlank()) {
+					skipped++;
+					continue;
+				}
+
+				storeMapper.updateSummaryReview(storeId, summary);
+				updated++;
+				updatedStoreIds.add(storeId);
+
+				// 필요 시 레이트리밋
+				// Thread.sleep(120);
+			} catch (Exception e) {
+				errors++;
+				log.warn("summarize fail storeId={}, cause={}", storeId, e.toString());
+			}
+		}
+		return new ProcessStats(updated, skipped, errors, updatedStoreIds);
+	}
+
+	private String buildJaSummaryPrompt(List<String> contents) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("""
+				以下は同一店舗の最新レビュー抜粋です。重複を避け、事実ベースで要点のみを日本語で簡潔にまとめてください。
+				- 出力は日本語の箇条書き3〜5行。各行は1文、合計300文字以内。
+				- 接客/味/量/価格/雰囲気/再訪意向など共通点を優先して要約。
+				- 箇条書き以外の文章・前置き・コードフェンスは禁止。
+				
+				【レビュー本文】
+				""");
+		for (String c : contents) sb.append("・").append(c).append("\n");
+		return sb.toString();
+	}
+
+	/**
+	 * Gemini 응답에서 candidates[0].content.parts[0].text 를 안전하게 파싱
+	 * (인덱스 서브스트링 방식 대신 Jackson 사용)
+	 */
+	private String extractPlainText(String raw) {
+		if (raw == null || raw.isBlank()) return null;
+		try {
+			JsonNode root = objectMapper.readTree(raw);
+			return root.at("/candidates/0/content/parts/0/text").asText(null);
+		} catch (Exception e) {
+			return null;
+		}
+	}
 
 	@Override
 	public List<ReviewDTO> findAll() {
 		// TODO: 무한 스크룰 및 review 상세 정보 추후 구현
 		return reviewMapper.selectAll();
+	}
+
+	@Override
+	public List<String> findContentByStoreId(Long storeId, int limit) {
+		return reviewMapper.selectRecentContentsByStoreId(storeId, limit);
 	}
 
 	@Override
@@ -144,7 +293,7 @@ public class ReviewManager implements ReviewService {
 
 	@Override
 	@Transactional
-	public void restore(Long userId, Long reviewId){
+	public void restore(Long userId, Long reviewId) {
 		boolean affected = reviewMapper.restoreById(userId, reviewId) > 0;
 		if (!affected) {
 			assertActiveReview(reviewId);
@@ -173,5 +322,9 @@ public class ReviewManager implements ReviewService {
 		if (!exists) {
 			throw new ReviewNotFoundException(reviewId);
 		}
+	}
+
+	// 간단한 처리 누적용 DTO
+	private record ProcessStats(int updated, int skipped, int errors, List<Long> updatedStoreIds) {
 	}
 }

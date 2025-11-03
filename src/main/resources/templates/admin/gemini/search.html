@@ -1,0 +1,870 @@
+<!doctype html>
+<html data-bs-theme="auto" lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8"/>
+  <title>地域別グルメ収集（Gemini）</title>
+
+  <!-- CSRF (Web チェーン用) -->
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
+
+  <!-- Maps Embed key (地図プレビュー) -->
+  <meta name="gmaps-embed-key" th:content="${mapsEmbedKey}" th:if="${mapsEmbedKey}">
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+      .map-embed, .map-fallback {
+          width: 320px;
+          height: 200px;
+          border-radius: .5rem;
+      }
+
+      .map-embed {
+          border: 0;
+          background: #f2f2f2;
+      }
+
+      .map-fallback {
+          background: #f8f9fa;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          color: #6c757d;
+          font-size: .9rem;
+          border: 1px dashed #dee2e6;
+          padding: .5rem .75rem;
+          min-width: 240px;
+      }
+
+      .pre-wrap {
+          white-space: pre-wrap;
+      }
+
+      @media (max-width: 992px) {
+          .map-embed, .map-fallback {
+              width: 240px;
+              height: 160px;
+          }
+      }
+  </style>
+</head>
+<body class="bg-body-tertiary">
+<div class="container py-4">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a th:href="@{/admin/index}">管理</a></li>
+      <li aria-current="page" class="breadcrumb-item active">レビュー要約</li>
+    </ol>
+  </nav>
+
+  <h4 class="mb-4">地域選択</h4>
+  <div class="row g-3">
+    <!-- 都道府県 -->
+    <div class="col-12 col-md-4">
+      <label class="form-label" for="sidoSelect">都道府県（必須）</label>
+      <select class="form-select" id="sidoSelect" required>
+        <option value="">都道府県を選択してください</option>
+        <option th:each="sido : ${sidos}" th:text="${sido.name}" th:value="${sido.id}">東京都</option>
+      </select>
+    </div>
+
+    <!-- 市・郡・区 -->
+    <div class="col-12 col-md-4">
+      <label class="form-label" for="sigunguSelect">市・郡・区（任意）</label>
+      <select class="form-select" id="sigunguSelect">
+        <option value="">市・郡・区を選択してください</option>
+      </select>
+
+      <template id="sigunguOptions">
+        <option th:attr="data-sido-id=${sigungu.sidoId}"
+                th:each="sigungu : ${sigungus}"
+                th:text="${sigungu.name}"
+                th:value="${sigungu.id}">ユソング
+        </option>
+      </template>
+    </div>
+
+    <!-- 邑・面・洞 -->
+    <div class="col-12 col-md-4">
+      <label class="form-label" for="emdSelect">邑・面・洞（任意）</label>
+      <select class="form-select" id="emdSelect">
+        <option value="">邑・面・洞を選択してください</option>
+      </select>
+
+      <template id="emdOptions">
+        <option th:attr="data-sigungu-id=${emd.sigunguId}"
+                th:each="emd : ${emds}"
+                th:text="${emd.name}"
+                th:value="${emd.id}">鳳鳴洞
+        </option>
+      </template>
+    </div>
+  </div>
+
+  <div class="row g-3 align-items-end mt-1">
+    <div class="col-6 col-md-3">
+      <label class="form-label" for="countInput">件数（1〜20）</label>
+      <input class="form-control" id="countInput" max="20" min="1" type="number" value="10">
+    </div>
+    <div class="col-6 col-md-3 d-grid">
+      <button class="btn btn-primary" id="queryButton">検索</button>
+    </div>
+  </div>
+
+  <hr class="my-4">
+
+  <!-- 結果テーブル -->
+  <div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center gap-2">
+        <span>結果</span>
+        <span class="badge text-bg-secondary" id="resultCountBadge">0</span>
+      </div>
+      <div class="d-flex gap-2">
+        <!-- すべて選択 / すべて解除 -->
+        <button class="btn btn-outline-secondary btn-sm" disabled id="buttonSelectAllRows">すべて選択</button>
+        <button class="btn btn-outline-secondary btn-sm" disabled id="buttonClearAllRows">すべて解除</button>
+        <button class="btn btn-outline-secondary btn-sm" disabled id="buttonOpenSelectedDetails">選択した項目の詳細
+        </button>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+        <tr>
+          <th style="width:48px">
+            <input disabled id="checkboxSelectAll" title="すべて選択/解除" type="checkbox">
+          </th>
+          <th style="width:56px">#</th>
+          <th>店名</th>
+          <th>都道府県</th>
+          <th>市・郡・区</th>
+          <th>邑・面・洞</th>
+          <th class="text-center" style="width:340px">地図</th>
+        </tr>
+        </thead>
+        <tbody aria-live="polite" id="resultTableBody">
+        <tr class="text-center text-secondary" id="emptyResultRow">
+          <td class="py-5" colspan="7">結果がありません。</td>
+        </tr>
+        <tr class="text-center" id="loadingResultRow" style="display:none;">
+          <td class="py-5" colspan="7">
+            <div class="d-flex align-items-center justify-content-center gap-2">
+              <div aria-hidden="true" class="spinner-border" role="status"></div>
+              <strong>読み込み中…</strong>
+            </div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 詳細モーダル -->
+<div aria-hidden="true" class="modal fade" id="storeDetailsModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">店舗詳細</h5>
+        <button aria-label="閉じる" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+      </div>
+      <div class="modal-body" id="storeDetailsBody"><!-- filled by JS --></div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="buttonSaveDetails">DBに保存</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal" id="buttonCloseDetails">閉じる</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 保存結果モーダル -->
+<div aria-hidden="true" class="modal fade" id="saveResultModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">DB 保存結果</h5>
+        <button aria-label="閉じる" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <span class="badge text-bg-success" id="badgeSavedCount">0 保存</span>
+          <span class="badge text-bg-warning text-dark" id="badgeUnresolvedCount">0 未解決</span>
+        </div>
+        <div class="mb-3 small text-muted" id="saveResultSummary"></div>
+
+        <div class="table-responsive" id="saveUnresolvedWrapper" style="display:none;">
+          <table class="table table-sm align-middle mb-0">
+            <thead class="table-light">
+            <tr>
+              <th style="width:80px">インデックス</th>
+              <th>店名</th>
+              <th>理由</th>
+            </tr>
+            </thead>
+            <tbody id="saveUnresolvedTbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    /* =============================
+     * DOM
+     * ============================= */
+    const sidoSelectElement = document.getElementById('sidoSelect');
+    const sigunguSelectElement = document.getElementById('sigunguSelect');
+    const emdSelectElement = document.getElementById('emdSelect');
+    const sigunguOptionsTemplate = document.getElementById('sigunguOptions');
+    const emdOptionsTemplate = document.getElementById('emdOptions');
+
+    const countInputElement = document.getElementById('countInput');
+    const queryButtonElement = document.getElementById('queryButton');
+
+    const resultTableBodyElement = document.getElementById('resultTableBody');
+    const emptyResultRowElement = document.getElementById('emptyResultRow');
+    const loadingResultRowElement = document.getElementById('loadingResultRow');
+    const resultCountBadgeElement = document.getElementById('resultCountBadge');
+
+    const checkboxSelectAllElement = document.getElementById('checkboxSelectAll');
+    const buttonOpenSelectedDetailsElement = document.getElementById('buttonOpenSelectedDetails');
+    const buttonSelectAllRowsElement = document.getElementById('buttonSelectAllRows');
+    const buttonClearAllRowsElement = document.getElementById('buttonClearAllRows');
+
+    const storeDetailsModalElement = document.getElementById('storeDetailsModal');
+    const storeDetailsModal = storeDetailsModalElement ? new bootstrap.Modal(storeDetailsModalElement) : null;
+    const storeDetailsBodyElement = document.getElementById('storeDetailsBody');
+    const buttonSaveDetailsElement = document.getElementById('buttonSaveDetails');
+
+    const saveResultModalElement = document.getElementById('saveResultModal');
+    const saveResultModal = saveResultModalElement ? new bootstrap.Modal(saveResultModalElement) : null;
+    const badgeSavedCount = document.getElementById('badgeSavedCount');
+    const badgeUnresolvedCount = document.getElementById('badgeUnresolvedCount');
+    const saveResultSummary = document.getElementById('saveResultSummary');
+    const saveUnresolvedWrapper = document.getElementById('saveUnresolvedWrapper');
+    const saveUnresolvedTbody = document.getElementById('saveUnresolvedTbody');
+
+    // 現在モーダルに表示中の詳細（1件または N件）を保持 → 保存時に送信
+    let lastRenderedDetails = [];
+
+    // CSRF
+    const csrfHeaderMetaElement = document.querySelector('meta[name="_csrf_header"]');
+    const csrfTokenMetaElement = document.querySelector('meta[name="_csrf"]');
+    const csrfHeaderName = csrfHeaderMetaElement ? csrfHeaderMetaElement.content.trim() : null;
+    const csrfTokenValue = csrfTokenMetaElement ? csrfTokenMetaElement.content.trim() : null;
+
+    // Maps Embed key
+    const gmapsKeyMetaElement = document.querySelector('meta[name="gmaps-embed-key"]');
+    const googleMapsEmbedApiKey = gmapsKeyMetaElement ? gmapsKeyMetaElement.content.trim() : null;
+
+    /* =============================
+     * Utils
+     * ============================= */
+    function setSelectOptions(selectElement, optionElements, placeholderText) {
+        selectElement.innerHTML = '';
+        const placeholderOptionElement = document.createElement('option');
+        placeholderOptionElement.value = '';
+        placeholderOptionElement.textContent = placeholderText || '';
+        selectElement.appendChild(placeholderOptionElement);
+        optionElements.forEach(optionElement => selectElement.appendChild(optionElement.cloneNode(true)));
+        selectElement.selectedIndex = 0;
+    }
+
+    function escapeHtml(raw) {
+        return String(raw ?? '').replace(/[&<>"']/g, ch => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[ch]));
+    }
+
+    async function postJson(url, payload) {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        };
+        if (csrfHeaderName && csrfTokenValue) headers[csrfHeaderName] = csrfTokenValue;
+
+        const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(payload),
+            credentials: 'same-origin'
+        });
+        const contentType = response.headers.get('content-type') || '';
+        if (!response.ok) {
+            const text = await response.text().catch(() => '');
+            // ✅ res -> response に修正
+            throw new Error(`${response.status} ${text || response.statusText}`);
+        }
+        if (!contentType.includes('application/json')) {
+            const text = await response.text().catch(() => '');
+            throw new Error(`Unexpected non-JSON: ${text.slice(0, 80)}`);
+        }
+        return response.json();
+    }
+
+    function setResultsLoading(loading) {
+        queryButtonElement.dataset.originalText ??= queryButtonElement.textContent;
+        queryButtonElement.textContent = loading ? '検索中…' : queryButtonElement.dataset.originalText;
+        queryButtonElement.disabled = loading;
+        checkboxSelectAllElement.disabled = true;
+        buttonSelectAllRowsElement.disabled = true;
+        buttonClearAllRowsElement.disabled = true;
+
+        if (loading) {
+            resultTableBodyElement.innerHTML = '';
+            loadingResultRowElement.style.display = '';
+            resultTableBodyElement.appendChild(loadingResultRowElement);
+            resultCountBadgeElement.textContent = '0';
+        } else {
+            loadingResultRowElement.style.display = 'none';
+        }
+    }
+
+    function setDetailsLoading(loading, label = '読み込み中…') {
+        if (!storeDetailsBodyElement) return;
+        if (loading) {
+            storeDetailsBodyElement.innerHTML =
+                `<div class="py-4 d-flex align-items-center justify-content-center gap-2">
+         <div class="spinner-border" role="status" aria-hidden="true"></div>
+         <strong>${escapeHtml(label)}</strong>
+       </div>`;
+        }
+    }
+
+    /* =============================
+     * Selects (カスケード)
+     * ============================= */
+    const allSigunguOptionElements = [...sigunguOptionsTemplate.content.querySelectorAll('option')];
+    const allEmdOptionElements = [...emdOptionsTemplate.content.querySelectorAll('option')];
+
+    function initAllSelects() {
+        setSelectOptions(sigunguSelectElement, allSigunguOptionElements, '市・郡・区を選択してください');
+        setSelectOptions(emdSelectElement, allEmdOptionElements, '邑・面・洞を選択してください');
+    }
+
+    initAllSelects();
+
+    sidoSelectElement.addEventListener('change', () => {
+        const selectedSidoId = sidoSelectElement.value;
+
+        const filteredSigungus = selectedSidoId
+            ? allSigunguOptionElements.filter(o => String(o.dataset.sidoId) === String(selectedSidoId))
+            : allSigunguOptionElements;
+        setSelectOptions(sigunguSelectElement, filteredSigungus, '市・郡・区を選択してください');
+
+        const filteredEmds = selectedSidoId
+            ? allEmdOptionElements.filter(o => {
+                const sigOpt = allSigunguOptionElements.find(s => s.value === o.dataset.sigunguId);
+                return sigOpt && String(sigOpt.dataset.sidoId) === String(selectedSidoId);
+            })
+            : allEmdOptionElements;
+        setSelectOptions(emdSelectElement, filteredEmds, '邑・面・洞を選択してください');
+    });
+
+    sigunguSelectElement.addEventListener('change', () => {
+        const selectedSigunguId = sigunguSelectElement.value;
+
+        const filteredEmds = selectedSigunguId
+            ? allEmdOptionElements.filter(o => String(o.dataset.sigunguId) === String(selectedSigunguId))
+            : (sidoSelectElement.value
+                ? allEmdOptionElements.filter(o => {
+                    const sigOpt = allSigunguOptionElements.find(s => s.value === o.dataset.sigunguId);
+                    return sigOpt && String(sigOpt.dataset.sidoId) === String(sidoSelectElement.value);
+                })
+                : allEmdOptionElements);
+        setSelectOptions(emdSelectElement, filteredEmds, '邑・面・洞を選択してください');
+    });
+
+    /* =============================
+     * Maps Embed（厳格な place-id 検出 + 安全検索フォールバック）
+     * ============================= */
+    const MAP_DEBUG = true;
+    const PLACE_ID_CORE_REGEX = /^ChIJ[0-9A-Za-z_-]{10,}$/;
+    const MIN_Q_CHARS = 4;
+    const BAD_Q_SET = new Set(['大韓民国', '韓国', 'コリア', 'Korea', 'South Korea']);
+
+    function normalizeWhitespace(text) {
+        return (text || '').replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\s+/g, ' ').trim();
+    }
+
+    function sanitizeQueryPart(part) {
+        const sanitized = normalizeWhitespace(part)
+            .replace(/[\[\]\(\){}"“”'‘’`~^<>|\\]/g, '')
+            .replace(/[;:@]/g, ' ')
+            .replace(/#/g, '');
+        return sanitized.replace(/[\p{Cc}\p{Cf}\p{Cs}\p{Co}\p{Cn}\p{So}]/gu, '');
+    }
+
+    function buildSafeQueryText({storeName, sidoName, sigunguName, emdName}) {
+        const parts = [
+            sanitizeQueryPart(storeName),
+            sanitizeQueryPart(emdName),
+            sanitizeQueryPart(sigunguName),
+            sanitizeQueryPart(sidoName),
+            '大韓民国'
+        ].filter(Boolean);
+
+        let q = normalizeWhitespace(parts.join(' '));
+        if (q.length < MIN_Q_CHARS) return '';
+        if (BAD_Q_SET.has(q)) return '';
+        if (q.length > 120) q = q.slice(0, 120);
+        return q;
+    }
+
+    function buildEmbedFromPlaceOrSearch({placeId, storeName, sidoName, sigunguName, emdName}) {
+        if (!googleMapsEmbedApiKey) {
+            MAP_DEBUG && console.warn('[maps] API key missing');
+            return {src: null, reason: 'APIキーなし', qText: ''};
+        }
+        let core = (placeId || '').trim();
+        if (core.startsWith('places/')) core = core.slice(7);
+        if (PLACE_ID_CORE_REGEX.test(core)) {
+            const src =
+                'https://www.google.com/maps/embed/v1/place'
+                + `?key=${encodeURIComponent(googleMapsEmbedApiKey)}`
+                + `&q=place_id:${encodeURIComponent(core)}`
+                + '&zoom=16&language=ja&region=KR';
+            MAP_DEBUG && console.debug('[maps] place mode', {placeId: core, src});
+            return {src, reason: null, qText: ''};
+        }
+        const qText = buildSafeQueryText({storeName, sidoName, sigunguName, emdName});
+        if (!qText) {
+            MAP_DEBUG && console.warn('[maps] empty/invalid qText → fallback link', {
+                storeName,
+                sidoName,
+                sigunguName,
+                emdName
+            });
+            return {src: null, reason: '有効な検索語なし', qText: ''};
+        }
+        const src =
+            'https://www.google.com/maps/embed/v1/search'
+            + `?key=${encodeURIComponent(googleMapsEmbedApiKey)}`
+            + `&q=${encodeURIComponent(qText)}`
+            + '&zoom=16&language=ja&region=KR';
+        MAP_DEBUG && console.debug('[maps] search mode', {qText, src});
+        return {src, reason: null, qText};
+    }
+
+    function mapFallbackHtml(reason, qText) {
+        const label = reason ? `埋め込み不可: ${reason}` : '埋め込み不可';
+        const href = qText
+            ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(qText)}&region=KR`
+            : `https://www.google.com/maps/@?api=1&map_action=map&region=KR`;
+        return `<a class="map-fallback text-decoration-none" href="${href}" target="_blank" rel="noopener"
+            title="${escapeHtml(label)}">${escapeHtml(label)}（新しいウィンドウ）</a>`;
+    }
+
+    /* =============================
+     * API（バックエンド）
+     * ============================= */
+    async function apiSearchStores(payload) {
+        return await postJson('/api/admin/places/search', payload);
+    }
+
+    // 200 → JSON, 404 → null, その他 → throw
+    async function apiDetail(regionLabel, storeName, placeId) {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        };
+        if (csrfHeaderName && csrfTokenValue) headers[csrfHeaderName] = csrfTokenValue;
+
+        const res = await fetch('/api/admin/places/detail', {
+            method: 'POST', headers, body: JSON.stringify({regionLabel, storeName, placeId}), credentials: 'same-origin'
+        });
+
+        if (res.status === 404) return null;
+        if (!res.ok) {
+            const t = await res.text().catch(() => '');
+            throw new Error(`${res.status} ${t || res.statusText}`);
+        }
+        const ct = res.headers.get('content-type') || '';
+        if (!ct.includes('application/json')) {
+            const t = await res.text().catch(() => '');
+            throw new Error(`Unexpected non-JSON: ${t.slice(0, 80)}`);
+        }
+        return res.json();
+    }
+
+    async function apiSaveDetailsBatch(payload) {
+        return await postJson('/api/admin/places/save', payload);
+    }
+
+    /* =============================
+     * 詳細レンダー（モーダル）
+     * ============================= */
+    function renderStoreDetails(details) {
+        const list = Array.isArray(details) ? details : (details ? [details] : []);
+        lastRenderedDetails = list;
+
+        if (!storeDetailsBodyElement) return;
+        if (!list.length) {
+            storeDetailsBodyElement.innerHTML = `<div class="text-secondary py-2">詳細情報がありません。</div>`;
+            return;
+        }
+
+        storeDetailsBodyElement.innerHTML = list.map(d => {
+            const imagesHtml = (d.images || []).slice(0, 6)
+                .map(u => `<img src="${escapeHtml(u)}" class="img-thumbnail me-2 mb-2" style="max-height:96px" alt="">`)
+                .join('');
+            const categoriesHtml = (d.categories || []).map(c => `<span class="badge text-bg-light me-1">${escapeHtml(c)}</span>`).join('');
+            const facilitiesHtml = (d.facilities || []).map(f => `<span class="badge text-bg-light me-1">${escapeHtml(f)}</span>`).join('');
+            const menusRowsHtml = (d.menus || []).map(m => `
+      <tr>
+        <td>${escapeHtml(m.name ?? '')}</td>
+        <td class="text-end">${m.price != null ? m.price.toLocaleString() : ''}</td>
+        <td>${escapeHtml(m.description ?? '')}</td>
+      </tr>`).join('');
+
+            const regionFromResponse = [d.sidoName, d.sigunguName, d.emdName].filter(Boolean).join(' ');
+            const addrRoad = d.roadAddressText || '';
+            const addrJibun = d.jibunAddressText || '';
+            const addrDetail = d.detail || '';
+
+            const infoBlock = `
+      <div class="mb-2">
+        ${d.description ? `<div class="mb-1"><span class="badge text-bg-info">紹介</span> <span class="pre-wrap">${escapeHtml(d.description)}</span></div>` : ''}
+        ${addrDetail ? `<div class="mb-1"><span class="badge text-bg-secondary">詳細住所</span> <span class="pre-wrap">${escapeHtml(addrDetail)}</span></div>` : ''}
+        ${addrRoad ? `<div class="mb-1"><span class="badge text-bg-light">道路名住所</span> <span class="pre-wrap">${escapeHtml(addrRoad)}</span></div>` : ''}
+        ${addrJibun ? `<div class="mb-1"><span class="badge text-bg-light">地番住所</span> <span class="pre-wrap">${escapeHtml(addrJibun)}</span></div>` : ''}
+        ${d.phone ? `<div class="mb-1"><span class="badge text-bg-secondary">電話</span> <code>${escapeHtml(d.phone)}</code></div>` : ''}
+      </div>`;
+
+            return `
+      <div class="mb-4">
+        <h6 class="mb-1">${escapeHtml(d.name || '')}</h6>
+        <div class="text-muted small mb-2">${escapeHtml(regionFromResponse)}</div>
+        ${infoBlock}
+        ${categoriesHtml ? `<div class="mb-2">カテゴリ: ${categoriesHtml}</div>` : ''}
+        ${facilitiesHtml ? `<div class="mb-2">設備: ${facilitiesHtml}</div>` : ''}
+        ${imagesHtml ? `<div class="mb-2 d-flex flex-wrap">${imagesHtml}</div>` : ''}
+        ${(d.menus && d.menus.length) ? `
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead class="table-light"><tr><th>メニュー</th><th class="text-end" style="width:120px">価格</th><th>説明</th></tr></thead>
+              <tbody>${menusRowsHtml}</tbody>
+            </table>
+          </div>` : ''}
+        <hr>
+      </div>`;
+        }).join('');
+    }
+
+    /* =============================
+     * 保存結果モーダル レンダー
+     * ============================= */
+    function renderSaveResultModal(res) {
+        const saved = Number(res?.savedCount || 0);
+        const unresolved = Array.isArray(res?.unresolved) ? res.unresolved : [];
+
+        badgeSavedCount.textContent = `${saved} 保存`;
+        badgeUnresolvedCount.textContent = `${unresolved.length} 未解決`;
+
+        if (unresolved.length === 0) {
+            saveResultSummary.textContent = `合計 ${saved} 件を保存しました。未解決項目はありません。`;
+            saveUnresolvedWrapper.style.display = 'none';
+            saveUnresolvedTbody.innerHTML = '';
+            return;
+        }
+
+        saveResultSummary.textContent = `合計 ${saved} 件を保存、未解決 ${unresolved.length} 件（下記理由を参照）。`;
+        saveUnresolvedWrapper.style.display = '';
+        saveUnresolvedTbody.innerHTML = unresolved.map(u => `
+    <tr>
+      <td>${u.index}</td>
+      <td>${escapeHtml(u.storeName || '')}</td>
+      <td class="text-danger">${escapeHtml(u.reason || '')}</td>
+    </tr>
+  `).join('');
+    }
+
+    /* =============================
+     * 結果テーブルレンダー
+     * ============================= */
+    function refreshSelectedDetailsButtonState() {
+        const allBoxes = [...document.querySelectorAll('.row-select-checkbox')];
+        const checkedCount = allBoxes.filter(cb => cb.checked).length;
+
+        buttonOpenSelectedDetailsElement.disabled = checkedCount === 0;
+
+        const hasRows = allBoxes.length > 0;
+        buttonSelectAllRowsElement.disabled = !hasRows || checkedCount === allBoxes.length;
+        buttonClearAllRowsElement.disabled = !hasRows || checkedCount === 0;
+
+        checkboxSelectAllElement.indeterminate = checkedCount > 0 && checkedCount < allBoxes.length;
+        checkboxSelectAllElement.checked = hasRows && checkedCount === allBoxes.length;
+    }
+
+    function renderResultRows(rows) {
+        resultTableBodyElement.innerHTML = '';
+
+        if (!Array.isArray(rows) || rows.length === 0) {
+            resultTableBodyElement.appendChild(emptyResultRowElement);
+            resultCountBadgeElement.textContent = '0';
+            checkboxSelectAllElement.checked = false;
+            checkboxSelectAllElement.disabled = true;
+            checkboxSelectAllElement.indeterminate = false;
+            buttonOpenSelectedDetailsElement.disabled = true;
+            buttonSelectAllRowsElement.disabled = true;
+            buttonClearAllRowsElement.disabled = true;
+            return;
+        }
+
+        rows.forEach((row, index) => {
+            const storeName = row.storeName ?? '';
+            const sidoName = row.sidoName ?? '';
+            const sigunguName = row.sigunguName ?? '';
+            const emdName = row.emdName ?? '';
+            const placeId = row.placeId ?? '';
+
+            const {src: embedSrc, reason: embedReason, qText} =
+                buildEmbedFromPlaceOrSearch({placeId, storeName, sidoName, sigunguName, emdName});
+
+            const tr = document.createElement('tr');
+            tr.dataset.placeId = placeId;
+
+            tr.innerHTML = `
+      <td><input type="checkbox" class="row-select-checkbox" aria-label="選択"></td>
+      <td class="text-secondary">${index + 1}</td>
+      <td class="cell-name">
+        <strong>${escapeHtml(storeName)}</strong>
+        <button type="button" class="btn btn-link btn-sm px-1 py-0 ms-1 text-decoration-none buttonRowDetail">詳細</button>
+      </td>
+      <td>${escapeHtml(sidoName)}</td>
+      <td>${escapeHtml(sigunguName)}</td>
+      <td>${escapeHtml(emdName)}</td>
+      <td class="text-center">
+        ${
+                embedSrc
+                    ? `<iframe class="map-embed" title="地図プレビュー"
+                 loading="lazy" allowfullscreen
+                 referrerpolicy="no-referrer-when-downgrade"
+                 src="${embedSrc}"></iframe>`
+                    : mapFallbackHtml(embedReason, qText)
+            }
+      </td>`;
+            resultTableBodyElement.appendChild(tr);
+        });
+
+        resultCountBadgeElement.textContent = String(rows.length);
+        checkboxSelectAllElement.checked = false;
+        checkboxSelectAllElement.indeterminate = false;
+        checkboxSelectAllElement.disabled = false;
+        buttonSelectAllRowsElement.disabled = false;   // 行があれば有効化
+        buttonClearAllRowsElement.disabled = true;     // 初期は未選択なので無効化
+        refreshSelectedDetailsButtonState();
+    }
+
+    /* =============================
+     * 「詳細」クリック（委譲）
+     * ============================= */
+    resultTableBodyElement.addEventListener('click', async (e) => {
+        const button = e.target.closest('.buttonRowDetail');
+        if (!button) return;
+
+        const tr = button.closest('tr');
+        if (!tr) return;
+
+        const storeName = tr.querySelector('.cell-name strong')?.textContent?.trim() || '';
+        const placeId = tr.dataset.placeId || '';
+        const regionLabel = buildRegionLabelFromCurrentSelects();
+
+        setDetailsLoading(true, '詳細を読み込み中…');
+        const originalText = button.textContent;
+        button.disabled = true;
+        button.textContent = '読み込み中…';
+
+        try {
+            const detail = await apiDetail(regionLabel, storeName, placeId); // 200 JSON / 404 null
+            renderStoreDetails(detail ? [detail] : []);
+            storeDetailsModal?.show();
+        } catch (err) {
+            storeDetailsBodyElement.innerHTML =
+                `<div class="text-danger">詳細取得に失敗しました: ${escapeHtml(err.message || '不明なエラー')}</div>`;
+            storeDetailsModal?.show();
+        } finally {
+            button.textContent = originalText;
+            button.disabled = false;
+        }
+    });
+
+    /* =============================
+     * 行チェック + ヘッダチェック + 全選択/全解除
+     * ============================= */
+    document.addEventListener('change', (e) => {
+        if (e.target.classList?.contains('row-select-checkbox')) {
+            refreshSelectedDetailsButtonState();
+        }
+    });
+    checkboxSelectAllElement.addEventListener('change', () => {
+        const checked = checkboxSelectAllElement.checked;
+        document.querySelectorAll('.row-select-checkbox').forEach(cb => cb.checked = checked);
+        refreshSelectedDetailsButtonState();
+    });
+    buttonSelectAllRowsElement.addEventListener('click', () => {
+        document.querySelectorAll('.row-select-checkbox').forEach(cb => cb.checked = true);
+        refreshSelectedDetailsButtonState();
+    });
+    buttonClearAllRowsElement.addEventListener('click', () => {
+        document.querySelectorAll('.row-select-checkbox').forEach(cb => cb.checked = false);
+        refreshSelectedDetailsButtonState();
+    });
+
+    /* =============================
+     * 地域ラベル ヘルパー
+     * ============================= */
+    function getSelectedText(selectElement) {
+        const opt = selectElement.options[selectElement.selectedIndex];
+        if (!opt || !opt.value) return '';
+        return (opt.textContent || '').trim();
+    }
+
+    function buildRegionLabelFromCurrentSelects() {
+        const sido = getSelectedText(sidoSelectElement) || '';
+        const sigungu = getSelectedText(sigunguSelectElement) || '';
+        const emd = getSelectedText(emdSelectElement) || '';
+        return [sido, sigungu, emd].filter(Boolean).join(' ').trim();
+    }
+
+    /* =============================
+     * 検索
+     * ============================= */
+    queryButtonElement.addEventListener('click', async () => {
+        const sidoId = sidoSelectElement.value;
+        const sigunguId = sigunguSelectElement.value || null;
+        const emdId = emdSelectElement.value || null;
+
+        if (!sidoId) {
+            alert('都道府県を選択してください。');
+            return;
+        }
+
+        let count = Number(countInputElement.value || 10);
+        count = Math.min(Math.max(count, 1), 20);
+
+        const payload = {
+            sidoId: Number(sidoId),
+            sigunguId: sigunguId ? Number(sigunguId) : null,
+            emdId: emdId ? Number(emdId) : null,
+            count
+        };
+
+        try {
+            setResultsLoading(true);
+            const rows = await apiSearchStores(payload);
+            renderResultRows(rows);
+        } catch (err) {
+            if (String(err.message || '').startsWith('401')) alert('認証が必要です（401）。');
+            else if (String(err.message || '').startsWith('403')) alert('アクセスが拒否されました（403）。');
+            else alert('リクエスト失敗: ' + (err.message || '不明なエラー'));
+        } finally {
+            setResultsLoading(false);
+        }
+    });
+
+    /* =============================
+     * 選択した項目の詳細（複数）
+     * ============================= */
+    function collectCheckedRows() {
+        const rows = [];
+        document.querySelectorAll('#resultTableBody tr').forEach(tr => {
+            const cb = tr.querySelector('.row-select-checkbox');
+            if (cb && cb.checked) rows.push(tr);
+        });
+        return rows;
+    }
+
+    buttonOpenSelectedDetailsElement.addEventListener('click', async () => {
+        const checkedRows = collectCheckedRows();
+        if (!checkedRows.length) {
+            alert('詳細を表示する項目を選択してください。');
+            return;
+        }
+
+        const originalText = buttonOpenSelectedDetailsElement.textContent;
+        buttonOpenSelectedDetailsElement.disabled = true;
+        buttonOpenSelectedDetailsElement.textContent = '読み込み中…';
+
+        setDetailsLoading(true, '選択項目の詳細を読み込み中…');
+        storeDetailsModal?.show();
+
+        const regionLabel = buildRegionLabelFromCurrentSelects();
+
+        try {
+            const promises = checkedRows.map(tr => {
+                const storeName = tr.querySelector('.cell-name strong')?.textContent?.trim() || '';
+                const placeId = tr.dataset.placeId || '';
+                return apiDetail(regionLabel, storeName, placeId).catch(() => null);
+            });
+            const list = (await Promise.all(promises)).filter(Boolean);
+            renderStoreDetails(list);
+        } catch (err) {
+            storeDetailsBodyElement.innerHTML =
+                `<div class="text-danger">詳細取得に失敗しました: ${escapeHtml(err.message || '不明なエラー')}</div>`;
+        } finally {
+            buttonOpenSelectedDetailsElement.textContent = originalText;
+            buttonOpenSelectedDetailsElement.disabled = false;
+            refreshSelectedDetailsButtonState();
+        }
+    });
+
+    /* =============================
+     * DB 保存（モーダルの詳細をバッチ保存）→ 結果モーダル表示
+     * ============================= */
+    buttonSaveDetailsElement.addEventListener('click', async () => {
+        const sidoId = sidoSelectElement.value;
+        const sigunguId = sigunguSelectElement.value || null;
+        const emdId = emdSelectElement.value || null;
+
+        if (!sidoId) {
+            alert('まず都道府県を選択してください。');
+            return;
+        }
+        if (!lastRenderedDetails || !lastRenderedDetails.length) {
+            alert('保存する詳細情報がありません。');
+            return;
+        }
+
+        const payload = {
+            sidoId: Number(sidoId),
+            sigunguId: sigunguId ? Number(sigunguId) : null,
+            emdId: emdId ? Number(emdId) : null,
+            details: lastRenderedDetails
+        };
+
+        const originalText = buttonSaveDetailsElement.textContent;
+        buttonSaveDetailsElement.disabled = true;
+        buttonSaveDetailsElement.textContent = '保存中…';
+
+        try {
+            const res = await apiSaveDetailsBatch(payload);
+            renderSaveResultModal(res);
+            saveResultModal?.show();
+        } catch (err) {
+            renderSaveResultModal({
+                savedCount: 0,
+                unresolved: [{index: -1, storeName: '', reason: String(err.message || 'エラー')}]
+            });
+            saveResultModal?.show();
+        } finally {
+            buttonSaveDetailsElement.textContent = originalText;
+            buttonSaveDetailsElement.disabled = false;
+        }
+    });
+</script>
+</body>
+</html>

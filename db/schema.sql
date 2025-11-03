@@ -77,27 +77,29 @@ CREATE TABLE road_postal (
 );*/
 
 CREATE TABLE address (
-    id                 BIGINT         NOT NULL AUTO_INCREMENT,
-    emd_id             BIGINT         NOT NULL,
+    id                 BIGINT      NOT NULL AUTO_INCREMENT,
+    emd_id             BIGINT      NOT NULL,
 --     road_id            BIGINT         NOT NULL,
 --     postal_id          BIGINT         NOT NULL,
-    detail             TEXT           NOT NULL,
-    road_address_text  TEXT           NOT NULL,
-    jibun_address_text TEXT           NOT NULL,
-    latitude           DECIMAL(9, 6)  NOT NULL,
-    longitude          DECIMAL(10, 6) NOT NULL,
-    created_at         DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at         DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    detail             TEXT        NOT NULL,
+    road_address_text  TEXT        NOT NULL,
+    jibun_address_text TEXT        NOT NULL,
+    place_id           VARCHAR(64) NOT NULL,
+--     latitude           DECIMAL(9, 6)  NOT NULL,
+--     longitude          DECIMAL(10, 6) NOT NULL,
+    created_at         DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at         DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT pk_address             PRIMARY KEY (id),
-    CONSTRAINT fk_address_emd         FOREIGN KEY (emd_id) REFERENCES region_emd(id),
+    CONSTRAINT pk_address          PRIMARY KEY (id),
+    CONSTRAINT fk_address_emd      FOREIGN KEY (emd_id) REFERENCES region_emd(id),
+    CONSTRAINT uk_address_place_id UNIQUE (place_id),
 --     CONSTRAINT fk_address_road        FOREIGN KEY (road_id)            REFERENCES road(id),
 --     CONSTRAINT fk_address_postal      FOREIGN KEY (postal_id)          REFERENCES postal(id),
 --     CONSTRAINT fk_address_road_postal FOREIGN KEY (road_id, postal_id) REFERENCES road_postal(road_id, postal_id),
 
     -- 범위 검증
-    CONSTRAINT ck_address_lat CHECK (latitude BETWEEN -90 AND 90),
-    CONSTRAINT ck_address_lon CHECK (longitude BETWEEN -180 AND 180)
+--     CONSTRAINT ck_address_lat CHECK (latitude BETWEEN -90 AND 90),
+--     CONSTRAINT ck_address_lon CHECK (longitude BETWEEN -180 AND 180)
 );
 
 
@@ -476,7 +478,7 @@ CREATE INDEX idx_address_emd_id ON address (emd_id);
    ========================= */
 
 -- 사각 범위(BBOX) 검색용 후보군 축소 인덱스
-CREATE INDEX idx_address_lat_lon ON address (latitude, longitude);
+-- CREATE INDEX idx_address_lat_lon ON address (latitude, longitude);
 
 
 /* =========================

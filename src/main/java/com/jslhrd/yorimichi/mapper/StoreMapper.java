@@ -33,6 +33,9 @@ public interface StoreMapper {
 	 */
 	Optional<StoreDTO> selectById(@Param("storeId") Long storeId, @Param("userId") long userId);
 
+	Long selectIdByAddressIdAndName(@Param("addressId") Long addressId,
+	                                @Param("name") String name);
+
 	boolean existsActive(@Param("storeId") Long storeId);
 
 	/**
@@ -51,6 +54,11 @@ public interface StoreMapper {
 	 */
 	int update(@Param("storeId") Long storeId,
 	           @Param("store") StoreDTO store);
+
+	int updateSummaryReview(
+			@Param("storeId") long storeId,
+			@Param("summary") String summary
+	);
 
 	/**
 	 * 상점 삭제.

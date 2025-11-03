@@ -152,7 +152,7 @@
             l.user_id as like_user_id,
             b.user_id as bookmark_user_id
         FROM store s
-        
+
         JOIN root r ON s.id = r.id
         <include refid="com.jslhrd.yorimichi.mapper.common.RootType">
             <property name="type" value="'STORE'"/>
@@ -166,7 +166,7 @@
 
         LEFT JOIN bookmark b ON b.store_id = s.id
         AND b.user_id = #{ userId }
-        
+
         WHERE s.id = #{storeId}
     </select>
 
@@ -180,10 +180,10 @@
             <result property="longitude" column="longitude"/>
         </association>
         <collection
-            property="foods"
-            column="{storeId=id}"
-            ofType="FoodDTO"
-            select="com.jslhrd.yorimichi.mapper.FoodMapper.selectAllByStoreId">
+                property="foods"
+                column="{storeId=id}"
+                ofType="FoodDTO"
+                select="com.jslhrd.yorimichi.mapper.FoodMapper.selectAllByStoreId">
         </collection>
     </resultMap>
 
@@ -206,6 +206,17 @@
         LEFT JOIN address a ON a.id = s.address_id
 
         WHERE s.id = #{ storeId }
+    </select>
+
+    <select id="selectIdByAddressIdAndName" resultType="long">
+        SELECT
+            id
+
+        FROM store
+
+        WHERE
+            address_id = #{addressId}
+            AND name = #{name}
     </select>
 
     <select id="existsActive" parameterType="long" resultType="boolean">
@@ -250,6 +261,12 @@
             r.updated_at = NOW()
 
         WHERE s.id = #{storeId}
+    </update>
+
+    <update id="updateSummaryReview">
+        UPDATE store
+        SET summared_review = #{summary}
+        WHERE id = #{storeId}
     </update>
 
     <update id="deleteById" parameterType="long">

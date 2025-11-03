@@ -31,6 +31,16 @@ public interface ReviewMapper {
 	 */
 	Optional<ReviewDTO> selectById(@Param("reviewId") Long reviewId);
 
+	List<Long> selectStoreIdsByDays(@Param("days") int days,
+	                                @Param("limit") int limit);
+
+	List<Long> selectBacklogStoreIdsByBucket(@Param("buckets") int buckets,
+	                                         @Param("bucketOfToday") int bucketOfToday,
+	                                         @Param("limit") int limit);
+
+	List<String> selectRecentContentsByStoreId(@Param("storeId") Long storeId,
+	                                           @Param("limit") int limit);
+
 	boolean existsActive(@Param("reviewId") Long reviewId);
 
 	/**
@@ -64,11 +74,11 @@ public interface ReviewMapper {
 
 	/**
 	 * 리뷰 복구.
-	 * 
+	 *
 	 * @param userId   유저 ID
 	 * @param reviewId 리뷰 ID
 	 * @return 영향 행 수 (복구 1, 대상 없음 0)
 	 */
 	int restoreById(@Param("userId") Long userId,
-	               @Param("reviewId") Long reviewId);
+	                @Param("reviewId") Long reviewId);
 }
