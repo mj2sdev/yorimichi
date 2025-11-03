@@ -7,328 +7,270 @@
 </head>
 
 <body>
-	<form name="myinfo" id="myinfo-form">
-		<div class="container my-4">
-			<div class="row">
-				<div class="col-9">
-					<div class="row mb-3 justify-content-center">
-						<div class="text-center col-8">
-							<button type="button" id="myinfosubmit" class="btn btn-ymprimary" th:text="#{user.mypage.button.edit_info}">정보 수정</button>
-						</div>
-					</div>
-					<div class="row justify-content-center">
-						<div class="col-4 text-center fs-1">
-							<ul class="list-unstyled">
-								<li>
-									<input type="text" name="nickname" th:value="${user.nickname}" class="form-control text-center"
-										   th:aria-label="#{user.mypage.label.username}" aria-describedby="addon-wrapping">
-								</li>
-								<li class="fs-5 bg-ymwhitesmoke form-control" th:text="${user.email}">
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div class="row my-4 justify-content-center">
-						<div class="col-8 text-center">
-							<img th:src="${user.image != null ? user.image : '/images/default-profile.png'}" class="mx-auto border rounded-circle" th:alt="#{user.mypage.label.profile_image}">
-						</div>
-					</div>
-					<div class="row justify-content-center">
-						<div class="col-8">
-							<div class="input-group mb-3">
-								<input type="file" name="rawImage" value="" class="form-control" id="inputGroupFile02">
-								<label class="input-group-text" for="inputGroupFile02" th:text="#{user.mypage.label.upload_photo}"></label>
+	<div class="container mb-5">
+		<div class="row my-4 g-4">
+			<!-- Profile Card -->
+			<div class="col-lg-4">
+				<div class="card shadow-sm">
+					<div class="card-body text-center">
+						<form name="myinfo" id="myinfo-form">
+							<label for="inputGroupFile02" class="position-relative">
+								<img th:src="${user.image != null ? user.image : '/images/default-profile.png'}"
+									 th:alt="#{user.mypage.label.profile_image}"
+									 class="rounded-circle img-fluid border" style="width: 150px; height: 150px; object-fit: cover; cursor: pointer;">
+								<span class="position-absolute bottom-0 end-0 bg-light rounded-circle p-1 lh-1">
+									<i class="bi bi-camera-fill"></i>
+								</span>
+							</label>
+							<input type="file" name="rawImage" class="d-none" id="inputGroupFile02">
+
+							<input type="text" name="nickname" th:value="${user.nickname}" class="form-control text-center fs-4 fw-bold border-0 mt-3"
+								   th:aria-label="#{user.mypage.label.username}" aria-describedby="addon-wrapping">
+
+							<p class="text-muted mb-1" th:text="${user.email}"></p>
+
+							<textarea name="description" th:text="${user.description}" class="form-control text-center text-muted border-0"
+									  th:aria-label="#{user.mypage.label.description}" aria-describedby="addon-wrapping" rows="2"></textarea>
+
+							<div class="d-flex justify-content-center gap-2 mt-4">
+								<button type="button" id="myinfosubmit" class="btn btn-ymprimary" th:text="#{user.mypage.button.edit_info}">정보 수정</button>
+								<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#privacy">
+									<i class="bi bi-gear-fill"></i> <span th:text="#{user.mypage.tab.privacy_settings}"></span>
+								</button>
 							</div>
-						</div>
+						</form>
 					</div>
-					<div class="row justify-content-center">
-						<div class="col-4 text-center fs-1">
-							<ul class="list-unstyled">
-								<li>
-									<textarea name="description" th:text="${user.description}" class="form-control text-center"
-											  th:aria-label="#{user.mypage.label.description}" aria-describedby="addon-wrapping"></textarea>
-								</li>
-							</ul>
+				</div>
+			</div>
+
+			<!-- Tab Content -->
+			<div class="col-lg-8">
+				<div class="card shadow-sm">
+					<div class="card-header bg-white border-bottom">
+						<ul class="nav nav-pills nav-fill" id="nav-tab-main" role="tablist">
+							<li class="nav-item" role="presentation">
+								<button class="nav-link active" id="nav-review-tab" data-bs-toggle="tab" data-bs-target="#nav-review" type="button" role="tab" aria-controls="nav-review" aria-selected="true" th:text="#{user.mypage.tab.reviews}"></button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="nav-like-tab" data-bs-toggle="tab" data-bs-target="#nav-like" type="button" role="tab" aria-controls="nav-like" aria-selected="false" th:text="#{user.mypage.tab.likes}"></button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="nav-bookmark-tab" data-bs-toggle="tab" data-bs-target="#nav-bookmark" type="button" role="tab" aria-controls="nav-bookmark" aria-selected="false" th:text="#{user.mypage.tab.bookmarks}"></button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="nav-follow-tab" data-bs-toggle="tab" data-bs-target="#nav-follow" type="button" role="tab" aria-controls="nav-follow" aria-selected="false" th:text="#{common.follow}"></button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="nav-follower-tab" data-bs-toggle="tab" data-bs-target="#nav-follower" type="button" role="tab" aria-controls="nav-follower" aria-selected="false" th:text="#{common.follower}"></button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="nav-block-tab" data-bs-toggle="tab" data-bs-target="#nav-block" type="button" role="tab" aria-controls="nav-block" aria-selected="false" th:text="#{user.mypage.tab.blocks}"></button>
+							</li>
+						</ul>
+					</div>
+					<div class="card-body">
+						<div class="tab-content" id="nav-tabContent-main">
+							<!-- Reviews Tab -->
+							<div class="tab-pane fade show active" id="nav-review" role="tabpanel" aria-labelledby="nav-review-tab" tabindex="0">
+								<div class="d-flex flex-column gap-3">
+									<th:block th:each="review : ${user.reviews}">
+										<div class="card">
+											<div class="row g-0">
+												<div class="col-md-3">
+													<div class="ratio ratio-1x1">
+
+														<img th:if="${!#lists.isEmpty(review.images)}" th:src="${review.images[0]?.url}" class="img-fluid rounded-start w-100 h-100" style="object-fit: cover;" th:alt="#{store.list.item.image}">
+														<div th:unless="${!#lists.isEmpty(review.images)}" class="d-flex align-items-center justify-content-center bg-light h-100 rounded-start">
+															<i class="bi bi-image-alt fs-1 text-muted"></i>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-9">
+													<div class="card-body d-flex flex-column h-100">
+														<div class="d-flex justify-content-between align-items-start">
+															<div>
+																<div class="star-rating-container">
+																	<span th:each="i : ${#numbers.sequence(1, 5)}">
+																		<th:block th:switch="true">
+																			<i th:case="${i <= review.rating}" class="bi bi-star-fill text-warning"></i>
+																			<i th:case="${i - 0.5 <= review.rating}" class="bi bi-star-half text-warning"></i>
+																			<i th:case="*" class="bi bi-star text-warning"></i>
+																		</th:block>
+																	</span>
+																</div>
+																<small class="text-muted" th:text="${#temporals.format(review.createdAt, 'yyyy.MM.dd')}"></small>
+															</div>
+															<div class="d-flex gap-2">
+																<a th:href="@{'/store/detail/'+${review.storeId}}" class="btn btn-sm btn-outline-ymprimary" th:text="#{user.detail.button.view_store}"></a>
+																<button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#reviewwriting" th:data-review-id="${review.id}" th:data-review-content="${review.content}" th:aria-label="#{common.edit}">
+																	<i class="bi bi-pencil-fill"></i>
+																</button>
+																<button type="button" class="delete-review-btn btn btn-sm btn-outline-danger" th:data-review-id="${review.id}" th:aria-label="#{common.delete}">
+																	<i class="bi bi-trash"></i>
+																</button>
+															</div>
+														</div>
+														<p class="card-text mt-2 flex-grow-1" th:text="${review.content}"></p>
+														<div th:if="${review.foods != null and !#lists.isEmpty(review.foods)}">
+															<th:block th:each="food, iterStat : ${review.foods}">
+																<span class="badge bg-light text-dark" th:text="${food}"></span>
+															</th:block>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</th:block>
+								</div>
+							</div>
+
+							<!-- Likes Tab -->
+							<div class="tab-pane fade" id="nav-like" role="tabpanel" aria-labelledby="nav-like-tab" tabindex="1">
+								<div class="list-group">
+									<th:block th:each="like : ${user.likes}">
+										<div class="list-group-item d-flex justify-content-between align-items-center">
+											<a th:href="@{'/store/detail/'+${like.id}}" class="text-decoration-none text-dark flex-grow-1">
+												<div class="fw-bold" th:text="${like.name} ?: #{index.featured.store.name}"></div>
+												<small class="text-muted" th:text="${like.address} ?: #{common.location}"></small>
+												<div>
+													<th:block th:each="category: ${like.categories}">
+														<span class="badge bg-secondary" th:text="${category}"></span>
+													</th:block>
+												</div>
+											</a>
+											<button type="button" class="btn btn-sm like-switch-btn" th:data-like-storeId="${like.id}">
+												<i class="bi bi-heart-fill fs-5 text-danger"></i>
+											</button>
+										</div>
+									</th:block>
+								</div>
+							</div>
+
+							<!-- Bookmarks Tab -->
+							<div class="tab-pane fade" id="nav-bookmark" role="tabpanel" aria-labelledby="nav-bookmark-tab" tabindex="2">
+								<div class="list-group">
+									<th:block th:each="bookmark : ${user.bookmarks}">
+										<div class="list-group-item d-flex justify-content-between align-items-center">
+											<a th:href="@{'/store/detail/'+${bookmark.id}}" class="text-decoration-none text-dark flex-grow-1">
+												<div class="fw-bold" th:text="${bookmark.name} ?: #{index.featured.store.name}"></div>
+												<small class="text-muted" th:text="${bookmark.address} ?: #{common.location}"></small>
+												<div>
+													<th:block th:each="category: ${bookmark.categories}">
+														<span class="badge bg-secondary" th:text="${category}"></span>
+													</th:block>
+												</div>
+											</a>
+											<button type="button" class="btn btn-sm bookmark-switch-btn" th:data-bookmark-storeId="${bookmark.id}">
+												<i class="bi bi-bookmark-fill fs-5 text-warning"></i>
+											</button>
+										</div>
+									</th:block>
+								</div>
+							</div>
+
+							<!-- Follow Tab -->
+							<div class="tab-pane fade" id="nav-follow" role="tabpanel" aria-labelledby="nav-follow-tab" tabindex="3">
+								<div class="list-group">
+									<th:block th:each="person : ${user.followees}">
+										<div class="list-group-item d-flex justify-content-between align-items-center">
+											<a th:href="@{'/user/detail/'+${person.id}}" class="text-decoration-none text-dark fw-bold" th:text="${person.nickname} ?: #{user.signup.nickname}"></a>
+											<button type="button" class="btn btn-sm follow-switch-btn" th:data-user-id="${person.id}">
+												<i class="bi bi-heart-fill fs-5 text-danger"></i>
+											</button>
+										</div>
+									</th:block>
+								</div>
+							</div>
+
+							<!-- Follower Tab -->
+							<div class="tab-pane fade" id="nav-follower" role="tabpanel" aria-labelledby="nav-follower-tab" tabindex="4">
+								<div class="list-group">
+									<th:block th:each="person : ${user.followers}">
+										<div class="list-group-item d-flex justify-content-between align-items-center">
+											<a th:href="@{'/user/detail/'+${person.id}}" class="text-decoration-none text-dark fw-bold" th:text="${person.nickname} ?: #{user.signup.nickname}"></a>
+											<!-- 팔로워에 대한 액션이 필요하다면 여기에 버튼 추가 -->
+										</div>
+									</th:block>
+								</div>
+							</div>
+
+							<!-- Block Tab -->
+							<div class="tab-pane fade" id="nav-block" role="tabpanel" aria-labelledby="nav-block-tab" tabindex="5">
+								<div class="list-group">
+									<th:block th:each="person : ${user.blocks}">
+										<div class="list-group-item d-flex justify-content-between align-items-center">
+											<a th:href="@{'/user/detail/'+${person.id}}" class="text-decoration-none text-dark fw-bold" th:text="${person.nickname} ?: #{user.signup.nickname}"></a>
+											<button type="button" class="btn btn-sm btn-outline-danger block-switch-btn" th:data-user-id="${person.id}" th:aria-label="#{user.mypage.button.toggle_block}">
+												<i class="bi bi-slash-circle"></i> <span th:text="#{common.unfollow}"></span>
+											</button>
+										</div>
+									</th:block>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</form>
+	</div>
+
+	<!-- Privacy Modal -->
 	<div class="modal fade" id="privacy" tabindex="-1" aria-labelledby="privacyLabel" aria-hidden="true">
-		<div class="modal-dialog">
+		<div class="modal-dialog modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
 					<h1 class="modal-title fs-5" id="privacyLabel" th:text="#{user.mypage.privacy_settings.title}"></h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 				</div>
 				<div class="modal-body">
-					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" role="switch" 
-							   id="show-reviews" 
-							   name="showReviews" 
-							   value="true" 
-							   th:checked="${user.showReviews}"
-							   form="myinfo-form">
-						<input type="hidden" name="showReviews" value="false" form="myinfo-form">
-						<label class="form-check-label" for="show-reviews" th:text="#{user.mypage.privacy_settings.reviews}">
-						</label>
-					</div>
-					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" role="switch" 
-							   id="show-likes" 
-							   name="showLikes" 
-							   value="true" 
-							   th:checked="${user.showLikes}"
-							   form="myinfo-form">
-						<input type="hidden" name="showLikes" value="false" form="myinfo-form">
-						<label class="form-check-label" for="show-likes" th:text="#{user.mypage.privacy_settings.likes}">
-						</label>
-					</div>
-					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" role="switch" 
-							   id="show-bookmarks" 
-							   name="showBookmarks" 
-							   value="true" 
-							   th:checked="${user.showBookmarks}"
-							   form="myinfo-form">
-						<input type="hidden" name="showBookmarks" value="false" form="myinfo-form">
-						<label class="form-check-label" for="show-bookmarks" th:text="#{user.mypage.privacy_settings.bookmarks}">
-						</label>
-					</div>
-					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" role="switch" 
-							   id="show-followees" 
-							   name="showFollowees" 
-							   value="true" 
-							   th:checked="${user.showFollowees}"
-							   form="myinfo-form">
-						<input type="hidden" name="showFollowees" value="false" form="myinfo-form">
-						<label class="form-check-label" for="show-followees" th:text="#{user.mypage.privacy_settings.followees}">
-						</label>
-					</div>
-					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" role="switch" 
-							   id="show-followers" 
-							   name="showFollowers" 
-							   value="1" 
-							   th:checked="${user.showFollowers}"
-							   form="myinfo-form">
-						<input type="hidden" name="showFollowers" value="0" form="myinfo-form">
-						<label class="form-check-label" for="show-followers" th:text="#{user.mypage.privacy_settings.followers}">
-						</label>
+					<div class="list-group list-group-flush">
+						<div class="list-group-item d-flex justify-content-between align-items-center">
+							<label class="form-check-label" for="show-reviews" th:text="#{user.mypage.privacy_settings.reviews}"></label>
+							<div class="form-check form-switch">
+								<input class="form-check-input" type="checkbox" role="switch" id="show-reviews" name="showReviews" value="true" th:checked="${user.showReviews}" form="myinfo-form">
+								<input type="hidden" name="showReviews" value="false" form="myinfo-form">
+							</div>
+						</div>
+						<div class="list-group-item d-flex justify-content-between align-items-center">
+							<label class="form-check-label" for="show-likes" th:text="#{user.mypage.privacy_settings.likes}"></label>
+							<div class="form-check form-switch">
+								<input class="form-check-input" type="checkbox" role="switch" id="show-likes" name="showLikes" value="true" th:checked="${user.showLikes}" form="myinfo-form">
+								<input type="hidden" name="showLikes" value="false" form="myinfo-form">
+							</div>
+						</div>
+						<div class="list-group-item d-flex justify-content-between align-items-center">
+							<label class="form-check-label" for="show-bookmarks" th:text="#{user.mypage.privacy_settings.bookmarks}"></label>
+							<div class="form-check form-switch">
+								<input class="form-check-input" type="checkbox" role="switch" id="show-bookmarks" name="showBookmarks" value="true" th:checked="${user.showBookmarks}" form="myinfo-form">
+								<input type="hidden" name="showBookmarks" value="false" form="myinfo-form">
+							</div>
+						</div>
+						<div class="list-group-item d-flex justify-content-between align-items-center">
+							<label class="form-check-label" for="show-followees" th:text="#{user.mypage.privacy_settings.followees}"></label>
+							<div class="form-check form-switch">
+								<input class="form-check-input" type="checkbox" role="switch" id="show-followees" name="showFollowees" value="true" th:checked="${user.showFollowees}" form="myinfo-form">
+								<input type="hidden" name="showFollowees" value="false" form="myinfo-form">
+							</div>
+						</div>
+						<div class="list-group-item d-flex justify-content-between align-items-center">
+							<label class="form-check-label" for="show-followers" th:text="#{user.mypage.privacy_settings.followers}"></label>
+							<div class="form-check form-switch">
+								<input class="form-check-input" type="checkbox" role="switch" id="show-followers" name="showFollowers" value="1" th:checked="${user.showFollowers}" form="myinfo-form">
+								<input type="hidden" name="showFollowers" value="0" form="myinfo-form">
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" data-bs-dismiss="modal" th:text="#{user.mypage.button.close}"></button>
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{common.close}"></button>
+					<button type="button" class="btn btn-ymprimary" data-bs-dismiss="modal" th:text="#{common.save}"></button>
 				</div>
 			</div>
 		</div>
 	</div>
-	
-	<div class="container">
-		<div class="row justify-content-center">
-			<div class="col-8 my-4 border border-3">
-				<nav>
-					<div class="nav nav-tabs" id="nav-tab-main" role="tablist">
-						<button class="nav-link active" id="nav-review-tab" data-bs-toggle="tab"
-							data-bs-target="#nav-review" type="button" role="tab"
-							aria-controls="nav-review" aria-selected="true"
-							th:text="#{user.mypage.tab.reviews}">
-						</button>
-						<button class="nav-link" id="nav-like-tab" data-bs-toggle="tab"
-							data-bs-target="#nav-like" type="button" role="tab" aria-controls="nav-like"
-							aria-selected="false" th:text="#{user.mypage.tab.likes}">
-						</button>
-						<button class="nav-link" id="nav-bookmark-tab" data-bs-toggle="tab"
-							data-bs-target="#nav-bookmark" type="button" role="tab"
-							aria-controls="nav-bookmark" aria-selected="false"
-							th:text="#{user.mypage.tab.bookmarks}">
-						</button>
-						<button type="button" class="btn text-ymprimary" data-bs-toggle="modal"
-							data-bs-target="#privacy">
-							<i class="bi bi-key-fill" style="font-size: 1em; color: gold;">
-								<span th:text="#{user.mypage.tab.privacy_settings}"></span>
-							</i>
-						</button>
-					</div>
-				</nav>
-				<div class="tab-content" id="nav-tabContent-main">
-					<div class="tab-pane fade show active" id="nav-review" role="tabpanel"
-						aria-labelledby="nav-review-tab" tabindex="0">
-						<th:block th:each="review : ${user.reviews}">
-							<div class="row bg-ymwhite mb-3">
-								<div class="col-3 border">
-									<img th:if="${!#lists.isEmpty(review.images)}" th:src="${review.images[0]?.url}" style="height:100%; width:100%;" th:alt="#{store.list.item.image}">
-								</div>
-								<div class="col-9 border">
-									<div class="row justify-content-between align-items-center">
-										<div class="col">
-											<div class="star-rating-container">
-												<span th:each="i : ${#numbers.sequence(1, 5)}">
-													<th:block th:switch="true">
-														<i th:case="${i <= review.rating}" class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
-														<i th:case="${i - 0.5 <= review.rating}" class="bi bi-star-half" style="font-size: 1em; color: gold;"></i>
-														<i th:case="*" class="bi bi-star" style="font-size: 1em; color: gold;"></i>
-													</th:block>
-												</span>
-											</div>
-										</div>
-										<div class="col-auto">
-											<a th:href="@{'/store/detail/'+${review.storeId}}"
-												class="text-ymprimary text-decoration-none"
-												th:text="#{user.detail.button.view_store}">
-											</a>
-										</div>
-										<div class="col-auto" th:text="${#temporals.format(review.createdAt, 'yyyy.MM.dd')}">
-										</div>
-										<div class="col-auto">
-											<button type="button" class="btn btn-sm p-0"
-													data-bs-toggle="modal" data-bs-target="#reviewwriting"
-													th:data-review-id="${review.id}"
-													th:data-review-content="${review.content}"
-													th:aria-label="#{common.edit}">
-												<i class="bi bi-pencil-fill text-ymprimary" style="font-size: 1em;"></i>
-											</button>
-										</div>
-										<div class="col-auto">
-											<button type="button" class="delete-review-btn btn btn-sm p-0" 
-													th:data-review-id="${review.id}"
-													th:aria-label="#{common.delete}">
-												<i class="bi bi-trash text-ymprimary" style="font-size: 1em;"></i>
-											</button>
-										</div>
-									</div>
-									<div class="p-2" data-bs-toggle="collapse"
-										th:attr="data-bs-target='#menu' + ${review.id}">
-										<div class="row mt-2">
-											<div class="col" th:text="${review.content}">
-											</div>
-										</div>
-									</div>
-									<div class="collapse" th:id="'menu' + ${review.id}">
-										<div class="card card-body">
-											<th:block th:each="food : ${review.foods}">
-												<span th:text="${food}"></span>
-											</th:block>
-										</div>
-									</div>
-								</div>
-							</div>
-						</th:block>
-					</div>
-					<div class="tab-pane fade" id="nav-like" role="tabpanel"
-						aria-labelledby="nav-like-tab" tabindex="1">
-						<th:block th:each="like : ${user.likes}">
-							<div class="row">
-								<div class="col-2">
-									<button type="button" class="btn like-switch-btn" th:data-like-storeId="${like.id}">
-										<i class="bi bi-heart-fill" style="font-size: 1em; color: red;"></i>
-									</button>
-								</div>
-								<div class="col">
-									<a th:href="@{'/store/detail/'+${like.id}}" class="btn">
-										<span th:text="${like.name} ?: #{index.featured.store.name}"></span>
-										<span th:text="${like.address} ?: #{common.location}"></span>
-										<th:block th:each="category: ${like.categories}">
-											<span th:text="${category}"></span>
-										</th:block>
-									</a>
-								</div>
-							</div>
-						</th:block>
-					</div>
-					<div class="tab-pane fade" id="nav-bookmark" role="tabpanel"
-						aria-labelledby="nav-bookmark-tab" tabindex="1">
-						<th:block th:each="bookmark : ${user.bookmarks}">
-							<div class="row">
-								<div class="col-2">
-									<button type="button" class="bookmark-switch-btn" th:data-bookmark-storeId="${bookmark.id}">
-										<i class="bi bi-bookmark-fill" style="font-size: 1em; color: gold"></i>
-									</button>
-								</div>
-								<div class="col">
-									<a th:href="@{'/store/detail/'+${bookmark.id}}" class="btn">
-										<span th:text="${bookmark.name} ?: #{index.featured.store.name}"></span>
-										<span th:text="${bookmark.address} ?: #{common.location}"></span>
-										<th:block th:each="category: ${bookmark.categories}">
-											<span th:text="${category}"></span>
-										</th:block>
-									</a>
-								</div>
-							</div>
-						</th:block>
-					</div>
-				</div>
-			</div>
-			<div class="col-3 border border-3 overflow-auto" style="height:400px; top: 145px;">
-				<nav>
-					<div class="nav nav-tabs" id="nav-tab-side" role="tablist">
-						<button class="nav-link active" id="nav-follow-tab" data-bs-toggle="tab"
-							data-bs-target="#nav-follow" type="button" role="tab" aria-controls="nav-follow"
-							aria-selected="true" th:text="#{common.follow}">
-						</button>
-						<button class="nav-link" id="nav-follower-tab" data-bs-toggle="tab"
-							data-bs-target="#nav-follower" type="button" role="tab" aria-controls="nav-follower"
-							aria-selected="false" th:text="#{common.follower}">
-						</button>
-						<button class="nav-link" id="nav-block-tab" data-bs-toggle="tab"
-							data-bs-target="#nav-block" type="button" role="tab" aria-controls="nav-block"
-							aria-selected="false" th:text="#{user.mypage.tab.blocks}">
-						</button>
-					</div>
-				</nav>
-				<div class="tab-content" id="nav-tabContent-side">
-					<div class="tab-pane fade show active" id="nav-follow" role="tabpanel"
-						aria-labelledby="nav-follow-tab" tabindex="0">
-						<th:block th:each="person : ${user.followees}">
-							<div class="row">
-								<div class="col-2">
-									<button type="button" class="btn follow-switch-btn" th:data-user-id="${person.id}">
-										<i class="bi bi-heart-fill" style="font-size: 1em; color:red"></i>
-									</button>
-								</div>
-								<div class="col">
-									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname} ?: #{user.signup.nickname}" class="btn d-block">
-									</a>
-								</div>
-							</div>
-						</th:block>
-					</div>
-					<div class="tab-pane fade" id="nav-follower" role="tabpanel"
-						aria-labelledby="nav-follower-tab" tabindex="0">
-						<th:block th:each="person : ${user.followers}">
-							<div class="row">
-								<div class="col-2">
-									<i class="bi bi-toggle-on" style="font-size: 1em; color:gold;"></i>
-								</div>
-								<div class="col">
-									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname} ?: #{user.signup.nickname}" class="btn d-block">
-									</a>
-								</div>
-							</div>
-						</th:block>
-					</div>
-					<div class="tab-pane fade" id="nav-block" role="tabpanel" aria-labelledby="nav-block-tab"
-						tabindex="0">
-						<th:block th:each="person : ${user.blocks}">
-							<div class="row">
-								<div class="col-2">
-									<button type="button" class="btn block-switch-btn" th:data-user-id="${person.id}"
-											th:aria-label="#{user.mypage.button.toggle_block}">
-										<i class="bi bi-toggle-on" style="font-size: 1em; color:red;"></i>
-									</button>
-								</div>
-								<div class="col">
-									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname} ?: #{user.signup.nickname}" class="btn d-block">
-									</a>
-								</div>
-							</div>
-						</th:block>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</body>
 
+	<!-- Review Edit/Write Modal (기존에 있다면 여기에 위치) -->
+	<!-- <div th:replace="~{fragments/review/modal/write :: reviewWritingModal}"></div> -->
+
+</body>
 </html>
