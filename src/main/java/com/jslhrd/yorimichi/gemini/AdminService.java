@@ -6,153 +6,76 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jslhrd.yorimichi.domain.RegionEmdDTO;
 import com.jslhrd.yorimichi.domain.RegionSidoDTO;
 import com.jslhrd.yorimichi.domain.RegionSigunguDTO;
-import com.jslhrd.yorimichi.enums.ToolMode;
+import com.jslhrd.yorimichi.gemini.dto.RegionNames;
 import com.jslhrd.yorimichi.gemini.dto.request.RegionStoreRequest;
+import com.jslhrd.yorimichi.gemini.dto.request.StoreDetailRequest;
+import com.jslhrd.yorimichi.gemini.dto.response.StoreDetailResponse;
 import com.jslhrd.yorimichi.gemini.dto.response.StoreNameRegionResponse;
 import com.jslhrd.yorimichi.service.RegionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
 public class AdminService {
 
-	private static final Pattern CID_PATTERN = Pattern.compile("[?&]cid=(\\d+)");
-
 	private final RegionService regionService;
 	private final GeminiService geminiService;
 	private final ObjectMapper objectMapper;
 
-	private static String buildPrompt(String region, int count) {
-		return """
-				한국어로만 작성.
-				
-				아래 지역에서 현지 평이 좋은 맛집을 **정확히 %d곳** 선정해 주세요.
-				
-				출력 규칙:
-				- 출력은 JSON 배열 리터럴 **하나만**. 앞뒤 공백/문장/주석/코드펜스(``` 등) 절대 금지.
-				- 배열 길이는 **정확히 %d**.
-				- 각 요소 객체는 **아래 5개 키만** 포함(철자·대소문자·순서 엄수), null/빈 문자열 금지:
-				  {
-				    "storeName": "string",
-				    "sidoName": "string",
-				    "sigunguName": "string",
-				    "emdName": "string",
-				    "placeId": "string"
-				  }
-				- **placeId는 반드시 Google Place ID**만 사용 (형식: "places/ChIJ...").
-				  숫자 CID(예: 9009..., 48...) 또는 "maps.google.com/?cid=..."는 절대 금지.
-				- 행정명칭은 대한민국 공식 표기(시/도, 시/군/구, 읍/면/동) 사용.
-				- 요청 지역 내부 장소만 선정, **중복 placeId 금지**.
-				- 조건을 만족할 수 없으면 빈 배열([]) 반환.
-				
-				요청 지역:
-				- %s
-				""".formatted(count, count, region);
-	}
-
-	private static String stripCodeFence(String s) {
-		if (s == null) return "";
-		String t = s.trim();
-		if (t.startsWith("```")) {
-			int nl = t.indexOf('\n');
-			if (nl > 0) t = t.substring(nl + 1);
-			int end = t.lastIndexOf("```");
-			if (end >= 0) t = t.substring(0, end);
-		}
-		return t.trim();
-	}
-
-	private static String extractCid(String uri) {
-		if (uri == null) return null;
-		Matcher m = CID_PATTERN.matcher(uri);
-		return m.find() ? m.group(1) : null;
-	}
-
-	private static String normalizePlaceId(String placeId,
-	                                       String title,
-	                                       Map<String, String> cidToPlaceId,
-	                                       Map<String, String> titleToPlaceId) {
-		String pid = placeId;
-		if (pid != null && pid.matches("\\d+")) {                 // 숫자면 CID로 간주
-			pid = cidToPlaceId.getOrDefault(pid, pid);
-		}
-		if (pid == null || !pid.startsWith("places/")) {           // 여전히 비정상이면 title 매핑 시도
-			String byTitle = titleToPlaceId.get(title);
-			if (byTitle != null) pid = byTitle;
-		}
-		return pid;
-	}
-
-	private static String joinNonBlank(String sep, String... parts) {
+	// ----- utils -----
+	private static String joinSkippingBlank(String separator, String... parts) {
 		return Arrays.stream(parts)
 				.filter(Objects::nonNull)
 				.map(String::trim)
 				.filter(s -> !s.isBlank())
-				.reduce((a, b) -> a + sep + b)
+				.reduce((a, b) -> a + separator + b)
 				.orElse("");
 	}
 
-	public List<StoreNameRegionResponse> findStores(RegionStoreRequest request) {
-		String regionLabel = resolveRegionLabel(request);            // 1) 지역명 문자열
-		int count = Math.max(1, Math.min(20, request.count()));     // 1~20 클램핑
-		String prompt = buildPrompt(regionLabel, count);         // 2) 프롬프트
-
-		String raw = geminiService.generate(prompt, ToolMode.BOTH, null, null); // 3) 호출
-
-		try {
-			JsonNode root = objectMapper.readTree(raw);
-
-			String jsonArrayText = stripCodeFence(
-					root.at("/candidates/0/content/parts/0/text").asText("")
-			);
-			if (jsonArrayText.isBlank()) return List.of();
-
-			// 4) 1차 파싱
-			List<StoreNameRegionResponse> items = objectMapper.readValue(
-					jsonArrayText, new TypeReference<>() {
-					}
-			);
-
-			// 5) grounding으로 placeId 보정 맵 구성
-			Map<String, String> cidToPlaceId = new HashMap<>();
-			Map<String, String> titleToPlaceId = new HashMap<>();
-			for (JsonNode chunk : root.at("/candidates/0/groundingMetadata/groundingChunks")) {
-				JsonNode maps = chunk.get("maps");
-				if (maps == null) continue;
-				String uri = maps.path("uri").asText("");
-				String pid = maps.path("placeId").asText("");
-				String title = maps.path("title").asText("");
-
-				String cid = extractCid(uri);
-				if (cid != null && pid.startsWith("places/")) cidToPlaceId.put(cid, pid);
-				if (!title.isBlank() && pid.startsWith("places/")) titleToPlaceId.put(title, pid);
-			}
-
-			// 6) 최종 정규화 + 필터링
-			List<StoreNameRegionResponse> fixed = new ArrayList<>(items.size());
-			for (StoreNameRegionResponse it : items) {
-				String pid = normalizePlaceId(it.placeId(), it.storeName(), cidToPlaceId, titleToPlaceId);
-				if (pid != null && pid.startsWith("places/")) {
-					fixed.add(new StoreNameRegionResponse(
-							it.storeName(), it.sidoName(), it.sigunguName(), it.emdName(), pid
-					));
-				}
-			}
-
-			// 혹시 모델이 과다 반환했어도 count까지만 보장
-			return fixed.size() > count ? fixed.subList(0, count) : fixed;
-
-		} catch (Exception e) {
-			return List.of(); // 필요 시 로깅
+	private static String removeCodeFence(String source) {
+		if (source == null) return "";
+		String s = source.trim();
+		if (s.startsWith("```")) {
+			int firstNl = s.indexOf('\n');
+			if (firstNl > 0) s = s.substring(firstNl + 1);
+			int lastFence = s.lastIndexOf("```");
+			if (lastFence >= 0) s = s.substring(0, lastFence);
 		}
+		return s.trim();
 	}
 
-	private String resolveRegionLabel(RegionStoreRequest request) {
+	private static String nz(String s) {
+		return s == null ? "" : s;
+	}
+
+	private static StoreDetailResponse normalizeCollections(StoreDetailResponse in) {
+		List<String> categories = in.categories() != null ? in.categories() : List.of();
+		List<String> facilities = in.facilities() != null ? in.facilities() : List.of();
+		List<StoreDetailResponse.Food> foods = in.foods() != null ? in.foods() : List.of();
+		List<String> images = in.images() != null ? in.images() : List.of();
+
+		return new StoreDetailResponse(
+				in.placeId(),
+				nz(in.name()),
+				nz(in.phone()),
+				nz(in.description()),
+				nz(in.sidoName()),
+				nz(in.sigunguName()),
+				nz(in.emdName()),
+				nz(in.roadAddressText()),
+				nz(in.jubunAddressText()),
+				categories,
+				facilities,
+				foods,
+				images
+		);
+	}
+
+	// ----- region name resolver -----
+	private RegionNames resolveRegionNames(RegionStoreRequest request) {
 		RegionSidoDTO sido = regionService.findBySidoId(request.sidoId());
 		if (sido == null) throw new IllegalArgumentException("유효하지 않은 sidoId");
 
@@ -165,10 +88,9 @@ public class AdminService {
 			if (emd == null) throw new IllegalArgumentException("유효하지 않은 emdId");
 			emdName = emd.getName();
 
-			// sigunguId가 비었으면 emd의 상위로 보정
 			if (request.sigunguId() == null) {
-				RegionSigunguDTO parent = regionService.findBySigunguId(emd.getSigunguId());
-				sigunguName = parent != null ? parent.getName() : null;
+				RegionSigunguDTO parentSigungu = regionService.findBySigunguId(emd.getSigunguId());
+				sigunguName = parentSigungu != null ? parentSigungu.getName() : null;
 			}
 		}
 
@@ -180,6 +102,159 @@ public class AdminService {
 			sigunguName = sigungu.getName();
 		}
 
-		return joinNonBlank(" ", sidoName, sigunguName, emdName);
+		return new RegionNames(sidoName, sigunguName, emdName);
+	}
+
+	// ----- list: find stores with Gemini (Search + Maps tools) -----
+	public List<StoreNameRegionResponse> findStores(RegionStoreRequest request) {
+		RegionNames regionNames = resolveRegionNames(request);
+		String regionLabel = joinSkippingBlank(" ",
+				regionNames.sidoName(),
+				regionNames.sigunguName(),
+				regionNames.emdName());
+
+		int count = Math.max(1, Math.min(20, request.count()));
+		String prompt = """
+				한국어로만 작성.
+				
+				아래 지역에서 현지 평이 좋은 맛집을 정확히 %d곳 선정해 주세요.
+				
+				출력 규칙:
+				- 출력은 JSON 배열 리터럴 하나만. 앞뒤 공백/문장/주석/코드펜스(``` 등) 금지.
+				- 배열 길이는 정확히 %d.
+				- 각 요소 객체는 아래 5개 키만 포함(철자·대소문자·순서 엄수), null/빈 문자열 금지:
+				  {
+				    "storeName": "string",
+				    "sidoName": "string",
+				    "sigunguName": "string",
+				    "emdName": "string",
+				    "placeId": "string"
+				  }
+				- placeId는 반드시 Google Place ID만 사용 (형식: "places/ChIJ...").
+				- 행정명칭은 대한민국 공식 표기(시/도, 시/군/구, 읍/면/동).
+				- 요청 지역 내부 장소만 선정, 중복 placeId 금지.
+				- 조건을 만족할 수 없으면 빈 배열([]) 반환.
+				
+				요청 지역:
+				- %s
+				""".formatted(count, count, regionLabel);
+
+		String raw = geminiService.generateWithBoth(prompt);
+
+		try {
+			JsonNode root = objectMapper.readTree(raw);
+			String text = removeCodeFence(root.at("/candidates/0/content/parts/0/text").asText(""));
+
+			// 본문이 비었으면 grounding에서 폴백 추출
+			if (text.isBlank() || "[]".equals(text)) {
+				return fallbackFromGrounding(root,
+						regionNames.sidoName(),
+						regionNames.sigunguName(),
+						regionNames.emdName(),
+						count);
+			}
+
+			List<StoreNameRegionResponse> parsed = objectMapper.readValue(
+					text, new TypeReference<>() {
+					}
+			);
+			return parsed.size() > count ? parsed.subList(0, count) : parsed;
+
+		} catch (Exception e) {
+			return List.of();
+		}
+	}
+
+	private List<StoreNameRegionResponse> fallbackFromGrounding(
+			JsonNode root, String sido, String sigungu, String emd, int need
+	) {
+		LinkedHashMap<String, String> ordered = new LinkedHashMap<>();
+
+		for (JsonNode ch : root.at("/candidates/0/groundingMetadata/groundingChunks")) {
+			JsonNode maps = ch.get("maps");
+			if (maps == null) continue;
+
+			String placeId = maps.path("placeId").asText("");
+			String title = maps.path("title").asText("");
+
+			// Google Place ID 형태만 채택
+			if (!placeId.startsWith("places/")) continue;
+
+			ordered.putIfAbsent(placeId, title);
+			if (ordered.size() >= need * 2) break; // 약간 여유 수집
+		}
+
+		List<StoreNameRegionResponse> out = new ArrayList<>();
+		for (Map.Entry<String, String> e : ordered.entrySet()) {
+			if (out.size() >= need) break;
+			out.add(new StoreNameRegionResponse(e.getValue(), sido, sigungu, emd, e.getKey()));
+		}
+		return out;
+	}
+
+	// ----- detail: one store with Gemini (Search + Maps tools) -----
+	public Optional<StoreDetailResponse> storeDetailByRegionNameAndPlaceId(StoreDetailRequest request) {
+		String regionLabel = request.regionLabel();
+		String storeName = request.storeName();
+		String placeId = request.placeId();
+
+		String prompt = """
+				한국어로만 작성.
+				
+				아래 조건을 모두 만족하는 가게 1곳의 상세 정보만 JSON 배열로 반환해 주세요.
+				- 지역(행정명): %s
+				- 가게명(검색 힌트): %s
+				- 반드시 이 placeId와 정확히 일치: %s   (형식: "places/ChIJ...")
+				
+				출력 규칙(엄격):
+				- 출력은 JSON 배열 리터럴 하나만. 앞뒤 공백/문장/주석/코드펜스(``` 등) 금지.
+				- 배열 길이는 정확히 1. 불확실하면 빈 배열([]).
+				- 키/순서/철자 엄수. null 최소화(모를 때만 빈 문자열/빈 배열).
+				[
+				  {
+				    "placeId": "string",          // 반드시 %s 와 정확 일치
+				    "name": "string",
+				    "phone": "string",
+				    "description": "string",
+				    "sidoName": "string",
+				    "sigunguName": "string",
+				    "emdName": "string",
+				    "roadAddressText": "string",
+				    "jubunAddressText": "string",
+				    "categories": ["string"],
+				    "facilities": ["string"],
+				    "foods": [
+				      { "name": "string", "price": 12345, "description": "string" }
+				    ],
+				    "images": ["string"]
+				  }
+				]
+				
+				주의:
+				- placeId가 %s 와 다르면 무조건 빈 배열([]).
+				- 지역/상호 불일치도 빈 배열([]).
+				- 불확실한 필드는 빈 문자열("") 또는 빈 배열([]).
+				""".formatted(regionLabel, storeName, placeId, placeId, placeId);
+
+		String raw = geminiService.generateWithBoth(prompt);
+
+		try {
+			JsonNode root = objectMapper.readTree(raw);
+			String body = removeCodeFence(root.at("/candidates/0/content/parts/0/text").asText("")).trim();
+
+			if (body.isBlank() || "[]".equals(body)) return Optional.empty();
+
+			List<StoreDetailResponse> list = objectMapper.readValue(body, new TypeReference<>() {
+			});
+			if (list.isEmpty()) return Optional.empty();
+
+			StoreDetailResponse first = list.get(0);
+			if (first.placeId() == null || !first.placeId().equals(placeId)) return Optional.empty();
+
+			return Optional.of(normalizeCollections(first));
+
+		} catch (Exception e) {
+			return Optional.empty();
+		}
 	}
 }

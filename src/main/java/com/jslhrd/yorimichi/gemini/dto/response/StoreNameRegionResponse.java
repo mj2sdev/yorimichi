@@ -5,7 +5,5 @@ public record StoreNameRegionResponse(
 		String sidoName,
 		String sigunguName,
 		String emdName,
-		String placeId
-) {
-
+		String placeId) {
 }

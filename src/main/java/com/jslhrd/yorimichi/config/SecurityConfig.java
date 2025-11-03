@@ -55,12 +55,11 @@ public class SecurityConfig {
 						// CORS preflight 허용
 						.requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
 
-						// 공개 엔드포인트 (수집 확인용)
-						.requestMatchers(HttpMethod.GET, "/api/ai/stores/names").permitAll()
-						.requestMatchers(HttpMethod.GET, "/api/ai/stores/info").permitAll()
-
 						.requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/stations").permitAll()
+
+						.requestMatchers(HttpMethod.POST, "/api/admin/**").permitAll()
+
 						// 나머지 API 는 인증 필요
 						.anyRequest().authenticated()
 				)
@@ -126,6 +125,8 @@ public class SecurityConfig {
 								"/webjars/**",
 								"/actuator/health"
 						).permitAll()
+
+
 						.anyRequest().authenticated()
 				)
 
