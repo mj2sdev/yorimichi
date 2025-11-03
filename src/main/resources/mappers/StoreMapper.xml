@@ -170,42 +170,15 @@
         WHERE s.id = #{storeId}
     </select>
 
-    <resultMap id="storeMapForCoeat" type="StoreDTO">
-        <id property="id" column="id" />
-        <association property="address">
-            <result property="detail" column="detail"/>
-            <result property="roadAddressText" column="road_address_text"/>
-            <result property="jibunAddressText" column="jibun_address_text"/>
-            <result property="latitude" column="latitude"/>
-            <result property="longitude" column="longitude"/>
-        </association>
-        <collection
-            property="foods"
-            column="{storeId=id}"
-            ofType="FoodDTO"
-            select="com.jslhrd.yorimichi.mapper.FoodMapper.selectAllByStoreId">
-        </collection>
-    </resultMap>
-
-    <select id="selectByStoreIdForCoeat" resultMap="storeMapForCoeat">
+    <select id="selectIdByAddressIdAndName" resultType="long">
         SELECT
-            s.id,
-            s.name,
+            id
 
-            a.detail,
-            a.road_address_text,
-            a.jibun_address_text,
-            a.latitude,
-            a.longitude
-        FROM store s
-        JOIN root r ON s.id = r.id
-        <include refid="com.jslhrd.yorimichi.mapper.common.Auditing">
-            <property name="type" value="'STORE'"/>
-        </include>
+        FROM store
 
-        LEFT JOIN address a ON a.id = s.address_id
-
-        WHERE s.id = #{ storeId }
+        WHERE
+            address_id = #{addressId}
+            AND name = #{name}
     </select>
 
     <select id="selectIdByAddressIdAndName" resultType="long">

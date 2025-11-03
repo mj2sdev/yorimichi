@@ -18,8 +18,8 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
-@NoArgsConstructor
 @ToString
+@NoArgsConstructor
 public class ImageDTO {
 
 	/**
