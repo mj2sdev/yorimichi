@@ -24,7 +24,6 @@
 										   th:aria-label="#{user.mypage.label.username}" aria-describedby="addon-wrapping">
 								</li>
 								<li class="fs-5 bg-ymwhitesmoke form-control" th:text="${user.email}">
-									user.email@example.com
 								</li>
 							</ul>
 						</div>
@@ -38,7 +37,7 @@
 						<div class="col-8">
 							<div class="input-group mb-3">
 								<input type="file" name="rawImage" value="" class="form-control" id="inputGroupFile02">
-								<label class="input-group-text" for="inputGroupFile02" th:text="#{user.mypage.label.upload_photo}">업로드</label>
+								<label class="input-group-text" for="inputGroupFile02" th:text="#{user.mypage.label.upload_photo}"></label>
 							</div>
 						</div>
 					</div>
@@ -60,7 +59,7 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="privacyLabel" th:text="#{user.mypage.privacy_settings.title}">개인 정보 보호 설정</h1>
+					<h1 class="modal-title fs-5" id="privacyLabel" th:text="#{user.mypage.privacy_settings.title}"></h1>
 				</div>
 				<div class="modal-body">
 					<div class="form-check form-switch">
@@ -72,7 +71,6 @@
 							   form="myinfo-form">
 						<input type="hidden" name="showReviews" value="false" form="myinfo-form">
 						<label class="form-check-label" for="show-reviews" th:text="#{user.mypage.privacy_settings.reviews}">
-							리뷰 비공개
 						</label>
 					</div>
 					<div class="form-check form-switch">
@@ -84,7 +82,6 @@
 							   form="myinfo-form">
 						<input type="hidden" name="showLikes" value="false" form="myinfo-form">
 						<label class="form-check-label" for="show-likes" th:text="#{user.mypage.privacy_settings.likes}">
-							좋아요 비공개
 						</label>
 					</div>
 					<div class="form-check form-switch">
@@ -96,7 +93,6 @@
 							   form="myinfo-form">
 						<input type="hidden" name="showBookmarks" value="false" form="myinfo-form">
 						<label class="form-check-label" for="show-bookmarks" th:text="#{user.mypage.privacy_settings.bookmarks}">
-							즐겨찾기 비공개
 						</label>
 					</div>
 					<div class="form-check form-switch">
@@ -108,7 +104,6 @@
 							   form="myinfo-form">
 						<input type="hidden" name="showFollowees" value="false" form="myinfo-form">
 						<label class="form-check-label" for="show-followees" th:text="#{user.mypage.privacy_settings.followees}">
-							팔로우 비공개
 						</label>
 					</div>
 					<div class="form-check form-switch">
@@ -120,12 +115,11 @@
 							   form="myinfo-form">
 						<input type="hidden" name="showFollowers" value="0" form="myinfo-form">
 						<label class="form-check-label" for="show-followers" th:text="#{user.mypage.privacy_settings.followers}">
-							팔로워 비공개
 						</label>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" data-bs-dismiss="modal" th:text="#{user.mypage.button.close}">창 닫기</button>
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal" th:text="#{user.mypage.button.close}"></button>
 				</div>
 			</div>
 		</div>
@@ -140,23 +134,20 @@
 							data-bs-target="#nav-review" type="button" role="tab"
 							aria-controls="nav-review" aria-selected="true"
 							th:text="#{user.mypage.tab.reviews}">
-							리뷰
 						</button>
 						<button class="nav-link" id="nav-like-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-like" type="button" role="tab" aria-controls="nav-like"
 							aria-selected="false" th:text="#{user.mypage.tab.likes}">
-							좋아요
 						</button>
 						<button class="nav-link" id="nav-bookmark-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-bookmark" type="button" role="tab"
 							aria-controls="nav-bookmark" aria-selected="false"
 							th:text="#{user.mypage.tab.bookmarks}">
-							즐겨찾기
 						</button>
 						<button type="button" class="btn text-ymprimary" data-bs-toggle="modal"
 							data-bs-target="#privacy">
 							<i class="bi bi-key-fill" style="font-size: 1em; color: gold;">
-								<span th:text="#{user.mypage.tab.privacy_settings}">공개설정</span>
+								<span th:text="#{user.mypage.tab.privacy_settings}"></span>
 							</i>
 						</button>
 					</div>
@@ -186,11 +177,9 @@
 											<a th:href="@{'/store/detail/'+${review.storeId}}"
 												class="text-ymprimary text-decoration-none"
 												th:text="#{user.detail.button.view_store}">
-												가게보기
 											</a>
 										</div>
 										<div class="col-auto" th:text="${#temporals.format(review.createdAt, 'yyyy.MM.dd')}">
-											2025.09.15
 										</div>
 										<div class="col-auto">
 											<button type="button" class="btn btn-sm p-0"
@@ -213,7 +202,6 @@
 										th:attr="data-bs-target='#menu' + ${review.id}">
 										<div class="row mt-2">
 											<div class="col" th:text="${review.content}">
-												리뷰 본문 내용...
 											</div>
 										</div>
 									</div>
@@ -239,8 +227,8 @@
 								</div>
 								<div class="col">
 									<a th:href="@{'/store/detail/'+${like.id}}" class="btn">
-										<span th:text="${like.name} ?: #{index.featured.store.name}">가게명</span>
-										<span th:text="${like.address} ?: #{common.location}">위치</span>
+										<span th:text="${like.name} ?: #{index.featured.store.name}"></span>
+										<span th:text="${like.address} ?: #{common.location}"></span>
 										<th:block th:each="category: ${like.categories}">
 											<span th:text="${category}"></span>
 										</th:block>
@@ -260,8 +248,8 @@
 								</div>
 								<div class="col">
 									<a th:href="@{'/store/detail/'+${bookmark.id}}" class="btn">
-										<span th:text="${bookmark.name} ?: #{index.featured.store.name}">가게명</span>
-										<span th:text="${bookmark.address} ?: #{common.location}">위치</span>
+										<span th:text="${bookmark.name} ?: #{index.featured.store.name}"></span>
+										<span th:text="${bookmark.address} ?: #{common.location}"></span>
 										<th:block th:each="category: ${bookmark.categories}">
 											<span th:text="${category}"></span>
 										</th:block>
@@ -278,17 +266,14 @@
 						<button class="nav-link active" id="nav-follow-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-follow" type="button" role="tab" aria-controls="nav-follow"
 							aria-selected="true" th:text="#{common.follow}">
-							팔로우
 						</button>
 						<button class="nav-link" id="nav-follower-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-follower" type="button" role="tab" aria-controls="nav-follower"
 							aria-selected="false" th:text="#{common.follower}">
-							팔로워
 						</button>
 						<button class="nav-link" id="nav-block-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-block" type="button" role="tab" aria-controls="nav-block"
 							aria-selected="false" th:text="#{user.mypage.tab.blocks}">
-							차단목록
 						</button>
 					</div>
 				</nav>
@@ -304,7 +289,6 @@
 								</div>
 								<div class="col">
 									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname} ?: #{user.signup.nickname}" class="btn d-block">
-										닉네임
 									</a>
 								</div>
 							</div>
@@ -319,7 +303,6 @@
 								</div>
 								<div class="col">
 									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname} ?: #{user.signup.nickname}" class="btn d-block">
-										닉네임
 									</a>
 								</div>
 							</div>
@@ -337,7 +320,6 @@
 								</div>
 								<div class="col">
 									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname} ?: #{user.signup.nickname}" class="btn d-block">
-										닉네임
 									</a>
 								</div>
 							</div>

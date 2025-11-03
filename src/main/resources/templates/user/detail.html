@@ -47,18 +47,15 @@
 							data-bs-target="#nav-review" type="button" role="tab"
 							aria-controls="nav-review" aria-selected="true"
 							th:text="#{user.mypage.tab.reviews}">
-							리뷰
 						</button>
 						<button class="nav-link" id="nav-like-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-like" type="button" role="tab" aria-controls="nav-like"
 							aria-selected="false" th:text="#{user.mypage.tab.likes}">
-							좋아요
 						</button>
 						<button class="nav-link" id="nav-bookmark-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-bookmark" type="button" role="tab"
 							aria-controls="nav-bookmark" aria-selected="false"
 							th:text="#{user.mypage.tab.bookmarks}">
-							즐겨찾기
 						</button>
 					</div>
 				</nav>
@@ -87,18 +84,15 @@
 											<a th:href="@{'/store/detail/'+${review.storeId}}"
 												class="text-ymprimary text-decoration-none"
 												th:text="#{user.detail.button.view_store}">
-												가게보기
 											</a>
 										</div>
 										<div class="col-auto" th:text="${#temporals.format(review.createdAt, 'yyyy.MM.dd')}">
-											2025.09.15
 										</div>
 									</div>
 									<div class="p-2" data-bs-toggle="collapse"
 										th:attr="data-bs-target='#menu' + ${review.id}">
 										<div class="row mt-2">
 											<div class="col" th:text="${review.content}">
-												리뷰 본문 내용...
 											</div>
 										</div>
 									</div>
@@ -119,10 +113,10 @@
 							<div class="row">
 								<div class="col">
 									<a th:href="@{'/store/detail/'+${like.id}}" class="btn">
-										<span th:text="${like.name} ?: #{index.featured.store.name}">가게명</span>
-										<span th:text="${like.address} ?: #{common.location}">위치</span>
+										<span th:text="${like.name} ?: #{index.featured.store.name}"></span>
+										<span th:text="${like.address} ?: #{common.location}"></span>
 										<th:block th:each="category: ${like.categories}">
-											<span th:text="${category}">#태그</span>
+											<span th:text="${category}"></span>
 										</th:block>
 									</a>
 								</div>
@@ -135,10 +129,10 @@
 							<div class="row">
 								<div class="col">
 									<a th:href="@{'/store/detail/'+${bookmark.id}}" class="btn">
-										<span th:text="${bookmark.name} ?: #{index.featured.store.name}">가게명</span>
-										<span th:text="${bookmark.address} ?: #{common.location}">위치</span>
+										<span th:text="${bookmark.name} ?: #{index.featured.store.name}"></span>
+										<span th:text="${bookmark.address} ?: #{common.location}"></span>
 										<th:block th:each="category: ${bookmark.categories}">
-											<span th:text="${category}">#태그</span>
+											<span th:text="${category}"></span>
 										</th:block>
 									</a>
 								</div>
@@ -153,12 +147,10 @@
 						<button class="nav-link active" id="nav-follow-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-follow" type="button" role="tab" aria-controls="nav-follow"
 							aria-selected="true" th:text="#{common.follow}">
-							팔로우
 						</button>
 						<button class="nav-link" id="nav-follower-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-follower" type="button" role="tab" aria-controls="nav-follower"
 							aria-selected="false" th:text="#{common.follower}">
-							팔로워
 						</button>
 					</div>
 				</nav>
@@ -169,7 +161,6 @@
 							<div class="row">
 								<div class="col">
 									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname} ?: #{user.signup.nickname}" class="btn d-block">
-										닉네임
 									</a>
 								</div>
 							</div>
@@ -181,7 +172,6 @@
 							<div class="row">
 								<div class="col">
 									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname} ?: #{user.signup.nickname}" class="btn d-block">
-										닉네임
 									</a>
 								</div>
 							</div>

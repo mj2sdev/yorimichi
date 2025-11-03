@@ -2,7 +2,7 @@
 <html th:replace="~{layout/main :: params(~{::head/content()},~{::body/content()})}"
 	  xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title th:text="#{header.station}">정류장</title>
+	<title th:text="#{header.station}"></title>
 
 	<link href="/css/station/list.css" rel="stylesheet"/>
 
@@ -18,28 +18,28 @@
 	<div class="border-bottom pb-3 mb-4">
 		<div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
 			<div class="d-flex align-items-center gap-3">
-				<h3 class="m-0 fw-bold" th:text="'🚉 ' + #{header.station}">🚉 정류장</h3>
+				<h3 class="m-0 fw-bold" th:text="'🚉 ' + #{header.station}"></h3>
 			</div>
 			<ul class="nav nav-pills" id="station-filter">
 				<li class="nav-item">
 					<a class="nav-link rounded-pill filter-tab"
 					   data-filter="ALL" href="#"
 					   th:classappend="${type == null || type.name() == 'ALL'} ? ' active'">
-						<i class="bi bi-grid-3x3-gap me-1"></i><span th:text="#{store.list.search.all}">전체</span>
+						<i class="bi bi-grid-3x3-gap me-1"></i><span th:text="#{store.list.search.all}"></span>
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link rounded-pill filter-tab"
 					   data-filter="REVIEW" href="#"
 					   th:classappend="${type != null && type.name() == 'REVIEW'} ? ' active'">
-						<i class="bi bi-chat-dots me-1"></i><span th:text="#{index.popular_stores.store.review}">리뷰</span>
+						<i class="bi bi-chat-dots me-1"></i><span th:text="#{index.popular_stores.store.review}"></span>
 					</a>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link rounded-pill filter-tab"
 					   data-filter="COEAT" href="#"
 					   th:classappend="${type != null && type.name() == 'COEAT'} ? ' active'">
-						<i class="bi bi-people me-1"></i><span th:text="#{store.coeat.title}">같이먹기</span>
+						<i class="bi bi-people me-1"></i><span th:text="#{store.coeat.title}"></span>
 					</a>
 				</li>
 			</ul>
@@ -81,7 +81,7 @@
 								<span class="badge rounded-pill small"
 									  th:classappend="${isReview} ? ' bg-primary bg-opacity-10 text-primary'
 															: ' bg-warning bg-opacity-10 text-warning'"
-									  th:text="${isReview} ? #{index.popular_stores.store.review} : #{store.coeat.title}">리뷰</span>
+									  th:text="${isReview} ? #{index.popular_stores.store.review} : #{store.coeat.title}"></span>
 
 								<span class="badge rounded-pill small"
 									  th:classappend="${item?.coeat?.status?.name() == 'OPEN' ? ' bg-success bg-opacity-10 text-success'
@@ -89,13 +89,11 @@
 										  : ' bg-danger bg-opacity-10 text-danger')} "
 									  th:if="${!isReview and item?.coeat?.status != null}"
 									  th:text="${item?.coeat?.status?.name()}">
-									OPEN
 								</span>
 							</div>
 							<small class="text-muted rel-time"
 								   th:attr="data-iso=${#temporals.format(item?.createdAt, 'yyyy-MM-dd''T''HH:mm:ss')}"
 								   th:text="${#temporals.format(item?.createdAt, 'MM/dd HH:mm')}">
-								10/23 12:30
 							</small>
 						</div>
 
@@ -106,33 +104,31 @@
 						<div class="mb-2">
 							<span class="fw-semibold text-dark small">
 								<i class="bi bi-person-circle me-1"></i>
-								<span th:text="${item?.user?.nickname ?: #{common.anonymous}}">사용자명</span>
+								<span th:text="${item?.user?.nickname ?: #{common.anonymous}}"></span>
 							</span>
 						</div>
 
 						<div class="text-ymsecondary small mb-2 lh-base clamp-2"
 							 th:text="${isReview} ? (${item?.review?.content} ?: '') : (${item?.coeat?.title} ?: '')">
-							내용/제목 요약
 						</div>
 
 						<div class="small text-muted mb-2"
 							 th:if="${!isReview and item?.coeat?.meetingAt != null}">
 							<i class="bi bi-calendar-event me-1"></i>
-							<span th:text="${#temporals.format(item?.coeat?.meetingAt, 'MM/dd HH:mm')}">10/23 19:00</span>
+							<span th:text="${#temporals.format(item?.coeat?.meetingAt, 'MM/dd HH:mm')}"></span>
 						</div>
 
 
 						<div class="text-muted small mb-2 clamp-2"
 							 th:if="${!isReview and item?.coeat?.content != null}"
 							 th:text="${item?.coeat?.content}">
-							같이먹기 내용
 						</div>
 
 						<div class="mb-2" th:if="${isReview and !#lists.isEmpty(item?.review?.foods)}">
 							<div class="d-flex flex-wrap gap-1">
 								<span class="badge bg-light text-dark"
 									  th:each="food : ${item?.review?.foods}"
-									  th:text="${food?.name ?: ''}">음식명</span>
+									  th:text="${food?.name ?: ''}"></span>
 							</div>
 						</div>
 
@@ -141,44 +137,44 @@
 									   or item?.coeat?.approvedCount != null
 									   or item?.coeat?.appliedCount != null)}">
 							<span th:if="${item?.coeat?.capacity != null}">
-								<span th:text="#{station.list.coeat.capacity}">정원</span>
+								<span th:text="#{station.list.coeat.capacity}"></span>
 								<span th:text="' ' + ${item.coeat.capacity}"></span>
 							</span>
 							<span th:if="${item?.coeat?.approvedCount != null}">
-								<span th:if="${item?.coeat?.capacity != null}"> / </span>
-								<span th:text="#{station.list.coeat.approved}">승인</span>
+								<span th:if="${item?.coeat?.capacity != null}"></span>
+								<span th:text="#{station.list.coeat.approved}"></span>
 								<span th:text="' ' + ${item.coeat.approvedCount}"></span>
 							</span>
 							<span th:if="${item?.coeat?.appliedCount != null}">
-								<span th:if="${item?.coeat?.capacity != null or item?.coeat?.approvedCount != null}"> / </span>
-								<span th:text="#{station.list.coeat.applied}">신청</span>
+								<span th:if="${item?.coeat?.capacity != null or item?.coeat?.approvedCount != null}"></span>
+								<span th:text="#{station.list.coeat.applied}"></span>
 								<span th:text="' ' + ${item.coeat.appliedCount}"></span>
 							</span>
 						</div>
 
 						<div class="mt-auto d-flex justify-content-between align-items-center small text-muted">
 							<div>
-								<span th:text="${item?.store?.name ?: #{index.featured.store.name}}">가게이름</span>
+								<span th:text="${item?.store?.name ?: #{index.featured.store.name}}"></span>
 
-								<span th:if="${item?.address?.roadAddressText != null}"> · </span>
+								<span th:if="${item?.address?.roadAddressText != null}"></span>
 								<span th:if="${item?.address?.roadAddressText != null}"
-									  th:text="${item?.address?.roadAddressText}">주소</span>
+									  th:text="${item?.address?.roadAddressText}"></span>
 
-								<span th:if="${isReview and item?.review?.rating != null}"> · </span>
+								<span th:if="${isReview and item?.review?.rating != null}"></span>
 								<span class="text-warning"
 									  th:if="${isReview and item?.review?.rating != null}"
-									  th:text="${item.review.rating} + ' ' + #{store.info.rating.unit}">5 점</span>
+									  th:text="${item.review.rating} + ' ' + #{store.info.rating.unit}"></span>
 							</div>
 
 							<div th:if="${!isReview}">
 								<span th:if="${item?.coeat?.commentCount != null}">
 									<i class="bi bi-chat-dots me-1"></i>
-									<span th:text="${item?.coeat?.commentCount}">0</span>
+									<span th:text="${item?.coeat?.commentCount}"></span>
 								</span>
 								<span th:if="${item?.coeat?.commentCount != null and item?.coeat?.viewCount != null}"> · </span>
 								<span th:if="${item?.coeat?.viewCount != null}">
 									<i class="bi bi-eye me-1"></i>
-									<span th:text="${item?.coeat?.viewCount}">0</span>
+									<span th:text="${item?.coeat?.viewCount}"></span>
 								</span>
 							</div>
 						</div>
@@ -195,8 +191,8 @@
 		<div class="card border-0 bg-light">
 			<div class="card-body text-center py-5">
 				<i class="bi bi-inbox display-1 text-muted opacity-50"></i>
-				<p class="mt-3 mb-1 fw-medium" th:text="#{station.list.empty.title}">아직 피드가 없어요.</p>
-				<p class="small text-muted mb-0" th:text="#{station.list.empty.subtitle}">첫 번째 글을 작성해보세요!</p>
+				<p class="mt-3 mb-1 fw-medium" th:text="#{station.list.empty.title}"></p>
+				<p class="small text-muted mb-0" th:text="#{station.list.empty.subtitle}"></p>
 			</div>
 		</div>
 	</div>
