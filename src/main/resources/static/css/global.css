@@ -954,5 +954,3 @@ mark.ym{ background:transparent; color:var(--ym-primary); font-weight:700; }
 @media (max-width: 576px){
   .search-panel{ position:fixed; left:1rem; right:1rem; top:72px; }
 }
-
-.search-panel { position: absolute; top: 100%; left: 0; right: 0; z-index: 2000; }

@@ -1,5 +1,6 @@
 package com.jslhrd.yorimichi.service.manager;
 
+import com.jslhrd.yorimichi.domain.CategoryDTO;
 import com.jslhrd.yorimichi.domain.SearchDTO;
 import com.jslhrd.yorimichi.domain.StoreDTO;
 import com.jslhrd.yorimichi.exception.AddressNotFoundException;
@@ -11,6 +12,7 @@ import com.jslhrd.yorimichi.mapper.RootMapper;
 import com.jslhrd.yorimichi.mapper.StoreMapper;
 import com.jslhrd.yorimichi.service.StoreService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class StoreManager implements StoreService {
 

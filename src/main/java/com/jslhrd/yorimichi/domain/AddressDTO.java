@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 /**
  * 주소 DTO.
  *
- * <br>주소 정보를 전달합니다.
+ * <br>
+ * 주소 정보를 전달합니다.
  *
  * @author GeonHoKoo
  * @author LancerAlert
@@ -20,23 +21,23 @@ import java.time.LocalDateTime;
 @Setter
 @ToString(callSuper = true)
 public class AddressDTO {
-    private Long id;
+	private Long id;
 
-    // FK들 (PR 방향에 맞춰 road/postal로 분리)
-    private Long roadId;
-    private Long postalId;
+	// FK들 (PR 방향에 맞춰 road/postal로 분리)
+	private Long roadId;
+	private Long postalId;
 
 	private Long emdId;
 
 	/**
 	 * FK: 도로 ID
 	 */
-//	private Long roadId;
+	// private Long roadId;
 
 	/**
 	 * FK: 우편번호 ID
 	 */
-//	private Long postalId;
+	// private Long postalId;
 
 	/**
 	 * 상세주소(동/호수 등)
@@ -73,7 +74,6 @@ public class AddressDTO {
 	 */
 	private LocalDateTime updatedAt;
 
-
 	/**
 	 * 주소의 상점
 	 */
@@ -84,7 +84,7 @@ public class AddressDTO {
 	/**
 	 * 주소의 우편번호
 	 */
-//	private PostalDTO postal;
+	// private PostalDTO postal;
 
 	/**
 	 * 주소의 도로명

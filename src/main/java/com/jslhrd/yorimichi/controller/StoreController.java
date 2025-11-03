@@ -11,6 +11,7 @@ import com.jslhrd.yorimichi.service.StoreService;
 import org.springframework.ui.Model;
 import com.jslhrd.yorimichi.mapper.SearchMapper;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -27,7 +28,6 @@ public class StoreController {
 	private final SearchMapper mapper; // ✅ 주입
 
 	private final ApiKeyService apiKeyService;
-
 	//인덱스 페이지에서 가게 맛집 리스트를 보여주기 위함. 인기있는 최신 6개를 보여주면 될 거 같음.
 	//인기의 기준이 뭔지 모르겠음.
 	@GetMapping("/search")
