@@ -64,6 +64,4 @@ public interface StoreService {
 	 *
 	 */
 	public void delete(Long storeId);
-
-	List<CategoryDTO> findCategoriesByStoreId(Long storeId);
 }
