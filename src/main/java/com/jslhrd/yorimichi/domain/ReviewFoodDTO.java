@@ -5,6 +5,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * 리뷰 - 음식 매핑 DTO.
  *
@@ -17,8 +20,8 @@ import java.time.LocalDateTime;
  * @version 1.1
  * 미춰버리겠네 ^^
  */
-@Getter
 @Setter
+@Getter
 public class ReviewFoodDTO {
 
 	/**

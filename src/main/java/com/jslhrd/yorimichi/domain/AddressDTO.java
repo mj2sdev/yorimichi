@@ -23,10 +23,6 @@ import java.time.LocalDateTime;
 public class AddressDTO {
 	private Long id;
 
-	// FK들 (PR 방향에 맞춰 road/postal로 분리)
-	private Long roadId;
-	private Long postalId;
-
 	private Long emdId;
 
 	/**

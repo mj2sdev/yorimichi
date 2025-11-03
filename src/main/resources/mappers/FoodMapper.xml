@@ -37,6 +37,15 @@
         ORDER BY r.created_at DESC;
     </select>
 
+    <select id="selectAllByReviewId" resultType="FoodDTO">
+        SELECT
+            f.id,
+            f.name
+        FROM review_food rf
+        JOIN food f ON f.id = rf.food_id
+
+        WHERE rf.review_id = #{ reviewId }
+    </select>
     <select id="selectByReviewIds" resultType="FoodDTO">
         SELECT
             rf.review_id,
