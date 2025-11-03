@@ -22,6 +22,17 @@ public class RegionNotFoundException extends DomainException {
 		);
 	}
 
+	public static RegionNotFoundException byName(RegionLevel level, String name) {
+		return new RegionNotFoundException(
+				"지역을 찾을 수 없습니다.",
+				Map.of(
+						"level", level.name(),
+						"keyType", RegionKeyType.NAME.name(),
+						"key", name
+				)
+		);
+	}
+
 	public static RegionNotFoundException byCode(RegionLevel level, String code) {
 		return new RegionNotFoundException(
 				"지역을 찾을 수 없습니다.",
