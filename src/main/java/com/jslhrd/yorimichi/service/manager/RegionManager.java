@@ -34,6 +34,13 @@ public class RegionManager implements RegionService {
 	}
 
 	@Override
+	public RegionSidoDTO findBySidoName(String sidoName) {
+		return regionMapper.selectBySidoName(sidoName)
+				.orElseThrow(() -> RegionNotFoundException.byName(RegionLevel.SIDO, sidoName));
+	}
+
+
+	@Override
 	public List<RegionSigunguDTO> findAllSigungu() {
 		return regionMapper.selectAllSigungu();
 	}
@@ -45,6 +52,12 @@ public class RegionManager implements RegionService {
 	}
 
 	@Override
+	public RegionSigunguDTO findBySigunguName(Long sidoId, String sigunguName) {
+		return regionMapper.selectBySigunguName(sidoId, sigunguName)
+				.orElseThrow(() -> RegionNotFoundException.byName(RegionLevel.SIGUNGU, sigunguName));
+	}
+
+	@Override
 	public List<RegionEmdDTO> findAllEmd() {
 		return regionMapper.selectAllEmd();
 	}
@@ -53,6 +66,12 @@ public class RegionManager implements RegionService {
 	public RegionEmdDTO findByEmdId(Long emdId) {
 		return regionMapper.selectByEmdId(emdId)
 				.orElseThrow(() -> RegionNotFoundException.byId(RegionLevel.EMD, emdId));
+	}
+
+	@Override
+	public RegionEmdDTO findByEmdName(Long sigunguId, String emdName) {
+		return regionMapper.selectByEmdName(sigunguId, emdName)
+				.orElseThrow(() -> RegionNotFoundException.byName(RegionLevel.EMD, emdName));
 	}
 }
 
