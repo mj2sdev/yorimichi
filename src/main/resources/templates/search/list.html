@@ -34,7 +34,7 @@
                     </div>
                   </th:block>
 
-                  <div class="text-muted small py-4 text-center"
+                  <div class="text-muted small py-4 text-center" hidden
                        th:if="${result == null or #lists.isEmpty(result.categories)}">
                     カテゴリーがありません
                   </div>
@@ -45,13 +45,14 @@
               <div>
                 <div class="fw-bold text-ymsecondary border-bottom pb-2 mb-3">🏠 条件</div>
                 <div class="row g-3">
-                  <th:block th:each="n : ${#numbers.sequence(1,5)}">
+                  <th:block th:each="n : ${ {'デリバリー可能', 'テイクアウト', 'NFC決済対応', '駐車場', '予約可能'} }">
                     <div class="col-6">
                       <input class="btn-check" type="checkbox"
                              th:id="'btn-check-outlined-' + ${n}" autocomplete="off">
                       <label class="btn btn-outline-ymsecondary w-100 py-2"
                              th:for="'btn-check-outlined-' + ${n}">
-                        <i class="bi bi-check2-circle me-1"></i> 주차
+                        <i class="bi bi-check2-circle me-1"></i>
+                        <span th:text="${ n }"></span>
                       </label>
                     </div>
                   </th:block>
@@ -126,7 +127,7 @@
 
             <div class="text-muted text-center py-5"
                  th:if="${result != null and #lists.isEmpty(result.items)}">
-              검색 결과가 없습니다.
+              検索結果がありません
             </div>
           </th:block>
         </div>

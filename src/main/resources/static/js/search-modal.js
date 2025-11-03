@@ -23,7 +23,7 @@
     if (!tokens.length) return esc;
     return esc.replace(new RegExp("(" + tokens.join("|") + ")", "gi"), '<span class="ym-hl">$1</span>');
   };
-  const toggleEmptyBox = (emptyBox, show, msg = "검색 결과가 없습니다") => {
+  const toggleEmptyBox = (emptyBox, show, msg = "検索結果がありません") => {
     if (!emptyBox) return;
     emptyBox.textContent = msg;
     emptyBox.classList.toggle("d-none", !show);
