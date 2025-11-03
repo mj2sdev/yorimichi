@@ -2,7 +2,7 @@ package com.jslhrd.yorimichi.service;
 
 import com.jslhrd.yorimichi.domain.SearchDTO;
 import com.jslhrd.yorimichi.domain.StoreDTO;
-
+import com.jslhrd.yorimichi.domain.CategoryDTO;
 import java.util.List;
 
 /**
@@ -61,4 +61,6 @@ public interface StoreService {
 	 *
 	 */
 	public void delete(Long storeId);
+
+	List<CategoryDTO> findCategoriesByStoreId(Long storeId);
 }

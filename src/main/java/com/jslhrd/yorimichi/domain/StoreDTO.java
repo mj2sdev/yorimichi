@@ -1,97 +1,23 @@
 package com.jslhrd.yorimichi.domain;
 
-import com.jslhrd.yorimichi.enums.RootType;
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.*;
 import java.util.List;
 
-/**
- * 상점 DTO.
- *
- * <br>상점 정보를 전달합니다.
- *
- * @author GeonHoKoo
- * @author LancerAlert
- * @since 1.0
- */
-@Getter
-@Setter
-public class StoreDTO extends RootDTO {
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+public class StoreDTO {
+    private Long id;
+    private String name;
+    private String description;
+    private String phone;
 
-	/**
-	 * FK: 주소 ID
-	 */
-	private Long addressId;
+    // 주소 FK + 중첩 주소객체
+    private Long addressId;
+    private AddressDTO address;
 
-	/**
-	 * 상점 이름
-	 */
-	private String name;
+    // 화면용 보조 필드들 (있으면 편함)
+    private String thumbnailUrl;   // 썸네일 경로 매핑 예정
+    private Integer reviewCount;   // 리뷰 수(없으면 null 허용)
 
-	/**
-	 * 상점 설명
-	 */
-	private String description;
-
-	/**
-	 * 상점 번호
-	 */
-	private String phone;
-
-	/**
-	 * 주소
-	 */
-	private AddressDTO address;
-
-	/**
-	 * 음식 카테고리  목록
-	 */
-	private List<CategoryDTO> categories;
-
-	/**
-	 * 시설 카테고리 목록
-	 */
-	private List<FacilityCategoryDTO> facilities;
-
-	/**
-	 * 음식 목록
-	 */
-	private List<FoodDTO> foods;
-
-	/**
-	 * 리뷰 목록
-	 */
-	private List<ReviewDTO> reviews;
-
-	/**
-	 * 같이 먹기 목록
-	 */
-	private List<CoeatDTO> coeats;
-
-	/**
-	 * 상점 이미지 목록
-	 */
-	private List<ImageDTO> images;
-
-	private ReviewDTO review;
-	
-	/**
-	 * 좋아요
-	 */
-	private LikeDTO like;
-
-	/**
-	 * 북마크
-	 */
-	private BookmarkDTO bookmark;
-
-	private CoeatDTO coeat;
-
-	private ImageDTO image;
-
-
-	public StoreDTO() {
-		super(RootType.STORE);
-	}
+    // (선택) 카테고리 태그를 가게에 물릴 계획이면
+    private List<CategoryDTO> categories;
 }

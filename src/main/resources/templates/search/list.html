@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: params(~{::head/content()}, ~{::body/content()})}">
+
+<head>
+  <title>Yorimichi Project - 검색</title>
+</head>
+
+<body>
+  <section>
+    <div class="container my-3">
+      <div class="row gap-5">
+
+        <!-- ===================== 좌측 : 조건 검색 / 카테고리 ===================== -->
+        <div class="col-12 col-lg-3">
+          <div class="row">
+            <div class="col text-center fs-1 fw-bold text-ymsecondary-bright">조건 검색</div>
+          </div>
+
+          <span class="bg-ymwhitesmoke">
+            <!-- 음식 카테고리 -->
+            <div class="row border border-3 my-4">
+              <div class="col">
+                <div class="row"><div class="col text-center fw-bold">음식 카테고리</div></div>
+
+                <div class="row">
+                  <!-- result.categories 있을 때 -->
+                  <th:block th:if="${result != null and result.categories != null}">
+                    <div class="col-4 text-center text-secondary my-4"
+                         th:each="c,i : ${result.categories}">
+                      <input class="btn-check" type="checkbox"
+                             th:id="'btn-food-outlined-' + ${i.index}" autocomplete="off">
+                      <label class="btn btn-outline-primary"
+                             th:for="'btn-food-outlined-' + ${i.index}">
+                        <div class="row"><div class="col">
+                          <i class="bi bi-p-circle" style="font-size: 1em;"></i>
+                        </div></div>
+                        <div class="row"><div class="col" th:text="${c.name}">카테고리명</div></div>
+                      </label>
+                    </div>
+                  </th:block>
+
+                  <!-- 없을 때 메시지 -->
+                  <div class="text-muted small py-4"
+                       th:if="${result == null or #lists.isEmpty(result.categories)}">
+                    연결된 카테고리가 없습니다.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- (샘플) 가게 조건 – 실제 데이터 연결 전까지 UI 유지 -->
+            <div class="row border border-3">
+              <div class="col">
+                <div class="row"><div class="col text-center fw-bold">가게 조건</div></div>
+                <div class="row">
+                  <th:block th:each="n : ${#numbers.sequence(1,11)}">
+                    <div class="col-4 text-center text-secondary my-4">
+                      <input class="btn-check" type="checkbox"
+                             th:id="'btn-check-outlined-' + ${n}" autocomplete="off">
+                      <label class="btn btn-outline-primary"
+                             th:for="'btn-check-outlined-' + ${n}">
+                        <div class="row"><div class="col">
+                          <i class="bi bi-p-circle" style="font-size: 1em;"></i>
+                        </div></div>
+                        <div class="row"><div class="col">주차</div></div>
+                      </label>
+                    </div>
+                  </th:block>
+                </div>
+              </div>
+            </div>
+          </span>
+        </div>
+
+        <!-- ===================== 우측 : 결과 영역 ===================== -->
+        <div class="col-12 col-lg-8">
+          <!-- 상단 탭 -->
+          <div class="row py-2 g-3">
+            <div class="col-auto">
+              <input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked>
+              <label class="btn" for="option1">전체</label>
+            </div>
+            <div class="col-auto">
+              <input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
+              <label class="btn" for="option2">좋아요</label>
+            </div>
+            <div class="col-auto">
+              <input type="radio" class="btn-check" name="options" id="option3" autocomplete="off">
+              <label class="btn" for="option3">즐겨찾기</label>
+            </div>
+          </div>
+
+          <!-- ───────── 단건 카드: 자동완성 클릭(type=store&id) ───────── -->
+          <th:block th:if="${result != null and result.store != null}">
+            <div class="row border border-3 py-3 my-3 position-relative">
+              <div class="col">
+                <!-- 상단 정보 행 -->
+                <div class="row border-bottom border-2 g-3 align-items-center">
+                  <!-- 썸네일 자리(임시) -->
+                  <div class="col-12 col-md-3">
+                    <div class="ratio ratio-16x9 bg-light d-flex align-items-center justify-content-center text-muted">
+                      <span>이미지</span>
+                    </div>
+                  </div>
+
+                  <!-- 이름/설명/전화 -->
+                  <div class="col-12 col-md-5">
+                    <div class="fw-bold fs-5" th:text="${result.store.name}">상점명</div>
+                    <div class="text-muted" th:text="${result.store.description}">상점 설명</div>
+                    <div class="small" th:text="${result.store.phone}">02-000-0001</div>
+                  </div>
+
+                  <!-- 우측 메타 -->
+                  <div class="col-12 col-md-4 text-md-end">
+                    <div class="small text-muted">
+                      <span>#주소ID: </span><span th:text="${result.store.addressId}">1</span>
+                    </div>
+                    <div class="small text-muted">리뷰수/평점은 추후 매핑</div>
+                  </div>
+                </div>
+
+                <!-- 카테고리 태그 -->
+                <div class="pt-2" th:if="${result.categories != null}">
+                  <a class="me-2" th:each="c : ${result.categories}"
+                     th:text="'#' + ${c.name}">#카테고리</a>
+                </div>
+              </div>
+
+              <!-- 카드 전체 클릭 이동 -->
+              <a class="stretched-link"
+                 th:href="@{/store/detail/{id}(id=${result.store.id})}"></a>
+            </div>
+          </th:block>
+
+          <!-- ───────── 목록 카드: 일반 키워드 검색 ───────── -->
+          <th:block th:if="${result == null or result.store == null}">
+            <th:block th:each="s : ${result.items}">
+              <div class="row border border-3 py-3 my-3 position-relative">
+                <div class="col">
+                  <div class="row border-bottom border-2 g-3 align-items-center">
+                    <div class="col-12 col-md-3">
+                      <div class="ratio ratio-16x9 bg-light d-flex align-items-center justify-content-center text-muted">
+                        <span>이미지</span>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                      <div class="fw-bold" th:text="${s.name}">가게 이름</div>
+                      <div class="text-muted" th:text="${s.description}">설명</div>
+                      <div class="small" th:text="${s.phone}">02-000-0001</div>
+                    </div>
+                    <div class="col-12 col-md-3 text-md-end">
+                      <div class="small text-muted">#주소ID: <span th:text="${s.addressId}">1</span></div>
+                    </div>
+                  </div>
+                </div>
+                <a class="stretched-link" th:href="@{/store/detail/{id}(id=${s.id})}"></a>
+              </div>
+            </th:block>
+
+            <!-- 결과 없음 -->
+            <div class="text-muted" th:if="${result != null and #lists.isEmpty(result.items)}">
+              검색 결과가 없습니다.
+            </div>
+          </th:block>
+
+        </div>
+        <!-- /우측 -->
+      </div>
+    </div>
+  </section>
+</body>
+</html>

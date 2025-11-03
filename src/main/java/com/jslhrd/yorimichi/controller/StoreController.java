@@ -3,7 +3,6 @@ package com.jslhrd.yorimichi.controller;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -12,6 +11,11 @@ import org.springframework.web.bind.annotation.*;
 import com.jslhrd.yorimichi.domain.StoreDTO;
 import com.jslhrd.yorimichi.service.BookmarkService;
 import com.jslhrd.yorimichi.service.LikeService;
+import com.jslhrd.yorimichi.service.StoreService;
+import org.springframework.ui.Model;
+import com.jslhrd.yorimichi.mapper.SearchMapper;
+import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
 import com.jslhrd.yorimichi.service.StoreService;
 
 @Controller
@@ -22,7 +26,7 @@ public class StoreController {
 	private final StoreService storeService;
 	private final LikeService likeService;
 	private final BookmarkService bookmarkService;
-
+	private final SearchMapper mapper; // ✅ 주입
 	//인덱스 페이지에서 가게 맛집 리스트를 보여주기 위함. 인기있는 최신 6개를 보여주면 될 거 같음.
 	//인기의 기준이 뭔지 모르겠음.
 	@ResponseBody
@@ -59,13 +63,7 @@ public class StoreController {
 		//return List<StoreDTO> stores;
 	}
 
-	//가게 상세정보로 이동
-	@GetMapping("/detail/{storeId}")
-	public String showDetail(@PathVariable("storeId") Long storeId, Model model) {
-		StoreDTO store = storeService.findById(storeId);
-		model.addAttribute(store);
-		return "store/detail";
-	}
+
 
 
 	//북마크 등록
@@ -92,11 +90,25 @@ public class StoreController {
 	public void submitLike(@AuthenticationPrincipal(expression = "userId") Long userId, @PathVariable("storeId") Long storeId) {
 		likeService.save(userId, storeId);
 	}
-
 	@ResponseBody
 	@DeleteMapping("/like/{storeId}")
 	public void deleteLikes(@AuthenticationPrincipal(expression = "userId") Long userId, @PathVariable("storeId") Long storeId){
 		likeService.delete(userId, storeId);
 	}
+	    // 가게 상세정보 (PathVariable 버전)
+    @GetMapping("/detail/{storeId}")
+    public String showDetail(@PathVariable Long storeId, Model model) {
+        var store = mapper.selectStoreById(storeId);
+        var categories = mapper.selectCategoriesByStoreId(storeId);
 
+        model.addAttribute("store", store);
+        model.addAttribute("categories", categories);
+        return "store/detail"; // templates/store/detail.html
+    }
+
+    // (선택) 쿼리스트링 버전도 허용하고 싶으면 함께 추가
+    @GetMapping("/detail")
+    public String showDetailByParam(@RequestParam("id") Long id, Model model) {
+        return showDetail(id, model); // 위 메서드 재사용
+    }
 }
