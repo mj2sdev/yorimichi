@@ -6,7 +6,7 @@
 	</div>
 	<div>
 		<div class="dropdown">
-			<button type="button" data-bs-toggle="dropdown" class="btn btn-link text-decoration-none btn-sm" th:text="${ user?.nickname ?: #{common.placeholder.nickname} }">
+			<button type="button" data-bs-toggle="dropdown" class="btn btn-link text-decoration-none btn-sm" th:text="${ user?.nickname ?: '名無し人' }">
 			</button>
 			<ul class="dropdown-menu">
 				<button type="button" class="dropdown-item" onclick="followByUserId(event)" th:data-userId="${ user?.id }">

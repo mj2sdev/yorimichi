@@ -22,8 +22,8 @@ async function toggleLike(event) {
 		i?.classList.toggle("bi-heart-fill");
 		button.dataset.liked = String(!liked);
 
-		const flag = liked ? "취소" : "설정";
-		alert(`해당 가게 좋아요가 ${ flag } 되었습니다.`)
+		const flag = liked ? "キャンセル" : "設定";
+		alert(`いいねが ${ flag } されました`)
 	}
 }
 /**
@@ -48,8 +48,8 @@ async function toggleBookmark(event) {
 		i?.classList.toggle("bi-bookmark-fill");
 		button.dataset.marked = String(!marked);
 
-		const flag = marked ? "취소" : "설정";
-		alert(`해당 가게 즐겨찾기가 ${ flag } 되었습니다.`);
+		const flag = marked ? "キャンセル" : "設定";
+		alert(`店のブックマーク ${ flag } されました`);
 	}
 }
 /**
@@ -62,11 +62,11 @@ async function toggleBookmark(event) {
 function shareStore() {
 	if (navigator.share != null) {
 		navigator.share({
-			title: "가게를 공유합니다",
-			text: "ㅎㅇㅎㅇ",
+			title: "店を共有します",
+			text: "おはよう",
 			url: location.href,
 		})
 	} else {
-		alert("이 브라우저는 Share API를 지원하지 않습니다.");
+		alert("このブラウザは Share API をサポートしていません");
 	}
 }
