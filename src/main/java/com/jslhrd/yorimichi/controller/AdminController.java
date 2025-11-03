@@ -31,12 +31,12 @@ public class AdminController {
 	}
 
 	@GetMapping("/reviews/summary")
-	public String adminReviewSummary() {
+	public String showReviewSummaryPage() {
 		return "admin/reviews/summary";
 	}
 
 	@GetMapping("/reviews/keywords")
-	public String adminReviewKeywords() {
+	public String showReviewKeywordsPage() {
 		return "admin/reviews/keywords";
 	}
 }

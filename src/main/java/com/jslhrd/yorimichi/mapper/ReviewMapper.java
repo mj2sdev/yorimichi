@@ -31,6 +31,9 @@ public interface ReviewMapper {
 	 */
 	Optional<ReviewDTO> selectById(@Param("reviewId") Long reviewId);
 
+	List<String> selectRecentContentsByStoreId(@Param("storeId") Long storeId,
+	                                           @Param("limit") int limit);
+
 	List<Long> selectStoreIdsByDays(@Param("days") int days,
 	                                @Param("limit") int limit);
 
@@ -38,8 +41,9 @@ public interface ReviewMapper {
 	                                         @Param("bucketOfToday") int bucketOfToday,
 	                                         @Param("limit") int limit);
 
-	List<String> selectRecentContentsByStoreId(@Param("storeId") Long storeId,
-	                                           @Param("limit") int limit);
+	// 키워드 추출 대상으로 잡을 스토어 id들 (리뷰가 있는 가게)
+	List<Long> selectStoreIdsHavingReviews(@Param("limit") int limit);
+
 
 	boolean existsActive(@Param("reviewId") Long reviewId);
 

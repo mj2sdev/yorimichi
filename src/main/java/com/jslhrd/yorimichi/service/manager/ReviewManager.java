@@ -3,13 +3,17 @@ package com.jslhrd.yorimichi.service.manager;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jslhrd.yorimichi.domain.ImageDTO;
+import com.jslhrd.yorimichi.domain.KeywordDTO;
 import com.jslhrd.yorimichi.domain.ReviewDTO;
 import com.jslhrd.yorimichi.domain.ReviewFoodDTO;
 import com.jslhrd.yorimichi.exception.*;
 import com.jslhrd.yorimichi.gemini.GeminiService;
-import com.jslhrd.yorimichi.gemini.review.ReviewSummaryRefreshResponse;
+import com.jslhrd.yorimichi.gemini.review.request.ReviewKeywordExtractRequest;
+import com.jslhrd.yorimichi.gemini.review.response.ReviewKeywordExtractResponse;
+import com.jslhrd.yorimichi.gemini.review.response.ReviewSummaryRefreshResponse;
 import com.jslhrd.yorimichi.mapper.*;
 import com.jslhrd.yorimichi.service.GoogleDriveService;
+import com.jslhrd.yorimichi.service.KeywordService;
 import com.jslhrd.yorimichi.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +27,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,16 +42,173 @@ public class ReviewManager implements ReviewService {
 	private final ImageManager imageManager;
 	private final RootImageMapper rootImageMapper;
 	private final ReviewFoodMapper reviewFoodMapper;
+
 	private final GoogleDriveService googleDriveService;
 	private final GeminiService geminiService;
+	private final KeywordService keywordService;
 	private final ObjectMapper objectMapper;
 
 	// 기본 파라미터
 	private int hotWindowDays = 14;   // 최근 N일
-	private int perStoreReviews = 20;  // 가게당 읽을 리뷰 수
 	private int hotBatchSize = 20;  // 매일 핫처리 개수
 	private int backlogBatchSize = 50;  // 매일 백로그 처리 개수
 	private int buckets = 30;  // 백로그 버킷 수
+
+	private int perStoreReviews = 20;  // 가게당 읽을 리뷰 수
+	private int candidateLimit = 10;  // 한 번에 최대 처리 가게 수
+
+	@Transactional
+	public ReviewKeywordExtractResponse extractKeywords(ReviewKeywordExtractRequest request) {
+
+		int limit = (request != null && request.limitStores() != null && request.limitStores() > 0)
+				? request.limitStores()
+				: candidateLimit;
+
+		int perReviews = (request != null && request.perStoreReviews() != null && request.perStoreReviews() > 0)
+				? request.perStoreReviews()
+				: this.perStoreReviews;
+
+		String mode = (request != null && request.mode() != null) ? request.mode() : "all";
+		Integer days = (request != null) ? request.days() : null;
+		Integer topN = (request != null) ? request.topN() : null;
+
+		// 1) 후보 가게 조회 (리뷰가 있는 상점만)
+		List<Long> storeIds = reviewMapper.selectStoreIdsByDays(days, limit);
+
+		int processedStores = 0;
+		int extractedKeywords = 0;
+		int createdKeywords = 0;
+		int linkedPairs = 0;
+		int skippedStores = 0;
+		int errors = 0;
+		List<Long> updatedStoreIds = new ArrayList<>();
+
+		for (Long storeId : storeIds) {
+			try {
+				// 2) 리뷰 수집
+				List<String> contents = reviewMapper.selectRecentContentsByStoreId(storeId, perReviews);
+				if (contents.isEmpty()) {
+					skippedStores++;
+					continue;
+				}
+
+				// 3) 키워드 추출(LLM)
+				String prompt = buildJaKeywordPrompt(contents);
+				String raw = geminiService.generateWithSearch(prompt);
+				List<String> keywords = parseKeywordsFromGemini(raw);
+				if (keywords.isEmpty()) {
+					skippedStores++;
+					continue;
+				}
+
+				// 중복 제거 + 상위 N 제한(옵션)
+				LinkedHashSet<String> dedup = new LinkedHashSet<>();
+				for (String k : keywords) {
+					String t = k == null ? "" : k.trim();
+					if (!t.isEmpty()) dedup.add(t);
+				}
+				List<String> finalKeywords = new ArrayList<>(dedup);
+				if (topN != null && topN > 0 && finalKeywords.size() > topN) {
+					finalKeywords = finalKeywords.subList(0, topN);
+				}
+				extractedKeywords += finalKeywords.size();
+
+				// 4) 키워드 upsert + 링크
+				int createdHere = 0;
+				int linkedHere = 0;
+
+				for (String name : finalKeywords) {
+					// 키워드 id 확보 (없으면 생성, 있으면 기존 id)
+					KeywordDTO dto = new KeywordDTO(name);
+					keywordService.save(dto);
+					Long keywordId = dto.getId();
+					createdHere++;
+
+					// store.id == root.id 구조 → storeId 그대로 사용 가능
+					keywordService.addKeywordToRoot(storeId, keywordId);
+					linkedHere++; // KeywordManager 가 중복 링크는 no-op 처리
+				}
+
+				createdKeywords += createdHere;
+				linkedPairs += linkedHere;
+
+				processedStores++;
+				updatedStoreIds.add(storeId);
+
+			} catch (Exception e) {
+				errors++;
+				log.warn("keyword refresh failed storeId={}, cause={}", storeId, e.toString());
+			}
+		}
+
+		return new ReviewKeywordExtractResponse(
+				processedStores,
+				extractedKeywords,
+				createdKeywords,
+				linkedPairs,
+				skippedStores,
+				errors,
+				updatedStoreIds
+		);
+	}
+
+	private String buildJaKeywordPrompt(List<String> contents) {
+		String joined = contents.stream()
+				.map(s -> s.replace('\n', ' ').trim())
+				.filter(s -> !s.isBlank())
+				.collect(Collectors.joining("\n・"));
+
+		return """
+				以下のレビュー本文から、日本語のキーワードを抽出してください。
+				ルール:
+				- 出力は JSON 配列リテラルのみ（前後の文章・コードフェンス禁止）
+				- 各要素は短い名詞または名詞句（最大10件）
+				- 宣伝語や固有店名は除外、料理名・味・量・価格・雰囲気・接客など実体を表す語を優先
+				- 似た語は代表1つに統一
+				例: ["味","量","価格","雰囲気","接客","キムチ","サムギョプサル"]
+				
+				【レビュー】
+				・%s
+				""".formatted(joined);
+	}
+
+	/**
+	 * LLM 응답 → 키워드 문자열 배열 파싱
+	 */
+	private List<String> parseKeywordsFromGemini(String raw) {
+		try {
+			JsonNode root = objectMapper.readTree(raw);
+			String text = Optional.ofNullable(root.at("/candidates/0/content/parts/0/text").asText(null))
+					.map(String::trim).orElse("");
+			// ```json … ``` 제거
+			if (text.startsWith("```")) {
+				int i = text.indexOf('\n');
+				if (i > 0) text = text.substring(i + 1);
+				int j = text.lastIndexOf("```");
+				if (j >= 0) text = text.substring(0, j);
+				text = text.trim();
+			}
+			if (text.isBlank() || "[]".equals(text)) return List.of();
+
+			JsonNode arr = objectMapper.readTree(text);
+			if (!arr.isArray()) return List.of();
+
+			List<String> out = new ArrayList<>();
+			for (JsonNode n : arr) {
+				if (n.isTextual()) {
+					String k = n.asText("").trim();
+					if (!k.isEmpty()) {
+						if (k.length() > 20) k = k.substring(0, 20); // 과도하게 긴 키워드 컷
+						out.add(k);
+					}
+				}
+			}
+			return out;
+		} catch (Exception e) {
+			log.debug("parseKeywordsFromGemini fail: {}", e.toString());
+			return List.of();
+		}
+	}
 
 	/**
 	 * 매일 04:10 (예시)

@@ -36,7 +36,7 @@ public interface KeywordMapper {
 	 *
 	 * @return 영향 행 수 (추가 1. 그 외 0)
 	 */
-	int insert(KeywordDTO keyword);
+	int upsert(KeywordDTO keyword);
 
 	/**
 	 * 키워드 수정.

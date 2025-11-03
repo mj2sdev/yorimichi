@@ -15,6 +15,9 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface RootKeywordMapper {
 
+	int insertIgnore(@Param("rootId") Long rootId,
+	                 @Param("keywordId") Long keywordId);
+
 	/**
 	 * 루트 - 키워드 매핑 추가.
 	 *

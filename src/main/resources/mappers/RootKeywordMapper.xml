@@ -6,8 +6,13 @@
 
     <!-- @formatter:off -->
 
+    <insert id="insertIgnore">
+        INSERT IGNORE INTO root_keyword (root_id, keyword_id)
+        VALUES (#{rootId}, #{keywordId})
+    </insert>
+
     <insert id="insert">
-        INSERT INTO root_keyword (root_id, keyword_id)
+        INSERT IGNORE INTO root_keyword (root_id, keyword_id)
         VALUES (#{rootId}, #{keywordId})
     </insert>
 

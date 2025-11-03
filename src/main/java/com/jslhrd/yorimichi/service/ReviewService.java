@@ -1,7 +1,9 @@
 package com.jslhrd.yorimichi.service;
 
 import com.jslhrd.yorimichi.domain.ReviewDTO;
-import com.jslhrd.yorimichi.gemini.review.ReviewSummaryRefreshResponse;
+import com.jslhrd.yorimichi.gemini.review.request.ReviewKeywordExtractRequest;
+import com.jslhrd.yorimichi.gemini.review.response.ReviewKeywordExtractResponse;
+import com.jslhrd.yorimichi.gemini.review.response.ReviewSummaryRefreshResponse;
 
 import java.util.List;
 
@@ -65,7 +67,9 @@ public interface ReviewService {
 	 */
 	public void update(Long userId, Long reviewId, ReviewDTO review);
 
-	ReviewSummaryRefreshResponse refreshOnce(Integer overrideHot, Integer overrideBacklog);
+	public ReviewSummaryRefreshResponse refreshOnce(Integer overrideHot, Integer overrideBacklog);
+
+	public ReviewKeywordExtractResponse extractKeywords(ReviewKeywordExtractRequest request);
 
 
 	/**

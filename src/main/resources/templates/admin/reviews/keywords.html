@@ -1,0 +1,250 @@
+<!-- templates/admin/reviews/keywords.html -->
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"/>
+  <title>レビュー・キーワード抽出</title>
+  <meta name="_csrf" th:content="${_csrf.token}">
+  <meta name="_csrf_header" th:content="${_csrf.headerName}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+      .metric-card .value {
+          font-size: 1.25rem;
+          font-weight: 700;
+      }
+
+      .metric-card .label {
+          color: #6c757d;
+          font-size: .9rem;
+      }
+
+      .scroll-x {
+          overflow-x: auto;
+      }
+  </style>
+</head>
+<body class="bg-body-tertiary">
+<div class="container py-4">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a th:href="@{/admin/index}">管理</a></li>
+      <li aria-current="page" class="breadcrumb-item active">レビュー・キーワード抽出</li>
+    </ol>
+  </nav>
+
+  <h4 class="mb-3">キーワード抽出を実行</h4>
+  <form class="row gy-2 gx-2" id="keywordForm">
+    <div class="col-6 col-md-2">
+      <label class="form-label">D日(対象)</label>
+      <input class="form-control" id="days" min="1" type="number" value="30">
+    </div>
+    <div class="col-6 col-md-2">
+      <label class="form-label">店舗件数</label>
+      <input class="form-control" id="limitStores" min="1" type="number" value="50">
+    </div>
+    <div class="col-6 col-md-2">
+      <label class="form-label">レビュー/店</label>
+      <input class="form-control" id="perStoreReviews" min="1" type="number" value="30">
+    </div>
+    <div class="col-6 col-md-2">
+      <label class="form-label">Top N</label>
+      <input class="form-control" id="topN" min="3" type="number" value="10">
+    </div>
+    <div class="col-12 d-flex gap-2 mt-2">
+      <button class="btn btn-primary" id="buttonRunAll" type="button">
+        <span class="when-idle">今すぐ抽出</span>
+        <span class="when-busy" style="display:none;">
+          <span aria-hidden="true" class="spinner-border spinner-border-sm me-1"></span> 実行中…
+        </span>
+      </button>
+      <button class="btn btn-outline-primary" id="buttonRunHot" type="button">
+        <span class="when-idle">ホット対象のみ</span>
+        <span class="when-busy" style="display:none;">
+          <span aria-hidden="true" class="spinner-border spinner-border-sm me-1"></span> 実行中…
+        </span>
+      </button>
+    </div>
+  </form>
+
+  <div class="small text-muted mt-3" id="keywordStatus">未実行</div>
+
+  <hr class="my-4">
+
+  <!-- Metrics -->
+  <div id="resultSection" style="display:none;">
+    <div class="row g-3">
+      <div class="col-6 col-md-2">
+        <div class="card metric-card">
+          <div class="card-body text-center">
+            <div class="value" id="mProcessed">0</div>
+            <div class="label">処理店舗</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-2">
+        <div class="card metric-card">
+          <div class="card-body text-center">
+            <div class="value" id="mExtracted">0</div>
+            <div class="label">抽出キーワード</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-2">
+        <div class="card metric-card">
+          <div class="card-body text-center">
+            <div class="value" id="mCreated">0</div>
+            <div class="label">新規作成</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-2">
+        <div class="card metric-card">
+          <div class="card-body text-center">
+            <div class="value" id="mLinked">0</div>
+            <div class="label">リンク作成</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-2">
+        <div class="card metric-card">
+          <div class="card-body text-center">
+            <div class="value" id="mSkipped">0</div>
+            <div class="label">スキップ</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-md-2">
+        <div class="card metric-card">
+          <div class="card-body text-center">
+            <div class="value" id="mErrors">0</div>
+            <div class="label">エラー</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- updatedStoreIds -->
+    <div class="card mt-3">
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <span>更新対象の Store IDs</span>
+        <span class="badge text-bg-secondary" id="badgeStoreCount">0</span>
+      </div>
+      <div class="card-body scroll-x">
+        <div class="d-flex flex-wrap gap-2" id="storeIdsWrap"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    const csrfHeaderName = document.querySelector('meta[name="_csrf_header"]')?.content?.trim() || null;
+    const csrfTokenValue = document.querySelector('meta[name="_csrf"]')?.content?.trim() || null;
+
+    const statusEl = document.getElementById('keywordStatus');
+    const resultSec = document.getElementById('resultSection');
+
+    const mProcessed = document.getElementById('mProcessed');
+    const mExtracted = document.getElementById('mExtracted');
+    const mCreated = document.getElementById('mCreated');
+    const mLinked = document.getElementById('mLinked');
+    const mSkipped = document.getElementById('mSkipped');
+    const mErrors = document.getElementById('mErrors');
+
+    const badgeStoreCount = document.getElementById('badgeStoreCount');
+    const storeIdsWrap = document.getElementById('storeIdsWrap');
+
+    const btnAll = document.getElementById('buttonRunAll');
+    const btnHot = document.getElementById('buttonRunHot');
+
+    function setBusy(btn, busy) {
+        if (!btn) return;
+        btn.disabled = !!busy;
+        const idle = btn.querySelector('.when-idle');
+        const bsy = btn.querySelector('.when-busy');
+        if (idle) idle.style.display = busy ? 'none' : '';
+        if (bsy) bsy.style.display = busy ? '' : 'none';
+    }
+
+    async function postJson(url, payload) {
+        const headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+        };
+        if (csrfHeaderName && csrfTokenValue) headers[csrfHeaderName] = csrfTokenValue;
+
+        const res = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify(payload ?? {}),
+            credentials: 'same-origin'
+        });
+
+        const ct = res.headers.get('content-type') || '';
+        if (!res.ok) {
+            const t = await res.text().catch(() => res.statusText);
+            throw new Error(`${res.status} ${t}`);
+        }
+        if (!ct.includes('application/json')) {
+            const t = await res.text().catch(() => '');
+            throw new Error(`Unexpected non-JSON: ${t.slice(0, 120)}`);
+        }
+        return res.json();
+    }
+
+    function renderResponse(res) {
+        // 안전하게 0 기본값
+        const processedStores = Number(res?.processedStores ?? 0);
+        const extractedKeywords = Number(res?.extractedKeywords ?? 0);
+        const createdKeywords = Number(res?.createdKeywords ?? 0);
+        const linkedPairs = Number(res?.linkedPairs ?? 0);
+        const skippedStores = Number(res?.skippedStores ?? 0);
+        const errors = Number(res?.errors ?? 0);
+        const updatedStoreIds = Array.isArray(res?.updatedStoreIds) ? res.updatedStoreIds : [];
+
+        mProcessed.textContent = processedStores.toLocaleString();
+        mExtracted.textContent = extractedKeywords.toLocaleString();
+        mCreated.textContent = createdKeywords.toLocaleString();
+        mLinked.textContent = linkedPairs.toLocaleString();
+        mSkipped.textContent = skippedStores.toLocaleString();
+        mErrors.textContent = errors.toLocaleString();
+
+        badgeStoreCount.textContent = String(updatedStoreIds.length);
+        storeIdsWrap.innerHTML = updatedStoreIds.length
+            ? updatedStoreIds.map(id => `<span class="badge text-bg-light">#${String(id)}</span>`).join(' ')
+            : '<span class="text-muted">なし</span>';
+
+        resultSec.style.display = '';
+    }
+
+    async function run(mode) {
+        statusEl.textContent = '実行中…';
+        setBusy(btnAll, true);
+        setBusy(btnHot, true);
+
+        try {
+            const payload = {
+                days: Number(document.getElementById('days').value || 30),
+                limitStores: Number(document.getElementById('limitStores').value || 50),
+                perStoreReviews: Number(document.getElementById('perStoreReviews').value || 30),
+                topN: Number(document.getElementById('topN').value || 10),
+                mode: mode // 'all' | 'hot'
+            };
+
+            const res = await postJson('/api/admin/reviews/keywords/extract', payload);
+            renderResponse(res);
+            statusEl.textContent = '完了';
+        } catch (e) {
+            statusEl.textContent = `失敗: ${e.message || '不明なエラー'}`;
+            alert('抽出に失敗しました: ' + (e.message || '不明なエラー'));
+        } finally {
+            setBusy(btnAll, false);
+            setBusy(btnHot, false);
+        }
+    }
+
+    btnAll.addEventListener('click', () => run('all'));
+    btnHot.addEventListener('click', () => run('hot'));
+</script>
+</body>
+</html>
