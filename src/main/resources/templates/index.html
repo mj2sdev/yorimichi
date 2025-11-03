@@ -107,7 +107,7 @@
 			<div class="featured p-3 equal-rail rail-compact"
 				 th:if="${recommendedStoreList != null and !#lists.isEmpty(recommendedStoreList)}">
 				<a class="d-block text-decoration-none"
-				   th:href="@{/store/{storeId}(storeId=${recommendedStoreList[0].id})}">
+				   th:href="@{/store/detail/{storeId}(storeId=${recommendedStoreList[0].id})}">
 					<img class="thumb"
 						 height="400"
 						 th:alt="${recommendedStoreList[0].name}"
@@ -155,11 +155,9 @@
 					<a class="list-group-item list-group-item-action d-flex gap-2 align-items-start"
 					   th:attr="list-id=${item?.id}, data-type=${item?.type}"
 					   th:each="item : ${stationSlice.items}"
-					   th:href="${isReview} ? ${reviewUrl} : ${coeatUrl}"
+					   th:href="@{/station}"
 					   th:with="
-						isReview=${item?.type?.name() == 'REVIEW'},
-						reviewUrl=@{/review/{reviewId}(reviewId=${item?.id})},
-						coeatUrl=@{/coeat/{coeatId}(coeatId=${item?.id})}
+						isReview=${item?.type?.name() == 'REVIEW'}
 					   ">
 
 						<i class="bi" th:classappend="${isReview} ? ' bi-chat-dots mt-1' : ' bi-people mt-1'"></i>
@@ -167,8 +165,7 @@
 						<div class="flex-grow-1">
 							<div class="d-flex justify-content-between">
 								<div class="fw-semibold">
-									<span th:text="${isReview} ? '' : #{store.coeat.title}"></span>
-									<!-- #{index.popular_stores.store.review} -->
+									<span th:text="${isReview} ? #{index.popular_stores.store.review} : #{store.coeat.title}"></span>
 
 									<span class="badge rounded-pill ms-2 small"
 										  th:classappend="${item?.coeat?.status?.name() == 'OPEN' ? ' bg-success bg-opacity-10 text-success' :
@@ -201,7 +198,7 @@
 								 th:if="${isReview and !#lists.isEmpty(item?.review?.foods)}">
 								<span class="badge bg-light text-dark me-1"
 									  th:each="food, iter : ${item?.review?.foods}"
-									  th:if="${iter.index < 3}"
+									  th:if="${ 3 > iter.index }"
 									  th:text="${food?.name ?: ''}"></span>
 								<span class="text-muted"
 									  th:if="${#lists.size(item?.review?.foods) > 3}"
@@ -265,7 +262,7 @@
 	</div>
 </div>
 
-<div class="container my-3">
+<div class="container m-5">
 	<div class="text-center mb-3">
 		<h2 class="fw-bold text-ymprimary" th:text="#{index.popular_stores.title}"></h2>
 		<div class="text-muted" th:text="#{index.popular_stores.subtitle}"></div>

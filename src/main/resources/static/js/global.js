@@ -60,3 +60,13 @@ function limitStartTime() {
 }
 
 limitStartTime();
+
+function imageInitializer() {
+	const images = document.querySelectorAll("img");
+	images.forEach(image => {
+		image.onerror = function() {
+			image.src = "https://picsum.photos/1600/900?random=" + Math.random();
+		}
+	})
+}
+imageInitializer();

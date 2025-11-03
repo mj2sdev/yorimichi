@@ -7,7 +7,7 @@
         <div class="col-12 col-md-3 d-flex align-items-center">
           <a class="d-inline-flex align-items-center text-decoration-none" th:href="@{/}">
             <!-- 데스크톱/태블릿: 가로 락업 -->
-            <img alt="Yorimichi" class="d-none d-md-inline-block" height="44" loading="eager" src="/images/ym1-logo-horizontal.svg">
+            <img alt="Yorimichi" class="d-none d-md-inline-block" height="44" loading="eager" src="/images/ym1-logo-horizontal.svg" style="transform: scale(1.5);">
             <!-- 모바일: 심벌 -->
             <img alt="Yorimichi" class="d-inline-block d-md-none" height="40" loading="eager" src="/images/ym1-symbol.svg">
           </a>
@@ -23,10 +23,10 @@
                 name="q"
                 class="form-control border-1"
                 type="search"
-                placeholder="검색어 입력"
+                placeholder="検索語入力"
                 autocomplete="off"
                 th:value="${param.q != null ? param.q[0] : (q != null ? q : '')}" />
-              <button type="submit" class="btn btn-ymprimary px-3">검색</button>
+              <button type="submit" class="btn btn-ymprimary px-3">検索</button>
             </div>
 
             <!-- ⬇︎ 자동완성 패널: 한 번만! (중복 금지) -->
@@ -35,7 +35,7 @@
               <div class="search-empty text-muted small px-3 py-3 d-none">검색어를 입력해 주세요</div>
               <ul id="search-list" class="list-unstyled mb-0"></ul>
               <div class="search-footer small text-end px-3 py-2 text-muted">
-                ↑/↓ 이동 · Enter 선택 · Esc 닫기
+                ↑/↓ 移動 · Enter 洗濯 · Esc 閉じる
               </div>
             </div>
           </form>
@@ -58,25 +58,25 @@
             <!-- 정류장 -->
             <a class="text-decoration-none text-ymsecondary text-center" th:href="@{/station}">
               <i class="bi bi-bus-front fs-3"></i>
-              <div class="small mt-1">정류장</div>
+              <div class="small mt-1">バス停</div>
             </a>
 
             <!-- 로그인 (비로그인 시) -->
             <a sec:authorize="isAnonymous()" class="text-decoration-none text-ymsecondary text-center" th:href="@{/login}">
               <i class="bi bi-door-open fs-3"></i>
-              <div class="small mt-1">로그인</div>
+              <div class="small mt-1">ログイン</div>
             </a>
 
             <!-- 내정보 (로그인 시) -->
             <a sec:authorize="isAuthenticated()" th:href="@{/user/mypage}" class="text-decoration-none text-ymsecondary text-center">
               <i class="bi bi-person-circle fs-3"></i>
-              <div class="small mt-1">내정보</div>
+              <div class="small mt-1">マイページ</div>
             </a>
 
             <!-- 로그아웃 (로그인 시) -->
             <a sec:authorize="isAuthenticated()" href="javascript:logoutForm.submit()" class="text-decoration-none text-ymsecondary text-center">
               <i class="bi bi-box-arrow-right fs-3"></i>
-              <div class="small mt-1">로그아웃</div>
+              <div class="small mt-1">ログアウト</div>
             </a>
             <form id="logoutForm" method="post" th:action="@{/logout}"></form>
 

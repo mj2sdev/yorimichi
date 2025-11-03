@@ -55,9 +55,9 @@ async function writeReview(event) {
 	const result = await request("POST", `/store/${storeId}/review`, { body });
 	
 	if (result === true) {
-		alert("리뷰가 작성되었습니다.");
+		alert("レビューが書かれています");
 	} else {
-		alert("리뷰 작성 중 오류가 발생하였습니다.")
+		alert("レビューの書き込み中にエラーが発生しました")
 	}
-	// location.reload();
+	location.reload();
 } 
