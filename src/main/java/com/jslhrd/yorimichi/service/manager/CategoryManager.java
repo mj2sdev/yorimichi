@@ -34,6 +34,28 @@ public class CategoryManager implements CategoryService {
 		return SliceResponse.of(categories, size, CategoryDTO::getId);
 	}
 
+	public Long getOrCreateByName(CategoryDTO category) {
+
+		Long parentId = category.getParentId();
+		String name = category.getName();
+
+		Long findCategoryId = categoryMapper.selectIdByParentAndName(parentId, name);
+		if (findCategoryId != null) {
+			return findCategoryId;
+		}
+
+		try {
+			save(category);
+			return category.getId();
+		} catch (DuplicateKeyException e) {
+			findCategoryId = categoryMapper.selectIdByParentAndName(parentId, name);
+			if (findCategoryId != null) {
+				return findCategoryId;
+			}
+
+			throw e;
+		}
+	}
 
 	@Override
 	public void save(CategoryDTO category) {

@@ -39,6 +39,9 @@ google:
     folder-id: 1Awhy7q0VebD8X1w9QaQ6S-U6gd3Wsm-A
     image-path-prefix: https://lh3.googleusercontent.com/d/
 
+  places:
+    base-url: https://places.googleapis.com
+
 gemini:
   base-url: https://generativelanguage.googleapis.com/v1beta
   mime-type: application/json

@@ -34,6 +34,29 @@ public class FacilityCategoryManager implements FacilityCategoryService {
 	}
 
 	@Override
+	public Long getOrCreateByName(FacilityCategoryDTO facility) {
+
+		String name = facility.getName();
+
+		Long findFacilityId = facilityCategoryMapper.selectIdByName(name);
+		if (findFacilityId != null) {
+			return findFacilityId;
+		}
+
+		try {
+			save(facility);
+			return facility.getId();
+		} catch (DuplicateKeyException e) {
+			findFacilityId = facilityCategoryMapper.selectIdByName(name);
+			if (findFacilityId != null) {
+				return findFacilityId;
+			}
+			
+			throw e;
+		}
+	}
+
+	@Override
 	public void save(FacilityCategoryDTO facility) {
 
 		try {

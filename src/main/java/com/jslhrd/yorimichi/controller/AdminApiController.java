@@ -62,8 +62,8 @@ public class AdminApiController {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE
 	)
-	public List<StoreNameRegionResponse> search(@RequestBody RegionStoreRequest req) {
-		return adminService.findStores(req);
+	public List<StoreNameRegionResponse> search(@RequestBody RegionStoreRequest request) {
+		return adminService.findStores(request);
 	}
 
 	@PostMapping(
@@ -71,8 +71,8 @@ public class AdminApiController {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE
 	)
-	public ResponseEntity<StoreDetailResponse> detail(@RequestBody StoreDetailRequest req) {
-		return adminService.storeDetailByRegionNameAndPlaceId(req)
+	public ResponseEntity<StoreDetailResponse> detail(@RequestBody StoreDetailRequest request) {
+		return adminService.storeDetail(request)
 				.map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}

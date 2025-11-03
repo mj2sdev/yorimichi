@@ -19,19 +19,23 @@ import java.util.Optional;
 public interface AddressMapper {
 
 	/**
-	 * 주소 추가.
-	 *
-	 * @return 영향 행 수 (추가 1, 그 외 0)
-	 */
-	int insert(AddressDTO address);
-
-	/**
 	 * 주소 단건 조회.
 	 *
 	 * @param addressId 주소 ID
 	 * @return 존재하면 DTO를 담은 Optional, 없으면 Optional.empty()
 	 */
 	Optional<AddressDTO> selectById(@Param("addressId") Long addressId);
+
+	Long selectIdByPlaceId(@Param("placeId") String placeId);
+
+	int upsert(AddressDTO address);
+
+	/**
+	 * 주소 추가.
+	 *
+	 * @return 영향 행 수 (추가 1, 그 외 0)
+	 */
+	int insert(AddressDTO address);
 
 	/**
 	 * 주소 수정.

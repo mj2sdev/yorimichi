@@ -33,6 +33,9 @@ public interface StoreMapper {
 	 */
 	Optional<StoreDTO> selectById(@Param("storeId") Long storeId, @Param("userId") long userId);
 
+	Long selectIdByAddressIdAndName(@Param("addressId") Long addressId,
+	                                @Param("name") String name);
+
 	boolean existsActive(@Param("storeId") Long storeId);
 
 	/**

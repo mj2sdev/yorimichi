@@ -29,6 +29,8 @@ public interface FacilityCategoryMapper {
 	 */
 	Optional<FacilityCategoryDTO> selectById(@Param("facilityId") Long facilityId);
 
+	Long selectIdByName(@Param("name") String name);
+
 	boolean existsById(@Param("facilityId") Long facilityId);
 
 	/**

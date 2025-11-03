@@ -19,7 +19,7 @@
 
 
     <insert id="insert" parameterType="RootImageDTO">
-        INSERT INTO root_image (root_id, image_id)
+        INSERT IGNORE INTO root_image (root_id, image_id)
         VALUES (#{rootId}, #{imageId})
     </insert>
 

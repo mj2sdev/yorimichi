@@ -37,4 +37,8 @@ public class FacilityCategoryDTO {
 	 * 수정일시 (DB 자동 갱신)
 	 */
 	private LocalDateTime updatedAt;
+
+	public FacilityCategoryDTO(String name) {
+		this.name = name;
+	}
 }
