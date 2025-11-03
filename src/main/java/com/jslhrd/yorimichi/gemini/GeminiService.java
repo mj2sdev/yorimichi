@@ -18,14 +18,11 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class GeminiService {
 
-	private final RestClient restClient;
 	private final ApiKeyService apiKeyService;
+	private final RestClient geminiRestClient;
 
 	@Value("${gemini.model:gemini-2.5-flash}")
 	private String model;
-
-	@Value("${gemini.mime-type:application/json}")
-	private String mimeType;
 
 	private static String requireNonEmpty(String apiKey) {
 		if (apiKey == null || apiKey.isBlank()) throw new IllegalStateException("Gemini API key not found");
@@ -44,9 +41,20 @@ public class GeminiService {
 		return generate(prompt, ToolMode.BOTH, null, null);
 	}
 
-	public String generate(String prompt, ToolMode toolMode, Double lat, Double lng) {
+	private String resolveApiKey() {
+		String apiKey = null;
+		try {
+			apiKey = apiKeyService.findApiKey("gemini");
+		} catch (Throwable ignore) {
+		}
+		if (apiKey == null || apiKey.isBlank()) throw new IllegalStateException("Gemini API key not configured");
+		return apiKey;
+	}
 
-		final String apiKey = requireNonEmpty(apiKeyService.findApiKey("gemini"));
+
+	public String generate(String prompt, ToolMode toolMode, Double latitude, Double longitude) {
+
+		String apiKey = resolveApiKey();
 
 		Map<String, Object> body = new LinkedHashMap<>();
 
@@ -58,40 +66,28 @@ public class GeminiService {
 		body.put("tools", buildTools(toolMode));
 
 		// 툴 사용 시 MIME 강제 금지 (2.5에서 400 방지)
-		if (lat != null && lng != null) {
+		if (latitude != null && longitude != null) {
 			body.put("toolConfig", Map.of(
 					"retrievalConfig", Map.of(
-							"latLng", Map.of("latitude", lat, "longitude", lng)
+							"latLng", Map.of(
+									"latitude", latitude,
+									"longitude", longitude
+							)
 					)
 			));
 		}
 
-		// --- 간단 백오프 재시도 (최대 3회) ---
-		int attempts = 0;
-		long backoffMs = 500;
-		while (true) {
-			try {
-				return restClient.post()
-						.uri("/models/{model}:generateContent", model)
-						.header("x-goog-api-key", apiKey)
-						.body(body)
-						.retrieve()
-						.onStatus(HttpStatusCode::isError, (req, res) -> {
-							byte[] bytes = res.getBody() != null ? res.getBody().readAllBytes() : new byte[0];
-							String msg = new String(bytes, StandardCharsets.UTF_8);
-							throw new RuntimeException("Gemini error " + res.getStatusCode().value() + ": " + msg);
-						})
-						.body(String.class);
-			} catch (org.springframework.web.client.ResourceAccessException io) {
-				// 타임아웃/네트워크 계열만 재시도
-				if (++attempts >= 3) throw io;
-				try {
-					Thread.sleep(backoffMs);
-				} catch (InterruptedException ignored) {
-				}
-				backoffMs *= 2; // 0.5s -> 1s -> 2s
-			}
-		}
+		return geminiRestClient.post()
+				.uri("/models/{model}:generateContent", model)
+				.header("x-goog-api-key", apiKey)
+				.body(body)
+				.retrieve()
+				.onStatus(HttpStatusCode::isError, (req, res) -> {
+					byte[] bytes = res.getBody() != null ? res.getBody().readAllBytes() : new byte[0];
+					String msg = new String(bytes, StandardCharsets.UTF_8);
+					throw new RuntimeException("Gemini error " + res.getStatusCode().value() + ": " + msg);
+				})
+				.body(String.class);
 	}
 
 	private List<Map<String, Object>> buildTools(ToolMode toolMode) {
