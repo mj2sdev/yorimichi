@@ -1,12 +1,13 @@
 package com.jslhrd.yorimichi.controller;
 
 import com.jslhrd.yorimichi.gemini.AdminService;
+import com.jslhrd.yorimichi.gemini.GeminiStoreService;
 import com.jslhrd.yorimichi.gemini.dto.request.RegionStoreRequest;
+import com.jslhrd.yorimichi.gemini.dto.request.SaveStoresRequest;
 import com.jslhrd.yorimichi.gemini.dto.request.StoreDetailRequest;
+import com.jslhrd.yorimichi.gemini.dto.response.SaveStoresResponse;
 import com.jslhrd.yorimichi.gemini.dto.response.StoreDetailResponse;
 import com.jslhrd.yorimichi.gemini.dto.response.StoreNameRegionResponse;
-import com.jslhrd.yorimichi.places.PlacesService;
-import com.jslhrd.yorimichi.service.RegionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-// 새 컨트롤러 예시
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminApiController {
 
-	private final RegionService regionService;
-	private final PlacesService placesService;
 	private final AdminService adminService;
+	private final GeminiStoreService geminiStoreService;
 
 	/*@PostMapping(
 			path = "/places/search",
@@ -76,4 +75,10 @@ public class AdminApiController {
 				.map(ResponseEntity::ok)
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
+
+	@PostMapping("/places/save")
+	public SaveStoresResponse save(@RequestBody SaveStoresRequest request) {
+		return geminiStoreService.saveAll(request);
+	}
+
 }

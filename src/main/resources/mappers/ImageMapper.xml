@@ -61,7 +61,7 @@
         ORDER BY i.created_at
     </select>
 
-    <select id="selectIdByUrl" parameterType="long" resultType="long">
+    <select id="selectIdByUrl" parameterType="string" resultType="long">
         SELECT
             id
 

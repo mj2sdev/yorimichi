@@ -18,12 +18,12 @@
       .map-embed, .map-fallback {
           width: 320px;
           height: 200px;
-          border-radius: .5rem
+          border-radius: .5rem;
       }
 
       .map-embed {
           border: 0;
-          background: #f2f2f2
+          background: #f2f2f2;
       }
 
       .map-fallback {
@@ -38,10 +38,14 @@
           min-width: 240px;
       }
 
+      .pre-wrap {
+          white-space: pre-wrap;
+      }
+
       @media (max-width: 992px) {
           .map-embed, .map-fallback {
               width: 240px;
-              height: 160px
+              height: 160px;
           }
       }
   </style>
@@ -105,6 +109,7 @@
 
   <hr class="my-4">
 
+  <!-- 결과 목록 테이블 -->
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center gap-2">
@@ -157,6 +162,42 @@
       </div>
       <div class="modal-body" id="storeDetailsBody"><!-- filled by JS --></div>
       <div class="modal-footer">
+        <button class="btn btn-primary" id="buttonSaveDetails">DB에 저장</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal" id="buttonCloseDetails">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 저장 결과 모달 -->
+<div aria-hidden="true" class="modal fade" id="saveResultModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">DB 저장 결과</h5>
+        <button aria-label="닫기" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <span class="badge text-bg-success" id="badgeSavedCount">0 저장</span>
+          <span class="badge text-bg-warning text-dark" id="badgeUnresolvedCount">0 미해결</span>
+        </div>
+        <div class="mb-3 small text-muted" id="saveResultSummary"></div>
+
+        <div class="table-responsive" id="saveUnresolvedWrapper" style="display:none;">
+          <table class="table table-sm align-middle mb-0">
+            <thead class="table-light">
+            <tr>
+              <th style="width:80px">인덱스</th>
+              <th>가게명</th>
+              <th>사유</th>
+            </tr>
+            </thead>
+            <tbody id="saveUnresolvedTbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
         <button class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
       </div>
     </div>
@@ -190,6 +231,18 @@
     const storeDetailsModalElement = document.getElementById('storeDetailsModal');
     const storeDetailsModal = storeDetailsModalElement ? new bootstrap.Modal(storeDetailsModalElement) : null;
     const storeDetailsBodyElement = document.getElementById('storeDetailsBody');
+    const buttonSaveDetailsElement = document.getElementById('buttonSaveDetails');
+
+    const saveResultModalElement = document.getElementById('saveResultModal');
+    const saveResultModal = saveResultModalElement ? new bootstrap.Modal(saveResultModalElement) : null;
+    const badgeSavedCount = document.getElementById('badgeSavedCount');
+    const badgeUnresolvedCount = document.getElementById('badgeUnresolvedCount');
+    const saveResultSummary = document.getElementById('saveResultSummary');
+    const saveUnresolvedWrapper = document.getElementById('saveUnresolvedWrapper');
+    const saveUnresolvedTbody = document.getElementById('saveUnresolvedTbody');
+
+    // 현재 모달에 표시된 상세(1건 또는 N건)를 보관 → 저장 버튼에서 보냄
+    let lastRenderedDetails = [];
 
     // CSRF
     const csrfHeaderMetaElement = document.querySelector('meta[name="_csrf_header"]');
@@ -218,15 +271,6 @@
         return String(raw ?? '').replace(/[&<>"']/g, ch => ({
             '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
         }[ch]));
-    }
-
-    function isValidAbsoluteUrl(u) {
-        try {
-            const url = new URL(u);
-            return url.protocol === 'http:' || url.protocol === 'https:';
-        } catch {
-            return false;
-        }
     }
 
     async function postJson(url, payload) {
@@ -276,9 +320,9 @@
         if (loading) {
             storeDetailsBodyElement.innerHTML =
                 `<div class="py-4 d-flex align-items-center justify-content-center gap-2">
-                   <div class="spinner-border" role="status" aria-hidden="true"></div>
-                   <strong>${escapeHtml(label)}</strong>
-                 </div>`;
+           <div class="spinner-border" role="status" aria-hidden="true"></div>
+           <strong>${escapeHtml(label)}</strong>
+         </div>`;
         }
     }
 
@@ -329,17 +373,13 @@
     // -----------------------------
     // Maps Embed (엄격 place-id 감지 + 안전 검색 폴백)
     // -----------------------------
-    const MAP_DEBUG = false; // 필요 시 true
-    const PLACE_ID_CORE_REGEX = /^ChIJ[0-9A-Za-z_-]{10,}$/; // 일반적인 Google Place ID core
-
+    const MAP_DEBUG = true;
+    const PLACE_ID_CORE_REGEX = /^ChIJ[0-9A-Za-z_-]{10,}$/;
     const MIN_Q_CHARS = 4;
     const BAD_Q_SET = new Set(['대한민국', '한국', '코리아', 'Korea', 'South Korea']);
 
     function normalizeWhitespace(text) {
-        return (text || '')
-            .replace(/[\u200B-\u200D\uFEFF]/g, '')
-            .replace(/\s+/g, ' ')
-            .trim();
+        return (text || '').replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\s+/g, ' ').trim();
     }
 
     function sanitizeQueryPart(part) {
@@ -372,7 +412,6 @@
             return {src: null, reason: 'API 키 없음', qText: ''};
         }
 
-        // 1) place_id 우선
         let core = (placeId || '').trim();
         if (core.startsWith('places/')) core = core.slice(7);
         if (PLACE_ID_CORE_REGEX.test(core)) {
@@ -385,7 +424,6 @@
             return {src, reason: null, qText: ''};
         }
 
-        // 2) 안전한 텍스트 검색 (폴백)
         const qText = buildSafeQueryText({storeName, sidoName, sigunguName, emdName});
         if (!qText) {
             MAP_DEBUG && console.warn('[maps] empty/invalid qText → fallback link', {
@@ -413,9 +451,9 @@
     }
 
     // -----------------------------
-    // API (Gemini 전용 백엔드)
+    // API (백엔드)
     // -----------------------------
-    async function apiSearchStores(payload /* RegionStoreRequest */) {
+    async function apiSearchStores(payload) {
         return await postJson('/api/admin/places/search', payload);
     }
 
@@ -429,10 +467,7 @@
         if (csrfHeaderName && csrfTokenValue) headers[csrfHeaderName] = csrfTokenValue;
 
         const res = await fetch('/api/admin/places/detail', {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({regionLabel, storeName, placeId}),
-            credentials: 'same-origin'
+            method: 'POST', headers, body: JSON.stringify({regionLabel, storeName, placeId}), credentials: 'same-origin'
         });
 
         if (res.status === 404) return null;
@@ -448,23 +483,25 @@
         return res.json();
     }
 
+    async function apiSaveDetailsBatch(payload /* {sidoId, sigunguId, emdId, details:[StoreDetailResponse]} */) {
+        return await postJson('/api/admin/places/save', payload);
+    }
+
     // -----------------------------
-    // 상세 렌더
+    // 상세 렌더(모달)
     // -----------------------------
     function renderStoreDetails(details) {
         const list = Array.isArray(details) ? details : (details ? [details] : []);
-        if (!storeDetailsBodyElement) return;
+        lastRenderedDetails = list;
 
+        if (!storeDetailsBodyElement) return;
         if (!list.length) {
             storeDetailsBodyElement.innerHTML = `<div class="text-secondary py-2">상세정보가 없습니다.</div>`;
             return;
         }
 
         storeDetailsBodyElement.innerHTML = list.map(d => {
-            const rawImages = Array.isArray(d.images) ? d.images : [];
-            const imageUrls = rawImages.filter(isValidAbsoluteUrl);
-
-            const imagesHtml = imageUrls.slice(0, 6)
+            const imagesHtml = (d.images || []).slice(0, 6)
                 .map(u => `<img src="${escapeHtml(u)}" class="img-thumbnail me-2 mb-2" style="max-height:96px" alt="">`)
                 .join('');
             const categoriesHtml = (d.categories || []).map(c => `<span class="badge text-bg-light me-1">${escapeHtml(c)}</span>`).join('');
@@ -476,14 +513,25 @@
           <td>${escapeHtml(m.description ?? '')}</td>
         </tr>`).join('');
 
-            const region = [d.sidoName, d.sigunguName, d.emdName].filter(Boolean).join(' ');
-            const addr = d.roadAddressText || d.jibunAddressText || '';
+            const regionFromResponse = [d.sidoName, d.sigunguName, d.emdName].filter(Boolean).join(' ');
+            const addrRoad = d.roadAddressText || '';
+            const addrJibun = d.jibunAddressText || '';
+            const addrDetail = d.detail || '';
+
+            const infoBlock = `
+        <div class="mb-2">
+          ${d.description ? `<div class="mb-1"><span class="badge text-bg-info">소개</span> <span class="pre-wrap">${escapeHtml(d.description)}</span></div>` : ''}
+          ${addrDetail ? `<div class="mb-1"><span class="badge text-bg-secondary">상세주소</span> <span class="pre-wrap">${escapeHtml(addrDetail)}</span></div>` : ''}
+          ${addrRoad ? `<div class="mb-1"><span class="badge text-bg-light">도로명</span> <span class="pre-wrap">${escapeHtml(addrRoad)}</span></div>` : ''}
+          ${addrJibun ? `<div class="mb-1"><span class="badge text-bg-light">지번</span> <span class="pre-wrap">${escapeHtml(addrJibun)}</span></div>` : ''}
+          ${d.phone ? `<div class="mb-1"><span class="badge text-bg-secondary">전화</span> <code>${escapeHtml(d.phone)}</code></div>` : ''}
+        </div>`;
 
             return `
         <div class="mb-4">
           <h6 class="mb-1">${escapeHtml(d.name || '')}</h6>
-          <div class="text-muted small mb-2">${escapeHtml(region || '')}${addr ? ' · ' + escapeHtml(addr) : ''}</div>
-          ${d.phone ? `<div class="mb-2"><span class="badge text-bg-secondary">전화</span> <code>${escapeHtml(d.phone)}</code></div>` : ''}
+          <div class="text-muted small mb-2">${escapeHtml(regionFromResponse)}</div>
+          ${infoBlock}
           ${categoriesHtml ? `<div class="mb-2">카테고리: ${categoriesHtml}</div>` : ''}
           ${facilitiesHtml ? `<div class="mb-2">시설: ${facilitiesHtml}</div>` : ''}
           ${imagesHtml ? `<div class="mb-2 d-flex flex-wrap">${imagesHtml}</div>` : ''}
@@ -500,13 +548,8 @@
     }
 
     // -----------------------------
-    // 결과 테이블
+    // 조회 결과 테이블 렌더
     // -----------------------------
-    function displayOrDash(v) {
-        const s = (v ?? '').toString().trim();
-        return s ? escapeHtml(s) : '—';
-    }
-
     function refreshSelectedDetailsButtonState() {
         buttonOpenSelectedDetailsElement.disabled = !document.querySelector('.row-select-checkbox:checked');
     }
@@ -573,9 +616,9 @@
           <strong>${escapeHtml(storeName)}</strong>
           <button type="button" class="btn btn-link btn-sm px-1 py-0 ms-1 text-decoration-none buttonRowDetail">상세</button>
         </td>
-        <td>${displayOrDash(sidoName)}</td>
-        <td>${displayOrDash(sigunguName)}</td>
-        <td>${displayOrDash(emdName)}</td>
+        <td>${escapeHtml(sidoName)}</td>
+        <td>${escapeHtml(sigunguName)}</td>
+        <td>${escapeHtml(emdName)}</td>
         <td class="text-center">
           ${
                 embedSrc
@@ -597,7 +640,7 @@
     }
 
     // -----------------------------
-    // 선택 상세보기 (여러 행 → 각 행 단건 상세 API 호출)
+    // 선택 상세보기(다중)
     // -----------------------------
     function collectCheckedRows() {
         const rows = [];
@@ -667,12 +710,8 @@
     }
 
     // -----------------------------
-    // 조회 버튼 → /api/admin/places/search (Gemini 목록)
+    // 조회
     // -----------------------------
-    async function requestRegionStores(payload) {
-        return await apiSearchStores(payload);
-    }
-
     queryButtonElement.addEventListener('click', async () => {
         const sidoId = sidoSelectElement.value;
         const sigunguId = sigunguSelectElement.value || null;
@@ -695,7 +734,7 @@
 
         try {
             setResultsLoading(true);
-            const rows = await requestRegionStores(payload);
+            const rows = await apiSearchStores(payload);
             renderResultRows(rows);
         } catch (err) {
             if (String(err.message || '').startsWith('401')) alert('인증이 필요합니다 (401).');
@@ -705,6 +744,75 @@
             setResultsLoading(false);
         }
     });
+
+    // -----------------------------
+    // DB 저장(모달 상세들 배치 저장) → 저장 결과 모달 표시
+    // -----------------------------
+    buttonSaveDetailsElement.addEventListener('click', async () => {
+        const sidoId = sidoSelectElement.value;
+        const sigunguId = sigunguSelectElement.value || null;
+        const emdId = emdSelectElement.value || null;
+
+        if (!sidoId) {
+            alert('시도를 먼저 선택하세요.');
+            return;
+        }
+        if (!lastRenderedDetails || !lastRenderedDetails.length) {
+            alert('저장할 상세정보가 없습니다.');
+            return;
+        }
+
+        const payload = {
+            sidoId: Number(sidoId),
+            sigunguId: sigunguId ? Number(sigunguId) : null,
+            emdId: emdId ? Number(emdId) : null,
+            details: lastRenderedDetails
+        };
+
+        const originalText = buttonSaveDetailsElement.textContent;
+        buttonSaveDetailsElement.disabled = true;
+        buttonSaveDetailsElement.textContent = '저장중…';
+
+        try {
+            const res = await apiSaveDetailsBatch(payload);
+            renderSaveResultModal(res);
+            saveResultModal?.show();
+        } catch (err) {
+            renderSaveResultModal({
+                savedCount: 0,
+                unresolved: [{index: -1, storeName: '', reason: String(err.message || '오류')}]
+            });
+            saveResultModal?.show();
+        } finally {
+            buttonSaveDetailsElement.textContent = originalText;
+            buttonSaveDetailsElement.disabled = false;
+        }
+    });
+
+    function renderSaveResultModal(res) {
+        const saved = Number(res?.savedCount || 0);
+        const unresolved = Array.isArray(res?.unresolved) ? res.unresolved : [];
+
+        badgeSavedCount.textContent = `${saved} 저장`;
+        badgeUnresolvedCount.textContent = `${unresolved.length} 미해결`;
+
+        if (unresolved.length === 0) {
+            saveResultSummary.textContent = `총 ${saved}건 저장 완료. 미해결 항목이 없습니다.`;
+            saveUnresolvedWrapper.style.display = 'none';
+            saveUnresolvedTbody.innerHTML = '';
+            return;
+        }
+
+        saveResultSummary.textContent = `총 ${saved}건 저장, 미해결 ${unresolved.length}건(아래 사유 참조).`;
+        saveUnresolvedWrapper.style.display = '';
+        saveUnresolvedTbody.innerHTML = unresolved.map(u => `
+      <tr>
+        <td>${u.index}</td>
+        <td>${escapeHtml(u.storeName || '')}</td>
+        <td class="text-danger">${escapeHtml(u.reason || '')}</td>
+      </tr>
+    `).join('');
+    }
 </script>
 </body>
 </html>

@@ -103,8 +103,16 @@
     </select>
 
     <insert id="insert" parameterType="FoodDTO">
-        INSERT INTO food (id, store_id, name, price, description)
-        VALUES (#{id}, #{storeId}, #{name}, #{price}, #{description})
+        INSERT INTO food (id,
+                          store_id,
+                          name,
+                          price,
+                          description)
+        VALUES (#{id},
+                #{storeId},
+                #{name},
+                #{price},
+                #{description})
     </insert>
 
     <update id="update">

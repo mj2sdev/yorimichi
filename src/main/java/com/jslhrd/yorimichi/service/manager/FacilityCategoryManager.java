@@ -19,8 +19,8 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class FacilityCategoryManager implements FacilityCategoryService {
 
 	private final FacilityCategoryMapper facilityCategoryMapper;
@@ -51,7 +51,7 @@ public class FacilityCategoryManager implements FacilityCategoryService {
 			if (findFacilityId != null) {
 				return findFacilityId;
 			}
-			
+
 			throw e;
 		}
 	}

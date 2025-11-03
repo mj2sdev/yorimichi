@@ -92,7 +92,7 @@ CREATE TABLE address (
 
     CONSTRAINT pk_address          PRIMARY KEY (id),
     CONSTRAINT fk_address_emd      FOREIGN KEY (emd_id) REFERENCES region_emd(id),
-    CONSTRAINT uk_address_place_id UNIQUE (place_id)
+    CONSTRAINT uk_address_place_id UNIQUE (place_id),
 --     CONSTRAINT fk_address_road        FOREIGN KEY (road_id)            REFERENCES road(id),
 --     CONSTRAINT fk_address_postal      FOREIGN KEY (postal_id)          REFERENCES postal(id),
 --     CONSTRAINT fk_address_road_postal FOREIGN KEY (road_id, postal_id) REFERENCES road_postal(road_id, postal_id),

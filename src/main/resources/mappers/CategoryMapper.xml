@@ -32,7 +32,7 @@
         WHERE id = #{categoryId}
     </select>
 
-    <select id="selectByParentIdAndName" resultType="long">
+    <select id="selectIdByParentAndName" resultType="long">
         SELECT
             id
 

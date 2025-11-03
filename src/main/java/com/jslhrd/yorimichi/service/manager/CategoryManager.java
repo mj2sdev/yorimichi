@@ -20,8 +20,8 @@ import java.util.List;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class CategoryManager implements CategoryService {
 
 	private final CategoryMapper categoryMapper;
@@ -29,6 +29,7 @@ public class CategoryManager implements CategoryService {
 	private final StoreMapper storeMapper;
 
 	@Override
+	@Transactional(readOnly = true)
 	public SliceResponse<CategoryDTO> findSlice(Long categoryId, int size) {
 		List<CategoryDTO> categories = categoryMapper.selectSlice(categoryId, size + 1);
 		return SliceResponse.of(categories, size, CategoryDTO::getId);

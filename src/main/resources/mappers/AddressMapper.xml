@@ -40,6 +40,16 @@
         WHERE place_id = #{placeId}
     </select>
 
+    <select id="existsById" parameterType="long" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+
+            FROM address
+
+            WHERE id = #{addressId}
+        )
+    </select>
+
     <insert id="upsert"
             parameterType="AddressDTO"
             useGeneratedKeys="true"

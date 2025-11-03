@@ -216,7 +216,7 @@ public class AdminService {
 				    "sidoName": "string",
 				    "sigunguName": "string",
 				    "emdName": "string",
-				    "detail": "string",
+				    "detail": "string",             // 상세주소
 				    "placeId": "string",            // 반드시 %s 와 정확 일치
 				    "roadAddressText": "string",
 				    "jibunAddressText": "string"
