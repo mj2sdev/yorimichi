@@ -67,7 +67,7 @@
 				th:if="${ store?.review?.avgRating }"
 				th:each="item : ${#numbers.sequence(1, store?.review?.avgRating ?: 0)}">
 			</i>
-			<span th:text="${ store?.review?.avgRating } + ' ' + #{store.info.rating.unit} + ' (' + ${ store?.review?.reviewCount } + ' ' + #{store.info.rating.people} + ')'">
+			<span th:text="${ store?.review?.avgRating ?: 0 } + ' ' + #{store.info.rating.unit} + ' (' + ${ store?.review?.reviewCount ?: 0} + ' ' + #{store.info.rating.people} + ')'">
 			</span>
 		</div>
 	</div>

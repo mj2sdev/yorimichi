@@ -31,10 +31,10 @@ function timeAgo() {
 		try {
 			const time = new Date(timeAgo).getTime();
 			const nokori = (Date.now() - time) / 1000;
-			if (nokori < 60) message = "방금";
-			else if (nokori < 3600) message = Math.floor(nokori / 60) + "분 전";
-			else if (nokori < 86400) message = Math.floor(nokori / 3600) + "시간 전";
-			else message = Math.floor(nokori / 86400) + "일 전";
+			if (nokori < 60) message = "先ほと";
+			else if (nokori < 3600) message = Math.floor(nokori / 60) + "分前";
+			else if (nokori < 86400) message = Math.floor(nokori / 3600) + "時間前";
+			else message = Math.floor(nokori / 86400) + "日前";
 		} catch {
 			message = timeAgo;
 		}

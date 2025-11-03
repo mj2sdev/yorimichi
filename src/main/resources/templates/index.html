@@ -83,7 +83,7 @@
 
 					<a class="cat-btn"
 					   th:each="category : ${categorySlice.items}"
-					   th:href="@{/store/list(categoryId=${category.id})}">
+					   th:href="@{/search?q={categoryId}(categoryId=${category.name})}">
 						<span></span>
 						<span class="fw-normal" th:text="${category.name}"></span>
 						<i class="bi bi-chevron-right"></i>
