@@ -63,10 +63,10 @@
 	<div class="col-12">
 		<div class="d-flex gap-1">
 			<span>평점 : </span>
-			<i class="bi bi-star-fill text-warning"
-				th:each="item : ${#numbers.sequence(1, store?.review?.avgRating)}">
+			<i class="bi bi-star-fill text-warning" th:if="${store?.review?.avgRating}"
+				th:each="item : ${#numbers.sequence(1, store?.review?.avgRating ?: 0)}">
 			</i>
-			<span th:text="${ store?.review?.avgRating } + '점 (' + ${ store?.review?.reviewCount } + '명의 평가)'">
+			<span th:text="${ store?.review?.avgRating ?: 0 } + '점 (' + ${ store?.review?.reviewCount ?: 0 } + '명의 평가)'">
 			</span>
 		</div>
 	</div>

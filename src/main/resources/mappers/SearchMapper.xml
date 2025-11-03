@@ -114,7 +114,9 @@
         <include refid="StoreSelectColumns"/>
         FROM store s
         LEFT JOIN address a ON a.id = s.address_id
-        WHERE (#{q} IS NULL OR #{q} = '' OR s.name LIKE CONCAT('%', #{q}, '%'))
+        LEFT JOIN store_category sc ON sc.store_id = s.id
+        LEFT JOIN category c ON c.id = sc.category_id
+        WHERE (#{q} IS NULL OR #{q} = '' OR s.name LIKE CONCAT('%', #{q}, '%') OR c.name LIKE CONCAT('%', #{q}, '%'))
         ORDER BY s.id
         LIMIT #{size} OFFSET #{offset}
     </select>

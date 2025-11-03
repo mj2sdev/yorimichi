@@ -30,7 +30,7 @@
           </div>
           <div>
               <span class="stat-value countup" data-format="comma"
-                    th:attr="data-value=${stats?.reviewCount ?: 12843}">0</span>
+                    th:attr="data-value=${stats?.reviewCount ?: 4886}">0</span>
             <span class="stat-unit">리뷰</span>
           </div>
         </div>
@@ -43,7 +43,7 @@
           </div>
           <div>
               <span class="stat-value countup" data-format="comma"
-                    th:attr="data-value=${stats?.storeCount ?: 8021}">0</span>
+                    th:attr="data-value=${stats?.storeCount ?: 512}">0</span>
             <span class="stat-unit">곳</span>
           </div>
         </div>
@@ -56,7 +56,7 @@
           </div>
           <div>
               <span class="stat-value countup"
-                    th:attr="data-value=${stats?.todayComments ?: 57}">0</span>
+                    th:attr="data-value=${stats?.todayComments ?: 13}">0</span>
             <span class="stat-unit">개</span>
           </div>
         </div>
@@ -123,7 +123,7 @@
       <div class="featured p-3 equal-rail rail-compact"
            th:if="${recommendedStoreList != null and !#lists.isEmpty(recommendedStoreList)}">
         <a class="d-block text-decoration-none"
-           th:href="@{/store/{storeId}(storeId=${recommendedStoreList[0].id})}">
+           th:href="@{/store/detail/{storeId}(storeId=${recommendedStoreList[0].id})}">
           <img class="thumb"
                height="400"
                th:alt="${recommendedStoreList[0].name}"
@@ -288,12 +288,12 @@
 
 <!-- ===================== 하단: 인기 맛집 그리드 ===================== -->
 <div class="container my-3">
-  <div class="text-center mb-3">
+  <div class="text-center m-5">
     <h2 class="fw-bold text-ymprimary">인기 맛집</h2>
     <div class="text-muted">리뷰/별점/조회수를 기반으로 추천해요</div>
   </div>
 
-  <div class="store-grid">
+  <div class="store-grid mb-5">
     <th:block th:each="store: ${recommendedStoreList}"
               th:if="${recommendedStoreList != null and !#lists.isEmpty(recommendedStoreList)}">
       <a class="text-decoration-none"

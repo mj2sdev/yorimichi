@@ -109,7 +109,7 @@
         const isRegion = (item.category || "").toUpperCase() === "REGION";
         a.href = isRegion
           ? `/search?type=region&id=${encodeURIComponent(item.id)}&q=${encodeURIComponent(item.name ?? "")}`
-          : `/store/detail?id=${encodeURIComponent(item.id)}`;
+          : `/store/detail/${encodeURIComponent(item.id)}`;
 
         const catLabel = isRegion ? "REGION" : "STORE";
         a.innerHTML = `
