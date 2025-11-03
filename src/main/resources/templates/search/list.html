@@ -82,7 +82,10 @@
             <div class="card mb-4 shadow-sm border-0 hover-shadow transition position-relative">
               <div class="row g-0">
                 <div class="col-md-3 bg-light d-flex align-items-center justify-content-center">
-                  <div class="ratio ratio-16x9 text-muted">이미지</div>
+                  <div class="ratio ratio-16x9 text-muted">
+                    <img th:src="${ result?.store?.image }">
+                  </div>
+                  
                 </div>
                 <div class="col-md-9 p-3">
                   <div class="fw-bold fs-5 text-ymsecondary" th:text="${result.store.name}">상점명</div>
@@ -102,11 +105,13 @@
 
           <!-- 목록 카드 -->
           <th:block th:if="${result == null or result.store == null}">
-            <div th:each="s : ${result.items}">
+            <div th:each="s, i : ${result.items}">
               <div class="card mb-4 border-0 shadow-sm hover-shadow transition position-relative">
                 <div class="row g-0">
                   <div class="col-md-3 bg-light d-flex align-items-center justify-content-center">
-                    <div class="ratio ratio-16x9 text-muted">이미지</div>
+                    <div class="ratio ratio-16x9 text-muted">
+                      <img th:src="${ s?.image ?: 'https://picsum.photos/1600/900?random=' + i.index }">
+                    </div>
                   </div>
                   <div class="col-md-9 p-3">
                     <div class="fw-bold text-ymsecondary" th:text="${s.name}">가게 이름</div>

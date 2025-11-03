@@ -2,8 +2,8 @@
 
 	<div class="col-12">
 		<div class="d-flex">
-			<div class="ratio ratio-1x1" style="width: 10rem;">
-				<img src="https://picsum.photos/280" th:alt="#{store.list.item.image}">
+			<div class="ratio ratio-1x1" style="width: 10rem;" th:each="image : ${ store?.images }">
+				<img th:src="${ image.url ?: 'https://picsum.photos/280' }" alt="">
 			</div>
 		</div>
 	</div>
