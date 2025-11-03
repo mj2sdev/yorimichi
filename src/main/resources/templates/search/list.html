@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/main :: params(~{::head/content()}, ~{::body/content()})}">
+<head>
+  <title>Yorimichi Project - 検索</title>
+</head>
+
+<body class="bg-light">
+  <section>
+    <div class="container my-4">
+      <div class="row gy-5">
+
+        <!-- ===================== 좌측 : 조건 검색 / 카테고리 ===================== -->
+        <div class="col-12 col-lg-3">
+          <div class="card shadow-sm border-0">
+            <div class="card-header text-center bg-ymprimary text-white fw-bold fs-4">
+              条件検索
+            </div>
+            <div class="card-body bg-white">
+
+              <!-- 음식 카테고리 -->
+              <div class="mb-4">
+                <div class="fw-bold text-ymsecondary border-bottom pb-2 mb-3">🍴 カテゴリー</div>
+                <div class="row g-3">
+                  <th:block th:if="${result != null and result.categories != null}">
+                    <div class="col-6" th:each="c,i : ${categories}">
+                      <input class="btn-check" type="checkbox"
+                             th:id="'btn-food-outlined-' + ${i.index}" autocomplete="off">
+                      <label class="btn btn-outline-ymprimary w-100 py-2"
+                             th:for="'btn-food-outlined-' + ${i.index}">
+                        <i class="bi bi-p-circle me-1"></i>
+                        <span th:text="${c.name}">카테고리명</span>
+                      </label>
+                    </div>
+                  </th:block>
+
+                  <div class="text-muted small py-4 text-center"
+                       th:if="${result == null or #lists.isEmpty(result.categories)}">
+                    カテゴリーがありません
+                  </div>
+                </div>
+              </div>
+
+              <!-- 가게 조건 -->
+              <div>
+                <div class="fw-bold text-ymsecondary border-bottom pb-2 mb-3">🏠 条件</div>
+                <div class="row g-3">
+                  <th:block th:each="n : ${#numbers.sequence(1,5)}">
+                    <div class="col-6">
+                      <input class="btn-check" type="checkbox"
+                             th:id="'btn-check-outlined-' + ${n}" autocomplete="off">
+                      <label class="btn btn-outline-ymsecondary w-100 py-2"
+                             th:for="'btn-check-outlined-' + ${n}">
+                        <i class="bi bi-check2-circle me-1"></i> 주차
+                      </label>
+                    </div>
+                  </th:block>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ===================== 우측 : 결과 영역 ===================== -->
+        <div class="col-12 col-lg-9">
+
+          <!-- 상단 탭 -->
+          <div class="d-flex flex-wrap gap-2 mb-3 justify-content-end">
+            <input type="radio" class="btn-check" name="options" id="option1" checked>
+            <label class="btn btn-outline-ymsecondary" for="option1">全て</label>
+
+            <input type="radio" class="btn-check" name="options" id="option2">
+            <label class="btn btn-outline-ymsecondary" for="option2">いいね</label>
+
+            <input type="radio" class="btn-check" name="options" id="option3">
+            <label class="btn btn-outline-ymsecondary" for="option3">ブックマーク</label>
+          </div>
+
+          <!-- 단건 카드 -->
+          <th:block th:if="${result != null and result.store != null}">
+            <div class="card mb-4 shadow-sm border-0 hover-shadow transition position-relative">
+              <div class="row g-0">
+                <div class="col-md-3 bg-light d-flex align-items-center justify-content-center">
+                  <div class="ratio ratio-16x9 text-muted">
+                    <img th:src="${ result?.store?.image }">
+                  </div>
+                  
+                </div>
+                <div class="col-md-9 p-3">
+                  <div class="fw-bold fs-5 text-ymsecondary" th:text="${result.store.name}">상점명</div>
+                  <div class="text-muted small" th:text="${result.store.description}">상점 설명</div>
+                  <div class="small mt-1" th:text="${result.store.phone}">02-000-0001</div>
+                  <div class="small text-muted mt-2">#주소ID: <span th:text="${result.store.addressId}">1</span></div>
+                  <div class="pt-2">
+                    <a class="badge bg-ymprimary-subtle text-ymprimary me-1"
+                       th:each="c : ${result.categories}" th:text="'#' + ${c.name}">#카테고리</a>
+                  </div>
+                </div>
+              </div>
+              <a class="stretched-link"
+                 th:href="@{/store/detail/{id}(id=${result.store.id})}"></a>
+            </div>
+          </th:block>
+
+          <!-- 목록 카드 -->
+          <th:block th:if="${result == null or result.store == null}">
+            <div th:each="s, i : ${result.items}">
+              <div class="card mb-4 border-0 shadow-sm hover-shadow transition position-relative">
+                <div class="row g-0">
+                  <div class="col-md-3 bg-light d-flex align-items-center justify-content-center">
+                    <div class="ratio ratio-16x9 text-muted">
+                      <img th:src="${ s?.image ?: 'https://picsum.photos/1600/900?random=' + i.index }">
+                    </div>
+                  </div>
+                  <div class="col-md-9 p-3">
+                    <div class="fw-bold text-ymsecondary" th:text="${s.name}">가게 이름</div>
+                    <div class="text-muted small" th:text="${s.description}">설명</div>
+                    <div class="small mt-1" th:text="${s.phone}">02-000-0001</div>
+                    <div class="small text-muted mt-2">#주소ID: <span th:text="${s.addressId}">1</span></div>
+                  </div>
+                </div>
+                <a class="stretched-link" th:href="@{/store/detail/{id}(id=${s.id})}"></a>
+              </div>
+            </div>
+
+            <div class="text-muted text-center py-5"
+                 th:if="${result != null and #lists.isEmpty(result.items)}">
+              검색 결과가 없습니다.
+            </div>
+          </th:block>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

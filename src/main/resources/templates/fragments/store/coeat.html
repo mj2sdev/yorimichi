@@ -1,23 +1,24 @@
 <div class="row shadow p-4 gx-0 gap-2">
 
-	<h4>
+	<h4 th:text="#{store.coeat.title}">
 		같이 먹기
 	</h4>
 
-	<div class="btn-toolbar justify-content-between">
-		<div class="btn-group">
+	<div class="btn-toolbar justify-content-end">
+		<div class="btn-group" hidden>
 			<input type="checkbox" class="btn-check" id="btncheck1" autocomplete="off">
-  		<label class="btn btn-outline-secondary btn-sm" for="btncheck1">팔로우만</label>
+			<label class="btn btn-outline-secondary btn-sm" for="btncheck1" th:text="#{store.coeat.button.follow_only}">팔로우만</label>
 
 			<input type="checkbox" class="btn-check" id="btncheck2" autocomplete="off">
-  		<label class="btn btn-outline-secondary btn-sm" for="btncheck2">팔로워만</label>
+			<label class="btn btn-outline-secondary btn-sm" for="btncheck2" th:text="#{store.coeat.button.follower_only}">팔로워만</label>
 		</div>
 		<div class="btn-group">
 			<button
 				type="button"
 				class="btn btn-sm btn-ymprimary"
 				data-bs-target="#coeatwriting"
-				data-bs-toggle="modal">
+				data-bs-toggle="modal"
+				th:text="#{store.coeat.button.create_meeting}">
 				같이먹기 작성
 			</button>
 		</div>
@@ -33,8 +34,8 @@
 			type="button"
 			class="btn btn-sm btn-outline-ymprimary"
 			th:data-id="${ item.id }"
-			onclick="coeatDetailModal.findOne(event)">
-			자세히
+			onclick="coeatDetailModal.findOne(event)"
+			th:text="#{common.view_detail}"> 상세보기
 		</button>
 	</div>
 

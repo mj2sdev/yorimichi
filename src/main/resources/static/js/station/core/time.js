@@ -2,10 +2,10 @@
 export function timeAgo(iso) {
     try {
         const d = (Date.now() - new Date(iso).getTime()) / 1000;
-        if (d < 60) return '방금';
-        if (d < 3600) return Math.floor(d / 60) + '분 전';
-        if (d < 86400) return Math.floor(d / 3600) + '시간 전';
-        return Math.floor(d / 86400) + '일 전';
+        if (d < 60) return '先ほと';
+        if (d < 3600) return Math.floor(d / 60) + '分前';
+        if (d < 86400) return Math.floor(d / 3600) + '時間前';
+        return Math.floor(d / 86400) + '日前';
     } catch {
         return '';
     }

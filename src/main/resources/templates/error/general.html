@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html
-	th:replace="~{layout/clean :: params(~{::head/content()},~{::body/content()})}"
-	xmlns:th="http://www.thymeleaf.org">
+  th:replace="~{layout/clean :: params(~{::head/content()},~{::body/content()})}"
+  xmlns:th="http://www.thymeleaf.org">
 <head>
-	<title>A0A N0T F0UN:D</title>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+  <title th:text="#{common.error.notfound}">페이지를 찾을 수 없음</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <style>
     body {
-      background-color: #fff7f0;
+	background-color: #fff7f0;
     }
     .error-icon {
-      font-size: 5rem;
-      color: #ff7a00;
+	font-size: 5rem;
+	color: #ff7a00;
     }
     .btn-orange {
-      background-color: #ff7a00;
-      color: white;
+	background-color: #ff7a00;
+	color: white;
     }
     .btn-orange:hover {
-      background-color: #e96a00;
+	background-color: #e96a00;
     }
   </style>
 </head>
@@ -26,17 +26,17 @@
 <div class="container text-center py-5 dvh">
   <div class="row h-100 align-items-center justify-content-center">
     <div class="col-md-8">
-      <div class="error-icon mb-4">
-        <i class="bi bi-emoji-frown"></i>
-      </div>
-      <h1 class="fw-bold text-orange mb-3" th:text="${ message }"></h1>
-      <p class="lead mb-4">
-        찾으시는 페이지는 메뉴에 없어요.<br>
-        대신 따끈한 추천 메뉴를 준비해볼까요?
-      </p>
-      <a href="/" class="btn btn-orange btn-lg px-4">
-        홈으로 돌아가기 🍜
-      </a>
+	<div class="error-icon mb-4">
+	  <i class="bi bi-emoji-frown"></i>
+	</div>
+	<h1 class="fw-bold text-orange mb-3" th:text="${ message }"></h1>
+	<p class="lead mb-4" th:utext="#{error.general.subtitle}">
+	  찾으시는 페이지는 메뉴에 없어요.<br>
+	  대신 따끈한 추천 메뉴를 준비해볼까요?
+	</p>
+	<a href="/" class="btn btn-orange btn-lg px-4" th:text="#{common.home}">
+	  홈으로 돌아가기 🍜
+	</a>
     </div>
   </div>
 </div>

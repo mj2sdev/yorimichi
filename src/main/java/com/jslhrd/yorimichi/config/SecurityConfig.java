@@ -55,7 +55,7 @@ public class SecurityConfig {
 						// CORS preflight 허용
 						.requestMatchers(HttpMethod.OPTIONS, "/api/**").permitAll()
 
-						.requestMatchers(HttpMethod.GET, "/api/categories").permitAll()
+						.requestMatchers(HttpMethod.GET, "/api/categories", "/api/search/**").permitAll()
 						.requestMatchers(HttpMethod.GET, "/api/stations").permitAll()
 
 						.requestMatchers(HttpMethod.POST, "/api/admin/**").permitAll()
@@ -121,8 +121,8 @@ public class SecurityConfig {
 						.requestMatchers(
 								"/", "/login", "/signup", "/signup/**", "/oauth2/**", "/error",
 								"/favicon.ico",
-								"/assets/**", "/css/**", "/js/**", "/images/**",
-								"/webjars/**",
+								"/assets/**", "/css/**", "/js/**", "/images/**","/feed/**" , "/api/**",
+								"/webjars/**",  "/search/**",
 								"/actuator/health"
 						).permitAll()
 
@@ -142,7 +142,7 @@ public class SecurityConfig {
 						.loginProcessingUrl("/login")
 						.usernameParameter("email")
 						.passwordParameter("password")
-						.defaultSuccessUrl("/", false)
+						.defaultSuccessUrl("/", true)
 						.failureUrl("/login?error")
 						.permitAll()
 				)
@@ -169,7 +169,7 @@ public class SecurityConfig {
 						.maximumSessions(1)
 						.maxSessionsPreventsLogin(false)
 				);
-
+		http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")); 
     /*
        소셜 로그인(OAuth2/OIDC)
        - ClientRegistrationRepository(=등록 정보)가 있을 때만 활성화

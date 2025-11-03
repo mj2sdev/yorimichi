@@ -40,7 +40,7 @@ export function renderCardItem(item) {
     left.innerHTML = `
     <i class="bi fs-5 ${isReview ? 'bi-chat-square-text-fill text-primary' : 'bi-people-fill text-warning'}"></i>
     <span class="badge rounded-pill small ${isReview ? 'bg-primary bg-opacity-10 text-primary' : 'bg-warning bg-opacity-10 text-warning'}">
-      ${isReview ? '리뷰' : '같이먹기'}
+      ${isReview ? 'レビュー' : '一緒に食べる'}
     </span>`;
 
     // 상태 배지(같이먹기)
