@@ -64,7 +64,8 @@
 		<div class="d-flex gap-1">
 			<span th:text="#{store.info.rating}">평점 : </span>
 			<i class="bi bi-star-fill text-warning"
-				th:each="item : ${#numbers.sequence(1, store?.review?.avgRating)}">
+				th:if="${ store?.review?.avgRating }"
+				th:each="item : ${#numbers.sequence(1, store?.review?.avgRating ?: 0)}">
 			</i>
 			<span th:text="${ store?.review?.avgRating } + ' ' + #{store.info.rating.unit} + ' (' + ${ store?.review?.reviewCount } + ' ' + #{store.info.rating.people} + ')'">
 			</span>
