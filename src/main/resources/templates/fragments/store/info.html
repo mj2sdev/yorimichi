@@ -3,19 +3,19 @@
 	<div class="col-12">
 		<div class="d-flex">
 			<div class="ratio ratio-1x1" style="width: 10rem;">
-				<img src="https://picsum.photos/280" alt="">
+				<img src="https://picsum.photos/280" th:alt="#{store.list.item.image}">
 			</div>
 		</div>
 	</div>
 
 	<div class="col-12">
 		<div class="d-flex justify-content-between">
-			<h3 th:text="${ store?.name } ?: '가게명 없음' "></h3>
+			<h3 th:text="${ store?.name } ?: #{index.featured.store.name}"></h3>
 			<div>
 				<button type="button" class="btn btn-outline-secondary" th:data-liked="${ store.like != null }"
 					onclick="toggleLike(event)">
 					<i class="bi text-danger" th:classappend="${ store.like } ? 'bi-heart-fill' : 'bi-heart'"></i>
-					<span>
+					<span th:text="#{store.list.search.likes}">
 						좋아요
 					</span>
 				</button>
@@ -23,13 +23,13 @@
 					th:data-marked="${ store.bookmark != null }"
 					onclick="toggleBookmark(event)">
 					<i class="bi text-warning" th:classappend="${ store.bookmark } ? 'bi-bookmark-fill' : 'bi-bookmark'"></i>
-					<span>
+					<span th:text="#{store.list.search.bookmarks}">
 						즐겨찾기
 					</span>
 				</button>
 				<button type="button" class="btn btn-outline-secondary" onclick="shareStore()">
 					<i class="bi bi-share text-info"></i>
-					<span>
+					<span th:text="#{store.info.button.share}">
 						공유
 					</span>
 				</button>
@@ -40,19 +40,19 @@
 	<div class="col-12">
 		<div>
 			<i class="bi bi-pin"></i>
-			<span th:text="${ store?.address?.roadAddressText } ?: '가게 주소 데이터'"></span>
+			<span th:text="${ store?.address?.roadAddressText } ?: #{store.info.address}"></span>
 		</div>
 		<div>
 			<i class="bi bi-telephone"></i>
-			<span th:text="${ store?.phone } ?: '가게 전화번호 데이터'"></span>
+			<span th:text="${ store?.phone } ?: #{store.info.phone}"></span>
 		</div>
 		<div>
 			<i class="bi bi-watch"></i>
-			<a class="text-decoration-none" data-bs-toggle="collapse" href="#collapseOpentime">
+			<a class="text-decoration-none" data-bs-toggle="collapse" href="#collapseOpentime" th:text="#{store.info.opening_hours}">
 				영업중 오늘 (수) 영업시간: 11:00 ~ 22:00
 			</a>
 			<div class="collapse" id="collapseOpentime">
-				<div class="card card-body">
+				<div class="card card-body" th:text="#{store.info.opening_hours.monday}">
 
 					월요일 영업시간: 11:00 ~ 22:00
 				</div>
@@ -62,11 +62,11 @@
 
 	<div class="col-12">
 		<div class="d-flex gap-1">
-			<span>평점 : </span>
-			<i class="bi bi-star-fill text-warning" th:if="${store?.review?.avgRating}"
-				th:each="item : ${#numbers.sequence(1, store?.review?.avgRating ?: 0)}">
+			<span th:text="#{store.info.rating}">평점 : </span>
+			<i class="bi bi-star-fill text-warning"
+				th:each="item : ${#numbers.sequence(1, store?.review?.avgRating)}">
 			</i>
-			<span th:text="${ store?.review?.avgRating ?: 0 } + '점 (' + ${ store?.review?.reviewCount ?: 0 } + '명의 평가)'">
+			<span th:text="${ store?.review?.avgRating } + ' ' + #{store.info.rating.unit} + ' (' + ${ store?.review?.reviewCount } + ' ' + #{store.info.rating.people} + ')'">
 			</span>
 		</div>
 	</div>

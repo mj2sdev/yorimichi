@@ -1,25 +1,22 @@
 <div class="d-flex flex-column shadow p-4 gap-4">
 
-	<!-- 제목, 글쓰기 -->
 	<div class="d-flex justify-content-between align-items-center">
-		<h3>가게 리뷰</h3>
+		<h3 th:text="#{store.review.title}">가게 리뷰</h3>
 			<button type="button" class="btn btn-ymprimary"
 			data-bs-toggle="modal"
-			data-bs-target="#writeReviewModal">
+			data-bs-target="#writeReviewModal"
+			th:text="#{store.review.button.write}">
 			리뷰작성
 		</button>
 	</div>
 
-	<!-- AI 리뷰 -->
 	<h6>
-		<i class="bi bi-compass text-ymprimary"> AI 리뷰 요약</i>
-		<div th:text="${ store.summaredReview } ?: '요약된 리뷰 데이터가 없습니다.'">
+		<i class="bi bi-compass text-ymprimary" th:text="' ' + #{store.review.ai_summary.title}"> AI 리뷰 요약</i>
+		<div th:text="${ store.summaredReview } ?: #{store.review.ai_summary.content}">
 		</div>
 	</h6>
 
-	<!-- 리뷰 리스트 -->
 	<div class="d-flex flex-column gap-2 border-top pt-2" th:each="item : ${ store.reviews }">
-		<!-- 프로필 -->
 		<div class="d-flex justify-content-between align-items-center">
 			<div th:replace="~{ fragments/common/profile :: userData(${ item.user }) }"></div>
 			<button
@@ -27,40 +24,25 @@
 				type="button"
 				onclick="deleteReview(event)"
 				th:data-review-id="${ item.id }"
-				sec:authorize="principal.userId == #vars.item.userId" hidden>삭제</button>
+				sec:authorize="principal.userId == #vars.item.userId" hidden th:text="#{common.delete}">삭제</button>
 		</div>
-		<!-- 리뷰 사진 -->
 		<div class="d-flex gap-2 overflow-x-auto">
 			<div class="ratio ratio-1x1 flex-shrink-0" style="width: 10rem;" th:each="image : ${ item.images }">
-				<img src="https://picsum.photos/150" th:src="${ image.url }">
+				<img src="https://picsum.photos/150" th:src="${ image.url }" th:alt="#{store.list.item.image}">
 			</div>
 		</div>
-		<!-- 점수, 작성일 -->
 		<div class="d-flex justify-content-between">
 			<div class="d-flex gap-2">
 				<div>
 					<i class="bi bi-star-fill text-warning" th:each="star : ${#numbers.sequence(1, item.rating) }"></i>
 				</div>
-				<span th:text="${ item.rating } + '점'"></span>
+				<span th:text="${ item.rating } + ' ' + #{store.info.rating.unit}"></span>
 				<i class="bi bi-check-circle text-success"
 					data-bs-toggle="tooltip"
 					data-bs-placement="top"
 					data-bs-custom-class="custom-tooltip"
-					data-bs-title="영수증이 인증된 리뷰입니다"
+					th:data-bs-title="#{review.item.receipt.verified}"
 					th:if="${ item.receiptStatus == true and item.receiptImageId != null }"></i>
 			</div>
 			<div th:data-time-ago="${ item.createdAt }"></div>
 		</div>
-		
-		<!-- 내용 -->
-		<div th:utext="${ item.content }"></div>
-
-		<!-- 메뉴 리스트 -->
-		<div class="d-flex gap-2">
-			<div class="text-primary" th:each="menu : ${ item.foods }">
-				<span class="badge bg-secondary" th:text="${ menu?.name }"></span>
-			</div>
-		</div>
-	</div>
-
-</div>

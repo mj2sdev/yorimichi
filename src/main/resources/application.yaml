@@ -23,6 +23,11 @@ spring:
   thymeleaf:
     cache: false
 
+  # 국제화 관련 (일본어 표기를 위함)
+  messages:
+    basename: messages/messages_ja
+    encoding: UTF-8
+
 # MyBatis 설정 (패키지 경로는 실제 프로젝트에 맞게 수정)
 # dto 위치 기본적으로 설정해서 xml에서 DTO클래스 이름만 적어도 되게 해줌.
 mybatis:

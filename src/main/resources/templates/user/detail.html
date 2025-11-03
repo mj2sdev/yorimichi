@@ -3,7 +3,7 @@
 
 <head>
 	<script defer src="/js/user/mypage/myinfo.js"></script>
-	<title> Yorimichi Project </title>
+	<title th:text="#{header.my_info}"> Yorimichi Project </title>
 </head>
 
 <body>
@@ -15,14 +15,14 @@
 						<ul class="list-unstyled">
 							<li>
 								<h1 th:text="${user.nickname}" class="text-center"
-									aria-label="Username" aria-describedby="addon-wrapping"></h1> 
+									th:aria-label="#{user.mypage.label.username}" aria-describedby="addon-wrapping"></h1> 
 							</li>
 						</ul>
 					</div>
 				</div>
 				<div class="row my-4 justify-content-center">
 					<div class="col-8 text-center">
-						<img th:src="${user.image != null ? user.image : '/images/default-profile.png'}" class="mx-auto border rounded-circle">
+						<img th:src="${user.image != null ? user.image : '/images/default-profile.png'}" class="mx-auto border rounded-circle" th:alt="#{user.mypage.label.profile_image}">
 					</div>
 				</div>
 				<div class="row justify-content-center">
@@ -30,7 +30,7 @@
 						<ul class="list-unstyled">
 							<li>
 								<p th:text="${user.description}" class="form-control text-center"
-									aria-label="Description" aria-describedby="addon-wrapping"></p>
+									th:aria-label="#{user.mypage.label.description}" aria-describedby="addon-wrapping"></p>
 							</li>
 						</ul>
 					</div>
@@ -45,18 +45,17 @@
 					<div class="nav nav-tabs" id="nav-tab-main" role="tablist">
 						<button class="nav-link active" id="nav-review-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-review" type="button" role="tab"
-							aria-controls="nav-review" aria-selected="true">
-							리뷰
+							aria-controls="nav-review" aria-selected="true"
+							th:text="#{user.mypage.tab.reviews}">
 						</button>
 						<button class="nav-link" id="nav-like-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-like" type="button" role="tab" aria-controls="nav-like"
-							aria-selected="false">
-							좋아요
+							aria-selected="false" th:text="#{user.mypage.tab.likes}">
 						</button>
 						<button class="nav-link" id="nav-bookmark-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-bookmark" type="button" role="tab"
-							aria-controls="nav-bookmark" aria-selected="false">
-							즐겨찾기
+							aria-controls="nav-bookmark" aria-selected="false"
+							th:text="#{user.mypage.tab.bookmarks}">
 						</button>
 					</div>
 				</nav>
@@ -66,7 +65,7 @@
 						<th:block th:each="review : ${user.reviews}">
 							<div class="row bg-ymwhite mb-3">
 								<div class="col-3 border">
-									<img th:if="${!#lists.isEmpty(review.images)}" th:src="${review.images[0]?.url}" style="height:100%; width:100%;">
+									<img th:if="${!#lists.isEmpty(review.images)}" th:src="${review.images[0]?.url}" style="height:100%; width:100%;" th:alt="#{store.list.item.image}">
 								</div>
 								<div class="col-9 border">
 									<div class="row justify-content-between align-items-center">
@@ -83,19 +82,17 @@
 										</div>
 										<div class="col-auto">
 											<a th:href="@{'/store/detail/'+${review.storeId}}"
-												class="text-ymprimary text-decoration-none">
-												가게보기
+												class="text-ymprimary text-decoration-none"
+												th:text="#{user.detail.button.view_store}">
 											</a>
 										</div>
 										<div class="col-auto" th:text="${#temporals.format(review.createdAt, 'yyyy.MM.dd')}">
-											2025.09.15
 										</div>
 									</div>
 									<div class="p-2" data-bs-toggle="collapse"
 										th:attr="data-bs-target='#menu' + ${review.id}">
 										<div class="row mt-2">
 											<div class="col" th:text="${review.content}">
-												리뷰 본문 내용...
 											</div>
 										</div>
 									</div>
@@ -116,10 +113,10 @@
 							<div class="row">
 								<div class="col">
 									<a th:href="@{'/store/detail/'+${like.id}}" class="btn">
-										<span th:text="${like.name}">가게명</span>
-										<span th:text="${like.address}">위치</span>
+										<span th:text="${like.name} ?: #{index.featured.store.name}"></span>
+										<span th:text="${like.address} ?: #{common.location}"></span>
 										<th:block th:each="category: ${like.categories}">
-											<span th:text="${category}">#태그</span>
+											<span th:text="${category}"></span>
 										</th:block>
 									</a>
 								</div>
@@ -132,10 +129,10 @@
 							<div class="row">
 								<div class="col">
 									<a th:href="@{'/store/detail/'+${bookmark.id}}" class="btn">
-										<span th:text="${bookmark.name}">가게명</span>
-										<span th:text="${bookmark.address}">위치</span>
+										<span th:text="${bookmark.name} ?: #{index.featured.store.name}"></span>
+										<span th:text="${bookmark.address} ?: #{common.location}"></span>
 										<th:block th:each="category: ${bookmark.categories}">
-											<span th:text="${category}">#태그</span>
+											<span th:text="${category}"></span>
 										</th:block>
 									</a>
 								</div>
@@ -149,13 +146,11 @@
 					<div class="nav nav-tabs" id="nav-tab-side" role="tablist">
 						<button class="nav-link active" id="nav-follow-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-follow" type="button" role="tab" aria-controls="nav-follow"
-							aria-selected="true">
-							팔로우
+							aria-selected="true" th:text="#{common.follow}">
 						</button>
 						<button class="nav-link" id="nav-follower-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-follower" type="button" role="tab" aria-controls="nav-follower"
-							aria-selected="false">
-							팔로워
+							aria-selected="false" th:text="#{common.follower}">
 						</button>
 					</div>
 				</nav>
@@ -165,8 +160,7 @@
 						<th:block th:each="person : ${user.followees}">
 							<div class="row">
 								<div class="col">
-									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname}" class="btn d-block">
-										닉네임
+									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname} ?: #{user.signup.nickname}" class="btn d-block">
 									</a>
 								</div>
 							</div>
@@ -177,8 +171,7 @@
 						<th:block th:each="person : ${user.followers}">
 							<div class="row">
 								<div class="col">
-									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname}" class="btn d-block">
-										닉네임
+									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname} ?: #{user.signup.nickname}" class="btn d-block">
 									</a>
 								</div>
 							</div>

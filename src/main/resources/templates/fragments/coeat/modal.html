@@ -3,7 +3,7 @@
 		<div class="modal-dialog modal-xl modal-dialog-scrollable modal-dialog-centered">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="coeatmodalLabel">가게이름 같이 먹기 일정: 25.09.11</h1>
+					<h1 class="modal-title fs-5" id="coeatmodalLabel" th:text="#{coeat.modal.temp.title}">가게이름 같이 먹기 일정: 25.09.11</h1>
 					<button class="btn">
 						<i class="bi bi-flag-fill" style="font-size: 1em; color: red;"></i>
 					</button>
@@ -11,7 +11,7 @@
 						data-bs-target="#reviewwriting">
 						<i class="bi bi-pencil-fill text-ymprimary" style="font-size: 1em;"></i>
 					</button>
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" th:aria-label="#{common.close}"></button>
 				</div>
 				<div class="modal-body">
 					<div class="container">
@@ -20,7 +20,7 @@
 								<div class="row border-bottom border-2" style="height:300px;">
 									<div class="col">
 										<img src="">
-										지도나 이미지 자리.
+										<span th:text="#{coeat.modal.temp.map_placeholder}">지도나 이미지 자리.</span>
 									</div>
 								</div>
 								<div class="row py-3">
@@ -28,8 +28,8 @@
 										<ul>
 											<th:block th:each="item : ${#numbers.sequence(1,5)}">
 												<div class="row">
-													<div class="col">음식이름</div>
-													<div class="col">가격</div>
+													<div class="col" th:text="#{coeat.modal.temp.food_name}">음식이름</div>
+													<div class="col" th:text="#{coeat.modal.temp.food_price}">가격</div>
 													<div class="col">
 														<th:block th:each="item : ${#numbers.sequence(1,5)}">
 															<i class="bi bi-star-fill" style="font-size: 1em; color: gold;"></i>
@@ -46,43 +46,43 @@
 									<div class="row">
 										<div class="col text-ymprimary">
 											<button class="btn fw-bold dropdown-toggle" data-bs-toggle="dropdown"
-												aria-expanded="false">개최자</button>
+												aria-expanded="false" th:text="#{coeat.modal.detail.organizer}">개최자</button>
 											<ul class="dropdown-menu">
-												<li><a class="dropdown-item" href="#"><i class="bi bi-heart" style="font-size: 1em;"></i>팔로우</a>
+												<li><a class="dropdown-item" href="#"><i class="bi bi-heart" style="font-size: 1em;"></i><span class="ms-1" th:text="#{common.follow}">팔로우</span></a>
 												</li>
 												<li th:if="${#false}"><a class="dropdown-item" href="#"><i class="bi bi-heart-fill"
-															style="font-size: 1em; color: red;"></i>팔로우취소</a></li>
+														style="font-size: 1em; color: red;"></i><span class="ms-1" th:text="#{common.unfollow}">팔로우취소</span></a></li>
 												<li><a class="dropdown-item" href="#"><i class="bi bi-search" style="font-size: 1em;"></i>
-														상세보기</a></li>
+														<span class="ms-1" th:text="#{common.view_detail}">상세보기</span></a></li>
 											</ul>
 										</div>
-										<div class="col" th:text="${'간단 자기소개'}">
-											사람에 대한 설명
+										<div class="col" th:text="#{coeat.modal.temp.user_intro}">
+											<span th:text="#{coeat.modal.temp.user_desc}">사람에 대한 설명</span>
 										</div>
 									</div>
 									<th:block th:each="item : ${#numbers.sequence(1,5)}">
 										<div class="row">
 											<div class="col text-ymprimary">
 												<button class="btn fw-bold dropdown-toggle" data-bs-toggle="dropdown"
-													aria-expanded="false">참여자</button>
+													aria-expanded="false" th:text="#{coeat.modal.detail.participant}">참여자</button>
 												<ul class="dropdown-menu">
 													<li><a class="dropdown-item" href="#"><i class="bi bi-heart"
-																style="font-size: 1em;"></i>팔로우</a></li>
+														style="font-size: 1em;"></i><span class="ms-1" th:text="#{common.follow}">팔로우</span></a></li>
 													<li th:if="${#false}"><a class="dropdown-item" href="#"><i class="bi bi-heart-fill"
-																style="font-size: 1em; color: red;"></i>팔로우취소</a>
+														style="font-size: 1em; color: red;"></i><span class="ms-1" th:text="#{common.unfollow}">팔로우취소</span></a>
 													</li>
 													<li><a class="dropdown-item" href="#"><i class="bi bi-search" style="font-size: 1em;"></i>
-															상세보기</a></li>
+															<span class="ms-1" th:text="#{common.view_detail}">상세보기</span></a></li>
 												</ul>
 											</div>
-											<div class="col" th:text="${'간단 자기소개'}">
-												사람에 대한 설명
+											<div class="col" th:text="#{coeat.modal.temp.user_intro}">
+												<span th:text="#{coeat.modal.temp.user_desc}">사람에 대한 설명</span>
 											</div>
 										</div>
 									</th:block>
 								</div>
 								<div class="row border-top border-3 mt-3">
-									<div class="col mt-3">
+									<div class="col mt-3" th:utext="#{coeat.modal.temp.organizer_note}">
 										만든 사람이 할 말.<br>
 										전 어쩌구 저쩌구 하고 싶구요<br>
 										뭐 먹으려고 합니다.<br>
@@ -93,16 +93,16 @@
 						</div>
 						<div class="row mt-3">
 							<div class="col">
-								<p class="text-center">참가자 대화</p>
+								<p class="text-center" th:text="#{coeat.modal.detail.section.chat}">참가자 대화</p>
 								<ul class="list-unstyled">
 									<th:block th:each="i : ${#numbers.sequence(1,5)}">
 										<li class="my-4 text-start">
 											<div class="row justify-content-between">
-												<div class="col-4">닉네임</div>
+												<div class="col-4" th:text="#{coeat.modal.temp.chat.nickname}">닉네임</div>
 												<div class="col">2025-09-11</div>
 											</div>
 											<div class="row">
-												<div class="col">
+												<div class="col" th:text="#{coeat.modal.temp.chat.content}">
 													댓글내용
 												</div>
 											</div>
@@ -114,8 +114,8 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-danger" data-bs-dismiss="modal">취소</button>
-					<button type="button" class="btn btn-ymprimary">참가신청</button>
+					<button type="button" class="btn btn-danger" data-bs-dismiss="modal" th:text="#{common.cancel}">취소</button>
+					<button type="button" class="btn btn-ymprimary" th:text="#{coeat.modal.detail.button.join}">참가신청</button>
 				</div>
 			</div>
 		</div>

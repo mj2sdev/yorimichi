@@ -2,7 +2,7 @@
 <html th:replace="~{layout/main :: params(~{::head/content()},~{::body/content()})}" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<title> Yorimichi Project </title>
+	<title th:text="#{store.list.title}"> Yorimichi Project </title>
 </head>
 
 <body>
@@ -11,7 +11,7 @@
 			<div class="row gap-5">
 				<div class="col-3">
 					<div class="row">
-						<div class="col text-center fs-1 fw-bold text-ymsecondary-bright">
+						<div class="col text-center fs-1 fw-bold text-ymsecondary-bright" th:text="#{store.list.search.condition}">
 							조건 검색
 						</div>
 					</div>
@@ -19,7 +19,7 @@
 						<div class="row border border-3 my-4">
 							<div class="col">
 								<div class="row">
-									<div class="col text-center fw-bold">
+									<div class="col text-center fw-bold" th:text="#{store.list.search.food_category}">
 										음식 카테고리
 									</div>
 								</div>
@@ -32,7 +32,7 @@
 													<div class="col"><i class="bi bi-p-circle" style="font-size: 1em;"></i></div>
 												</div>
 												<div class="row">
-													<div class="col">파스타</div>
+													<div class="col" th:text="#{store.list.temp.pasta}">파스타</div>
 												</div>
 											</label>
 										</div>
@@ -43,7 +43,7 @@
 						<div class="row border border-3">
 							<div class="col">
 								<div class="row">
-									<div class="col text-center fw-bold">
+									<div class="col text-center fw-bold" th:text="#{store.list.search.store_condition}">
 										가게 조건
 									</div>
 								</div>
@@ -56,7 +56,7 @@
 													<div class="col"><i class="bi bi-p-circle" style="font-size: 1em;"></i></div>
 												</div>
 												<div class="row">
-													<div class="col">주차</div>
+													<div class="col" th:text="#{store.list.temp.parking}">주차</div>
 												</div>
 											</label>
 										</div>
@@ -70,15 +70,15 @@
 					<div class="row py-2">
 						<div class="col-2">
 							<input type="radio" class="btn-check" name="options" id="option1" autocomplete="off" checked>
-							<label class="btn" for="option1">전체</label>
+							<label class="btn" for="option1" th:text="#{store.list.search.all}">전체</label>
 						</div>
 						<div class="col-2">
 							<input type="radio" class="btn-check" name="options" id="option2" autocomplete="off">
-							<label class="btn" for="option2">좋아요</label>
+							<label class="btn" for="option2" th:text="#{store.list.search.likes}">좋아요</label>
 						</div>
 						<div class="col-2">
 							<input type="radio" class="btn-check" name="options" id="option3" autocomplete="off">
-							<label class="btn" for="option3">즐겨찾기</label>
+							<label class="btn" for="option3" th:text="#{store.list.search.bookmarks}">즐겨찾기</label>
 						</div>
 					</div>
 					<th:block th:each="item : ${#numbers.sequence(1,6)}">
@@ -86,18 +86,18 @@
 							<div class="col">
 								<a href="" class="text-decoration-none text-ymsecondary">
 									<div class="row border-bottom border-2" style="height:100px;">
-										<div class="col-3">이미지자리</div>
+										<div class="col-3" th:text="#{store.list.item.image}">이미지자리</div>
 										<div class="col-3">
 											<div class="row">
-												<div class="col">이름자리</div>
+												<div class="col" th:text="#{store.list.item.name}">이름자리</div>
 											</div>
 											<div class="row">
-												<div class="col">분류자리</div>
+												<div class="col" th:text="#{store.list.item.category}">분류자리</div>
 											</div>
 										</div>
 										<div class="col">
 											<div class="row mb-3">
-												<div class="col">대전광역시 어쩌구 어쩌동</div>
+												<div class="col" th:text="#{store.list.item.address}">대전광역시 어쩌구 어쩌동</div>
 											</div>
 											<div class="row">
 												<div class="col">
