@@ -1,39 +1,45 @@
-<!DOCTYPE html>
-<html
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-	xmlns:th="http://www.thymeleaf.org">
-<body>
 <th:block th:fragment="header">
+  <header class="border-bottom shadow-sm sticky-top bg-ymwhite">
+    <div class="container">
+      <div class="row align-items-center py-3 g-2">
 
-	<header class="border-bottom shadow-sm sticky-top bg-ymwhite">
-		<div class="container">
-			<div class="row align-items-center py-3 g-2">
+        <!-- 로고 -->
+        <div class="col-12 col-md-3 d-flex align-items-center">
+          <a class="d-inline-flex align-items-center text-decoration-none" th:href="@{/}">
+            <!-- 데스크톱/태블릿: 가로 락업 -->
+            <img alt="Yorimichi" class="d-none d-md-inline-block" height="44" loading="eager" src="/images/ym1-logo-horizontal.svg">
+            <!-- 모바일: 심벌 -->
+            <img alt="Yorimichi" class="d-inline-block d-md-none" height="40" loading="eager" src="/images/ym1-symbol.svg">
+          </a>
+        </div>
 
-				<div class="col-12 col-md-3 d-flex align-items-center">
-					<a class="d-inline-flex align-items-center text-decoration-none" th:href="@{/}">
-						<img th:alt="#{index.title}" class="d-none d-md-inline-block"
-							 height="44" loading="eager" src="/images/ym1-logo-horizontal.svg">
-						<img th:alt="#{index.title}" class="d-inline-block d-md-none"
-							 height="40" loading="eager" src="/images/ym1-symbol.svg">
-					</a>
-				</div>
+        <!-- 검색창 (오버레이 + 자동완성) -->
+        <div class="col-12 col-md-5">
+          <form id="search-form" class="w-100 position-relative" role="search" method="get" th:action="@{/search}">
+            <div class="input-group">
+              <span class="input-group-text bg-white border-1"><i class="bi bi-search"></i></span>
+              <input
+                id="search-input"
+                name="q"
+                class="form-control border-1"
+                type="search"
+                placeholder="검색어 입력"
+                autocomplete="off"
+                th:value="${param.q != null ? param.q[0] : (q != null ? q : '')}" />
+              <button type="submit" class="btn btn-ymprimary px-3">검색</button>
+            </div>
 
-				<div class="col-12 col-md-5">
-					<form action="/search" class="w-100" method="get">
-						<div class="input-group">
-						<span class="input-group-text bg-white border-1">
-							<i class="bi bi-search"></i>
-						</span>
-							<input autocomplete="off"
-								   class="form-control border-1"
-								   name="keyword"
-								   th:placeholder="#{header.search.placeholder}">
-							<button class="btn btn-ymprimary px-3" type="submit" th:text="#{common.search}">
-								검색
-							</button>
-						</div>
-					</form>
-				</div>
+            <!-- ⬇︎ 자동완성 패널: 한 번만! (중복 금지) -->
+            <div id="search-panel" class="search-panel shadow-lg rounded-3 d-none"
+                 role="listbox" aria-labelledby="search-input">
+              <div class="search-empty text-muted small px-3 py-3 d-none">검색어를 입력해 주세요</div>
+              <ul id="search-list" class="list-unstyled mb-0"></ul>
+              <div class="search-footer small text-end px-3 py-2 text-muted">
+                ↑/↓ 이동 · Enter 선택 · Esc 닫기
+              </div>
+            </div>
+          </form>
+        </div>
 
 				<div class="col-12 col-md-4">
 					<div class="d-flex justify-content-md-end justify-content-between align-items-center gap-3">
@@ -49,35 +55,35 @@
 							<div class="small mt-1" th:text="#{header.notifications}">알림</div>
 						</a>
 
-						<a class="text-decoration-none text-ymsecondary text-center" href="/station">
-							<i class="bi bi-bus-front fs-3"></i>
-							<div class="small mt-1" th:text="#{header.station}">정류장</div>
-						</a>
+            <!-- 정류장 -->
+            <a class="text-decoration-none text-ymsecondary text-center" th:href="@{/station}">
+              <i class="bi bi-bus-front fs-3"></i>
+              <div class="small mt-1">정류장</div>
+            </a>
 
-						<a class="text-decoration-none text-ymsecondary text-center" href="/login" sec:authorize="isAnonymous()">
-							<i class="bi bi-door-open fs-3"></i>
-							<div class="small mt-1" th:text="#{header.login}">로그인</div>
-						</a>
+            <!-- 로그인 (비로그인 시) -->
+            <a sec:authorize="isAnonymous()" class="text-decoration-none text-ymsecondary text-center" th:href="@{/login}">
+              <i class="bi bi-door-open fs-3"></i>
+              <div class="small mt-1">로그인</div>
+            </a>
 
-					<a sec:authorize="isAuthenticated()" href="/user/mypage" class="text-decoration-none text-ymsecondary text-center">
-						<i class="bi bi-person-circle fs-3"></i>
-						<div class="small mt-1" th:text="#{header.my_info}">내정보</div>
-					</a>
+            <!-- 내정보 (로그인 시) -->
+            <a sec:authorize="isAuthenticated()" th:href="@{/user/mypage}" class="text-decoration-none text-ymsecondary text-center">
+              <i class="bi bi-person-circle fs-3"></i>
+              <div class="small mt-1">내정보</div>
+            </a>
 
-						<a class="text-decoration-none text-ymsecondary text-center" href="javascript:logoutForm.submit()"
-						   sec:authorize="isAuthenticated()">
-							<i class="bi bi-box-arrow-right fs-3"></i>
-							<div class="small mt-1" th:text="#{header.logout}">로그아웃</div>
-						</a>
-						<form id="logoutForm" method="post" th:action="@{/logout}"></form>
+            <!-- 로그아웃 (로그인 시) -->
+            <a sec:authorize="isAuthenticated()" href="javascript:logoutForm.submit()" class="text-decoration-none text-ymsecondary text-center">
+              <i class="bi bi-box-arrow-right fs-3"></i>
+              <div class="small mt-1">로그아웃</div>
+            </a>
+            <form id="logoutForm" method="post" th:action="@{/logout}"></form>
 
 					</div>
 				</div>
 
-			</div>
-		</div>
-	</header>
-
+      </div>
+    </div>
+  </header>
 </th:block>
-</body>
-</html>

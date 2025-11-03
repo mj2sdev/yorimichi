@@ -1,5 +1,6 @@
 package com.jslhrd.yorimichi.service.manager;
 
+import com.jslhrd.yorimichi.domain.CategoryDTO;
 import com.jslhrd.yorimichi.domain.SearchDTO;
 import com.jslhrd.yorimichi.domain.StoreDTO;
 import com.jslhrd.yorimichi.exception.AddressNotFoundException;
@@ -11,6 +12,7 @@ import com.jslhrd.yorimichi.mapper.RootMapper;
 import com.jslhrd.yorimichi.mapper.StoreMapper;
 import com.jslhrd.yorimichi.service.StoreService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class StoreManager implements StoreService {
 
@@ -39,13 +41,13 @@ public class StoreManager implements StoreService {
 
 	@Override
 	public List<StoreDTO> findAll(SearchDTO search) {
-		// TODO: 무한 스크롤 구현 후 교체
+		// TODO: 무한 스크롤 구현 후 교체
 		return storeMapper.selectAll(search);
 	}
 
 	@Override
 	public List<StoreDTO> findAllByUserLike(Long userId) {
-		// TODO: mappers 구현 후 교체
+		// TODO: mappers 구현 후 교체
 		return Collections.emptyList();
 
 	}
@@ -55,38 +57,38 @@ public class StoreManager implements StoreService {
 		List<StoreDTO> stores = storeMapper.selectRecommend(9, 30);
 
 		return stores.stream()
-				// 1) 1차 정렬 키: 가중치 점수(높을수록 우선)
-				//    - this::scoreOf 는 평균/총리뷰/최근리뷰/좋아요/북마크/코잇을 ln 포화로 가중합
-				//    - comparingDouble 은 double 키 추출 Comparator
+				// 1) 1차 정렬 키: 가중치 점수(높을수록 우선)
+				//    - this::scoreOf 는 평균/총리뷰/최근리뷰/좋아요/북마크/코잇을 ln 포화로 가중합
+				//    - comparingDouble 은 double 키 추출 Comparator
 				.sorted(Comparator.comparingDouble(this::scoreOf)
-						// 1-1) 내림차순(점수 큰 순서)으로 뒤집기
+						// 1-1) 내림차순(점수 큰 순서)으로 뒤집기
 						.reversed()
 
-						// 2) 2차 정렬 키: 최근 리뷰 수(recentCount) — 많을수록 우선
-						//    - review 가 null일 수도 있어 NPE 방지를 위해 삼항 연산자로 0 대체
-						//    - reverseOrder() 로 내림차순
+						// 2) 2차 정렬 키: 최근 리뷰 수(recentCount) — 많을수록 우선
+						//    - review 가 null일 수도 있어 NPE 방지를 위해 삼항 연산자로 0 대체
+						//    - reverseOrder() 로 내림차순
 						.thenComparing(
 								s -> s.getReview() != null ? s.getReview().getRecentCount() : 0,
 								Comparator.reverseOrder()
 						)
 
-						// 3) 3차 정렬 키: 총 리뷰 수(reviewCount) — 많을수록 우선
-						//    - 마찬가지로 null 안전 처리
+						// 3) 3차 정렬 키: 총 리뷰 수(reviewCount) — 많을수록 우선
+						//    - 마찬가지로 null 안전 처리
 						.thenComparing(
 								s -> s.getReview() != null ? s.getReview().getReviewCount() : 0,
 								Comparator.reverseOrder()
 						)
 
-						// 4) 4차 정렬 키: store id — 큰 id 우선(동점 안정화용)
-						//    - id가 Long 이므로 메서드 레퍼런스 사용
-						//    - reverseOrder() 으로 내림차순
+						// 4) 4차 정렬 키: store id — 큰 id 우선(동점 안정화용)
+						//    - id가 Long 이므로 메서드 레퍼런스 사용
+						//    - reverseOrder() 으로 내림차순
 						.thenComparing(StoreDTO::getId, Comparator.reverseOrder())
 				)
 
-				// 5) 상위 size 개만 유지
+				// 5) 상위 size 개만 유지
 				.limit(limit)
 
-				// 6) 최종 리스트 생성
+				// 6) 최종 리스트 생성
 				.toList();
 	}
 
@@ -122,7 +124,7 @@ public class StoreManager implements StoreService {
 	public void update(Long storeId, StoreDTO store) {
 
 		if (store.getId() != null && !storeId.equals(store.getId())) {
-			throw new BadRequestException("경로의 storeId 와 본문의 id 가 다릅니다.");
+			throw new BadRequestException("경로의 storeId 와 본문의 id 가 다릅니다.");
 		}
 
 		if (store.getAddressId() != null) {
