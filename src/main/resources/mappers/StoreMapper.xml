@@ -181,17 +181,6 @@
             AND name = #{name}
     </select>
 
-    <select id="selectIdByAddressIdAndName" resultType="long">
-        SELECT
-            id
-
-        FROM store
-
-        WHERE
-            address_id = #{addressId}
-            AND name = #{name}
-    </select>
-
     <select id="existsActive" parameterType="long" resultType="boolean">
         SELECT EXISTS (
             SELECT 1
