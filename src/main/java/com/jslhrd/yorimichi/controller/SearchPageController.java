@@ -1,6 +1,7 @@
 package com.jslhrd.yorimichi.controller;
 
 import com.jslhrd.yorimichi.domain.SearchResultDTO;
+import com.jslhrd.yorimichi.service.CategoryService;
 import com.jslhrd.yorimichi.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class SearchPageController {
 
     private final SearchService searchService;
+    
+    private final CategoryService categoryService;
 
     // /search?q=상점01&type=store&id=2001
     @GetMapping("/search")
@@ -25,7 +28,9 @@ public class SearchPageController {
             Model model
     ) {
         SearchResultDTO result = searchService.search(q, type, id, page, size);
+        var categories = categoryService.findSlice(null, 10).getItems();
         model.addAttribute("result", result);
+        model.addAttribute("categories", categories);
         return "search/list"; // templates/search/list.html
     }
 }
