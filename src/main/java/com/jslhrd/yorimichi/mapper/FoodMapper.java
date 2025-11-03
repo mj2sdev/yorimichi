@@ -29,6 +29,9 @@ public interface FoodMapper {
 	 */
 	Optional<FoodDTO> selectById(@Param("foodId") Long foodId);
 
+	Long selectFoodIdByStoreAndName(@Param("storeId") Long storeId,
+	                                @Param("name") String name);
+
 	boolean existsActive(@Param("foodId") Long foodId);
 
 	/**

@@ -33,6 +33,29 @@ public class ImageManager implements ImageService {
 	}
 
 	@Override
+	public Long getOrCreateByName(ImageDTO image) {
+
+		String url = image.getUrl();
+
+		Long findImageId = imageMapper.selectIdByUrl(url);
+		if (findImageId != null) {
+			return findImageId;
+		}
+
+		try {
+			save(image);
+			return image.getId();
+		} catch (DuplicateKeyException e) {
+			findImageId = imageMapper.selectIdByUrl(url);
+			if (findImageId != null) {
+				return findImageId;
+			}
+
+			throw e;
+		}
+	}
+
+	@Override
 	public long save(ImageDTO image) {
 
 		imageMapper.insert(image);

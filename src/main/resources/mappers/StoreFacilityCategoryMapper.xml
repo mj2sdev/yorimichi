@@ -7,7 +7,7 @@
     <!-- @formatter:off -->
 
     <insert id="insert">
-        INSERT INTO store_facility_category (store_id, facility_category_id)
+        INSERT IGNORE INTO store_facility_category (store_id, facility_category_id)
         VALUES (#{storeId}, #{facilityId})
     </insert>
 

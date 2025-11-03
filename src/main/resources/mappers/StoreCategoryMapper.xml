@@ -16,7 +16,7 @@
     </select>
 
     <insert id="insert">
-        INSERT INTO store_category (store_id, category_id)
+        INSERT IGNORE INTO store_category (store_id, category_id)
         VALUES (#{storeId}, #{categoryId})
     </insert>
 

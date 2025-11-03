@@ -1,6 +1,7 @@
 package com.jslhrd.yorimichi.domain;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 @Setter
+@NoArgsConstructor
 public class ImageDTO {
 
 	/**
@@ -37,4 +39,9 @@ public class ImageDTO {
 	 * 수정일시 (DB 자동 갱신)
 	 */
 	private LocalDateTime updatedAt;
+
+
+	public ImageDTO(String url) {
+		this.url = url;
+	}
 }

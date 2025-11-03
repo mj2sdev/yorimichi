@@ -55,6 +55,17 @@
         WHERE f.id = #{foodId}
     </select>
 
+    <select id="selectFoodIdByStoreAndName" resultType="long">
+        SELECT
+            id
+
+        FROM food
+
+        WHERE
+            store_id = #{storeId}
+            AND name = #{name}
+    </select>
+
     <select id="existsActive" parameterType="long" resultType="boolean">
         SELECT EXISTS (
             SELECT 1

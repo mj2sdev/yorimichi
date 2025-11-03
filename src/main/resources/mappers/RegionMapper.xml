@@ -114,6 +114,16 @@
             AND name = #{emdName}
     </select>
 
+    <select id="existsByEmdId" parameterType="long" resultType="boolean">
+        SELECT EXISTS (
+            SELECT 1
+
+            FROM region_emd
+
+            WHERE id = #{emdId}
+        )
+    </select>
+
     <!-- @formatter:on -->
 
 </mapper>

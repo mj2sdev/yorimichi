@@ -42,4 +42,8 @@ public class CategoryDTO {
 	 * 수정일시 (DB 자동 갱신)
 	 */
 	private LocalDateTime updatedAt;
+
+	public CategoryDTO(String name) {
+		this.name = name;
+	}
 }

@@ -24,6 +24,14 @@
         WHERE id = #{facilityId}
     </select>
 
+    <select id="selectIdByName" parameterType="string" resultType="long">
+        SELECT
+            id
+        FROM facility_category
+
+        WHERE name = #{name}
+    </select>
+
     <select id="existsById" parameterType="long" resultType="boolean">
         SELECT EXISTS (
             SELECT 1

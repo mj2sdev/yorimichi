@@ -50,6 +50,14 @@
         ORDER BY i.created_at
     </select>
 
+    <select id="selectIdByUrl" parameterType="long" resultType="long">
+        SELECT
+            id
+
+        FROM image
+
+        WHERE url = #{url}
+    </select>
 
     <select id="selectById" parameterType="long" resultType="ImageDTO">
         SELECT

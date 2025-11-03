@@ -20,6 +20,8 @@ public interface FacilityCategoryService {
 	 */
 	public List<FacilityCategoryDTO> findAll();
 
+	public Long getOrCreateByName(FacilityCategoryDTO facility);
+
 	/**
 	 * 새로운 카테고리를 생성합니다.
 	 *

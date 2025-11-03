@@ -33,4 +33,6 @@ public interface RegionMapper {
 
 	Optional<RegionEmdDTO> selectByEmdName(@Param("sigunguId") Long sigunguId,
 	                                       @Param("emdName") String emdName);
+
+	boolean existsByEmdId(@Param("emdId") Long emdId);
 }
