@@ -22,8 +22,7 @@
             detail,
             road_address_text,
             jibun_address_text,
-            latitude,
-            longitude,
+            place_id,
             created_at,
             updated_at
 
@@ -32,19 +31,40 @@
         WHERE id = #{addressId}
     </select>
 
-    <insert id="insert" parameterType="AddressDTO">
+    <!--
+        @Param("emdId") Long emdId,
+        @Param("roadAddressText") String roadAddressText,
+        @Param("jibunAddressText") String jibunAddressText,
+        @Param("detail") String detail
+    -->
+
+    <select id="selectIdByNaturalKey" resultType="long">
+        SELECT id
+
+        FROM address
+
+        WHERE
+            emd_id = #{emdId}
+            AND road_address_text = #{roadAddressText}
+            AND jibun_address_text = #{jibunAddressText}
+            AND detail = #{detail}
+    </select>
+
+    <insert id="insert"
+            parameterType="AddressDTO"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
         INSERT INTO address (emd_id,
                              detail,
                              road_address_text,
                              jibun_address_text,
-                             latitude,
-                             longitude)
+                             place_id)
         VALUES (#{emdId},
                 #{detail},
                 #{roadAddressText},
                 #{jibunAddressText},
-                #{latitude},
-                #{longitude})
+                #{placeId})
     </insert>
 
     <update id="update" parameterType="AddressDTO">
@@ -55,8 +75,7 @@
             detail = #{detail},
             road_address_text = #{roadAddressText},
             jibun_address_text = #{jibunAddressText},
-            latitude = #{latitude},
-            longitude = #{longitude}
+            place_id = #{placeId}
 
         WHERE id = #{addressId}
     </update>
