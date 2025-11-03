@@ -41,21 +41,19 @@
           </form>
         </div>
 
-        <!-- 오른쪽 메뉴 -->
-        <div class="col-12 col-md-4">
-          <div class="d-flex justify-content-md-end justify-content-between align-items-center gap-3">
+				<div class="col-12 col-md-4">
+					<div class="d-flex justify-content-md-end justify-content-between align-items-center gap-3">
 
-            <!-- 알림 -->
-            <a class="text-decoration-none text-ymsecondary text-center" data-bs-target="#notification"
-               data-bs-toggle="offcanvas"
-               onclick="notificationOffcanvas.findAll()"
-               sec:authorize="isAuthenticated()">
-              <div class="position-relative" id="notificationCount">
-                <i class="bi bi-lightbulb fs-3"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" v-if="count" v-text="count">99+</span>
-              </div>
-              <div class="small mt-1">알림</div>
-            </a>
+						<a class="text-decoration-none text-ymsecondary text-center" data-bs-target="#notification"
+						   data-bs-toggle="offcanvas"
+						   onclick="notificationOffcanvas.findAll()"
+						   sec:authorize="isAuthenticated()">
+							<div class="position-relative" id="notificationCount">
+								<i class="bi bi-lightbulb fs-3"></i>
+								<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" v-if="count" v-text="count">99+</span>
+							</div>
+							<div class="small mt-1" th:text="#{header.notifications}">알림</div>
+						</a>
 
             <!-- 정류장 -->
             <a class="text-decoration-none text-ymsecondary text-center" th:href="@{/station}">
@@ -82,8 +80,8 @@
             </a>
             <form id="logoutForm" method="post" th:action="@{/logout}"></form>
 
-          </div>
-        </div>
+					</div>
+				</div>
 
       </div>
     </div>

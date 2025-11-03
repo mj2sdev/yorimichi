@@ -3,7 +3,7 @@
 
 <head>
 	<script defer src="/js/user/mypage/myinfo.js"></script>
-	<title> Yorimichi Project </title>
+	<title th:text="#{header.my_info}"> 내 정보 </title>
 </head>
 
 <body>
@@ -13,7 +13,7 @@
 				<div class="col-9">
 					<div class="row mb-3 justify-content-center">
 						<div class="text-center col-8">
-							<button type="button" id="myinfosubmit" class="btn btn-ymprimary">정보 수정</button>
+							<button type="button" id="myinfosubmit" class="btn btn-ymprimary" th:text="#{user.mypage.button.edit_info}">정보 수정</button>
 						</div>
 					</div>
 					<div class="row justify-content-center">
@@ -21,24 +21,23 @@
 							<ul class="list-unstyled">
 								<li>
 									<input type="text" name="nickname" th:value="${user.nickname}" class="form-control text-center"
-										aria-label="Username" aria-describedby="addon-wrapping">
+										   th:aria-label="#{user.mypage.label.username}" aria-describedby="addon-wrapping">
 								</li>
 								<li class="fs-5 bg-ymwhitesmoke form-control" th:text="${user.email}">
-									user.email@example.com
 								</li>
 							</ul>
 						</div>
 					</div>
 					<div class="row my-4 justify-content-center">
 						<div class="col-8 text-center">
-							<img th:src="${user.image != null ? user.image : '/images/default-profile.png'}" class="mx-auto border rounded-circle">
+							<img th:src="${user.image != null ? user.image : '/images/default-profile.png'}" class="mx-auto border rounded-circle" th:alt="#{user.mypage.label.profile_image}">
 						</div>
 					</div>
 					<div class="row justify-content-center">
 						<div class="col-8">
 							<div class="input-group mb-3">
 								<input type="file" name="rawImage" value="" class="form-control" id="inputGroupFile02">
-								<label class="input-group-text" for="inputGroupFile02">업로드</label>
+								<label class="input-group-text" for="inputGroupFile02" th:text="#{user.mypage.label.upload_photo}"></label>
 							</div>
 						</div>
 					</div>
@@ -47,7 +46,7 @@
 							<ul class="list-unstyled">
 								<li>
 									<textarea name="description" th:text="${user.description}" class="form-control text-center"
-										aria-label="Description" aria-describedby="addon-wrapping"></textarea>
+											  th:aria-label="#{user.mypage.label.description}" aria-describedby="addon-wrapping"></textarea>
 								</li>
 							</ul>
 						</div>
@@ -60,72 +59,67 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h1 class="modal-title fs-5" id="privacyLabel">개인 정보 보호 설정</h1>
+					<h1 class="modal-title fs-5" id="privacyLabel" th:text="#{user.mypage.privacy_settings.title}"></h1>
 				</div>
 				<div class="modal-body">
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" role="switch" 
-							id="show-reviews" 
-							name="showReviews" 
-							value="true" 
-							th:checked="${user.showReviews}"
-							form="myinfo-form">
+							   id="show-reviews" 
+							   name="showReviews" 
+							   value="true" 
+							   th:checked="${user.showReviews}"
+							   form="myinfo-form">
 						<input type="hidden" name="showReviews" value="false" form="myinfo-form">
-						<label class="form-check-label" for="show-reviews">
-							리뷰 비공개
+						<label class="form-check-label" for="show-reviews" th:text="#{user.mypage.privacy_settings.reviews}">
 						</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" role="switch" 
-							id="show-likes" 
-							name="showLikes" 
-							value="true" 
-							th:checked="${user.showLikes}"
-							form="myinfo-form">
+							   id="show-likes" 
+							   name="showLikes" 
+							   value="true" 
+							   th:checked="${user.showLikes}"
+							   form="myinfo-form">
 						<input type="hidden" name="showLikes" value="false" form="myinfo-form">
-						<label class="form-check-label" for="show-likes">
-							좋아요 비공개
+						<label class="form-check-label" for="show-likes" th:text="#{user.mypage.privacy_settings.likes}">
 						</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" role="switch" 
-							id="show-bookmarks" 
-							name="showBookmarks" 
-							value="true" 
-							th:checked="${user.showBookmarks}"
-							form="myinfo-form">
+							   id="show-bookmarks" 
+							   name="showBookmarks" 
+							   value="true" 
+							   th:checked="${user.showBookmarks}"
+							   form="myinfo-form">
 						<input type="hidden" name="showBookmarks" value="false" form="myinfo-form">
-						<label class="form-check-label" for="show-bookmarks">
-							즐겨찾기 비공개
+						<label class="form-check-label" for="show-bookmarks" th:text="#{user.mypage.privacy_settings.bookmarks}">
 						</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" role="switch" 
-							id="show-followees" 
-							name="showFollowees" 
-							value="true" 
-							th:checked="${user.showFollowees}"
-							form="myinfo-form">
+							   id="show-followees" 
+							   name="showFollowees" 
+							   value="true" 
+							   th:checked="${user.showFollowees}"
+							   form="myinfo-form">
 						<input type="hidden" name="showFollowees" value="false" form="myinfo-form">
-						<label class="form-check-label" for="show-followees">
-							팔로우 비공개
+						<label class="form-check-label" for="show-followees" th:text="#{user.mypage.privacy_settings.followees}">
 						</label>
 					</div>
 					<div class="form-check form-switch">
 						<input class="form-check-input" type="checkbox" role="switch" 
-							id="show-followers" 
-							name="showFollowers" 
-							value="1" 
-							th:checked="${user.showFollowers}"
-							form="myinfo-form">
+							   id="show-followers" 
+							   name="showFollowers" 
+							   value="1" 
+							   th:checked="${user.showFollowers}"
+							   form="myinfo-form">
 						<input type="hidden" name="showFollowers" value="0" form="myinfo-form">
-						<label class="form-check-label" for="show-followers">
-							팔로워 비공개
+						<label class="form-check-label" for="show-followers" th:text="#{user.mypage.privacy_settings.followers}">
 						</label>
 					</div>
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-primary" data-bs-dismiss="modal">창 닫기</button>
+					<button type="button" class="btn btn-primary" data-bs-dismiss="modal" th:text="#{user.mypage.button.close}"></button>
 				</div>
 			</div>
 		</div>
@@ -138,23 +132,22 @@
 					<div class="nav nav-tabs" id="nav-tab-main" role="tablist">
 						<button class="nav-link active" id="nav-review-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-review" type="button" role="tab"
-							aria-controls="nav-review" aria-selected="true">
-							리뷰
+							aria-controls="nav-review" aria-selected="true"
+							th:text="#{user.mypage.tab.reviews}">
 						</button>
 						<button class="nav-link" id="nav-like-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-like" type="button" role="tab" aria-controls="nav-like"
-							aria-selected="false">
-							좋아요
+							aria-selected="false" th:text="#{user.mypage.tab.likes}">
 						</button>
 						<button class="nav-link" id="nav-bookmark-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-bookmark" type="button" role="tab"
-							aria-controls="nav-bookmark" aria-selected="false">
-							즐겨찾기
+							aria-controls="nav-bookmark" aria-selected="false"
+							th:text="#{user.mypage.tab.bookmarks}">
 						</button>
 						<button type="button" class="btn text-ymprimary" data-bs-toggle="modal"
 							data-bs-target="#privacy">
 							<i class="bi bi-key-fill" style="font-size: 1em; color: gold;">
-								공개설정
+								<span th:text="#{user.mypage.tab.privacy_settings}"></span>
 							</i>
 						</button>
 					</div>
@@ -165,7 +158,7 @@
 						<th:block th:each="review : ${user.reviews}">
 							<div class="row bg-ymwhite mb-3">
 								<div class="col-3 border">
-									<img th:if="${!#lists.isEmpty(review.images)}" th:src="${review.images[0]?.url}" style="height:100%; width:100%;">
+									<img th:if="${!#lists.isEmpty(review.images)}" th:src="${review.images[0]?.url}" style="height:100%; width:100%;" th:alt="#{store.list.item.image}">
 								</div>
 								<div class="col-9 border">
 									<div class="row justify-content-between align-items-center">
@@ -182,24 +175,25 @@
 										</div>
 										<div class="col-auto">
 											<a th:href="@{'/store/detail/'+${review.storeId}}"
-												class="text-ymprimary text-decoration-none">
-												가게보기
+												class="text-ymprimary text-decoration-none"
+												th:text="#{user.detail.button.view_store}">
 											</a>
 										</div>
 										<div class="col-auto" th:text="${#temporals.format(review.createdAt, 'yyyy.MM.dd')}">
-											2025.09.15
 										</div>
 										<div class="col-auto">
 											<button type="button" class="btn btn-sm p-0"
-												data-bs-toggle="modal" data-bs-target="#reviewwriting"
-												th:data-review-id="${review.id}"
-												th:data-review-content="${review.content}">
+													data-bs-toggle="modal" data-bs-target="#reviewwriting"
+													th:data-review-id="${review.id}"
+													th:data-review-content="${review.content}"
+													th:aria-label="#{common.edit}">
 												<i class="bi bi-pencil-fill text-ymprimary" style="font-size: 1em;"></i>
 											</button>
 										</div>
 										<div class="col-auto">
 											<button type="button" class="delete-review-btn btn btn-sm p-0" 
-											th:data-review-id="${review.id}">
+													th:data-review-id="${review.id}"
+													th:aria-label="#{common.delete}">
 												<i class="bi bi-trash text-ymprimary" style="font-size: 1em;"></i>
 											</button>
 										</div>
@@ -208,7 +202,6 @@
 										th:attr="data-bs-target='#menu' + ${review.id}">
 										<div class="row mt-2">
 											<div class="col" th:text="${review.content}">
-												리뷰 본문 내용...
 											</div>
 										</div>
 									</div>
@@ -234,10 +227,10 @@
 								</div>
 								<div class="col">
 									<a th:href="@{'/store/detail/'+${like.id}}" class="btn">
-										<span th:text="${like.name}">가게명</span>
-										<span th:text="${like.address}">위치</span>
+										<span th:text="${like.name} ?: #{index.featured.store.name}"></span>
+										<span th:text="${like.address} ?: #{common.location}"></span>
 										<th:block th:each="category: ${like.categories}">
-											<span th:text="${category}">#태그</span>
+											<span th:text="${category}"></span>
 										</th:block>
 									</a>
 								</div>
@@ -255,10 +248,10 @@
 								</div>
 								<div class="col">
 									<a th:href="@{'/store/detail/'+${bookmark.id}}" class="btn">
-										<span th:text="${bookmark.name}">가게명</span>
-										<span th:text="${bookmark.address}">위치</span>
+										<span th:text="${bookmark.name} ?: #{index.featured.store.name}"></span>
+										<span th:text="${bookmark.address} ?: #{common.location}"></span>
 										<th:block th:each="category: ${bookmark.categories}">
-											<span th:text="${category}">#태그</span>
+											<span th:text="${category}"></span>
 										</th:block>
 									</a>
 								</div>
@@ -272,18 +265,15 @@
 					<div class="nav nav-tabs" id="nav-tab-side" role="tablist">
 						<button class="nav-link active" id="nav-follow-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-follow" type="button" role="tab" aria-controls="nav-follow"
-							aria-selected="true">
-							팔로우
+							aria-selected="true" th:text="#{common.follow}">
 						</button>
 						<button class="nav-link" id="nav-follower-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-follower" type="button" role="tab" aria-controls="nav-follower"
-							aria-selected="false">
-							팔로워
+							aria-selected="false" th:text="#{common.follower}">
 						</button>
 						<button class="nav-link" id="nav-block-tab" data-bs-toggle="tab"
 							data-bs-target="#nav-block" type="button" role="tab" aria-controls="nav-block"
-							aria-selected="false">
-							차단목록
+							aria-selected="false" th:text="#{user.mypage.tab.blocks}">
 						</button>
 					</div>
 				</nav>
@@ -298,8 +288,7 @@
 									</button>
 								</div>
 								<div class="col">
-									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname}" class="btn d-block">
-										닉네임
+									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname} ?: #{user.signup.nickname}" class="btn d-block">
 									</a>
 								</div>
 							</div>
@@ -313,8 +302,7 @@
 									<i class="bi bi-toggle-on" style="font-size: 1em; color:gold;"></i>
 								</div>
 								<div class="col">
-									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname}" class="btn d-block">
-										닉네임
+									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname} ?: #{user.signup.nickname}" class="btn d-block">
 									</a>
 								</div>
 							</div>
@@ -325,13 +313,13 @@
 						<th:block th:each="person : ${user.blocks}">
 							<div class="row">
 								<div class="col-2">
-									<button type="button" class="btn block-switch-btn" th:data-user-id="${person.id}">
+									<button type="button" class="btn block-switch-btn" th:data-user-id="${person.id}"
+											th:aria-label="#{user.mypage.button.toggle_block}">
 										<i class="bi bi-toggle-on" style="font-size: 1em; color:red;"></i>
 									</button>
 								</div>
 								<div class="col">
-									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname}" class="btn d-block">
-										닉네임
+									<a th:href="@{'/user/detail/'+${person.id}}" th:text="${person.nickname} ?: #{user.signup.nickname}" class="btn d-block">
 									</a>
 								</div>
 							</div>
