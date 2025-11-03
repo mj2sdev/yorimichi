@@ -1,4 +1,4 @@
-package com.jslhrd.yorimichi.gemini.dto.request;
+package com.jslhrd.yorimichi.gemini.store.dto.request;
 
 public record RegionStoreRequest(
 		Long sidoId,

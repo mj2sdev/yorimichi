@@ -1,14 +1,14 @@
 <!doctype html>
-<html data-bs-theme="auto" lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html data-bs-theme="auto" lang="ja" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="utf-8"/>
-  <title>지역별 맛집 수집 (Gemini)</title>
+  <title>地域別グルメ収集（Gemini）</title>
 
-  <!-- CSRF (웹 체인 페이지용) -->
+  <!-- CSRF (Web チェーン用) -->
   <meta name="_csrf" th:content="${_csrf.token}">
   <meta name="_csrf_header" th:content="${_csrf.headerName}">
 
-  <!-- Maps Embed key (지도 미리보기) -->
+  <!-- Maps Embed key (地図プレビュー) -->
   <meta name="gmaps-embed-key" th:content="${mapsEmbedKey}" th:if="${mapsEmbedKey}">
 
   <!-- Bootstrap -->
@@ -52,46 +52,46 @@
 </head>
 <body class="bg-body-tertiary">
 <div class="container py-4">
-  <h4 class="mb-4">지역 선택</h4>
+  <h4 class="mb-4">地域選択</h4>
 
   <div class="row g-3">
-    <!-- 시도 -->
+    <!-- 都道府県 -->
     <div class="col-12 col-md-4">
-      <label class="form-label" for="sidoSelect">시도 (필수)</label>
+      <label class="form-label" for="sidoSelect">都道府県（必須）</label>
       <select class="form-select" id="sidoSelect" required>
-        <option value="">시도를 선택하세요</option>
-        <option th:each="sido : ${sidos}" th:text="${sido.name}" th:value="${sido.id}">서울특별시</option>
+        <option value="">都道府県を選択してください</option>
+        <option th:each="sido : ${sidos}" th:text="${sido.name}" th:value="${sido.id}">東京都</option>
       </select>
     </div>
 
-    <!-- 시군구 -->
+    <!-- 市・郡・区 -->
     <div class="col-12 col-md-4">
-      <label class="form-label" for="sigunguSelect">시군구 (선택)</label>
+      <label class="form-label" for="sigunguSelect">市・郡・区（任意）</label>
       <select class="form-select" id="sigunguSelect">
-        <option value="">시군구를 선택하세요</option>
+        <option value="">市・郡・区を選択してください</option>
       </select>
 
       <template id="sigunguOptions">
         <option th:attr="data-sido-id=${sigungu.sidoId}"
                 th:each="sigungu : ${sigungus}"
                 th:text="${sigungu.name}"
-                th:value="${sigungu.id}">유성구
+                th:value="${sigungu.id}">ユソング
         </option>
       </template>
     </div>
 
-    <!-- 읍면동 -->
+    <!-- 邑・面・洞 -->
     <div class="col-12 col-md-4">
-      <label class="form-label" for="emdSelect">읍면동 (선택)</label>
+      <label class="form-label" for="emdSelect">邑・面・洞（任意）</label>
       <select class="form-select" id="emdSelect">
-        <option value="">읍면동을 선택하세요</option>
+        <option value="">邑・面・洞を選択してください</option>
       </select>
 
       <template id="emdOptions">
         <option th:attr="data-sigungu-id=${emd.sigunguId}"
                 th:each="emd : ${emds}"
                 th:text="${emd.name}"
-                th:value="${emd.id}">봉명동
+                th:value="${emd.id}">鳳鳴洞
         </option>
       </template>
     </div>
@@ -99,25 +99,26 @@
 
   <div class="row g-3 align-items-end mt-1">
     <div class="col-6 col-md-3">
-      <label class="form-label" for="countInput">개수 (1~20)</label>
+      <label class="form-label" for="countInput">件数（1〜20）</label>
       <input class="form-control" id="countInput" max="20" min="1" type="number" value="10">
     </div>
     <div class="col-6 col-md-3 d-grid">
-      <button class="btn btn-primary" id="queryButton">조회</button>
+      <button class="btn btn-primary" id="queryButton">検索</button>
     </div>
   </div>
 
   <hr class="my-4">
 
-  <!-- 결과 목록 테이블 -->
+  <!-- 結果テーブル -->
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
       <div class="d-flex align-items-center gap-2">
-        <span>결과</span>
+        <span>結果</span>
         <span class="badge text-bg-secondary" id="resultCountBadge">0</span>
       </div>
       <div class="d-flex gap-2">
-        <button class="btn btn-outline-secondary btn-sm" disabled id="buttonOpenSelectedDetails">선택 상세보기</button>
+        <button class="btn btn-outline-secondary btn-sm" disabled id="buttonOpenSelectedDetails">選択した項目の詳細
+        </button>
       </div>
     </div>
 
@@ -127,22 +128,22 @@
         <tr>
           <th style="width:48px"><input disabled id="checkboxSelectAll" type="checkbox"></th>
           <th style="width:56px">#</th>
-          <th>가게명</th>
-          <th>시도</th>
-          <th>시군구</th>
-          <th>읍면동</th>
-          <th class="text-center" style="width:340px">지도</th>
+          <th>店名</th>
+          <th>都道府県</th>
+          <th>市・郡・区</th>
+          <th>邑・面・洞</th>
+          <th class="text-center" style="width:340px">地図</th>
         </tr>
         </thead>
         <tbody aria-live="polite" id="resultTableBody">
         <tr class="text-center text-secondary" id="emptyResultRow">
-          <td class="py-5" colspan="7">조회 결과가 없습니다.</td>
+          <td class="py-5" colspan="7">結果がありません。</td>
         </tr>
         <tr class="text-center" id="loadingResultRow" style="display:none;">
           <td class="py-5" colspan="7">
             <div class="d-flex align-items-center justify-content-center gap-2">
               <div aria-hidden="true" class="spinner-border" role="status"></div>
-              <strong>로딩중…</strong>
+              <strong>読み込み中…</strong>
             </div>
           </td>
         </tr>
@@ -152,35 +153,35 @@
   </div>
 </div>
 
-<!-- 상세 모달 -->
+<!-- 詳細モーダル -->
 <div aria-hidden="true" class="modal fade" id="storeDetailsModal" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">가게 상세</h5>
-        <button aria-label="닫기" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+        <h5 class="modal-title">店舗詳細</h5>
+        <button aria-label="閉じる" class="btn-close" data-bs-dismiss="modal" type="button"></button>
       </div>
       <div class="modal-body" id="storeDetailsBody"><!-- filled by JS --></div>
       <div class="modal-footer">
-        <button class="btn btn-primary" id="buttonSaveDetails">DB에 저장</button>
-        <button class="btn btn-secondary" data-bs-dismiss="modal" id="buttonCloseDetails">닫기</button>
+        <button class="btn btn-primary" id="buttonSaveDetails">DBに保存</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal" id="buttonCloseDetails">閉じる</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- 저장 결과 모달 -->
+<!-- 保存結果モーダル -->
 <div aria-hidden="true" class="modal fade" id="saveResultModal" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">DB 저장 결과</h5>
-        <button aria-label="닫기" class="btn-close" data-bs-dismiss="modal" type="button"></button>
+        <h5 class="modal-title">DB 保存結果</h5>
+        <button aria-label="閉じる" class="btn-close" data-bs-dismiss="modal" type="button"></button>
       </div>
       <div class="modal-body">
         <div class="d-flex align-items-center gap-2 mb-2">
-          <span class="badge text-bg-success" id="badgeSavedCount">0 저장</span>
-          <span class="badge text-bg-warning text-dark" id="badgeUnresolvedCount">0 미해결</span>
+          <span class="badge text-bg-success" id="badgeSavedCount">0 保存</span>
+          <span class="badge text-bg-warning text-dark" id="badgeUnresolvedCount">0 未解決</span>
         </div>
         <div class="mb-3 small text-muted" id="saveResultSummary"></div>
 
@@ -188,9 +189,9 @@
           <table class="table table-sm align-middle mb-0">
             <thead class="table-light">
             <tr>
-              <th style="width:80px">인덱스</th>
-              <th>가게명</th>
-              <th>사유</th>
+              <th style="width:80px">インデックス</th>
+              <th>店名</th>
+              <th>理由</th>
             </tr>
             </thead>
             <tbody id="saveUnresolvedTbody"></tbody>
@@ -198,7 +199,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+        <button class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
       </div>
     </div>
   </div>
@@ -241,7 +242,7 @@
     const saveUnresolvedWrapper = document.getElementById('saveUnresolvedWrapper');
     const saveUnresolvedTbody = document.getElementById('saveUnresolvedTbody');
 
-    // 현재 모달에 표시된 상세(1건 또는 N건)를 보관 → 저장 버튼에서 보냄
+    // 現在モーダルに表示中の詳細（1件または N件）を保持 → 保存時に送信
     let lastRenderedDetails = [];
 
     // CSRF
@@ -301,7 +302,7 @@
 
     function setResultsLoading(loading) {
         queryButtonElement.dataset.originalText ??= queryButtonElement.textContent;
-        queryButtonElement.textContent = loading ? '조회중…' : queryButtonElement.dataset.originalText;
+        queryButtonElement.textContent = loading ? '検索中…' : queryButtonElement.dataset.originalText;
         queryButtonElement.disabled = loading;
         checkboxSelectAllElement.disabled = true;
 
@@ -315,7 +316,7 @@
         }
     }
 
-    function setDetailsLoading(loading, label = '불러오는 중…') {
+    function setDetailsLoading(loading, label = '読み込み中…') {
         if (!storeDetailsBodyElement) return;
         if (loading) {
             storeDetailsBodyElement.innerHTML =
@@ -327,14 +328,14 @@
     }
 
     // -----------------------------
-    // Selects (cascade)
+    // Selects (カスケード)
     // -----------------------------
     const allSigunguOptionElements = [...sigunguOptionsTemplate.content.querySelectorAll('option')];
     const allEmdOptionElements = [...emdOptionsTemplate.content.querySelectorAll('option')];
 
     function initAllSelects() {
-        setSelectOptions(sigunguSelectElement, allSigunguOptionElements, '시군구를 선택하세요');
-        setSelectOptions(emdSelectElement, allEmdOptionElements, '읍면동을 선택하세요');
+        setSelectOptions(sigunguSelectElement, allSigunguOptionElements, '市・郡・区を選択してください');
+        setSelectOptions(emdSelectElement, allEmdOptionElements, '邑・面・洞を選択してください');
     }
 
     initAllSelects();
@@ -345,7 +346,7 @@
         const filteredSigungus = selectedSidoId
             ? allSigunguOptionElements.filter(o => String(o.dataset.sidoId) === String(selectedSidoId))
             : allSigunguOptionElements;
-        setSelectOptions(sigunguSelectElement, filteredSigungus, '시군구를 선택하세요');
+        setSelectOptions(sigunguSelectElement, filteredSigungus, '市・郡・区を選択してください');
 
         const filteredEmds = selectedSidoId
             ? allEmdOptionElements.filter(o => {
@@ -353,7 +354,7 @@
                 return sigOpt && String(sigOpt.dataset.sidoId) === String(selectedSidoId);
             })
             : allEmdOptionElements;
-        setSelectOptions(emdSelectElement, filteredEmds, '읍면동을 선택하세요');
+        setSelectOptions(emdSelectElement, filteredEmds, '邑・面・洞を選択してください');
     });
 
     sigunguSelectElement.addEventListener('change', () => {
@@ -367,16 +368,16 @@
                     return sigOpt && String(sigOpt.dataset.sidoId) === String(sidoSelectElement.value);
                 })
                 : allEmdOptionElements);
-        setSelectOptions(emdSelectElement, filteredEmds, '읍면동을 선택하세요');
+        setSelectOptions(emdSelectElement, filteredEmds, '邑・面・洞を選択してください');
     });
 
     // -----------------------------
-    // Maps Embed (엄격 place-id 감지 + 안전 검색 폴백)
+    // Maps Embed（厳格な place-id 検出 + 安全検索フォールバック）
     // -----------------------------
     const MAP_DEBUG = true;
     const PLACE_ID_CORE_REGEX = /^ChIJ[0-9A-Za-z_-]{10,}$/;
     const MIN_Q_CHARS = 4;
-    const BAD_Q_SET = new Set(['대한민국', '한국', '코리아', 'Korea', 'South Korea']);
+    const BAD_Q_SET = new Set(['大韓民国', '韓国', 'コリア', 'Korea', 'South Korea']);
 
     function normalizeWhitespace(text) {
         return (text || '').replace(/[\u200B-\u200D\uFEFF]/g, '').replace(/\s+/g, ' ').trim();
@@ -396,7 +397,7 @@
             sanitizeQueryPart(emdName),
             sanitizeQueryPart(sigunguName),
             sanitizeQueryPart(sidoName),
-            '대한민국'
+            '大韓民国'
         ].filter(Boolean);
 
         let q = normalizeWhitespace(parts.join(' '));
@@ -409,7 +410,7 @@
     function buildEmbedFromPlaceOrSearch({placeId, storeName, sidoName, sigunguName, emdName}) {
         if (!googleMapsEmbedApiKey) {
             MAP_DEBUG && console.warn('[maps] API key missing');
-            return {src: null, reason: 'API 키 없음', qText: ''};
+            return {src: null, reason: 'APIキーなし', qText: ''};
         }
 
         let core = (placeId || '').trim();
@@ -419,7 +420,7 @@
                 'https://www.google.com/maps/embed/v1/place'
                 + `?key=${encodeURIComponent(googleMapsEmbedApiKey)}`
                 + `&q=place_id:${encodeURIComponent(core)}`
-                + '&zoom=16&language=ko&region=KR';
+                + '&zoom=16&language=ja&region=KR';
             MAP_DEBUG && console.debug('[maps] place mode', {placeId: core, src});
             return {src, reason: null, qText: ''};
         }
@@ -429,35 +430,35 @@
             MAP_DEBUG && console.warn('[maps] empty/invalid qText → fallback link', {
                 storeName, sidoName, sigunguName, emdName
             });
-            return {src: null, reason: '유효한 검색어 없음', qText: ''};
+            return {src: null, reason: '有効な検索語なし', qText: ''};
         }
 
         const src =
             'https://www.google.com/maps/embed/v1/search'
             + `?key=${encodeURIComponent(googleMapsEmbedApiKey)}`
             + `&q=${encodeURIComponent(qText)}`
-            + '&zoom=16&language=ko&region=KR';
+            + '&zoom=16&language=ja&region=KR';
         MAP_DEBUG && console.debug('[maps] search mode', {qText, src});
         return {src, reason: null, qText};
     }
 
     function mapFallbackHtml(reason, qText) {
-        const label = reason ? `임베드 불가: ${reason}` : '임베드 불가';
+        const label = reason ? `埋め込み不可: ${reason}` : '埋め込み不可';
         const href = qText
             ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(qText)}&region=KR`
             : `https://www.google.com/maps/@?api=1&map_action=map&region=KR`;
         return `<a class="map-fallback text-decoration-none" href="${href}" target="_blank" rel="noopener"
-              title="${escapeHtml(label)}">${escapeHtml(label)} (새 창)</a>`;
+              title="${escapeHtml(label)}">${escapeHtml(label)}（新しいウィンドウ）</a>`;
     }
 
     // -----------------------------
-    // API (백엔드)
+    // API（バックエンド）
     // -----------------------------
     async function apiSearchStores(payload) {
         return await postJson('/api/admin/places/search', payload);
     }
 
-    // 200 → JSON, 404 → null, 그 외 → throw
+    // 200 → JSON, 404 → null, その他 → throw
     async function apiDetail(regionLabel, storeName, placeId) {
         const headers = {
             'Content-Type': 'application/json',
@@ -488,7 +489,7 @@
     }
 
     // -----------------------------
-    // 상세 렌더(모달)
+    // 詳細レンダー（モーダル）
     // -----------------------------
     function renderStoreDetails(details) {
         const list = Array.isArray(details) ? details : (details ? [details] : []);
@@ -496,7 +497,7 @@
 
         if (!storeDetailsBodyElement) return;
         if (!list.length) {
-            storeDetailsBodyElement.innerHTML = `<div class="text-secondary py-2">상세정보가 없습니다.</div>`;
+            storeDetailsBodyElement.innerHTML = `<div class="text-secondary py-2">詳細情報がありません。</div>`;
             return;
         }
 
@@ -520,11 +521,11 @@
 
             const infoBlock = `
         <div class="mb-2">
-          ${d.description ? `<div class="mb-1"><span class="badge text-bg-info">소개</span> <span class="pre-wrap">${escapeHtml(d.description)}</span></div>` : ''}
-          ${addrDetail ? `<div class="mb-1"><span class="badge text-bg-secondary">상세주소</span> <span class="pre-wrap">${escapeHtml(addrDetail)}</span></div>` : ''}
-          ${addrRoad ? `<div class="mb-1"><span class="badge text-bg-light">도로명</span> <span class="pre-wrap">${escapeHtml(addrRoad)}</span></div>` : ''}
-          ${addrJibun ? `<div class="mb-1"><span class="badge text-bg-light">지번</span> <span class="pre-wrap">${escapeHtml(addrJibun)}</span></div>` : ''}
-          ${d.phone ? `<div class="mb-1"><span class="badge text-bg-secondary">전화</span> <code>${escapeHtml(d.phone)}</code></div>` : ''}
+          ${d.description ? `<div class="mb-1"><span class="badge text-bg-info">紹介</span> <span class="pre-wrap">${escapeHtml(d.description)}</span></div>` : ''}
+          ${addrDetail ? `<div class="mb-1"><span class="badge text-bg-secondary">詳細住所</span> <span class="pre-wrap">${escapeHtml(addrDetail)}</span></div>` : ''}
+          ${addrRoad ? `<div class="mb-1"><span class="badge text-bg-light">道路名住所</span> <span class="pre-wrap">${escapeHtml(addrRoad)}</span></div>` : ''}
+          ${addrJibun ? `<div class="mb-1"><span class="badge text-bg-light">地番住所</span> <span class="pre-wrap">${escapeHtml(addrJibun)}</span></div>` : ''}
+          ${d.phone ? `<div class="mb-1"><span class="badge text-bg-secondary">電話</span> <code>${escapeHtml(d.phone)}</code></div>` : ''}
         </div>`;
 
             return `
@@ -532,13 +533,13 @@
           <h6 class="mb-1">${escapeHtml(d.name || '')}</h6>
           <div class="text-muted small mb-2">${escapeHtml(regionFromResponse)}</div>
           ${infoBlock}
-          ${categoriesHtml ? `<div class="mb-2">카테고리: ${categoriesHtml}</div>` : ''}
-          ${facilitiesHtml ? `<div class="mb-2">시설: ${facilitiesHtml}</div>` : ''}
+          ${categoriesHtml ? `<div class="mb-2">カテゴリ: ${categoriesHtml}</div>` : ''}
+          ${facilitiesHtml ? `<div class="mb-2">設備: ${facilitiesHtml}</div>` : ''}
           ${imagesHtml ? `<div class="mb-2 d-flex flex-wrap">${imagesHtml}</div>` : ''}
           ${(d.menus && d.menus.length) ? `
             <div class="table-responsive">
               <table class="table table-sm">
-                <thead class="table-light"><tr><th>메뉴</th><th class="text-end" style="width:120px">가격</th><th>설명</th></tr></thead>
+                <thead class="table-light"><tr><th>メニュー</th><th class="text-end" style="width:120px">価格</th><th>説明</th></tr></thead>
                 <tbody>${menusRowsHtml}</tbody>
               </table>
             </div>` : ''}
@@ -548,7 +549,7 @@
     }
 
     // -----------------------------
-    // 조회 결과 테이블 렌더
+    // 結果テーブルレンダー
     // -----------------------------
     function refreshSelectedDetailsButtonState() {
         buttonOpenSelectedDetailsElement.disabled = !document.querySelector('.row-select-checkbox:checked');
@@ -564,17 +565,17 @@
                 const placeId = tr.dataset.placeId || '';
                 const regionLabel = buildRegionLabelFromCurrentSelects();
 
-                setDetailsLoading(true, '상세 불러오는 중…');
+                setDetailsLoading(true, '詳細を読み込み中…');
                 const originalText = buttonElement.textContent;
                 buttonElement.disabled = true;
-                buttonElement.textContent = '불러오는 중…';
+                buttonElement.textContent = '読み込み中…';
 
                 try {
                     const detail = await apiDetail(regionLabel, storeName, placeId); // 200 JSON / 404 null
                     renderStoreDetails(detail ? [detail] : []);
                     storeDetailsModal?.show();
                 } catch (err) {
-                    storeDetailsBodyElement.innerHTML = `<div class="text-danger">상세 조회 실패: ${escapeHtml(err.message || '알 수 없는 오류')}</div>`;
+                    storeDetailsBodyElement.innerHTML = `<div class="text-danger">詳細取得に失敗しました: ${escapeHtml(err.message || '不明なエラー')}</div>`;
                     storeDetailsModal?.show();
                 } finally {
                     buttonElement.textContent = originalText;
@@ -614,7 +615,7 @@
         <td class="text-secondary">${index + 1}</td>
         <td class="cell-name">
           <strong>${escapeHtml(storeName)}</strong>
-          <button type="button" class="btn btn-link btn-sm px-1 py-0 ms-1 text-decoration-none buttonRowDetail">상세</button>
+          <button type="button" class="btn btn-link btn-sm px-1 py-0 ms-1 text-decoration-none buttonRowDetail">詳細</button>
         </td>
         <td>${escapeHtml(sidoName)}</td>
         <td>${escapeHtml(sigunguName)}</td>
@@ -622,7 +623,7 @@
         <td class="text-center">
           ${
                 embedSrc
-                    ? `<iframe class="map-embed" title="지도 미리보기"
+                    ? `<iframe class="map-embed" title="地図プレビュー"
                    loading="lazy" allowfullscreen
                    referrerpolicy="no-referrer-when-downgrade"
                    src="${embedSrc}"></iframe>`
@@ -640,7 +641,7 @@
     }
 
     // -----------------------------
-    // 선택 상세보기(다중)
+    // 選択した項目の詳細（複数）
     // -----------------------------
     function collectCheckedRows() {
         const rows = [];
@@ -654,15 +655,15 @@
     buttonOpenSelectedDetailsElement.addEventListener('click', async () => {
         const checkedRows = collectCheckedRows();
         if (!checkedRows.length) {
-            alert('상세를 볼 항목을 선택하세요.');
+            alert('詳細を表示する項目を選択してください。');
             return;
         }
 
         const originalText = buttonOpenSelectedDetailsElement.textContent;
         buttonOpenSelectedDetailsElement.disabled = true;
-        buttonOpenSelectedDetailsElement.textContent = '불러오는 중…';
+        buttonOpenSelectedDetailsElement.textContent = '読み込み中…';
 
-        setDetailsLoading(true, '선택 항목 상세 불러오는 중…');
+        setDetailsLoading(true, '選択項目の詳細を読み込み中…');
         storeDetailsModal?.show();
 
         const regionLabel = buildRegionLabelFromCurrentSelects();
@@ -676,7 +677,7 @@
             const list = (await Promise.all(promises)).filter(Boolean);
             renderStoreDetails(list);
         } catch (err) {
-            storeDetailsBodyElement.innerHTML = `<div class="text-danger">상세 조회 실패: ${escapeHtml(err.message || '알 수 없는 오류')}</div>`;
+            storeDetailsBodyElement.innerHTML = `<div class="text-danger">詳細取得に失敗しました: ${escapeHtml(err.message || '不明なエラー')}</div>`;
         } finally {
             buttonOpenSelectedDetailsElement.textContent = originalText;
             buttonOpenSelectedDetailsElement.disabled = false;
@@ -694,7 +695,7 @@
     });
 
     // -----------------------------
-    // 지역 라벨 헬퍼
+    // 地域ラベル ヘルパー
     // -----------------------------
     function getSelectedText(selectElement) {
         const opt = selectElement.options[selectElement.selectedIndex];
@@ -710,7 +711,7 @@
     }
 
     // -----------------------------
-    // 조회
+    // 検索
     // -----------------------------
     queryButtonElement.addEventListener('click', async () => {
         const sidoId = sidoSelectElement.value;
@@ -718,7 +719,7 @@
         const emdId = emdSelectElement.value || null;
 
         if (!sidoId) {
-            alert('시도를 선택하세요.');
+            alert('都道府県を選択してください。');
             return;
         }
 
@@ -737,16 +738,16 @@
             const rows = await apiSearchStores(payload);
             renderResultRows(rows);
         } catch (err) {
-            if (String(err.message || '').startsWith('401')) alert('인증이 필요합니다 (401).');
-            else if (String(err.message || '').startsWith('403')) alert('접근이 거부되었습니다 (403).');
-            else alert('요청 실패: ' + (err.message || '알 수 없는 오류'));
+            if (String(err.message || '').startsWith('401')) alert('認証が必要です（401）。');
+            else if (String(err.message || '').startsWith('403')) alert('アクセスが拒否されました（403）。');
+            else alert('リクエスト失敗: ' + (err.message || '不明なエラー'));
         } finally {
             setResultsLoading(false);
         }
     });
 
     // -----------------------------
-    // DB 저장(모달 상세들 배치 저장) → 저장 결과 모달 표시
+    // DB 保存（モーダルの詳細をバッチ保存）→ 結果モーダル表示
     // -----------------------------
     buttonSaveDetailsElement.addEventListener('click', async () => {
         const sidoId = sidoSelectElement.value;
@@ -754,11 +755,11 @@
         const emdId = emdSelectElement.value || null;
 
         if (!sidoId) {
-            alert('시도를 먼저 선택하세요.');
+            alert('まず都道府県を選択してください。');
             return;
         }
         if (!lastRenderedDetails || !lastRenderedDetails.length) {
-            alert('저장할 상세정보가 없습니다.');
+            alert('保存する詳細情報がありません。');
             return;
         }
 
@@ -771,7 +772,7 @@
 
         const originalText = buttonSaveDetailsElement.textContent;
         buttonSaveDetailsElement.disabled = true;
-        buttonSaveDetailsElement.textContent = '저장중…';
+        buttonSaveDetailsElement.textContent = '保存中…';
 
         try {
             const res = await apiSaveDetailsBatch(payload);
@@ -780,7 +781,7 @@
         } catch (err) {
             renderSaveResultModal({
                 savedCount: 0,
-                unresolved: [{index: -1, storeName: '', reason: String(err.message || '오류')}]
+                unresolved: [{index: -1, storeName: '', reason: String(err.message || 'エラー')}]
             });
             saveResultModal?.show();
         } finally {
@@ -793,17 +794,17 @@
         const saved = Number(res?.savedCount || 0);
         const unresolved = Array.isArray(res?.unresolved) ? res.unresolved : [];
 
-        badgeSavedCount.textContent = `${saved} 저장`;
-        badgeUnresolvedCount.textContent = `${unresolved.length} 미해결`;
+        badgeSavedCount.textContent = `${saved} 保存`;
+        badgeUnresolvedCount.textContent = `${unresolved.length} 未解決`;
 
         if (unresolved.length === 0) {
-            saveResultSummary.textContent = `총 ${saved}건 저장 완료. 미해결 항목이 없습니다.`;
+            saveResultSummary.textContent = `合計 ${saved} 件を保存しました。未解決項目はありません。`;
             saveUnresolvedWrapper.style.display = 'none';
             saveUnresolvedTbody.innerHTML = '';
             return;
         }
 
-        saveResultSummary.textContent = `총 ${saved}건 저장, 미해결 ${unresolved.length}건(아래 사유 참조).`;
+        saveResultSummary.textContent = `合計 ${saved} 件を保存、未解決 ${unresolved.length} 件（下記理由を参照）。`;
         saveUnresolvedWrapper.style.display = '';
         saveUnresolvedTbody.innerHTML = unresolved.map(u => `
       <tr>

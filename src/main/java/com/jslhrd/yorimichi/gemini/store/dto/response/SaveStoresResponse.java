@@ -1,4 +1,4 @@
-package com.jslhrd.yorimichi.gemini.dto.response;
+package com.jslhrd.yorimichi.gemini.store.dto.response;
 
 import java.util.List;
 

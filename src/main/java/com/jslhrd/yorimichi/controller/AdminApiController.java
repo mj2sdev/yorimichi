@@ -1,13 +1,13 @@
 package com.jslhrd.yorimichi.controller;
 
 import com.jslhrd.yorimichi.gemini.AdminService;
-import com.jslhrd.yorimichi.gemini.GeminiStoreService;
-import com.jslhrd.yorimichi.gemini.dto.request.RegionStoreRequest;
-import com.jslhrd.yorimichi.gemini.dto.request.SaveStoresRequest;
-import com.jslhrd.yorimichi.gemini.dto.request.StoreDetailRequest;
-import com.jslhrd.yorimichi.gemini.dto.response.SaveStoresResponse;
-import com.jslhrd.yorimichi.gemini.dto.response.StoreDetailResponse;
-import com.jslhrd.yorimichi.gemini.dto.response.StoreNameRegionResponse;
+import com.jslhrd.yorimichi.gemini.store.GeminiStoreService;
+import com.jslhrd.yorimichi.gemini.store.dto.request.RegionStoreRequest;
+import com.jslhrd.yorimichi.gemini.store.dto.request.SaveStoresRequest;
+import com.jslhrd.yorimichi.gemini.store.dto.request.StoreDetailRequest;
+import com.jslhrd.yorimichi.gemini.store.dto.response.SaveStoresResponse;
+import com.jslhrd.yorimichi.gemini.store.dto.response.StoreDetailResponse;
+import com.jslhrd.yorimichi.gemini.store.dto.response.StoreNameRegionResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

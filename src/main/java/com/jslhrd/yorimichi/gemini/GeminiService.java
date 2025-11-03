@@ -41,6 +41,29 @@ public class GeminiService {
 		return generate(prompt, ToolMode.BOTH, null, null);
 	}
 
+	public String generatePlain(String prompt) {
+		String apiKey = resolveApiKey();
+
+		Map<String, Object> body = Map.of(
+				"contents", List.of(Map.of(
+						"role", "user",
+						"parts", List.of(Map.of("text", prompt))
+				))
+		);
+
+		return geminiRestClient.post()
+				.uri("/models/{model}:generateContent", model)
+				.header("x-goog-api-key", apiKey)
+				.body(body)
+				.retrieve()
+				.onStatus(HttpStatusCode::isError, (req, res) -> {
+					byte[] bytes = res.getBody() != null ? res.getBody().readAllBytes() : new byte[0];
+					String msg = new String(bytes, java.nio.charset.StandardCharsets.UTF_8);
+					throw new RuntimeException("Gemini error " + res.getStatusCode().value() + ": " + msg);
+				})
+				.body(String.class);
+	}
+
 	private String resolveApiKey() {
 		String apiKey = null;
 		try {

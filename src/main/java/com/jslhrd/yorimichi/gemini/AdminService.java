@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jslhrd.yorimichi.domain.RegionEmdDTO;
 import com.jslhrd.yorimichi.domain.RegionSidoDTO;
 import com.jslhrd.yorimichi.domain.RegionSigunguDTO;
-import com.jslhrd.yorimichi.gemini.dto.RegionNames;
-import com.jslhrd.yorimichi.gemini.dto.request.RegionStoreRequest;
-import com.jslhrd.yorimichi.gemini.dto.request.StoreDetailRequest;
-import com.jslhrd.yorimichi.gemini.dto.response.StoreDetailResponse;
-import com.jslhrd.yorimichi.gemini.dto.response.StoreNameRegionResponse;
+import com.jslhrd.yorimichi.gemini.store.dto.RegionNames;
+import com.jslhrd.yorimichi.gemini.store.dto.request.RegionStoreRequest;
+import com.jslhrd.yorimichi.gemini.store.dto.request.StoreDetailRequest;
+import com.jslhrd.yorimichi.gemini.store.dto.response.StoreDetailResponse;
+import com.jslhrd.yorimichi.gemini.store.dto.response.StoreNameRegionResponse;
 import com.jslhrd.yorimichi.service.RegionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,14 +23,15 @@ import java.util.*;
 @RequiredArgsConstructor
 public class AdminService {
 
-	private static final String KOREAN_RULES = """
-			한국어만 사용하세요. 영어/기타 언어 금지.
-			아래 어느 하나라도 지키지 못하면 빈 배열([])을 반환하세요.
-			- 설명/카테고리/시설/주소는 한국어로 표기 (고유명은 원문 허용).
-			- 영어 설명이 필요하면 한국어로 의역하고, 원문은 생략.
-			- 출력은 JSON 배열 리터럴 하나만 (앞뒤 텍스트/코드펜스/주석 금지)
-			- 한국어 표기만 사용 (상호 고유명은 원문 허용)
+	private static final String JAPANESE_RULES = """
+			日本語のみを使用してください。英語やその他の言語は禁止です。
+			次のいずれかを満たせない場合は空配列([])を返してください。
+			- 説明・カテゴリ・設備・住所は日本語表記（固有名詞は原文可）
+			- 英語原文がある場合は日本語に意訳し、原文は省略
+			- 出力は JSON 配列リテラルのみ（前後のテキスト／コードフェンス／コメント禁止）
+			- 日本語表記のみを使用（店名などの固有名詞は原文可）
 			""";
+
 
 	private final RegionService regionService;
 	private final GeminiService geminiService;
@@ -55,17 +56,6 @@ public class AdminService {
 			if (lastFenceIndex >= 0) trimmed = trimmed.substring(0, lastFenceIndex);
 		}
 		return trimmed.trim();
-	}
-
-	private static String sanitizeRegionLabel(String regionLabel) {
-		if (regionLabel == null) return "";
-		// 셀렉트 placeholder가 끼어들어온 경우 제거
-		String cleaned = regionLabel
-				.replace("시군구를 선택하세요", "")
-				.replace("읍면동을 선택하세요", "")
-				.replaceAll("\\s+", " ")
-				.trim();
-		return cleaned;
 	}
 
 	private RegionNames resolveRegionNames(RegionStoreRequest request) {
@@ -106,14 +96,15 @@ public class AdminService {
 				regionNames.emdName());
 
 		int count = Math.max(1, Math.min(20, request.count()));
-		String prompt = KOREAN_RULES + """
+
+		String prompt = JAPANESE_RULES + """
 				
-				아래 지역에서 현지 평이 좋은 맛집을 정확히 %d곳 선정해 주세요.
+				以下の地域から、現地評価の高い飲食店をちょうど %d 件、厳選してください。
 				
-				출력 규칙:
-				- 출력은 JSON 배열 리터럴 하나만. 앞뒤 공백/문장/주석/코드펜스(``` 등) 금지.
-				- 배열 길이는 정확히 %d.
-				- 각 요소 객체는 아래 5개 키만 포함(철자·대소문자·순서 엄수), null/빈 문자열 금지:
+				出力ルール:
+				- 出力は JSON 配列リテラルのみ。前後の空白・文章・コメント・コードフェンス(```)は禁止。
+				- 配列の長さは正確に %d。
+				- 各要素オブジェクトは次の 5 キーのみを含むこと（綴り・大文字小文字・順番を厳守）。null や空文字は不可:
 				  {
 				    "storeName": "string",
 				    "sidoName": "string",
@@ -121,12 +112,12 @@ public class AdminService {
 				    "emdName": "string",
 				    "placeId": "string"
 				  }
-				- placeId는 반드시 Google Place ID만 사용 (형식: "places/ChIJ...").
-				- 행정명칭은 대한민국 공식 표기(시/도, 시/군/구, 읍/면/동).
-				- 요청 지역 내부 장소만 선정, 중복 placeId 금지.
-				- 조건을 만족할 수 없으면 빈 배열([]) 반환.
+				- placeId は必ず Google Place ID のみを使用（形式: "places/ChIJ..."）。
+				- 行政名称は大韓民国の公的表記（市/道、市/郡/区、邑/面/洞）に従うこと。
+				- 要求地域の内部にある店舗のみを選定し、placeId の重複は禁止。
+				- 条件を満たせない場合は空配列([])を返すこと。
 				
-				요청 지역:
+				要求地域:
 				- %s
 				""".formatted(count, count, regionLabel);
 
@@ -189,21 +180,21 @@ public class AdminService {
 	public Optional<StoreDetailResponse> storeDetail(StoreDetailRequest request) {
 
 		String requiredPlaceId = request.placeId();
-		String regionLabelClean = sanitizeRegionLabel(request.regionLabel());
+		String regionLabelClean = request.regionLabel();
 		String storeNameHint = request.storeName();
 
-		String strictPrompt = KOREAN_RULES + """
+		String strictPrompt = JAPANESE_RULES + """
 				
-				아래 조건을 모두 만족하는 가게 1곳의 상세 정보만 JSON 배열로 반환해 주세요.
-				- 지역(행정명): %s
-				- 가게명(검색 힌트): %s
-				- 반드시 이 placeId와 정확히 일치: %s   (형식: "places/ChIJ...")
+				次の条件をすべて満たす店舗 1 件の詳細情報のみを JSON 配列で返してください。
+				- 地域（行政名）: %s
+				- 店名（検索ヒント）: %s
+				- 次の placeId と完全一致であること: %s   （形式: "places/ChIJ..."）
 				
-				출력 규칙(엄격):
-				- 출력은 JSON 배열 리터럴 하나만. 앞뒤 공백/문장/주석/코드펜스(``` 등) 금지.
-				- 배열 길이는 정확히 1. 불확실하면 빈 배열([]).
-				- 키/순서/철자 엄수. null 최소화(모를 때만 빈 문자열/빈 배열).
-				- 가능하면 실제 판매 메뉴 이름을 3~8개 수집해 "menus"에 담으세요. 가격/설명이 불확실하면 생략하고 이름만 넣으세요.
+				出力ルール（厳格）:
+				- 出力は JSON 配列リテラルのみ。前後の空白・文章・コメント・コードフェンス(```)は禁止。
+				- 配列の長さは正確に 1。不確実な場合は空配列([])。
+				- キー／順序／綴りは厳守。null は最小限（不明な場合のみ空文字・空配列を使用）。
+				- 可能であれば実際の販売メニュー名を 3〜8 件収集して "menus" に格納。価格・説明が不確実なら省略し、名前のみを入れてよい。
 				[
 				  {
 				    "name": "string",
@@ -216,32 +207,32 @@ public class AdminService {
 				    "sidoName": "string",
 				    "sigunguName": "string",
 				    "emdName": "string",
-				    "detail": "string",             // 상세주소
-				    "placeId": "string",            // 반드시 %s 와 정확 일치
+				    "detail": "string",             // 詳細住所
+				    "placeId": "string",            // 必ず %s と完全一致
 				    "roadAddressText": "string",
 				    "jibunAddressText": "string"
 				  }
 				]
 				
-				주의:
-				- placeId가 %s 와 다르면 무조건 빈 배열([]).
-				- 지역/상호 불일치도 빈 배열([]).
-				- menus 배열은 0개 이상 허용, 단 각 항목의 "name"은 반드시 존재/비공백.
-				- price/description 은 모르면 생략하거나 null.
-				- 불확실한 필드는 빈 문자열("") 또는 빈 배열([]).
+				注意:
+				- placeId が %s と異なる場合は必ず空配列([])。
+				- 地域／店名が一致しない場合も空配列([])。
+				- menus 配列は 0 件以上可。ただし各要素の "name" は必須かつ空白不可。
+				- price / description は不明なら省略または null。
+				- 不明なフィールドは空文字("") または空配列([])を使用。
 				""".formatted(regionLabelClean, storeNameHint, requiredPlaceId, requiredPlaceId, requiredPlaceId);
 
-		String relaxedPrompt = KOREAN_RULES + """
+		String relaxedPrompt = JAPANESE_RULES + """
 				
-				아래 placeId에 해당하는 가게 1곳의 상세 정보를 JSON 배열로 반환해 주세요.
-				- placeId(필수): %s
-				- 지역(참고용): %s
-				- 가게명(힌트): %s
+				次の placeId に該当する店舗 1 件の詳細情報を JSON 配列で返してください。
+				- placeId（必須）: %s
+				- 地域（参考）: %s
+				- 店名（ヒント）: %s
 				
-				출력 규칙:
-				- 출력은 JSON 배열 리터럴 하나, 길이 1(불확실하면 빈 배열 []).
-				- 각 객체는 아래와 같은 단순(flat) 키만 사용:
-				- 가능하면 실제 판매 메뉴 이름을 3~8개 수집해 "menus"에 담으세요. 가격/설명이 불확실하면 생략하고 이름만 넣으세요.
+				出力ルール:
+				- 出力は JSON 配列リテラル 1 つ、長さは 1（不確実なら空配列 []）。
+				- 各オブジェクトは以下のフラットなキーのみを使用:
+				- 可能であれば実際の販売メニュー名を 3〜8 件収集して "menus" に格納。価格・説明が不確実なら省略し、名前のみで可。
 				[
 				  {
 				    "name": "string",
@@ -255,18 +246,18 @@ public class AdminService {
 				    "sigunguName": "string",
 				    "emdName": "string",
 				    "detail": "string",
-				    "placeId": "string",        // 반드시 %s 와 동일
+				    "placeId": "string",        // 必ず %s と同一
 				    "roadAddressText": "string",
 				    "jibunAddressText": "string"
 				  }
 				]
 				
-				주의:
-				- placeId가 %s 와 같아야 함.
-				- 지역/상호 표기가 조금 달라도 placeId 일치 시 허용.
-				- menus 배열은 0개 이상 허용, 단 각 항목의 "name"은 반드시 존재/비공백.
-				- price/description 은 모르면 생략하거나 null.
-				- 모르는 필드는 빈 문자열("") 또는 빈 배열([]) 사용.
+				注意:
+				- placeId は %s と同一でなければならない。
+				- 地域／店名の表記が多少異なっても、placeId が一致すれば許容。
+				- menus 配列は 0 件以上可。ただし各要素の "name" は必須かつ空白不可。
+				- price / description は不明なら省略または null。
+				- 不明なフィールドは空文字("") または空配列([])を使用。
 				""".formatted(requiredPlaceId, regionLabelClean, storeNameHint, requiredPlaceId, requiredPlaceId);
 
 		Optional<StoreDetailResponse> strict = tryDetailOnce(strictPrompt, requiredPlaceId);
@@ -281,6 +272,7 @@ public class AdminService {
 		}
 		return fallback;
 	}
+
 
 	private Optional<StoreDetailResponse> tryDetailOnce(String prompt, String requiredPlaceId) {
 		String raw = geminiService.generateWithBoth(prompt);

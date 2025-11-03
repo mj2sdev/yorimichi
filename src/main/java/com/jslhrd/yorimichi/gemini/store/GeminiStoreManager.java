@@ -1,9 +1,9 @@
-package com.jslhrd.yorimichi.gemini;
+package com.jslhrd.yorimichi.gemini.store;
 
 import com.jslhrd.yorimichi.domain.*;
-import com.jslhrd.yorimichi.gemini.dto.request.SaveStoresRequest;
-import com.jslhrd.yorimichi.gemini.dto.response.SaveStoresResponse;
-import com.jslhrd.yorimichi.gemini.dto.response.StoreDetailResponse;
+import com.jslhrd.yorimichi.gemini.store.dto.request.SaveStoresRequest;
+import com.jslhrd.yorimichi.gemini.store.dto.response.SaveStoresResponse;
+import com.jslhrd.yorimichi.gemini.store.dto.response.StoreDetailResponse;
 import com.jslhrd.yorimichi.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

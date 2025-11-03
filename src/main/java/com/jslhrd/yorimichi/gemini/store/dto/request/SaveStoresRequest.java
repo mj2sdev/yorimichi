@@ -1,6 +1,6 @@
-package com.jslhrd.yorimichi.gemini.dto.request;
+package com.jslhrd.yorimichi.gemini.store.dto.request;
 
-import com.jslhrd.yorimichi.gemini.dto.response.StoreDetailResponse;
+import com.jslhrd.yorimichi.gemini.store.dto.response.StoreDetailResponse;
 
 import java.util.List;
 
