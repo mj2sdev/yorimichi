@@ -1,8 +1,10 @@
 package com.jslhrd.yorimichi.controller;
 
 import com.jslhrd.yorimichi.gemini.AdminService;
-import com.jslhrd.yorimichi.gemini.review.ReviewSummaryRefreshRequest;
-import com.jslhrd.yorimichi.gemini.review.ReviewSummaryRefreshResponse;
+import com.jslhrd.yorimichi.gemini.review.request.ReviewKeywordExtractRequest;
+import com.jslhrd.yorimichi.gemini.review.request.ReviewSummaryRefreshRequest;
+import com.jslhrd.yorimichi.gemini.review.response.ReviewKeywordExtractResponse;
+import com.jslhrd.yorimichi.gemini.review.response.ReviewSummaryRefreshResponse;
 import com.jslhrd.yorimichi.gemini.store.GeminiStoreService;
 import com.jslhrd.yorimichi.gemini.store.dto.request.RegionStoreRequest;
 import com.jslhrd.yorimichi.gemini.store.dto.request.SaveStoresRequest;
@@ -87,7 +89,7 @@ public class AdminApiController {
 
 	@PostMapping("/reviews/summary/refresh")
 	public ResponseEntity<ReviewSummaryRefreshResponse> refresh(
-			@RequestBody(required = false) ReviewSummaryRefreshRequest body
+			@RequestBody ReviewSummaryRefreshRequest body
 	) {
 		// 기본값(원하면 설정으로 뺄 수 있음)
 		int defaultHot = 50;
@@ -100,5 +102,12 @@ public class AdminApiController {
 		return ResponseEntity.ok(out);
 	}
 
-
+	@PostMapping("/reviews/keywords/extract")
+	public ResponseEntity<ReviewKeywordExtractResponse> extract(
+			@RequestBody ReviewKeywordExtractRequest request
+	) {
+		// 서비스가 HTML과 동일한 키를 가진 DTO를 반환하도록
+		ReviewKeywordExtractResponse response = reviewService.extractKeywords(request);
+		return ResponseEntity.ok(response);
+	}
 }

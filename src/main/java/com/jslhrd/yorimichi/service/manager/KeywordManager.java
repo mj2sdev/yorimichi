@@ -37,7 +37,7 @@ public class KeywordManager implements KeywordService {
 	public void save(KeywordDTO keyword) {
 
 		try {
-			keywordMapper.insert(keyword);
+			keywordMapper.upsert(keyword);
 		} catch (DuplicateKeyException e) {
 			throw new DuplicateKeywordException(keyword.getName());
 		}
@@ -86,7 +86,7 @@ public class KeywordManager implements KeywordService {
 		assertExistKeyword(keywordId);
 
 		try {
-			rootKeywordMapper.insert(rootId, keywordId);
+			rootKeywordMapper.insertIgnore(rootId, keywordId);
 		} catch (DuplicateKeyException e) {
 			log.debug("RootKeyword: add no-op rootId={}, keywordId={}", rootId, keywordId);
 			return;

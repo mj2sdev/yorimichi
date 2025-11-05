@@ -1,4 +1,4 @@
-package com.jslhrd.yorimichi.gemini.review;
+package com.jslhrd.yorimichi.gemini.review.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

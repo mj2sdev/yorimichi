@@ -44,6 +44,17 @@
         )
     </select>
 
+    <insert id="upsert"
+            useGeneratedKeys="true"
+            keyProperty="id"
+            keyColumn="id">
+        INSERT INTO keyword (name)
+
+        VALUES (#{name})
+
+        ON DUPLICATE KEY UPDATE id = LAST_INSERT_ID(id)
+    </insert>
+
     <insert id="insert"
             parameterType="KeywordDTO"
             useGeneratedKeys="true"

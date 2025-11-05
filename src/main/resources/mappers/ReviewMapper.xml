@@ -179,6 +179,22 @@
         LIMIT #{limit}
     </select>
 
+    <select id="selectStoreIdsHavingReviews" resultType="long">
+        SELECT rv.store_id
+
+        FROM review rv
+
+        JOIN root r ON r.id = rv.id
+            AND r.type = 'REVIEW'
+            AND <include refid="com.jslhrd.yorimichi.mapper.common.RootVisible"/>
+
+        GROUP BY rv.store_id
+
+        ORDER BY MAX(rv.id) DESC
+
+        LIMIT #{limit}
+    </select>
+
     <select id="existsActive" parameterType="long" resultType="boolean">
         SELECT EXISTS (
         SELECT 1
